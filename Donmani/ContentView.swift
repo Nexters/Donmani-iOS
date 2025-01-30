@@ -11,8 +11,13 @@ struct ContentView: View {
     @State var text: String = ""
     var body: some View {
         NavigationStack {
-            NavigationLink("Go to Haptic Test") {
-                HapticTestView()
+            VStack(spacing: 10) {
+                NavigationLink("Go to Haptic Test") {
+                    HapticTestView()
+                }
+                NavigationLink("Go to Coin Test") {
+                    CoinTestView()
+                }
             }
         }
     }
