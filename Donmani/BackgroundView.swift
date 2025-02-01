@@ -1,0 +1,90 @@
+//
+//  BackgroundView.swift
+//  Donmani
+//
+//  Created by 문종식 on 2/1/25.
+//
+
+import SwiftUI
+
+struct BackgroundView: View {
+    struct RandomCoordinate: Identifiable {
+        let id = UUID()
+        var x: CGFloat
+        var y: CGFloat
+    }
+    
+    @State private var dotCoordinates: [RandomCoordinate] = []
+    @State private var starCoordinates: [RandomCoordinate] = []
+    
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color.backgroundTop,
+                    Color.backgroundBottom
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+            
+            ZStack {
+                ForEach(dotCoordinates) { coordinate in
+                    backgroundImage(
+                        name: "BackgroundDot",
+                        size: 2,
+                        opacity: 0.3,
+                        coordinate: coordinate
+                    )
+                }
+                ForEach(starCoordinates) { coordinate in
+                    backgroundImage(
+                        name: "BackgroundStar",
+                        size: 12,
+                        opacity: 0.5,
+                        coordinate: coordinate
+                    )
+                }
+            }
+            .onAppear {
+                fetchUI(in: UIScreen.main.bounds)
+            }
+        }
+    }
+    
+    private func backgroundImage(
+        name: String,
+        size: CGFloat,
+        opacity: Double,
+        coordinate: RandomCoordinate
+    ) -> some View {
+        Image(name)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: size)
+            .opacity(opacity)
+            .position(x: coordinate.x, y: coordinate.y)
+    }
+    
+    private func fetchUI(in size: CGRect) {
+        let count: Int = 6
+        let edge: CGFloat = 30.0
+        starCoordinates = (0..<count).map { _ in
+            RandomCoordinate(
+                x: CGFloat.random(in: edge...size.width - edge),
+                y: CGFloat.random(in: edge...size.height - edge)
+            )
+        }
+        dotCoordinates = (0..<count).map { _ in
+            RandomCoordinate(
+                x: CGFloat.random(in: edge...size.width - edge),
+                y: CGFloat.random(in: edge...size.height - edge)
+            )
+        }
+    }
+}
+
+#Preview {
+    BackgroundView()
+}
