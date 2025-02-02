@@ -26,7 +26,7 @@ final class CoinScene: SKScene {
         self.addChild(bottom)
         
         let top = SKSpriteNode(color: .blue, size: CGSize(width: width, height: 5))
-        top.position = CGPoint(x: width/2, y: height - 120)
+        top.position = CGPoint(x: width/2, y: height - 20)
         top.physicsBody = SKPhysicsBody(rectangleOf: top.size)
         top.physicsBody?.isDynamic = false
         self.addChild(top)
