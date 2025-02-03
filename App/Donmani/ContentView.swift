@@ -22,7 +22,7 @@ struct ContentView: View {
                         
                         Spacer()
                         Text(name+"의 별나라")
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.b1, .semibold)
                             .foregroundStyle(.white)
                         Spacer()
                         

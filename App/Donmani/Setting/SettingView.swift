@@ -10,9 +10,11 @@ import SwiftUI
 struct SettingView: View {
     @Environment(\.dismiss) private var dismiss
     let width = UIScreen.main.bounds.width
-    let horizontalPadding: CGFloat = 20
+    
+    let defaultPadding: CGFloat = 20
+    
     var body: some View {
-        VStack(alignment: .center, spacing: 20) {
+        VStack(alignment: .center, spacing: defaultPadding) {
             ZStack {
                 HStack {
                     Button {
@@ -31,7 +33,7 @@ struct SettingView: View {
                     }
                     Spacer()
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, defaultPadding)
                 Text("설정")
                     .font(.system(size: 16, weight: .semibold))
             }
@@ -40,10 +42,10 @@ struct SettingView: View {
             VStack(alignment: .center, spacing: 12) {
                 Image("TempImage")
                 Text("노래하는 농담곰")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.b1, .semibold)
             }
-            .padding(20)
-            .padding(.bottom, 20)
+            .padding(defaultPadding)
+            .padding(.bottom, defaultPadding)
             
             VStack(alignment: .leading, spacing: 0) {
                 MenuButton(title: "개인정보 처리방침") {
@@ -67,10 +69,10 @@ struct SettingView: View {
             action()
         } label: {
             Text(title)
-                .font(.system(size: 16, weight: .bold))
+                .font(.b1, .bold)
                 .foregroundStyle(.black)
-                .frame(width: width - horizontalPadding * 2, alignment: .leading)
-                .padding(.horizontal, horizontalPadding)
+                .frame(width: width - defaultPadding * 2, alignment: .leading)
+                .padding(.horizontal, defaultPadding)
                 .padding(.vertical, 16)
         }
     }
