@@ -1,0 +1,30 @@
+name: UI Issue
+description: 화면 개발 및 수정
+title: "[UI Feature] <제목>"
+labels: ["ui feature"]
+body:
+  - type: textarea
+    attributes:
+      label: 페이지 설명
+      description: "추가 및 업데이트 된 화면에 대한 설명"
+      placeholder: ex. 메인 페이지
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 스크린샷
+      description: "추가 및 업데이트 된 스크린샷 또는 gif 파일을 추가"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 스크린샷 환경
+      description: 스크린샷을 생성한 기기 환경 정보
+      value: |
+        Device: 
+        iOS: 
+      placeholder: |
+        기기: 시뮬레이터 아이폰16 or 실제기기 아이폰16 프로
+        iOS: iOS 17.0
+    validations:
+      required: true

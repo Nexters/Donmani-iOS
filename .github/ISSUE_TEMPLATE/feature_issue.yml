@@ -1,0 +1,30 @@
+name: Feature Issue
+description: 기능 개발 및 수정
+title: "[Feature] <제목>"
+labels: ["feature"]
+body:
+  - type: textarea
+    attributes:
+      label: 기능 설명
+      description: "추가 및 업데이트 된 기능에 대한 설명"
+      placeholder: ex. 별사탕 인터렉션 추가
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 스크린샷
+      description: "추가 및 업데이트 된 기능에 대한 스크린샷 또는 gif 파일을 추가"
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 테스트 환경
+      description: 테스트한 기기 환경 정보
+      value: |
+        Device: 
+        iOS: 
+      placeholder: |
+        기기: 시뮬레이터 아이폰16 or 실제기기 아이폰16 프로
+        iOS: iOS 17.0
+    validations:
+      required: true

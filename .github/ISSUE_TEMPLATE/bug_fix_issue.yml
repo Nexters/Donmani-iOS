@@ -1,0 +1,37 @@
+name: Bug Fix Issue
+description: 화면 개발 및 수정
+title: "[Bug Fix] <제목>"
+labels: ["bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Fix 종류
+      description: "Fix 종류 체크 후 라벨 추가"
+      options:
+        - label: Fix
+        - label: Hot Fix
+  - type: textarea
+    attributes:
+      label: 오류 설명
+      description: "발생하는 오류에 설명(오류 재현 방법 등)"
+      placeholder: ex. 메인 페이지에서 설정 페이지 50번 왕복 후 메인 페이지의 배경이 사라지는 오류 발생
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 스크린샷
+      description: "오류 상황에 대한 스크린샷 또는 gif 파일을 추가"
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 오류 발생 환경
+      description: 오류가 발생한 기기 환경 정보
+      value: |
+        Device: 
+        iOS: 
+      placeholder: |
+        기기: 시뮬레이터 아이폰16 or 실제기기 아이폰16 프로
+        iOS: iOS 17.0
+    validations:
+      required: true
