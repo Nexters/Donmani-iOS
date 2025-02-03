@@ -39,40 +39,40 @@ struct SettingView: View {
             
             VStack(alignment: .center, spacing: 12) {
                 Image("TempImage")
-                Text("노래하는 농담공")
+                Text("노래하는 농담곰")
                     .font(.system(size: 16, weight: .semibold))
             }
             .padding(20)
             .padding(.bottom, 20)
             
             VStack(alignment: .leading, spacing: 0) {
-                Group {
-                    Button {
-                        // TODO: - 개인정보 처리방침
-                    } label: {
-                        Text("개인정보 처리방침")
-                            .font(.system(size: 16, weight: .bold))
-                            .frame(width: width - horizontalPadding * 2, alignment: .leading)
-                        .padding(.horizontal, horizontalPadding)
-                        .padding(.vertical, 16)
-                    }
+                MenuButton(title: "개인정보 처리방침") {
                     
-                    Button {
-                        // TODO: - 피드백
-                    } label: {
-                        Text("피드백")
-                            .font(.system(size: 16, weight: .bold))
-                            .frame(width: width - horizontalPadding * 2, alignment: .leading)
-                            .padding(.horizontal, horizontalPadding)
-                            .padding(.vertical, 16)
-                    }
                 }
-                .foregroundStyle(.black)
                 
+                MenuButton(title: "피드백") {
+                    
+                }
             }
             Spacer()
         }
         .navigationBarBackButtonHidden()
+    }
+    
+    private func MenuButton(
+        title: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            action()
+        } label: {
+            Text(title)
+                .font(.system(size: 16, weight: .bold))
+                .foregroundStyle(.black)
+                .frame(width: width - horizontalPadding * 2, alignment: .leading)
+                .padding(.horizontal, horizontalPadding)
+                .padding(.vertical, 16)
+        }
     }
 }
 
