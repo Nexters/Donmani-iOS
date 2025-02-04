@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import DesignSystem
 
 struct ContentView: View {
     var name: String = "행복한 코알라"
+    // TODO: - Add Store
     
     var body: some View {
         NavigationStack {
@@ -16,7 +18,7 @@ struct ContentView: View {
                 BackgroundView()
                 VStack {
                     HStack {
-                        AccessoryButton(name: "Setting") {
+                        AccessoryButton(asset: .setting) {
                             SettingView()
                         }
                         
@@ -26,7 +28,7 @@ struct ContentView: View {
                             .foregroundStyle(.white)
                         Spacer()
                         
-                        AccessoryButton(name: "Calendar") {
+                        AccessoryButton(asset: .calendar) {
                             SettingView()
                         }
                     }
@@ -44,7 +46,7 @@ struct ContentView: View {
     }
     
     private func AccessoryButton(
-        name: String,
+        asset: DImageAsset,
         destination: () -> some View
     ) -> some View {
         NavigationLink{
@@ -54,7 +56,7 @@ struct ContentView: View {
                 Circle()
                     .fill(Color.accessoryButton)
                     .opacity(0.1)
-                Image(name)
+                DImage(asset).image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 24)

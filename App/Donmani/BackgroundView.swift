@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DesignSystem
 
 struct BackgroundView: View {
     struct RandomCoordinate: Identifiable {
@@ -32,7 +33,7 @@ struct BackgroundView: View {
             ZStack {
                 ForEach(dotCoordinates) { coordinate in
                     backgroundImage(
-                        name: "BackgroundDot",
+                        asset: .backgroundDot,
                         size: 2,
                         opacity: 0.3,
                         coordinate: coordinate
@@ -40,7 +41,7 @@ struct BackgroundView: View {
                 }
                 ForEach(starCoordinates) { coordinate in
                     backgroundImage(
-                        name: "BackgroundStar",
+                        asset: .backgroundStar,
                         size: 12,
                         opacity: 0.5,
                         coordinate: coordinate
@@ -54,12 +55,12 @@ struct BackgroundView: View {
     }
     
     private func backgroundImage(
-        name: String,
+        asset: DImageAsset,
         size: CGFloat,
         opacity: Double,
         coordinate: RandomCoordinate
     ) -> some View {
-        Image(name)
+        DImage(asset).image
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: size)

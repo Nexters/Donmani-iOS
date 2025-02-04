@@ -8,17 +8,17 @@
 import SwiftUI
 
 public struct DImage {
-    private let asset: DImageAsset
+    @usableFromInline let asset: DImageAsset
     
     public init(_ asset: DImageAsset) {
         self.asset = asset
     }
     
     public var image: Image {
-        Image(asset.rawValue)
+        Image(asset.rawValue, bundle: .designSystem)
     }
     
     public var uiImage: UIImage {
-        UIImage(named: asset.rawValue) ?? UIImage()
+        UIImage(named: asset.rawValue, in: .designSystem, compatibleWith: nil) ?? UIImage()
     }
 }

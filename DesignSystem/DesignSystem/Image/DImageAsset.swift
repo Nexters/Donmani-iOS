@@ -10,7 +10,7 @@ import SwiftUI
 public enum DImageAsset: String {
     case backgroundDot = "BackgroundDot"
     case backgroundStar = "BackgroundStar"
-    case add = "add"
+    case addLog = "AddLog"
     case edit = "Edit"
     case leftArrow = "LeftArrow"
     case rightArrow = "RightArrow"
