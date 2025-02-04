@@ -24,16 +24,11 @@ struct SettingView: View {
                         Button {
                             dismiss()
                         } label: {
-                            ZStack {
-                                Rectangle()
-                                    .fill(.clear)
-                                    .frame(width: 24, height: 24)
-                                DImage(.leftArrow).image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(height: 14)
-                                    .foregroundStyle(.black)
-                            }
+                            DImage(.leftArrow).image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: .s3)
+                                .foregroundStyle(.black)
                         }
                         Spacer()
                     }
