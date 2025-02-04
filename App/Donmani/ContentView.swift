@@ -54,7 +54,7 @@ struct ContentView: View {
         } label: {
             ZStack {
                 Circle()
-                    .fill(Color.accessoryButton)
+                    .fill(DColor.accessoryButton)
                     .opacity(0.1)
                 DImage(asset).image
                     .resizable()
@@ -71,13 +71,11 @@ struct ContentView: View {
         } label: {
             ZStack {
                 Circle()
-                    .fill(Color("RecordStart"))
-                RoundedRectangle(cornerRadius: 2, style: .circular)
-                    .fill(Color.white)
-                    .frame(width: 18, height: 4)
-                RoundedRectangle(cornerRadius: 2, style: .circular)
-                    .fill(Color.white)
-                    .frame(width: 4, height: 18)
+                    .fill(DColor.recordStart)
+                DImage(.plus).image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: .s2)                    
             }
         }
         .frame(width: 70, height: 70)
