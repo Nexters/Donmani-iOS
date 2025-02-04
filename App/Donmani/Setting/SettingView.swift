@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingView: View {
     @Environment(\.dismiss) private var dismiss
     let width = UIScreen.main.bounds.width
-    
+    // TODO: Store 
     let defaultPadding: CGFloat = 20
     
     var body: some View {
