@@ -59,7 +59,7 @@ struct ContentView: View {
                 DImage(asset).image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 24)
+                    .frame(width: .s3)
             }
         }
         .frame(width: 48, height: 48)

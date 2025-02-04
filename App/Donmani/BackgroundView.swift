@@ -9,6 +9,9 @@ import SwiftUI
 import DesignSystem
 
 struct BackgroundView: View {
+    let dotSize: CGFloat = 2
+    let starSize: CGFloat = 12
+    
     struct RandomCoordinate: Identifiable {
         let id = UUID()
         var x: CGFloat
@@ -34,7 +37,7 @@ struct BackgroundView: View {
                 ForEach(dotCoordinates) { coordinate in
                     backgroundImage(
                         asset: .backgroundDot,
-                        size: 2,
+                        size: dotSize,
                         opacity: 0.3,
                         coordinate: coordinate
                     )
@@ -42,7 +45,7 @@ struct BackgroundView: View {
                 ForEach(starCoordinates) { coordinate in
                     backgroundImage(
                         asset: .backgroundStar,
-                        size: 12,
+                        size: starSize,
                         opacity: 0.5,
                         coordinate: coordinate
                     )
