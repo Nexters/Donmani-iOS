@@ -25,8 +25,8 @@ struct BackgroundView: View {
         ZStack {
             LinearGradient(
                 colors: [
-                    Color.backgroundTop,
-                    Color.backgroundBottom
+                    DColor.backgroundTop,
+                    DColor.backgroundBottom
                 ],
                 startPoint: .top,
                 endPoint: .bottom

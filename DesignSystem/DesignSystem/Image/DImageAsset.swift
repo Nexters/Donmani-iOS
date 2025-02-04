@@ -12,6 +12,7 @@ public enum DImageAsset: String {
     case backgroundStar = "BackgroundStar"
     case addLog = "AddLog"
     case edit = "Edit"
+    case plus = "Plus"
     case leftArrow = "LeftArrow"
     case rightArrow = "RightArrow"
     case calendar = "Calendar"

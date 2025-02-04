@@ -28,7 +28,6 @@ struct SettingView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(height: .s3)
-                                .foregroundStyle(.black)
                         }
                         Spacer()
                     }
