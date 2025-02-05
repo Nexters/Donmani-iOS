@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import DesignSystem
 
 @main
 struct DonmaniApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onAppear {
+                    DFont.loadFonts()
+                }
         }
     }
 }

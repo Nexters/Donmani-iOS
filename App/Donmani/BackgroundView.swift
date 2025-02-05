@@ -32,6 +32,7 @@ struct BackgroundView: View {
                 endPoint: .bottom
             )
             .ignoresSafeArea()
+            .padding(-1)
             
             ZStack {
                 ForEach(dotCoordinates) { coordinate in

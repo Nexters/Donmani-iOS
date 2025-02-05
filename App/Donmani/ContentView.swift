@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 import DesignSystem
 
 struct ContentView: View {
@@ -35,7 +36,17 @@ struct ContentView: View {
                     .padding(.horizontal, 20)
                     Spacer()
                     RecordButton {
-                        
+                        LogView(
+                            store: Store(
+                                initialState: LogReducer.LogState(
+                                    isCompleteToday: false,
+                                    isCompleteYesterday: false
+                                ),
+                                reducer: {
+                                    
+                                }
+                            )
+                        )
                     }
                     
                 }
@@ -65,9 +76,9 @@ struct ContentView: View {
         .frame(width: 48, height: 48)
     }
     
-    private func RecordButton(action: @escaping () -> Void) -> some View {
-        Button {
-            action()
+    private func RecordButton(destination: () -> some View) -> some View {
+        NavigationLink {
+            destination()
         } label: {
             ZStack {
                 Circle()

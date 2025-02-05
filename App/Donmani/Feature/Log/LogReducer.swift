@@ -13,6 +13,11 @@ struct LogReducer {
     // MARK: - State
     @ObservableState
     struct LogState: Equatable {
+        enum DayType {
+            case today
+            case yesterday
+        }
+        
         var isCompleteToday: Bool
         var isCompleteYesterday: Bool
         
@@ -20,9 +25,18 @@ struct LogReducer {
         var goToLogBad: Bool = false
         var goToLogEmpty: Bool = false
         
+        var dayType: DayType = .today
+        
+        var title: String {
+            return "\(dayType == .today ? "오늘" : "어제") 소비 정리해 볼까요?"
+        }
+        
         init(isCompleteToday: Bool, isCompleteYesterday: Bool) {
             self.isCompleteToday = isCompleteToday
             self.isCompleteYesterday = isCompleteYesterday
+            if self.isCompleteToday {
+                self.dayType = .yesterday
+            }
         }
     }
     
