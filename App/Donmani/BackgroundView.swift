@@ -6,8 +6,12 @@
 //
 
 import SwiftUI
+import DesignSystem
 
 struct BackgroundView: View {
+    let dotSize: CGFloat = 2
+    let starSize: CGFloat = 12
+    
     struct RandomCoordinate: Identifiable {
         let id = UUID()
         var x: CGFloat
@@ -21,8 +25,8 @@ struct BackgroundView: View {
         ZStack {
             LinearGradient(
                 colors: [
-                    Color.backgroundTop,
-                    Color.backgroundBottom
+                    DColor.backgroundTop,
+                    DColor.backgroundBottom
                 ],
                 startPoint: .top,
                 endPoint: .bottom
@@ -32,16 +36,16 @@ struct BackgroundView: View {
             ZStack {
                 ForEach(dotCoordinates) { coordinate in
                     backgroundImage(
-                        name: "BackgroundDot",
-                        size: 2,
+                        asset: .backgroundDot,
+                        size: dotSize,
                         opacity: 0.3,
                         coordinate: coordinate
                     )
                 }
                 ForEach(starCoordinates) { coordinate in
                     backgroundImage(
-                        name: "BackgroundStar",
-                        size: 12,
+                        asset: .backgroundStar,
+                        size: starSize,
                         opacity: 0.5,
                         coordinate: coordinate
                     )
@@ -54,12 +58,12 @@ struct BackgroundView: View {
     }
     
     private func backgroundImage(
-        name: String,
+        asset: DImageAsset,
         size: CGFloat,
         opacity: Double,
         coordinate: RandomCoordinate
     ) -> some View {
-        Image(name)
+        DImage(asset).image
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: size)

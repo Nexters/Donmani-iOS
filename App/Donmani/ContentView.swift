@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import DesignSystem
 
 struct ContentView: View {
     var name: String = "행복한 코알라"
+    // TODO: - Add Store
     
     var body: some View {
         NavigationStack {
@@ -16,17 +18,17 @@ struct ContentView: View {
                 BackgroundView()
                 VStack {
                     HStack {
-                        AccessoryButton(name: "Setting") {
+                        AccessoryButton(asset: .setting) {
                             SettingView()
                         }
                         
                         Spacer()
                         Text(name+"의 별나라")
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.b1, .semibold)
                             .foregroundStyle(.white)
                         Spacer()
                         
-                        AccessoryButton(name: "Calendar") {
+                        AccessoryButton(asset: .calendar) {
                             SettingView()
                         }
                     }
@@ -44,7 +46,7 @@ struct ContentView: View {
     }
     
     private func AccessoryButton(
-        name: String,
+        asset: DImageAsset,
         destination: () -> some View
     ) -> some View {
         NavigationLink{
@@ -52,12 +54,12 @@ struct ContentView: View {
         } label: {
             ZStack {
                 Circle()
-                    .fill(Color.accessoryButton)
+                    .fill(DColor.accessoryButton)
                     .opacity(0.1)
-                Image(name)
+                DImage(asset).image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 24)
+                    .frame(width: .s3)
             }
         }
         .frame(width: 48, height: 48)
@@ -69,13 +71,11 @@ struct ContentView: View {
         } label: {
             ZStack {
                 Circle()
-                    .fill(Color("RecordStart"))
-                RoundedRectangle(cornerRadius: 2, style: .circular)
-                    .fill(Color.white)
-                    .frame(width: 18, height: 4)
-                RoundedRectangle(cornerRadius: 2, style: .circular)
-                    .fill(Color.white)
-                    .frame(width: 4, height: 18)
+                    .fill(DColor.recordStart)
+                DImage(.plus).image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: .s2)                    
             }
         }
         .frame(width: 70, height: 70)
