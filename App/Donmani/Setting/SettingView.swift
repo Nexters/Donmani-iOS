@@ -11,14 +11,13 @@ import DesignSystem
 struct SettingView: View {
     @Environment(\.dismiss) private var dismiss
     let width = UIScreen.main.bounds.width
-    let defaultPadding: CGFloat = 20
     
     // TODO: - Add Store
     
     var body: some View {
         ZStack {
             BackgroundView()
-            VStack(alignment: .center, spacing: defaultPadding) {
+            VStack(alignment: .center, spacing: .defaultLayoutPadding) {
                 ZStack {
                     HStack {
                         Button {
@@ -31,7 +30,7 @@ struct SettingView: View {
                         }
                         Spacer()
                     }
-                    .padding(.horizontal, defaultPadding)
+                    .padding(.horizontal, .defaultLayoutPadding)
                     Text("설정")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
@@ -44,8 +43,8 @@ struct SettingView: View {
                         .font(.b1, .semibold)
                         .foregroundStyle(.white)
                 }
-                .padding(defaultPadding)
-                .padding(.bottom, defaultPadding)
+                .padding(.defaultLayoutPadding)
+                .padding(.bottom, .defaultLayoutPadding)
                 
                 VStack(alignment: .leading, spacing: 0) {
                     MenuButton(title: "개인정보 처리방침") {
@@ -57,6 +56,7 @@ struct SettingView: View {
                     }
                 }
                 Spacer()
+                
             }
         }
         .navigationBarBackButtonHidden()
@@ -72,8 +72,8 @@ struct SettingView: View {
             Text(title)
                 .font(.b1, .bold)
                 .foregroundStyle(.white)
-                .frame(width: width - defaultPadding * 2, alignment: .leading)
-                .padding(.horizontal, defaultPadding)
+                .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
+                .padding(.horizontal, .defaultLayoutPadding)
                 .padding(.vertical, 16)
         }
     }

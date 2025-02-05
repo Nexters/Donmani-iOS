@@ -6,7 +6,7 @@
 //
 
 
-public enum DFontWeight: String {
+public enum DFontWeight: String, CaseIterable {
     case bold = "Bold"
     case semibold = "SemiBold"
     case medium = "Medium"
