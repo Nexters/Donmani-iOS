@@ -33,5 +33,10 @@ public extension DImageSize {
     ///
     /// 16px
     static let s5: CGFloat = 16
+    
+    /// 160 Size. Category Sticker
+    ///
+    /// 160
+    static let stickerSize: CGFloat = 160
 }
 
