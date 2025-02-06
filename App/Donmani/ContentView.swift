@@ -30,7 +30,17 @@ struct ContentView: View {
                         Spacer()
                         
                         AccessoryButton(asset: .calendar) {
-                            SettingView()
+//                            SettingView()
+                            LogWritingView(
+                                store: Store(
+                                    initialState: LogWritingReducer.LogWritingState(
+                                        type: .bad
+                                    ),
+                                    reducer: {
+                                        
+                                    }
+                                )
+                            )
                         }
                     }
                     .padding(.horizontal, 20)

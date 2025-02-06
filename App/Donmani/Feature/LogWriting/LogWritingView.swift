@@ -12,6 +12,7 @@ import DesignSystem
 struct LogWritingView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<LogWritingReducer>
+    @State var isPresenting: Bool = false
     
     var body: some View {
         ZStack {
@@ -30,17 +31,21 @@ struct LogWritingView: View {
                         }
                         Spacer()
                     }
-                    .padding(.horizontal, .defaultLayoutPadding)
                     Text(store.type.title)
                         .font(DFont.font(.b1, weight: .bold))
                         .foregroundStyle(.white)
                 }
                 .padding(.vertical, 14)
                 VStack(spacing: .defaultLayoutPadding) {
-                    store.sticker
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: .stickerSize, height: .stickerSize)
+                    Button {
+                        
+                    } label: {
+                        store.sticker
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                    }
+                    .frame(width: .stickerSize, height: .stickerSize)
+                    
                     
                     Text("카테고리")
                         .font(DFont.font(.h3, weight: .bold))
@@ -49,12 +54,13 @@ struct LogWritingView: View {
                     
                     VStack(spacing: 4) {
                         TextEditor(
-                            text: Binding(
-                                get: { return store.text },
-                                set: { v, t in
-//                                    store.send(.write(v))
-                                }
-                            )
+                            text: .constant("asdf")
+//                            text: Binding(
+//                                get: { return store.text },
+//                                set: { v, t in
+////                                    store.send(.write(v))
+//                                }
+//                            )
                         )
                         .frame(height: 100)
                         .foregroundStyle(.white)
@@ -79,10 +85,10 @@ struct LogWritingView: View {
                         ZStack {
                             // TODO: - Edit Color
                             Capsule(style: .circular)
-                                .fill(.white)
+                                .fill(DColor(.gray95).color)
                             Text("완료")
                                 .font(DFont.font(.b1, weight: .bold))
-                                .foregroundStyle(.black)
+                                .foregroundStyle(DColor(.deepBlue10).color)
                         }
                     }
                     .frame(width: 60, height: 40)
@@ -91,6 +97,11 @@ struct LogWritingView: View {
             .padding(.horizontal, .defaultLayoutPadding)
         }
         .navigationBarBackButtonHidden()
+        .customBottomSheet(isPresented: $isPresenting) {
+            Text("BottomSheet")
+                .frame(height: 150)
+                .background(.white)
+        }
     }
 }
 

@@ -16,13 +16,13 @@ extension LogView {
             } label: {
                 Text("어제")
                     .font(DFont.font(.b2, weight: .semibold))
-                    .foregroundStyle(DColor.deepBlue80)
+                    .foregroundStyle(DColor(.deepBlue80).color)
             }
             .padding(12)
             
             Text("|")
                 .font(DFont.font(.b2, weight: .regular))
-                .foregroundStyle(DColor.deepBlue80)
+                .foregroundStyle(DColor(.deepBlue80).color)
             
             Button {
                 
@@ -73,7 +73,7 @@ extension LogView {
                     .frame(width: .s4, height: .s4)
                 Text("무소비 했어요")
                     .font(DFont.font(.b2, weight: .semibold))
-                    .foregroundStyle(DColor.deepBlue80)
+                    .foregroundStyle(DColor(.deepBlue80).color)
             }
         }
     }

@@ -82,7 +82,7 @@ struct LogView: View {
                         .padding(8)
                     Button {
                         
-                    } label: {
+                    } label: { 
                         ZStack {
                             RoundedRectangle(
                                 cornerRadius: .s5,
