@@ -5,7 +5,7 @@
 //  Created by 문종식 on 2/1/25.
 //
 
-struct Content {
+struct LogContent {
     enum ContentType {
         case good
         case bad

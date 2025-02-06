@@ -50,8 +50,13 @@ struct LogWritingReducer {
         
         var type: LogType
         var selectedCategory: Category?
-        var text: String = ""
+        var text: String
         
+        init(type: LogType, selectedCategory: Category? = nil, text: String = "") {
+            self.type = type
+            self.selectedCategory = selectedCategory
+            self.text = text
+        }
     }
     
     // MARK: - Action

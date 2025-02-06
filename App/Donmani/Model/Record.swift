@@ -13,5 +13,5 @@ struct RecordDTO {
 
 struct Record {
     var date: Date
-    var contents: [Content]?
+    var contents: [LogContent]?
 }
