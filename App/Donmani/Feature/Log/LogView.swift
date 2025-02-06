@@ -46,10 +46,28 @@ struct LogView: View {
                     spacing: .s4
                 ) {
                     LogButton(title: "행복") {
-                        Text("")
+                        LogWritingView(
+                            store: Store(
+                                initialState: LogWritingReducer.LogWritingState(
+                                    type: .good
+                                ),
+                                reducer: {
+                                    
+                                }
+                            )
+                        )
                     }
                     LogButton(title: "후회") {
-                        Text("")
+                        LogWritingView(
+                            store: Store(
+                                initialState: LogWritingReducer.LogWritingState(
+                                    type: .bad
+                                ),
+                                reducer: {
+                                    
+                                }
+                            )
+                        )
                     }
                     LogEmptyButton()
                 }
@@ -60,7 +78,7 @@ struct LogView: View {
                 VStack(spacing: 0) {
                     Text("너의 소비를 별사탕으로 바꿔줄게!")
                         .font(DFont.font(.b2, weight: .semibold))
-                        .foregroundStyle(DColor.pupleBlue90)
+                        .foregroundStyle(DColor(.pupleBlue90).color)
                         .padding(8)
                     Button {
                         
@@ -70,10 +88,10 @@ struct LogView: View {
                                 cornerRadius: .s5,
                                 style: .continuous
                             )
-                            .fill(DColor.deepBlue20)
+                            .fill(DColor(.deepBlue20).color)
                             Text("저장하기")
                                 .font(DFont.font(.h3, weight: .bold))
-                                .foregroundStyle(DColor.deepBlue70)
+                                .foregroundStyle(DColor(.deepBlue70).color)
                         }
                     }
                     .frame(height: 58)

@@ -16,7 +16,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                BackgroundView()
+                MainBackgroundView()
                 VStack {
                     HStack {
                         AccessoryButton(asset: .setting) {
@@ -82,7 +82,7 @@ struct ContentView: View {
         } label: {
             ZStack {
                 Circle()
-                    .fill(DColor.recordStart)
+                    .fill(DColor(.pupleBlue70).color)
                 DImage(.plus).image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
