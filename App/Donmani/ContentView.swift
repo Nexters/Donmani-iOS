@@ -30,32 +30,15 @@ struct ContentView: View {
                         Spacer()
                         
                         AccessoryButton(asset: .calendar) {
-//                            SettingView()
-                            LogWritingView(
-                                store: Store(
-                                    initialState: LogWritingReducer.LogWritingState(
-                                        type: .bad
-                                    ),
-                                    reducer: {
-                                        
-                                    }
-                                )
-                            )
+                            CoinTestView()
                         }
                     }
                     .padding(.horizontal, 20)
                     Spacer()
                     RecordButton {
-                        LogView(
-                            store: Store(
-                                initialState: LogReducer.LogState(
-                                    isCompleteToday: false,
-                                    isCompleteYesterday: false
-                                ),
-                                reducer: {
-                                    
-                                }
-                            )
+                        LogStore.view(
+                            isCompleteToday: false,
+                            isCompleteYesterday: false
                         )
                     }
                     

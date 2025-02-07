@@ -1,5 +1,5 @@
 //
-//  LogReducer.swift
+//  LogStore.swift
 //  Donmani
 //
 //  Created by 문종식 on 2/5/25.
@@ -8,11 +8,11 @@
 import ComposableArchitecture
 
 @Reducer
-struct LogReducer {
+struct LogStore {
     
     // MARK: - State
     @ObservableState
-    struct LogState: Equatable {
+    struct State: Equatable {
         enum DayType {
             case today
             case yesterday
@@ -41,7 +41,7 @@ struct LogReducer {
     }
     
     // MARK: - Action
-    enum LogAction: Equatable {
+    enum Action: Equatable {
         case logGood
         case logBad
         case logEmpty
@@ -50,7 +50,7 @@ struct LogReducer {
     }
     
     // MARK: - Reducer
-    var body: some Reducer<LogState, LogAction> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .logGood:
@@ -65,5 +65,20 @@ struct LogReducer {
                 return .none
             }
         }
+    }
+    
+    
+    // MARK: - View
+    public static func view(isCompleteToday: Bool, isCompleteYesterday: Bool) -> LogView {
+        LogView(
+            store: Store(
+                initialState: LogStore.State(
+                    isCompleteToday: isCompleteToday,
+                    isCompleteYesterday: isCompleteYesterday
+                )
+            ) {
+                LogStore()
+            }
+        )
     }
 }

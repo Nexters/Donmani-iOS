@@ -11,8 +11,9 @@ import DesignSystem
 
 struct LogWritingView: View {
     @Environment(\.dismiss) private var dismiss
-    @Bindable var store: StoreOf<LogWritingReducer>
+    @Bindable var store: StoreOf<LogWritingStore>
     @State var isPresenting: Bool = false
+    @State var text: String = ""
     
     var body: some View {
         ZStack {
@@ -38,7 +39,7 @@ struct LogWritingView: View {
                 .padding(.vertical, 14)
                 VStack(spacing: .defaultLayoutPadding) {
                     Button {
-                        
+                        isPresenting.toggle()
                     } label: {
                         store.sticker
                             .resizable()
@@ -53,25 +54,26 @@ struct LogWritingView: View {
                         .opacity((store.selectedCategory == nil) ? 0 : 1)
                     
                     VStack(spacing: 4) {
-                        TextEditor(
-                            text: .constant("asdf")
-//                            text: Binding(
-//                                get: { return store.text },
-//                                set: { v, t in
-////                                    store.send(.write(v))
-//                                }
-//                            )
-                        )
-                        .frame(height: 100)
+                        TextField(
+                            text: $store.text,
+                            axis: .vertical
+                        ) {
+                            Text("어떤 소비를 했나요?")
+                                .font(DFont.font(.b1, weight: .medium))
+                                .foregroundStyle(DColor(.deepBlue80).color)
+                        }
+                        .font(DFont.font(.b1, weight: .medium))
                         .foregroundStyle(.white)
+                        .lineLimit(5...)
+                        .frame(height: 100)
                         .scrollContentBackground(.hidden)
                         .background(.clear)
-                        
                         
                         HStack {
                             Spacer()
                             Text("\(store.text.count)/100")
                                 .font(DFont.font(.b2))
+                                .foregroundStyle(DColor(.deepBlue80).color)
                         }
                     }
                     .padding(8)
@@ -98,22 +100,20 @@ struct LogWritingView: View {
         }
         .navigationBarBackButtonHidden()
         .customBottomSheet(isPresented: $isPresenting) {
-            Text("BottomSheet")
-                .frame(height: 150)
-                .background(.white)
+            SelectCategoryView()
         }
     }
+    
 }
 
 #Preview {
     LogWritingView(
         store: Store(
-            initialState: LogWritingReducer.LogWritingState(
+            initialState: LogWritingStore.State(
                 type: .good
-            ),
-            reducer: {
-                
-            }
-        )
+            )
+        ) {
+            LogWritingStore()
+        }
     )
 }

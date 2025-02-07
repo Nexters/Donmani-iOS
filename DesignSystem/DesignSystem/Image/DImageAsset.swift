@@ -29,7 +29,9 @@ public enum DImageAsset: String {
     case setting = "Setting"
     
     // Image 28
-    case addLog = "AddLog"
     case plus = "Plus"
+    case close = "Close"
     
+    // Image 32
+    case addLog = "AddLog"
 }
