@@ -11,9 +11,10 @@ import DesignSystem
 
 struct LogView: View {
     @Environment(\.dismiss) private var dismiss
-    @Bindable var store: StoreOf<LogReducer>
+    @Bindable var store: StoreOf<LogStore>
     
     var body: some View {
+        
         ZStack {
             BackgroundView()
             VStack(
@@ -46,28 +47,10 @@ struct LogView: View {
                     spacing: .s4
                 ) {
                     LogButton(title: "행복") {
-                        LogWritingView(
-                            store: Store(
-                                initialState: LogWritingReducer.LogWritingState(
-                                    type: .good
-                                ),
-                                reducer: {
-                                    
-                                }
-                            )
-                        )
+                        LogWritingStore.view(type: .good)
                     }
                     LogButton(title: "후회") {
-                        LogWritingView(
-                            store: Store(
-                                initialState: LogWritingReducer.LogWritingState(
-                                    type: .bad
-                                ),
-                                reducer: {
-                                    
-                                }
-                            )
-                        )
+                        LogWritingStore.view(type: .bad)
                     }
                     LogEmptyButton()
                 }
@@ -82,7 +65,7 @@ struct LogView: View {
                         .padding(8)
                     Button {
                         
-                    } label: { 
+                    } label: {
                         ZStack {
                             RoundedRectangle(
                                 cornerRadius: .s5,
@@ -107,13 +90,12 @@ struct LogView: View {
 #Preview {
     LogView(
         store: Store(
-            initialState: LogReducer.LogState(
+            initialState: LogStore.State(
                 isCompleteToday: false,
                 isCompleteYesterday: false
-            ),
-            reducer: {
-                
-            }
-        )
+            )
+        ) {
+            LogStore()
+        }
     )
 }

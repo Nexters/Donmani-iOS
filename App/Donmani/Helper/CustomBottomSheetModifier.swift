@@ -1,5 +1,5 @@
 //
-//  SelectCategoryView.swift
+//  CustomBottomSheetModifier.swift
 //  Donmani
 //
 //  Created by 문종식 on 2/6/25.
@@ -32,9 +32,6 @@ struct CustomBottomSheetModifier<SheetContent: View>: ViewModifier {
 
                 VStack {
                     sheetContent()
-                        .background(.ultraThinMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .padding()
                 }
                 .frame(maxWidth: .infinity)
                 .transition(.move(edge: .bottom)) 

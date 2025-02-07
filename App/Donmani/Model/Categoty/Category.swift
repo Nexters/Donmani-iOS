@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Category: Equatable {
+struct LogCategory: Equatable {
     private let base: any CategoryProtocol
     
     init<T: CategoryProtocol>(_ base: T) {
@@ -18,7 +18,7 @@ struct Category: Equatable {
         return base.rawValue as? String
     }
     
-    static func == (lhs: Category, rhs: Category) -> Bool {
+    static func == (lhs: LogCategory, rhs: LogCategory) -> Bool {
         return lhs.base.rawValue as? String == rhs.base.rawValue as? String
     }
 }
