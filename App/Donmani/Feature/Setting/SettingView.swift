@@ -20,13 +20,8 @@ struct SettingView: View {
             VStack(alignment: .center, spacing: .defaultLayoutPadding) {
                 ZStack {
                     HStack {
-                        Button {
+                        DBackButton {
                             dismiss()
-                        } label: {
-                            DImage(.leftArrow).image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: .s3)
                         }
                         Spacer()
                     }

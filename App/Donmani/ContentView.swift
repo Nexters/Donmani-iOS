@@ -30,11 +30,26 @@ struct ContentView: View {
                         Spacer()
                         
                         AccessoryButton(asset: .calendar) {
-                            CoinTestView()
+                            Text("List")
                         }
                     }
                     .padding(.horizontal, 20)
+                    
                     Spacer()
+                    
+                    ZStack {
+                        DImage(.starBottle).image
+                            .resizable()
+                            .aspectRatio(0.75, contentMode: .fit)
+                            .frame(width: .screenWidth * 0.8)
+                        StarBottleView()
+                            .aspectRatio(0.75, contentMode: .fit)
+                            .frame(width: .screenWidth * 0.8)
+                    }
+                    
+                    
+                    Spacer()
+                    
                     RecordButton {
                         LogStore.view(
                             isCompleteToday: false,
@@ -69,7 +84,9 @@ struct ContentView: View {
         .frame(width: 48, height: 48)
     }
     
-    private func RecordButton(destination: () -> some View) -> some View {
+    private func RecordButton(
+        destination: @escaping () -> some View
+    ) -> some View {
         NavigationLink {
             destination()
         } label: {

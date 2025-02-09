@@ -12,6 +12,9 @@ public struct DColor {
     public static let backgroundTop: Color = Color("BackgroundTop", bundle: .designSystem)
     public static let backgroundBottom: Color = Color("BackgroundBottom", bundle: .designSystem)
     
+    public static let tempGood: Color = Color("TempGood", bundle: .designSystem)
+    public static let tempBad: Color = Color("TempBad", bundle: .designSystem)
+    
     public var type: DColorType
     public var color: Color {
         Color("\(type.name)\(type.brightness)", bundle: .designSystem)

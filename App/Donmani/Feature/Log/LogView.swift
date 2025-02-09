@@ -10,7 +10,7 @@ import ComposableArchitecture
 import DesignSystem
 
 struct LogView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss) var dismiss
     @Bindable var store: StoreOf<LogStore>
     
     var body: some View {
@@ -23,13 +23,8 @@ struct LogView: View {
             ) {
                 // Navigation Bar
                 HStack {
-                    Button {
-                        dismiss()
-                    } label: {
-                        DImage(.leftArrow).image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: .s3, height: .s3)
+                    DBackButton {
+                        store.send(.showCancelRecordBottomSheet)
                     }
                     Spacer()
                     DayToggle()
@@ -52,7 +47,11 @@ struct LogView: View {
                     LogButton(title: "후회") {
                         LogWritingStore.view(type: .bad)
                     }
-                    LogEmptyButton()
+                    LogEmptyButton(
+                        isChecked: store.isEmptyRecord
+                    ) {
+                        store.send(.showEmptyRecordBottomSheet)
+                    }
                 }
                 
                 Spacer()
@@ -63,25 +62,28 @@ struct LogView: View {
                         .font(DFont.font(.b2, weight: .semibold))
                         .foregroundStyle(DColor(.pupleBlue90).color)
                         .padding(8)
-                    Button {
-                        
-                    } label: {
-                        ZStack {
-                            RoundedRectangle(
-                                cornerRadius: .s5,
-                                style: .continuous
-                            )
-                            .fill(DColor(.deepBlue20).color)
-                            Text("저장하기")
-                                .font(DFont.font(.h3, weight: .bold))
-                                .foregroundStyle(DColor(.deepBlue70).color)
-                        }
+                    DButton(
+                        title: "저장하기",
+                        isEnabled: store.isSaveEnabled
+                    ) {
+                        store.send(.showSaveBottomSheet)
                     }
-                    .frame(height: 58)
                     .padding(8)
                 }
             }
             .padding(.horizontal, .defaultLayoutPadding)
+            
+            if store.isPresentingRecordEmpty {
+                RecordEmptyConfirmView()
+            }
+            
+            if store.isPresentingCancel {
+                CancelRecordConfirmView()
+            }
+            
+            if store.isPresentingRecordComplete {
+                RecordSaveConfirmView()
+            }
         }
         .navigationBarBackButtonHidden()
     }

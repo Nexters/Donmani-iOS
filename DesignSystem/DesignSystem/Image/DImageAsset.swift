@@ -16,6 +16,11 @@ public enum DImageAsset: String {
     case defaultBadSticker = "DefaultBadSticker"
     case goodLogSelected = "GoodLogSelected"
     case badLogSelected = "BadLogSelected"
+    case goodLog = "GoodLog"
+    case badLog = "BadLog"
+    case starBottle = "StarBottle"
+    case save = "Save"
+    case star = "Star"
     
     // Image 20
     case check = "Check"
