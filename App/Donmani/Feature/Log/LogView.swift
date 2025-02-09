@@ -41,17 +41,34 @@ struct LogView: View {
                     alignment: .leading,
                     spacing: .s4
                 ) {
-                    LogButton(title: "행복") {
-                        LogWritingStore.view(type: .good)
-                    }
-                    LogButton(title: "후회") {
-                        LogWritingStore.view(type: .bad)
-                    }
+                    //                    LogButton(title: "행복", type: .good)
+                    //                    {
+                    //                        LogWritingStore.view(type: .good)
+                    //                    }
+                    //                    LogButton(title: "후회", type: .bad)
+                    //                    {
+                    //                        LogWritingStore.view(type: .bad)
+                    //                        Text("후회")
+                    //                    }
+                    LogButton(type: .good)
+                    LogButton(type: .bad)
                     LogEmptyButton(
                         isChecked: store.isEmptyRecord
                     ) {
                         store.send(.showEmptyRecordBottomSheet)
                     }
+                }
+                .navigationDestination(for: RecordContentType.self) { recordType in
+                    LogWritingView(
+                        store: Store(
+                            initialState: LogWritingStore.State(
+                                type: recordType
+                            )
+                        ) {
+                            LogWritingStore()
+                        }
+                    )
+//                    LogWritingStore.view(type: recordType)
                 }
                 
                 Spacer()

@@ -36,12 +36,11 @@ extension LogView {
     }
     
     func LogButton(
-        title: String,
-        destination: @escaping () -> some View
+//        title: String,
+//        destination: () -> some View
+        type :RecordContentType
     ) -> some View {
-        NavigationLink {
-            destination()
-        } label: {
+        NavigationLink(value: type) {
             ZStack {
                 RoundedRectangle(
                     cornerRadius: .defaultLayoutPadding,
@@ -49,7 +48,7 @@ extension LogView {
                 )
                 .fill(.white.opacity(0.1))
                 HStack {
-                    Text(title)
+                    Text(type.title)
                         .font(DFont.font(.h3, weight: .bold))
                         .foregroundStyle(.white)
                     Spacer()
@@ -60,6 +59,27 @@ extension LogView {
                 .padding(.defaultLayoutPadding)
             }
         }
+//        NavigationLink {
+//            destination()
+//        } label: {
+//            ZStack {
+//                RoundedRectangle(
+//                    cornerRadius: .defaultLayoutPadding,
+//                    style: .continuous
+//                )
+//                .fill(.white.opacity(0.1))
+//                HStack {
+//                    Text(title)
+//                        .font(DFont.font(.h3, weight: .bold))
+//                        .foregroundStyle(.white)
+//                    Spacer()
+//                    DImage(.addLog).image
+//                        .resizable()
+//                        .frame(width: .s1, height: .s1)
+//                }
+//                .padding(.defaultLayoutPadding)
+//            }
+//        }
         .frame(height: 118)
     }
     

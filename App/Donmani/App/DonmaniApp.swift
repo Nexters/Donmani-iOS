@@ -10,12 +10,13 @@ import DesignSystem
 
 @main
 struct DonmaniApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .onAppear {
-                    DFont.loadFonts()
-                }
+            NavigationStack {
+                MainView()
+            }
         }
     }
 }
