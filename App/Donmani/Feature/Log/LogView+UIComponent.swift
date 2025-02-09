@@ -37,7 +37,7 @@ extension LogView {
     
     func LogButton(
         title: String,
-        destination: () -> some View
+        destination: @escaping () -> some View
     ) -> some View {
         NavigationLink {
             destination()
@@ -63,17 +63,31 @@ extension LogView {
         .frame(height: 118)
     }
     
-    func LogEmptyButton() -> some View {
+    func LogEmptyButton(
+        isChecked: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
         Button {
-            
+            action()
         } label: {
             HStack(spacing: 4) {
-                DImage(.uncheck).image
-                    .resizable()
-                    .frame(width: .s4, height: .s4)
+                if isChecked {
+                    DImage(.check).image
+                        .resizable()
+                        .frame(width: .s4, height: .s4)
+                } else {
+                    DImage(.uncheck).image
+                        .resizable()
+                        .frame(width: .s4, height: .s4)
+                }
+                
                 Text("무소비 했어요")
                     .font(DFont.font(.b2, weight: .semibold))
-                    .foregroundStyle(DColor(.deepBlue80).color)
+                    .foregroundStyle(
+                        isChecked
+                        ? DColor(.gray95).color
+                        : DColor(.deepBlue80).color
+                    )
             }
         }
     }

@@ -12,8 +12,6 @@ import DesignSystem
 struct LogWritingView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<LogWritingStore>
-    @State var isPresenting: Bool = false
-    @State var text: String = ""
     
     var body: some View {
         ZStack {
@@ -22,13 +20,8 @@ struct LogWritingView: View {
                 // Navigation Bar
                 ZStack {
                     HStack {
-                        Button {
+                        DBackButton {
                             dismiss()
-                        } label: {
-                            DImage(.leftArrow).image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: .s3)
                         }
                         Spacer()
                     }
@@ -37,16 +30,16 @@ struct LogWritingView: View {
                         .foregroundStyle(.white)
                 }
                 .padding(.vertical, 14)
+                
                 VStack(spacing: .defaultLayoutPadding) {
                     Button {
-                        isPresenting.toggle()
+                        store.send(.openCategory)
                     } label: {
                         store.sticker
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                     }
                     .frame(width: .stickerSize, height: .stickerSize)
-                    
                     
                     Text("카테고리")
                         .font(DFont.font(.h3, weight: .bold))
@@ -71,7 +64,7 @@ struct LogWritingView: View {
                         
                         HStack {
                             Spacer()
-                            Text("\(store.text.count)/100")
+                            Text("\(store.textCount)/100")
                                 .font(DFont.font(.b2))
                                 .foregroundStyle(DColor(.deepBlue80).color)
                         }
@@ -79,13 +72,14 @@ struct LogWritingView: View {
                     .padding(8)
                 }
                 Spacer()
+                
+                // Complete Button
                 HStack {
                     Spacer()
                     Button {
-                        
+                        dismiss()
                     } label: {
                         ZStack {
-                            // TODO: - Edit Color
                             Capsule(style: .circular)
                                 .fill(DColor(.gray95).color)
                             Text("완료")
@@ -94,13 +88,19 @@ struct LogWritingView: View {
                         }
                     }
                     .frame(width: 60, height: 40)
+                    .padding(.bottom, 8)
                 }
             }
             .padding(.horizontal, .defaultLayoutPadding)
+            if store.isPresentingSelectCategory {
+                self.SelectCategoryView()
+            }
         }
         .navigationBarBackButtonHidden()
-        .customBottomSheet(isPresented: $isPresenting) {
-            SelectCategoryView()
+        .onAppear {
+            if store.text.isEmpty {
+                store.send(.openCategory)
+            }
         }
     }
     
@@ -116,4 +116,17 @@ struct LogWritingView: View {
             LogWritingStore()
         }
     )
+}
+
+#Preview {
+    LogWritingView(
+        store: Store(
+            initialState: LogWritingStore.State(
+                type: .bad
+            )
+        ) {
+            LogWritingStore()
+        }
+    )
+    .SelectCategoryView()
 }
