@@ -92,16 +92,16 @@ struct LogWritingView: View {
                 }
             }
             .padding(.horizontal, .defaultLayoutPadding)
+//            .onAppear {
+//                if store.text.isEmpty {
+//                    store.send(.openCategory)
+//                }
+//            }
             if store.isPresentingSelectCategory {
                 self.SelectCategoryView()
             }
         }
         .navigationBarBackButtonHidden()
-        .onAppear {
-            if store.text.isEmpty {
-                store.send(.openCategory)
-            }
-        }
     }
     
 }

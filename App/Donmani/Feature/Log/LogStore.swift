@@ -31,6 +31,10 @@ struct LogStore {
         var isPresentingRecordEmpty: Bool = false
         var isPresentingRecordComplete: Bool = false
         
+        var showDayToggle: Bool {
+            return !(isCompleteToday || isCompleteYesterday)
+        }
+        
         var isSaveEnabled: Bool {
             return (goodRecord != nil && badRecord != nil) || isEmptyRecord
         }
@@ -122,16 +126,16 @@ struct LogStore {
     
     
     // MARK: - View
-    public static func view(isCompleteToday: Bool, isCompleteYesterday: Bool) -> LogView {
-        LogView(
-            store: Store(
-                initialState: LogStore.State(
-                    isCompleteToday: isCompleteToday,
-                    isCompleteYesterday: isCompleteYesterday
-                )
-            ) {
-                LogStore()
-            }
-        )
-    }
+//    public static func view(isCompleteToday: Bool, isCompleteYesterday: Bool) -> LogView {
+//        LogView(
+//            store: Store(
+//                initialState: LogStore.State(
+//                    isCompleteToday: isCompleteToday,
+//                    isCompleteYesterday: isCompleteYesterday
+//                )
+//            ) {
+//                LogStore()
+//            }
+//        )
+//    }
 }

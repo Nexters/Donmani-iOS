@@ -84,17 +84,17 @@ struct LogWritingStore {
     }
     
     // MARK: - View
-    public static func view(type: RecordContentType) -> LogWritingView {
-        LogWritingView(
-            store: Store(
-                initialState: LogWritingStore.State(
-                    type: type
-                )
-            ) {
-                LogWritingStore()
-            }
-        )
-    }
+//    public static func view(type: RecordContentType) -> LogWritingView {
+//        LogWritingView(
+//            store: Store(
+//                initialState: LogWritingStore.State(
+//                    type: type
+//                )
+//            ) {
+//                LogWritingStore()
+//            }
+//        )
+//    }
 }
 
 
