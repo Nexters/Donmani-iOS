@@ -1,5 +1,5 @@
 //
-//  LogStore.swift
+//  RecordEntryPointStore.swift
 //  Donmani
 //
 //  Created by 문종식 on 2/5/25.
@@ -8,7 +8,7 @@
 import ComposableArchitecture
 
 @Reducer
-struct LogStore {
+struct RecordEntryPointStore {
     
     // MARK: - State
     @ObservableState
@@ -23,7 +23,7 @@ struct LogStore {
         
         var goodRecord: RecordContent?
         var badRecord: RecordContent?
-        var isEmptyRecord: Bool = false
+        var isCheckedEmptyRecord: Bool = false
         
         var dayType: DayType = .today
         
@@ -31,24 +31,19 @@ struct LogStore {
         var isPresentingRecordEmpty: Bool = false
         var isPresentingRecordComplete: Bool = false
         
-        var showDayToggle: Bool {
-            return !(isCompleteToday || isCompleteYesterday)
-        }
+//        var logWritingState: LogWritingStore.State? //  = (type: .good)
         
-        var isSaveEnabled: Bool {
-            return (goodRecord != nil && badRecord != nil) || isEmptyRecord
-        }
+        var showDayToggle: Bool
+        var title: String
         
-        var title: String {
-            return "\(dayType == .today ? "오늘" : "어제") 소비 정리해 볼까요?"
-        }
+        var isSaveEnabled: Bool = false
         
         init(isCompleteToday: Bool, isCompleteYesterday: Bool) {
             self.isCompleteToday = isCompleteToday
             self.isCompleteYesterday = isCompleteYesterday
-            if self.isCompleteToday {
-                self.dayType = .yesterday
-            }
+            self.dayType = isCompleteToday ? .yesterday : .today
+            self.title = "\(isCompleteToday ? "어제" : "오늘") 소비 정리해 볼까요?"
+            self.showDayToggle = !(isCompleteToday || isCompleteYesterday)
         }
     }
     
@@ -58,12 +53,16 @@ struct LogStore {
         case dismissCancelRecordBottomSheet
         case cancelRecording
         
-        case logGood
-        case logBad
+        case startLogWriting(RecordContentType)
         
-        case showEmptyRecordBottomSheet
+        case touchEmptyRecordButton
         case dismissEmtpyRecordBottomSheet
         case recordEmpty
+        
+        case setGoodRecord(RecordContent)
+        case setBadRecord(RecordContent)
+        case setRecord(RecordWritingStore.Action)
+        case checkRecord
         
         case showSaveBottomSheet
         case dismissSaveBottomSheet
@@ -73,8 +72,11 @@ struct LogStore {
     }
     
     // MARK: - Reducer
-    var body: some Reducer<State, Action> {
+    var body: some ReducerOf<Self> {
         Reduce { state, action in
+//            print("State ---- \n", state)
+            print("Action ---- \n", action)
+            print(#function, "============================\n\n")
             switch action {
             case .showCancelRecordBottomSheet:
                 state.isPresentingCancel = true
@@ -86,14 +88,14 @@ struct LogStore {
                 state.isPresentingCancel = false
                 return .none
                 
-            case .logGood:
-                return .none
-            case .logBad:
+            case .startLogWriting(let type):
+//                state.logWritingState?.type = type
                 return .none
             
-            case .showEmptyRecordBottomSheet:
-                if state.isEmptyRecord {
-                    state.isEmptyRecord = false
+            case .touchEmptyRecordButton:
+                if state.isCheckedEmptyRecord {
+                    state.isCheckedEmptyRecord = false
+                    state.isSaveEnabled = false
                 } else {
                     state.isPresentingRecordEmpty = true
                 }
@@ -104,7 +106,37 @@ struct LogStore {
                 return .none
                 
             case .recordEmpty:
-                state.isEmptyRecord = true
+                state.isCheckedEmptyRecord = true
+                state.isSaveEnabled = true
+                state.isPresentingRecordEmpty = false
+                return .none
+
+            case .setGoodRecord(let recordContent):
+                state.goodRecord = recordContent
+                return .run { send in
+                    await send(.checkRecord)
+                }
+            case .setBadRecord(let recordContent):
+                state.badRecord = recordContent
+                return .run { send in
+                    await send(.checkRecord)
+                }
+            case .setRecord(.sendToLogView(let content)):
+                
+                return .run { send in
+                    switch content.flag {
+                    case .good:
+                        await send(.setGoodRecord(content))
+                    case .bad:
+                        await send(.setBadRecord(content))
+                    }
+                }
+            case .checkRecord:
+                if (state.badRecord != nil && state.goodRecord != nil) {
+                    state.isSaveEnabled = true
+                } else {
+                    state.isSaveEnabled = false
+                }
                 return .none
                 
             case .showSaveBottomSheet:
@@ -113,29 +145,17 @@ struct LogStore {
             case .dismissSaveBottomSheet:
                 state.isPresentingRecordComplete = false
                 return .none
-                
             case .save:
                 state.isPresentingRecordComplete = false
                 return .none
                 
             case .toggleDay:
                 return .none
+                
+            default:
+                return .none
             }
         }
     }
     
-    
-    // MARK: - View
-//    public static func view(isCompleteToday: Bool, isCompleteYesterday: Bool) -> LogView {
-//        LogView(
-//            store: Store(
-//                initialState: LogStore.State(
-//                    isCompleteToday: isCompleteToday,
-//                    isCompleteYesterday: isCompleteYesterday
-//                )
-//            ) {
-//                LogStore()
-//            }
-//        )
-//    }
 }

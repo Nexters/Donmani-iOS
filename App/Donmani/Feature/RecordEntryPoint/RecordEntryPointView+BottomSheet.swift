@@ -1,5 +1,5 @@
 //
-//  LogView+BottomSheet.swift
+//  RecordEntryPointView+BottomSheet.swift
 //  Donmani
 //
 //  Created by 문종식 on 2/9/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import DesignSystem
 
-extension LogView {
+extension RecordEntryPointView {
     func CancelRecordConfirmView() -> some View {
         BottomSheetView(
             closeAction: { store.send(.dismissCancelRecordBottomSheet) }
@@ -26,7 +26,9 @@ extension LogView {
                 
                 HStack {
                     Button {
-                        dismissSheet()
+                        dismissSheet {
+                            store.send(.dismissCancelRecordBottomSheet)
+                        }
                     } label: {
                         ZStack {
                             RoundedRectangle(
@@ -42,7 +44,7 @@ extension LogView {
                     }
                     
                     Button {
-                        store.send(.cancelRecording)
+//                        store.send(.cancelRecording)
                         dismiss()
                     } label: {
                         ZStack {
@@ -79,7 +81,9 @@ extension LogView {
                 }
                 HStack {
                     Button {
-                        dismissSheet()
+                        dismissSheet {
+                            store.send(.dismissEmtpyRecordBottomSheet)
+                        }
                     } label: {
                         ZStack {
                             RoundedRectangle(
@@ -95,8 +99,9 @@ extension LogView {
                     }
                     
                     Button {
-                        store.send(.recordEmpty)
-                        dismissSheet()
+                        dismissSheet {
+                            store.send(.recordEmpty)
+                        }
                     } label: {
                         ZStack {
                             RoundedRectangle(
@@ -142,7 +147,9 @@ extension LogView {
                     isEnabled: true
                 ) {
                     store.send(.save)
-                    dismissSheet()
+//                    dismissSheet {
+//                        store.send(.dismissSaveBottomSheet)
+//                    }
                     dismiss()
                 }
             }

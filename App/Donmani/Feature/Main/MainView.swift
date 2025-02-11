@@ -31,16 +31,22 @@ struct MainView: View {
                     AccessoryButton(asset: .calendar) {
                         Text("List")
                     }
+                    .hidden()
                 }
                 .padding(.horizontal, 20)
                 
                 Spacer()
                 
                 ZStack {
+                    DImage(.starBottleBackground).image
+                        .resizable()
+                        .aspectRatio(0.75, contentMode: .fit)
+                        .frame(width: .screenWidth * 0.9)
                     DImage(.starBottle).image
                         .resizable()
                         .aspectRatio(0.75, contentMode: .fit)
                         .frame(width: .screenWidth * 0.8)
+                        .opacity(0.5)
                     StarBottleView()
                         .aspectRatio(0.75, contentMode: .fit)
                         .frame(width: .screenWidth * 0.8)
@@ -51,14 +57,14 @@ struct MainView: View {
                 RecordButton(value: name)
             }
             .navigationDestination(for: String.self) { _ in
-                LogView(
+                RecordEntryPointView(
                     store: Store(
-                        initialState: LogStore.State(
+                        initialState: RecordEntryPointStore.State(
                             isCompleteToday: false,
                             isCompleteYesterday: false
                         )
                     ) {
-                        LogStore()
+                        RecordEntryPointStore()
                     }
                 )
             }

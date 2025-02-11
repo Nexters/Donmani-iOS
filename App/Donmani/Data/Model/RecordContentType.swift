@@ -5,7 +5,7 @@
 //  Created by 문종식 on 2/8/25.
 //
 
-enum RecordContentType: Codable {
+enum RecordContentType: Codable, Equatable {
     case good
     case bad
     

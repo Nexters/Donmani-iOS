@@ -9,6 +9,7 @@ import SpriteKit
 import DesignSystem
 
 extension StarScene {
+    public static let starTexture = SKTexture(image: DImage(.star).uiImage)
     public func addGroundNode(width: CGFloat, height: CGFloat) {
         self.backgroundColor = .clear
         let nodeSize = CGSize(width: size.width, height: size.width * 1.15)
@@ -27,11 +28,10 @@ extension StarScene {
     }
     
     public func addStarNode(width: CGFloat, height: CGFloat) {
-        let starTexture = SKTexture(image: DImage(.star).uiImage)
-        let starNode = SKSpriteNode(texture: starTexture)
+        let starNode = SKSpriteNode(texture: Self.starTexture)
         starNode.size = CGSize(width: width/6, height: width/6)
         starNode.position = CGPoint(x: width / 2, y: height / 2)
-        starNode.physicsBody = SKPhysicsBody(texture: starTexture, size: starNode.size)
+        starNode.physicsBody = SKPhysicsBody(texture: Self.starTexture, size: starNode.size)
         starNode.physicsBody?.affectedByGravity = true
         starNode.physicsBody?.isDynamic = true
         starNode.physicsBody?.categoryBitMask = 0x1

@@ -10,12 +10,12 @@ import DesignSystem
 
 struct BottomSheetView<Content: View>: View {
     let closeAction: () -> Void
-    let content: (@escaping () -> Void) -> Content
+    let content: (@escaping (@escaping () -> Void) -> Void) -> Content
     @State private var isPresented = false
     
     init(
         closeAction: @escaping () -> Void,
-        @ViewBuilder _ content: @escaping (@escaping () -> Void) -> Content
+        @ViewBuilder _ content: @escaping (@escaping (@escaping () -> Void) -> Void) -> Content
     ) {
         self.closeAction = closeAction
         self.content = content
@@ -26,7 +26,7 @@ struct BottomSheetView<Content: View>: View {
             Color(.black)
                 .opacity(isPresented ? 0.6 : 0)
                 .onTapGesture {
-                    dismiss()
+                    dismiss(nil)
                 }
                 .animation(.easeInOut(duration: 0.3), value: isPresented)
                 .ignoresSafeArea()
@@ -37,7 +37,7 @@ struct BottomSheetView<Content: View>: View {
                         HStack {
                             Spacer()
                             Button {
-                                dismiss()
+                                dismiss(nil)
                             } label: {
                                 DImage(.close).image
                                     .resizable()
@@ -46,7 +46,9 @@ struct BottomSheetView<Content: View>: View {
                         }
                         .padding(.bottom, .s3)
                         
-                        content(dismiss)
+                        content { action in
+                            dismiss(action)
+                        }
                     }
                     .padding(.defaultLayoutPadding)
                     .background {
@@ -74,11 +76,15 @@ struct BottomSheetView<Content: View>: View {
         }
     }
     
-    private func dismiss() {
+    private func dismiss(_ action: (() -> Void)?) {
         withAnimation {
             isPresented.toggle()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                closeAction()
+                if let action = action {
+                    action()
+                } else {
+                    closeAction()
+                }
             }
         }
     }
