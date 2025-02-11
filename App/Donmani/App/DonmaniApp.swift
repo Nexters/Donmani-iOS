@@ -6,17 +6,18 @@
 //
 
 import SwiftUI
-import DesignSystem
 
 @main
 struct DonmaniApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @State var navigationPath = NavigationPath()
     
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
+            NavigationStack(path: $navigationPath) {
                 MainView()
             }
+//            .environmentObject(<#T##object: ObservableObject##ObservableObject#>)
         }
     }
 }

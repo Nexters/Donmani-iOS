@@ -32,7 +32,7 @@ struct StarBottleView: View {
                 .ignoresSiblingOrder
             ]
         )
-        .background(Color.black.opacity(0.1))
+        .background(Color.clear)
         .onAppear {
             starScene.addGroundNode(
                 width: width,

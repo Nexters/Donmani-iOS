@@ -1,5 +1,5 @@
 //
-//  LogWritingView.swift
+//  RecordWritingView.swift
 //  Donmani
 //
 //  Created by 문종식 on 2/6/25.
@@ -9,9 +9,9 @@ import SwiftUI
 import ComposableArchitecture
 import DesignSystem
 
-struct LogWritingView: View {
+struct RecordWritingView: View {
     @Environment(\.dismiss) private var dismiss
-    @Bindable var store: StoreOf<LogWritingStore>
+    @Bindable var store: StoreOf<RecordWritingStore>
     
     var body: some View {
         ZStack {
@@ -41,10 +41,10 @@ struct LogWritingView: View {
                     }
                     .frame(width: .stickerSize, height: .stickerSize)
                     
-                    Text("카테고리")
+                    Text(store.savedCategory?.title ?? "")
                         .font(DFont.font(.h3, weight: .bold))
                         .foregroundStyle(.white)
-                        .opacity((store.selectedCategory == nil) ? 0 : 1)
+                        .opacity((store.savedCategory == nil) ? 0 : 1)
                     
                     VStack(spacing: 4) {
                         TextField(
@@ -76,27 +76,21 @@ struct LogWritingView: View {
                 // Complete Button
                 HStack {
                     Spacer()
-                    Button {
+                    SaveButton(
+                        iaActive: store.isSaveEnabled
+                    ) {
+                        store.send(.save)
                         dismiss()
-                    } label: {
-                        ZStack {
-                            Capsule(style: .circular)
-                                .fill(DColor(.gray95).color)
-                            Text("완료")
-                                .font(DFont.font(.b1, weight: .bold))
-                                .foregroundStyle(DColor(.deepBlue10).color)
-                        }
                     }
-                    .frame(width: 60, height: 40)
-                    .padding(.bottom, 8)
                 }
             }
             .padding(.horizontal, .defaultLayoutPadding)
-//            .onAppear {
-//                if store.text.isEmpty {
-//                    store.send(.openCategory)
-//                }
-//            }
+            .onAppear {
+                print(#function, self)
+                if store.text.isEmpty {
+                    store.send(.openCategory)
+                }
+            }
             if store.isPresentingSelectCategory {
                 self.SelectCategoryView()
             }
@@ -107,26 +101,43 @@ struct LogWritingView: View {
 }
 
 #Preview {
-    LogWritingView(
+    RecordWritingView(
         store: Store(
-            initialState: LogWritingStore.State(
+            initialState: RecordWritingStore.State(
                 type: .good
             )
         ) {
-            LogWritingStore()
+            RecordWritingStore()
         }
+//        ,logStore: Store(
+//            initialState: LogStore.State(
+//                isCompleteToday: false,
+//                isCompleteYesterday: false
+//            )
+//        ) {
+//            LogStore()
+//        }
     )
 }
 
 #Preview {
-    LogWritingView(
+    RecordWritingView(
         store: Store(
-            initialState: LogWritingStore.State(
+            initialState: RecordWritingStore.State(
                 type: .bad
             )
         ) {
-            LogWritingStore()
+            RecordWritingStore()
         }
+//        ,
+//        logStore: Store(
+//            initialState: LogStore.State(
+//                isCompleteToday: false,
+//                isCompleteYesterday: false
+//            )
+//        ) {
+//            LogStore()
+//        }
     )
     .SelectCategoryView()
 }
