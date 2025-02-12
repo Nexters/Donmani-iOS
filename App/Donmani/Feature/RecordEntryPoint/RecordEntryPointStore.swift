@@ -30,8 +30,9 @@ struct RecordEntryPointStore {
         var isPresentingCancel: Bool = false
         var isPresentingRecordEmpty: Bool = false
         var isPresentingRecordComplete: Bool = false
+        var isPresentingRecordWritingView: Bool = false
         
-//        var logWritingState: LogWritingStore.State? //  = (type: .good)
+        var recordWritingState = RecordWritingStore.State(type: .good)
         
         var showDayToggle: Bool
         var title: String
@@ -48,12 +49,14 @@ struct RecordEntryPointStore {
     }
     
     // MARK: - Action
-    enum Action: Equatable {
+    enum Action: BindableAction, Equatable {
         case showCancelRecordBottomSheet
         case dismissCancelRecordBottomSheet
         case cancelRecording
         
-        case startLogWriting(RecordContentType)
+        case startRecordWriting(RecordContentType)
+        
+        case binding(BindingAction<State>)
         
         case touchEmptyRecordButton
         case dismissEmtpyRecordBottomSheet
@@ -73,10 +76,19 @@ struct RecordEntryPointStore {
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
+        Scope(
+            state: \.recordWritingState,
+            action: \.setRecord
+        ) {
+            RecordWritingStore()
+        }
+        
+        BindingReducer()
+        
         Reduce { state, action in
-//            print("State ---- \n", state)
-            print("Action ---- \n", action)
-            print(#function, "============================\n\n")
+            //            print("State ---- \n", state)
+            //            print("Action ---- \n", action)
+            //            print(#function, "============================\n\n")
             switch action {
             case .showCancelRecordBottomSheet:
                 state.isPresentingCancel = true
@@ -88,10 +100,13 @@ struct RecordEntryPointStore {
                 state.isPresentingCancel = false
                 return .none
                 
-            case .startLogWriting(let type):
-//                state.logWritingState?.type = type
+            case .startRecordWriting(let type):
+                state.recordWritingState = RecordWritingStore.State(type: type)
+                state.isPresentingRecordWritingView = true
                 return .none
-            
+            case .binding:
+                return .none
+                
             case .touchEmptyRecordButton:
                 if state.isCheckedEmptyRecord {
                     state.isCheckedEmptyRecord = false
@@ -109,8 +124,10 @@ struct RecordEntryPointStore {
                 state.isCheckedEmptyRecord = true
                 state.isSaveEnabled = true
                 state.isPresentingRecordEmpty = false
+                state.goodRecord = nil
+                state.badRecord = nil
                 return .none
-
+                
             case .setGoodRecord(let recordContent):
                 state.goodRecord = recordContent
                 return .run { send in
@@ -121,15 +138,19 @@ struct RecordEntryPointStore {
                 return .run { send in
                     await send(.checkRecord)
                 }
-            case .setRecord(.sendToLogView(let content)):
-                
-                return .run { send in
-                    switch content.flag {
-                    case .good:
-                        await send(.setGoodRecord(content))
-                    case .bad:
-                        await send(.setBadRecord(content))
+            case .setRecord(let event):
+                switch event {
+                case .sendToLogView(let content):
+                    return .run { send in
+                        switch content.flag {
+                        case .good:
+                            await send(.setGoodRecord(content))
+                        case .bad:
+                            await send(.setBadRecord(content))
+                        }
                     }
+                default:
+                    return .none
                 }
             case .checkRecord:
                 if (state.badRecord != nil && state.goodRecord != nil) {

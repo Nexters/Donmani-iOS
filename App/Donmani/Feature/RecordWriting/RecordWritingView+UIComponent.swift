@@ -17,12 +17,12 @@ extension RecordWritingView {
     func SelectCategoryView() -> some View {
         BottomSheetView(
             closeAction: { store.send(.closeCategory) }
-        ) { closeAction in
+        ) { dismissSheet in
             Text("어떤 \(store.type.title)였나요?")
                 .font(DFont.font(.h2, weight: .bold))
                 .foregroundStyle(.white)
             LazyVGrid(
-                columns: LogWritingView.categoryColumns,
+                columns: RecordWritingView.categoryColumns,
                 spacing: .s3
             ) {
                 ForEach(store.category.indices, id: \.self) { i in
@@ -39,7 +39,7 @@ extension RecordWritingView {
                 isEnabled: store.selectedCategory != nil
             ) {
                 if let selectedCategory = store.selectedCategory {
-                    closeAction {
+                    dismissSheet {
                         store.send(.saveCategory(selectedCategory))
                     }
                 }
