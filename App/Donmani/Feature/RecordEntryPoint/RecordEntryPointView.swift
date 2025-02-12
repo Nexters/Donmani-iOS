@@ -42,12 +42,7 @@ struct RecordEntryPointView: View {
                         alignment: .leading,
                         spacing: .defaultLayoutPadding
                     ) {
-                        if store.isCheckedEmptyRecord {
-                            EmptyRecordView()
-                        } else {
-                            RecordWritingButton(type: .good)
-                            RecordWritingButton(type: .bad)
-                        }
+                        RecordArea()
                         EmptyRecordButton(isChecked: store.isCheckedEmptyRecord) {
                             store.send(.touchEmptyRecordButton)
                         }
@@ -95,7 +90,10 @@ struct RecordEntryPointView: View {
         }
         .navigationDestination(for: RecordContentType.self) { recordType in
             
-            
+        }
+        .navigationDestination(isPresented: $store.isPresentingRecordWritingView) {
+            let recordWritingStore = store.scope(state: \.recordWritingState, action: \.setRecord)
+            return RecordWritingView(store: recordWritingStore)
         }
         .navigationBarBackButtonHidden()
     }

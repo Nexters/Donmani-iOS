@@ -41,7 +41,7 @@ struct RecordWritingView: View {
                     }
                     .frame(width: .stickerSize, height: .stickerSize)
                     
-                    Text(store.savedCategory?.title ?? "")
+                    Text(store.savedCategory?.title ?? " ")
                         .font(DFont.font(.h3, weight: .bold))
                         .foregroundStyle(.white)
                         .opacity((store.savedCategory == nil) ? 0 : 1)
@@ -86,7 +86,7 @@ struct RecordWritingView: View {
             }
             .padding(.horizontal, .defaultLayoutPadding)
             .onAppear {
-                print(#function, self)
+//                print(#function, self)
                 if store.text.isEmpty {
                     store.send(.openCategory)
                 }
@@ -102,10 +102,7 @@ struct RecordWritingView: View {
 
 #Preview {
     RecordWritingView(
-        store: Store(
-            initialState: RecordWritingStore.State(
-                type: .good
-            )
+        store: Store(initialState: RecordWritingStore.State(type: .good)
         ) {
             RecordWritingStore()
         }
@@ -122,10 +119,7 @@ struct RecordWritingView: View {
 
 #Preview {
     RecordWritingView(
-        store: Store(
-            initialState: RecordWritingStore.State(
-                type: .bad
-            )
+        store: Store(initialState: RecordWritingStore.State(type: .good)
         ) {
             RecordWritingStore()
         }

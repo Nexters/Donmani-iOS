@@ -40,7 +40,10 @@ extension RecordEntryPointView {
     func RecordWritingButton(
         type: RecordContentType
     ) -> some View {
-        NavigationLink(value: type) {
+        Button {
+            store.send(.startRecordWriting(type))
+            //        NavigationLink(value: type) {
+        } label: {
             ZStack {
                 RoundedRectangle(
                     cornerRadius: .s3,
@@ -60,6 +63,19 @@ extension RecordEntryPointView {
             }
         }
         .frame(height: 118)
+    }
+    
+    func RecordView(
+        record: RecordContent
+    ) -> some View {
+        RecordContentView(
+            record: record
+        )
+        .background {
+            RecordBackgroundView(
+                categoryColor: (record.flag == .good ? DColor.tempGood : DColor.tempBad)
+            )
+        }
     }
     
     func RecordBackgroundView(
@@ -108,11 +124,6 @@ extension RecordEntryPointView {
             }
         }
         .padding(.defaultLayoutPadding)
-        .background {
-            RecordBackgroundView(
-                categoryColor: (record.flag == .good ? DColor.tempGood : DColor.tempBad)
-            )
-        }
     }
     
     func EmptyRecordButton(
@@ -162,5 +173,44 @@ extension RecordEntryPointView {
             .padding(.defaultLayoutPadding + 8)
         }
         .frame(height: 256)
+    }
+    
+    func RecordArea() -> some View {
+        Group {
+            if store.isSaveEnabled {
+                if store.isCheckedEmptyRecord {
+                    EmptyRecordView()
+                } else {
+                    VStack {
+                        RecordContentView(record: store.goodRecord!)
+                        RecordContentView(record: store.badRecord!)
+                    }
+                    .background(
+                        RoundedRectangle(
+                            cornerRadius: .defaultLayoutPadding,
+                            style: .continuous
+                        )
+                        .fill(
+                            LinearGradient(
+                                colors: [DColor.tempGood, DColor.tempBad]
+                                , startPoint: .topLeading
+                                , endPoint: .bottomTrailing
+                            )
+                        )
+                    )
+                }
+            } else {
+                if let goodRecord = store.goodRecord {
+                    RecordView(record: goodRecord)
+                } else {
+                    RecordWritingButton(type: .good)
+                }
+                if let badRecord = store.badRecord {
+                    RecordView(record: badRecord)
+                } else {
+                    RecordWritingButton(type: .bad)
+                }
+            }
+        }
     }
 }
