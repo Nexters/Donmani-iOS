@@ -88,9 +88,9 @@ struct RecordEntryPointView: View {
                 RecordSaveConfirmView()
             }
         }
-        .navigationDestination(for: RecordContentType.self) { recordType in
-            
-        }
+//        .navigationDestination(for: RecordContentType.self) { recordType in
+//            
+//        }
         .navigationDestination(isPresented: $store.isPresentingRecordWritingView) {
             let recordWritingStore = store.scope(state: \.recordWritingState, action: \.setRecord)
             return RecordWritingView(store: recordWritingStore)

@@ -42,7 +42,6 @@ extension RecordEntryPointView {
     ) -> some View {
         Button {
             store.send(.startRecordWriting(type))
-            //        NavigationLink(value: type) {
         } label: {
             ZStack {
                 RoundedRectangle(
@@ -105,7 +104,7 @@ extension RecordEntryPointView {
                     .foregroundStyle(.white)
                 Spacer()
                 Button {
-                    
+                    store.send(.editRecordWriting(record))
                 } label: {
                     DImage(.edit).image
                         .resizable()

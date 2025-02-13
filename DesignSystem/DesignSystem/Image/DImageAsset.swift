@@ -35,6 +35,7 @@ public enum DImageAsset: String {
     case rightArrow = "RightArrow"
     case calendar = "Calendar"
     case setting = "Setting"
+    case textMaxLength = "TextMaxLength"
     
     // Image 28
     case plus = "Plus"

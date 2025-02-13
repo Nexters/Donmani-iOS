@@ -12,6 +12,12 @@ struct RecordContentDTO: Codable {
     var category: RecordCategory
     var memo: String
     
+    init(flag: RecordContentType, category: RecordCategory, memo: String) {
+        self.flag = flag
+        self.category = category
+        self.memo = memo
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.flag = try container.decode(RecordContentType.self, forKey: .flag)

@@ -14,6 +14,7 @@ public struct DColor {
     
     public static let tempGood: Color = Color("TempGood", bundle: .designSystem)
     public static let tempBad: Color = Color("TempBad", bundle: .designSystem)
+    public static let textGuide: Color = Color("TextGuide", bundle: .designSystem)
     
     public var type: DColorType
     public var color: Color {

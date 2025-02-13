@@ -92,4 +92,20 @@ extension RecordWritingView {
         .frame(width: 60, height: 40)
         .padding(.bottom, 8)
     }
+    
+    func TextGuideView() -> some View {
+        HStack(spacing: 8) {
+            DImage(.textMaxLength).image
+                .resizable()
+                .frame(width: .s3, height: .s3)
+            Text("최대로 작성했어요")
+                .font(DFont.font(.b2, weight: .bold))
+                .foregroundStyle(.white)
+        }
+        .padding(.s5)
+        .background {
+            Capsule(style: .continuous)
+                .fill(DColor.textGuide.opacity(0.9))
+        }
+    }
 }

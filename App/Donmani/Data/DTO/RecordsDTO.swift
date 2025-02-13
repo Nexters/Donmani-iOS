@@ -6,5 +6,6 @@
 //
 
 struct RecordsDTO: Codable {
+    var userKey: String
     var records: [RecordDTO]?
 }

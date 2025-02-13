@@ -86,13 +86,16 @@ struct RecordWritingView: View {
             }
             .padding(.horizontal, .defaultLayoutPadding)
             .onAppear {
-//                print(#function, self)
                 if store.text.isEmpty {
                     store.send(.openCategory)
                 }
             }
+            
+            if store.isPresendTextGuide {
+                TextGuideView()
+            }
             if store.isPresentingSelectCategory {
-                self.SelectCategoryView()
+                SelectCategoryView()
             }
         }
         .navigationBarBackButtonHidden()
@@ -106,14 +109,6 @@ struct RecordWritingView: View {
         ) {
             RecordWritingStore()
         }
-//        ,logStore: Store(
-//            initialState: LogStore.State(
-//                isCompleteToday: false,
-//                isCompleteYesterday: false
-//            )
-//        ) {
-//            LogStore()
-//        }
     )
 }
 
@@ -123,15 +118,6 @@ struct RecordWritingView: View {
         ) {
             RecordWritingStore()
         }
-//        ,
-//        logStore: Store(
-//            initialState: LogStore.State(
-//                isCompleteToday: false,
-//                isCompleteYesterday: false
-//            )
-//        ) {
-//            LogStore()
-//        }
     )
     .SelectCategoryView()
 }
