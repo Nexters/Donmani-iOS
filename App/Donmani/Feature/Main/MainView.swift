@@ -10,28 +10,26 @@ import ComposableArchitecture
 import DesignSystem
 
 struct MainView: View {
-    var name: String = "행복한 코알라"
-    // TODO: - Add Store
+    @Bindable var store: StoreOf<MainStore>
     
     var body: some View {
         ZStack {
             MainBackgroundView()
             VStack {
-                HStack {
-                    AccessoryButton(asset: .setting) {
-                        SettingView()
+                ZStack {
+                    HStack {
+                        AccessoryButton(asset: .setting) {
+                            SettingView()
+                        }
+                        Spacer()
                     }
-                    
-                    Spacer()
-                    Text(name+"의 별나라")
-                        .font(.b1, .semibold)
-                        .foregroundStyle(.white)
-                    Spacer()
-                    
-                    AccessoryButton(asset: .calendar) {
-                        Text("List")
+                    HStack {
+                        Spacer()
+                        Text(store.name + "의 별나라")
+                            .font(.b1, .semibold)
+                            .foregroundStyle(.white)
+                        Spacer()
                     }
-                    .hidden()
                 }
                 .padding(.horizontal, 20)
                 
@@ -51,12 +49,15 @@ struct MainView: View {
                         .aspectRatio(0.75, contentMode: .fit)
                         .frame(width: .screenWidth * 0.8)
                 }
+                .onTapGesture {
+                    store.send(.touchStarBottle)
+                }
                 
                 Spacer()
                 
-                RecordButton(value: name)
+                RecordButton()
             }
-            .navigationDestination(for: String.self) { _ in
+            .navigationDestination(isPresented: $store.isPresentingRecordEntryView) {
                 RecordEntryPointView(
                     store: Store(
                         initialState: RecordEntryPointStore.State(
@@ -74,5 +75,9 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    MainView(
+        store: Store(initialState: MainStore.State()) {
+            MainStore()
+        }
+    )
 }

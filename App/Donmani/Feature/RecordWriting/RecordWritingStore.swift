@@ -29,10 +29,10 @@ struct RecordWritingStore {
         var text: String = ""
         var isPresentingSelectCategory: Bool = false
         var isFocused: Bool = false
+        var isPresendTextGuide: Bool = false
         
         init(
             type: RecordContentType,
-            selectedCategory: RecordCategory? = nil,
             content: RecordContent? = nil
         ) {
             self.type = type
@@ -42,10 +42,12 @@ struct RecordWritingStore {
             case .bad:
                 self.category = BadCategory.allCases.map { RecordCategory($0) }
             }
-            self.selectedCategory = selectedCategory
+            self.selectedCategory = content?.category
+            self.savedCategory = content?.category
             if let content = content {
                 self.sticker = (content.flag == .good ? DImage(.goodLogSelected) : DImage(.badLogSelected)).image
                 self.textCount = content.memo.count
+                self.text = content.memo
                 self.isSaveEnabled = true
             } else {
                 self.sticker = (type == .good ? DImage(.defaultGoodSticker) : DImage(.defaultBadSticker)).image
@@ -97,14 +99,21 @@ struct RecordWritingStore {
                 state.isPresentingSelectCategory = false
                 return .none
                 
-            case .binding(let bindingState):
+            case .binding(_):
                 return .run { send in await send(.textChanged) }
                 
             case .textChanged:
+                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 state.textCount = state.text.count
                 state.isSaveEnabled = (state.textCount > 0 && state.savedCategory != nil)
                 if state.textCount > 100 {
                     state.text = String(state.text.prefix(100))
+                    state.isPresendTextGuide = true
+                }
+                if state.textCount >= 100 {
+                    state.isPresendTextGuide = true
+                } else {
+                    state.isPresendTextGuide = false
                 }
                 return .none
                 

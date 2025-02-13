@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct DonmaniApp: App {
@@ -15,9 +16,12 @@ struct DonmaniApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $navigationPath) {
-                MainView()
+                MainView(
+                    store: Store(initialState: MainStore.State()) {
+                        MainStore()
+                    }
+                )
             }
-//            .environmentObject(<#T##object: ObservableObject##ObservableObject#>)
         }
     }
 }

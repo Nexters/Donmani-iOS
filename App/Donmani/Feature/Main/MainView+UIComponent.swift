@@ -29,10 +29,10 @@ extension MainView {
         .frame(width: 48, height: 48)
     }
     
-    func RecordButton(
-        value: String
-    ) -> some View {
-        NavigationLink(value: value) {
+    func RecordButton() -> some View {
+        Button {
+            store.send(.touchRecordEntryButton)
+        } label: {
             ZStack {
                 Circle()
                     .fill(DColor(.pupleBlue70).color)

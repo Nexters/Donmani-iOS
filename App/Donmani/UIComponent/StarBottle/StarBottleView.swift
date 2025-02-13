@@ -45,12 +45,12 @@ struct StarBottleView: View {
         .onDisappear {
             MotionManager.stopGyros()
         }
-        .onTapGesture {
-            starScene.addStarNode(
-                width: width,
-                height: height
-            )
-        }
+//        .onTapGesture {
+//            starScene.addStarNode(
+//                width: width,
+//                height: height
+//            )
+//        }
     }
 }
 

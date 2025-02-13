@@ -13,11 +13,6 @@ struct RecordEntryPointStore {
     // MARK: - State
     @ObservableState
     struct State: Equatable {
-        enum DayType {
-            case today
-            case yesterday
-        }
-        
         var isCompleteToday: Bool
         var isCompleteYesterday: Bool
         
@@ -43,7 +38,15 @@ struct RecordEntryPointStore {
             self.isCompleteToday = isCompleteToday
             self.isCompleteYesterday = isCompleteYesterday
             self.dayType = isCompleteToday ? .yesterday : .today
-            self.title = "\(isCompleteToday ? "어제" : "오늘") 소비 정리해 볼까요?"
+            var title = "소비 정리해 볼까요?"
+            if !(isCompleteToday || isCompleteYesterday) {
+                title = "하루 " + title
+            } else if isCompleteToday {
+                title = "어제 " + title
+            } else {
+                title = "오늘 " + title
+            }
+            self.title = title
             self.showDayToggle = !(isCompleteToday || isCompleteYesterday)
         }
     }
@@ -54,6 +57,7 @@ struct RecordEntryPointStore {
         case dismissCancelRecordBottomSheet
         case cancelRecording
         
+        case editRecordWriting(RecordContent)
         case startRecordWriting(RecordContentType)
         
         case binding(BindingAction<State>)
@@ -99,7 +103,10 @@ struct RecordEntryPointStore {
             case .cancelRecording:
                 state.isPresentingCancel = false
                 return .none
-                
+            case .editRecordWriting(let content):
+                state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
+                state.isPresentingRecordWritingView = true
+                return .none
             case .startRecordWriting(let type):
                 state.recordWritingState = RecordWritingStore.State(type: type)
                 state.isPresentingRecordWritingView = true

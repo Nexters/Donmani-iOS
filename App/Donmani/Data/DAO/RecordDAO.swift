@@ -5,20 +5,33 @@
 //  Created by 문종식 on 2/8/25.
 //
 
-class RecordDAO {
-    func insert() {
+import ComposableArchitecture
+
+final class RecordDAO: DependencyKey {
+    static var liveValue: RecordDAO = RecordDAO()
+    
+    static func insert() {
         
     }
     
-    func select() {
+    static func select() {
         
     }
+//    func udpate() {
+//        
+//    }
     
-    func udpate() {
-        
-    }
-    
-    func delete() {
-        
+//    func delete() {
+//        
+//    }
+}
+
+extension DependencyValues {
+    var recordDAO: RecordDAO {
+        get {
+            self[RecordDAO.self]
+        } set {
+            self[RecordDAO.self] = newValue
+        }
     }
 }
