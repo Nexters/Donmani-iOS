@@ -8,14 +8,42 @@
 import SwiftUI
 
 public enum DImageAsset: String {
+    // Image
     case backgroundDot = "BackgroundDot"
     case backgroundStar = "BackgroundStar"
-    case addLog = "AddLog"
+    case tempImage = "TempImage"
+    case defaultGoodSticker = "DefaultGoodSticker"
+    case defaultBadSticker = "DefaultBadSticker"
+    case goodRecord = "GoodRecord"
+    case badRecord = "BadRecord"
+    
+    case emptyRecord = "EmptyRecord"
+    case starBottle = "StarBottle"
+    case starBottleBackground = "StarBottleBackground"
+    case save = "Save"
+    case star = "Star"
+    
+    case editCategory = "EditCategory"
+    case blur = "Blur"
+    
+    // Image 20
+    case check = "Check"
+    case uncheck = "Uncheck"
+    
+    // Image 24
     case edit = "Edit"
-    case plus = "Plus"
     case leftArrow = "LeftArrow"
     case rightArrow = "RightArrow"
     case calendar = "Calendar"
     case setting = "Setting"
-    case tempImage = "TempImage"
+    case textMaxLength = "TextMaxLength"
+    
+    // Image 28
+    case plus = "Plus"
+    case close = "Close"
+    case starShape = "StarShape"
+    case starSingleHighlighter = "StarSingleHighlighter"
+    
+    // Image 32
+    case addLog = "AddLog"
 }

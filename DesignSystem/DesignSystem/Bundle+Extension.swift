@@ -11,7 +11,5 @@ private class DesignSystemBundle { }
 private let designSystemBundleIdentifier: String = Bundle(for: DesignSystemBundle.self).bundleIdentifier ?? "com.nexters.Donmani.DesignSystem"
 
 public extension Bundle {
-    static var designSystem: Bundle {
-        return Bundle(identifier: designSystemBundleIdentifier) ?? .main
-    }
+    static let designSystem: Bundle = Bundle(identifier: designSystemBundleIdentifier) ?? .main
 }
