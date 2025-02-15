@@ -8,22 +8,20 @@
 import DNetwork
 
 extension NetworkManager {
-    struct Record {
+    struct NMRecord {
         let service: DNetworkService
-        let userKey: String
         let dateManager: DateManager
         
         init (
             service: DNetworkService,
-            userKey: String,
             dateManager: DateManager
         ) {
             self.service = service
-            self.userKey = userKey
             self.dateManager = dateManager
         }
         
         func uploadRecord(recordContent: [RecordContent]) async throws {
+            let userKey = NetworkManager.userKey
             let bodyData = RecordsDTO(
                 userKey: userKey,
                 records: [
@@ -46,8 +44,25 @@ extension NetworkManager {
             )
         }
         
-        func fetchRecord() async throws {
-            
+        func fetchRecord(year: Int, month: Int) async throws -> [Record] {
+            let userKey = NetworkManager.userKey
+            let responseData: RecordsDTO = try await self.service.requestGET(
+                path: .expenses,
+                addtionalPath: ["calendar", userKey],
+                parameters: ["year": year, "month": month]
+            )
+            return responseData.records?.map { record in
+                Record(
+                    date: record.date,
+                    contents: record.contents?.map { content in
+                        RecordContent(
+                            flag: content.flag,
+                            category: content.category,
+                            memo: content.memo
+                        )
+                    }
+                )
+            } ?? []
         }
     }
 }

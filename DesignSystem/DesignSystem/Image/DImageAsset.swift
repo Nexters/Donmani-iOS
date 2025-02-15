@@ -24,7 +24,7 @@ public enum DImageAsset: String {
     case star = "Star"
     
     case editCategory = "EditCategory"
-    case blur = "Blur"
+    case splashLogo = "SplashLogo"
     
     // Image 20
     case check = "Check"

@@ -6,13 +6,16 @@
 //
 
 public enum DFontStyle {
-    case t1
+    
+    case t0, t1
     case h1, h2, h3
     case b1, b2, b3, b4
     
     var size: CGFloat {
         switch self {
+        case .t0: return 32
         case .t1: return 30
+        
             
         case .h1: return 24
         case .h2: return 20
