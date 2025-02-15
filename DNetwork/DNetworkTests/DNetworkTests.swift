@@ -11,7 +11,7 @@ import Testing
 struct DNetworkTests {
 
     @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+        try DNetwork.shared.requestGET(path: .user, responseType: String.self)
     }
 
 }
