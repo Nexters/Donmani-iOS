@@ -5,16 +5,33 @@
 //  Created by 문종식 on 2/6/25.
 //
 
-import Foundation
+import SwiftUI
+import DesignSystem
 
-struct RecordCategory: CategoryProtocol {    
+struct RecordCategory: Equatable {
+    
     private let _isEqual: (Any) -> Bool
     private let _hashValue: () -> Int
     private let _title: () -> String
     private let _instance: any CategoryProtocol
+    private let _color: () -> Color
+    private let _image: () -> Image
+    private let _miniImage: () -> Image
 
     var title: String {
         _title()
+    }
+    
+    var color: Color {
+        _color()
+    }
+    
+    var image: Image {
+        _image()
+    }
+    
+    var miniImage: Image {
+        _miniImage()
     }
 
     init<T: CategoryProtocol>(_ instance: T) {
@@ -22,6 +39,9 @@ struct RecordCategory: CategoryProtocol {
         _isEqual = { ($0 as? T) == instance }
         _hashValue = { instance.hashValue }
         _instance = instance
+        _color = { instance.color }
+        _image = { instance.sticker }
+        _miniImage = { instance.miniSticker }
     }
     
     func getInstance<T: CategoryProtocol>() -> T? {

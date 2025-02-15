@@ -64,67 +64,6 @@ extension RecordEntryPointView {
         .frame(height: 118)
     }
     
-    func RecordView(
-        record: RecordContent
-    ) -> some View {
-        RecordContentView(
-            record: record
-        )
-        .background {
-            RecordBackgroundView(
-                categoryColor: (record.flag == .good ? DColor.tempGood : DColor.tempBad)
-            )
-        }
-    }
-    
-    func RecordBackgroundView(
-        categoryColor: Color
-    ) -> some View {
-        ZStack {
-            RoundedRectangle(
-                cornerRadius: .defaultLayoutPadding,
-                style: .continuous
-            )
-            .fill(categoryColor.opacity(0.5))
-            RoundedRectangle(
-                cornerRadius: .defaultLayoutPadding,
-                style: .continuous
-            )
-            .fill(.white.opacity(0.1))
-        }
-    }
-    
-    func RecordContentView(
-        record: RecordContent
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text(record.category.title)
-                    .font(DFont.font(.h3, weight: .bold))
-                    .foregroundStyle(.white)
-                Spacer()
-                Button {
-                    store.send(.editRecordWriting(record))
-                } label: {
-                    DImage(.edit).image
-                        .resizable()
-                        .frame(width: .s4, height: .s4)
-                }
-            }
-            HStack(spacing: 12) {
-                DImage(record.flag == .good ? .goodLog : .badLog).image
-                    .resizable()
-                    .aspectRatio(1, contentMode: .fit)
-                    .frame(width: 78)
-                Text(record.memo)
-                    .font(DFont.font(.b1, weight: .medium))
-                    .foregroundStyle(DColor(.gray95).color)
-                    .lineLimit(10)
-            }
-        }
-        .padding(.defaultLayoutPadding)
-    }
-    
     func EmptyRecordButton(
         isChecked: Bool,
         action: @escaping () -> Void
@@ -149,17 +88,7 @@ extension RecordEntryPointView {
                 cornerRadius: .s3,
                 style: .continuous
             )
-            .fill(
-                LinearGradient(
-                    colors: [
-                        DColor(.gray70).color,
-                        DColor(.gray90).color
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
-            .opacity(0.2)
+            .fill(DColor.emptyColor)
             VStack(alignment: .center, spacing: .defaultLayoutPadding) {
                 Text("오늘은 무소비 데이!")
                     .font(DFont.font(.h2, weight: .bold))
@@ -179,10 +108,15 @@ extension RecordEntryPointView {
             if store.isSaveEnabled {
                 if store.isCheckedEmptyRecord {
                     EmptyRecordView()
-                } else {
+                } else if let goodRecord = store.goodRecord,
+                          let badRecord = store.badRecord {
                     VStack {
-                        RecordContentView(record: store.goodRecord!)
-                        RecordContentView(record: store.badRecord!)
+                        RecordContentView(record: goodRecord) {
+                            store.send(.editRecordWriting(goodRecord))
+                        }
+                        RecordContentView(record: badRecord) {
+                            store.send(.editRecordWriting(badRecord))
+                        }
                     }
                     .background(
                         RoundedRectangle(
@@ -191,7 +125,10 @@ extension RecordEntryPointView {
                         )
                         .fill(
                             LinearGradient(
-                                colors: [DColor.tempGood, DColor.tempBad]
+                                colors: [
+                                    goodRecord.category.color,
+                                    badRecord.category.color
+                                ]
                                 , startPoint: .topLeading
                                 , endPoint: .bottomTrailing
                             )
@@ -200,12 +137,16 @@ extension RecordEntryPointView {
                 }
             } else {
                 if let goodRecord = store.goodRecord {
-                    RecordView(record: goodRecord)
+                    RecordView(record: goodRecord) {
+                        store.send(.editRecordWriting(goodRecord))
+                    }
                 } else {
                     RecordWritingButton(type: .good)
                 }
                 if let badRecord = store.badRecord {
-                    RecordView(record: badRecord)
+                    RecordView(record: badRecord) {
+                        store.send(.editRecordWriting(badRecord))
+                    }
                 } else {
                     RecordWritingButton(type: .bad)
                 }

@@ -16,6 +16,9 @@ struct RecordWritingView: View {
     var body: some View {
         ZStack {
             BackgroundView()
+            if let categoryColor = store.savedCategory?.color {
+                ColorBackgroundView(color: categoryColor)
+            }
             VStack(spacing: 0) {
                 // Navigation Bar
                 ZStack {
@@ -32,15 +35,27 @@ struct RecordWritingView: View {
                 .padding(.vertical, 14)
                 
                 VStack(spacing: .defaultLayoutPadding) {
-                    Button {
-                        store.send(.openCategory)
-                    } label: {
+                    ZStack {
                         store.sticker
                             .resizable()
                             .aspectRatio(contentMode: .fit)
+                        .frame(width: .stickerSize, height: .stickerSize)
+                        .overlay {
+                            VStack(spacing: 0) {
+                                HStack(spacing: 0) {
+                                    Spacer()
+                                    Button {
+                                        store.send(.openCategory)
+                                    } label: {
+                                        DImage(.editCategory).image
+                                    }
+                                    .frame(width: 40, height: 40)
+                                    .offset(x: 20, y: 0)
+                                }
+                                Spacer()
+                            }
+                        }
                     }
-                    .frame(width: .stickerSize, height: .stickerSize)
-                    
                     Text(store.savedCategory?.title ?? " ")
                         .font(DFont.font(.h3, weight: .bold))
                         .foregroundStyle(.white)

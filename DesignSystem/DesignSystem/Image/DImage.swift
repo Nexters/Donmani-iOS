@@ -8,17 +8,24 @@
 import SwiftUI
 
 public struct DImage {
-    @usableFromInline let asset: DImageAsset
+    @usableFromInline var asset: DImageAsset = .tempImage
+    @usableFromInline var assetName: String? = nil
     
     public init(_ asset: DImageAsset) {
         self.asset = asset
     }
     
+    public init(_ assetName: String) {
+        self.assetName = assetName
+    }
+    
     public var image: Image {
-        Image(asset.rawValue, bundle: .designSystem)
+        let name = assetName ?? asset.rawValue
+        return Image(name, bundle: .designSystem)
     }
     
     public var uiImage: UIImage {
-        UIImage(named: asset.rawValue, in: .designSystem, compatibleWith: nil) ?? UIImage()
+        let name = assetName ?? asset.rawValue
+        return UIImage(named: name, in: .designSystem, compatibleWith: nil) ?? UIImage()
     }
 }

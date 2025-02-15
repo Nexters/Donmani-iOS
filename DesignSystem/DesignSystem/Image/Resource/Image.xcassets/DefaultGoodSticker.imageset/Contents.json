@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "GoodLogDefault.png",
+      "filename" : "DefaultGoodSticker.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "GoodLogDefault 1.png",
+      "filename" : "DefaultGoodSticker 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "GoodLogDefault 2.png",
+      "filename" : "DefaultGoodSticker 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

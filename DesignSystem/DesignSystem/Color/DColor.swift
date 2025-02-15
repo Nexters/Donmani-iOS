@@ -12,13 +12,15 @@ public struct DColor {
     public static let backgroundTop: Color = Color("BackgroundTop", bundle: .designSystem)
     public static let backgroundBottom: Color = Color("BackgroundBottom", bundle: .designSystem)
     
-    public static let tempGood: Color = Color("TempGood", bundle: .designSystem)
-    public static let tempBad: Color = Color("TempBad", bundle: .designSystem)
     public static let textGuide: Color = Color("TextGuide", bundle: .designSystem)
+    public static let emptyColor: Color = Color("EmptyColor", bundle: .designSystem)
     
-    public var type: DColorType
+    public var type: DColorType = .deepBlue50
+    public var name: String? = nil
+    
     public var color: Color {
-        Color("\(type.name)\(type.brightness)", bundle: .designSystem)
+        let name = self.name ?? ("\(type.name)\(type.brightness)")
+        return Color(name, bundle: .designSystem)
     }
     public var uiColor: UIColor {
         UIColor(color)
@@ -26,6 +28,10 @@ public struct DColor {
     
     public init(_ type: DColorType) {
         self.type = type
+    }
+    
+    public init(_ name: String) {
+        self.name = name
     }
     
 }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DesignSystem
+import Glur
 
 extension RecordWritingView {
     static let categoryColumns = Array(
@@ -14,11 +15,37 @@ extension RecordWritingView {
         count: 3
     )
     
+    func ColorBackgroundView(
+        color: Color
+    ) -> some View {
+        ZStack {
+            VStack {
+                Rectangle()
+                    .fill(color)
+                    .frame(height: 340)
+                    .clipShape(
+                        .rect(
+                            topLeadingRadius: 0,
+                            bottomLeadingRadius: 27,
+                            bottomTrailingRadius: 27,
+                            topTrailingRadius: 0,
+                            style: .continuous
+                        )
+                    )
+                    .offset(x: 0, y: -170)
+                    .blur(radius: 70.0)
+                    .padding(.horizontal, -.screenWidth)
+                Spacer()
+            }
+        }
+    }
+                        
+    
     func SelectCategoryView() -> some View {
         BottomSheetView(
             closeAction: { store.send(.closeCategory) }
         ) { dismissSheet in
-            Text("어떤 \(store.type.title)였나요?")
+            Text("소비가 \(store.type.selectTitle)던 이유는?")
                 .font(DFont.font(.h2, weight: .bold))
                 .foregroundStyle(.white)
             LazyVGrid(
@@ -28,7 +55,8 @@ extension RecordWritingView {
                 ForEach(store.category.indices, id: \.self) { i in
                     CategoryButton(
                         category: store.category[i],
-                        isSelected: store.category[i].title == (store.selectedCategory?.title ?? "")
+                        isSelected: store.category[i].title == (store.selectedCategory?.title ?? ""),
+                        initState: (store.selectedCategory == nil)
                     )
                 }
             }
@@ -49,21 +77,23 @@ extension RecordWritingView {
     
     func CategoryButton(
         category: RecordCategory,
-        isSelected: Bool
+        isSelected: Bool,
+        initState: Bool
     ) -> some View {
         Button{
             store.send(.selectCategory(category))
         } label: {
             VStack(spacing: 4) {
-//                DImage(.tempImage).image
-//                    .resizable()
-                DColor(.deepBlue70).color
+                ((isSelected && !initState) ? category.image : category.miniImage)
+                    .resizable()
                     .frame(width: 62, height: 62)
                     .clipShape(RoundedRectangle(cornerRadius: .s5, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: .s5)
-                            .stroke(DColor(.deepBlue99).color, lineWidth: isSelected ? 2 : 0)
-                    )
+                    .opacity((initState || isSelected) ? 1 : 0.4)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: .s5)
+//                            .stroke(DColor(.deepBlue99).color, lineWidth: (isSelected && !initState) ? 2 : 0)
+//                    )
+
                 Text(category.title)
                     .font(DFont.font(.b2, weight: .semibold))
                     .foregroundStyle(
