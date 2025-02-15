@@ -176,11 +176,8 @@ struct RecordEntryPointStore {
             case .save:
                 state.isPresentingRecordComplete = false
                 return .none
-                
+
             case .toggleDay:
-                return .none
-                
-            default:
                 return .none
             }
         }

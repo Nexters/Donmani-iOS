@@ -44,7 +44,7 @@ struct MainStore {
     }
     
     // MARK: - Dependency
-    @Dependency(\.recordDAO) var recordDAO
+    
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
