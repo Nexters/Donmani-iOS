@@ -14,6 +14,7 @@ final class DateManager {
         
     }
     
+    /// Type에 해당하는 날짜를 yyyy-MM-dd 형식으로 반환
     func getFormattedDate(for type: DayType) -> String {
         let currentDate = Date()
         let targetDate: Date

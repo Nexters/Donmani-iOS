@@ -8,24 +8,20 @@
 import DNetwork
 
 extension NetworkManager {
-    struct User {
+    struct NMUser {
         let service: DNetworkService
-        let userKey: String
         
         init (
-            service: DNetworkService,
-            userKey: String
+            service: DNetworkService
         ) {
             self.service = service
-            self.userKey = userKey
         }
         
         func registerUser() async throws -> String {
-            //            let userKey = PersistentUUIDManager.shared.getPersistentUUID()
             let responseData: UserDTO = try await self.service.requestPOST(
                 path: .user,
                 addtionalPath: ["register"],
-                bodyData: UserDTO(userKey: userKey)
+                bodyData: UserDTO(userKey: NetworkManager.userKey)
             )
             guard let userName = responseData.userName else {
                 throw NetworkError.noData
@@ -34,11 +30,10 @@ extension NetworkManager {
         }
         
         func updateUser(name: String) async throws -> String {
-//            let userKey = PersistentUUIDManager.shared.getPersistentUUID()
             let responseData: UserDTO = try await self.service.requestPUT(
                 path: .user,
                 addtionalPath: ["update"],
-                bodyData: UserDTO(userKey: userKey, newUserName: name)
+                bodyData: UserDTO(userKey: NetworkManager.userKey, newUserName: name)
             )
             guard let userName = responseData.updatedUserName else {
                 throw NetworkError.noData

@@ -14,7 +14,7 @@ struct MainView: View {
     
     var body: some View {
         ZStack {
-            MainBackgroundView()
+            MainBackgroundView(starCount: 6)
             VStack {
                 ZStack {
                     HStack {

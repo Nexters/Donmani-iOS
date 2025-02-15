@@ -8,31 +8,51 @@
 import Foundation
 import Security
 
-final class PersistentUUIDManager {
-    static let shared = PersistentUUIDManager()
-    
-    private let key = "com.nexters.donmani.app.persistentUUID"
-    
-    private init() {}
-    
-    /// Keychain에서 UUID 가져오기 (없으면 새로 생성 후 저장)
-    public func getPersistentUUID() -> String {
-        if let uuid = loadFromKeychain() {
-            return uuid
-        } else {
-            let newUUID = UUID().uuidString
-            saveToKeychain(uuid: newUUID)
-            return newUUID
+final class KeychainManager {
+    enum DataType {
+        case uuid
+        case name
+        
+        var key: String {
+            switch self {
+            case .uuid:
+                return "com.nexters.donmani.app.persistentUUID"
+            case .name:
+                return "com.nexters.donmani.app.UserName"
+            }
         }
     }
     
+    public init() {
+        
+    }
+    
+    /// Keychain에서 UUID 가져오기 (없으면 새로 생성 후 저장)
+    public func generateUUID() -> (key: String, isInitialized: Bool) {
+        if let uuid = loadValue(from: .uuid) {
+            return (uuid, false)
+        } else {
+            let newUUID = UUID().uuidString
+            saveToKeychain(to: .uuid, value: newUUID)
+            return (newUUID, true)
+        }
+    }
+    
+    public func getUserName() -> String {
+        loadValue(from: .name) ?? ""
+    }
+    
+    public func setUserName(name: String) {
+        saveToKeychain(to: .name, value: name)
+    }
+    
     /// Keychain에 UUID 저장
-    private func saveToKeychain(uuid: String) {
-        let data = Data(uuid.utf8)
+    private func saveToKeychain(to type: DataType, value: String) {
+        let data = Data(value.utf8)
         
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key,
+            kSecAttrAccount as String: type.key,
             kSecValueData as String: data
         ]
         
@@ -42,10 +62,10 @@ final class PersistentUUIDManager {
     }
     
     /// Keychain에서 UUID 불러오기
-    private func loadFromKeychain() -> String? {
+    public func loadValue(from type: DataType) -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key,
+            kSecAttrAccount as String: type.key,
             kSecReturnData as String: true,
             kSecMatchLimit as String: kSecMatchLimitOne
         ]
