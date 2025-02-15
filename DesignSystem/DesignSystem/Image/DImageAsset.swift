@@ -14,16 +14,17 @@ public enum DImageAsset: String {
     case tempImage = "TempImage"
     case defaultGoodSticker = "DefaultGoodSticker"
     case defaultBadSticker = "DefaultBadSticker"
-    case goodLogSelected = "GoodLogSelected"
-    case badLogSelected = "BadLogSelected"
-    case goodLog = "GoodLog"
-    case badLog = "BadLog"
+    case goodRecord = "GoodRecord"
+    case badRecord = "BadRecord"
     
     case emptyRecord = "EmptyRecord"
     case starBottle = "StarBottle"
     case starBottleBackground = "StarBottleBackground"
     case save = "Save"
     case star = "Star"
+    
+    case editCategory = "EditCategory"
+    case blur = "Blur"
     
     // Image 20
     case check = "Check"
@@ -40,6 +41,8 @@ public enum DImageAsset: String {
     // Image 28
     case plus = "Plus"
     case close = "Close"
+    case starShape = "StarShape"
+    case starSingleHighlighter = "StarSingleHighlighter"
     
     // Image 32
     case addLog = "AddLog"

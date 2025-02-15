@@ -45,7 +45,7 @@ struct RecordWritingStore {
             self.selectedCategory = content?.category
             self.savedCategory = content?.category
             if let content = content {
-                self.sticker = (content.flag == .good ? DImage(.goodLogSelected) : DImage(.badLogSelected)).image
+                self.sticker = content.category.image
                 self.textCount = content.memo.count
                 self.text = content.memo
                 self.isSaveEnabled = true
@@ -87,7 +87,7 @@ struct RecordWritingStore {
                 
             case .saveCategory(let category):
                 state.savedCategory = category
-                state.sticker = (state.type == .good ? DImage(.goodLogSelected) : DImage(.badLogSelected)).image
+                state.sticker = category.image
                 state.selectedCategory = nil
                 state.isPresentingSelectCategory = false
                 if (state.textCount > 0) {

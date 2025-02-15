@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C753176C2D60CC84000F8A8C /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = C753176B2D60CC84000F8A8C /* Glur */; };
 		C7A6A2962D4A89D500B4CF35 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = C7A6A2952D4A89D500B4CF35 /* ComposableArchitecture */; };
 		C7BF8A352D50F4F600ACE68D /* DesignSystem.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */; };
 		C7BF8A362D50F4F600ACE68D /* DesignSystem.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -75,6 +76,7 @@
 			files = (
 				C7A6A2962D4A89D500B4CF35 /* ComposableArchitecture in Frameworks */,
 				C7BF8A352D50F4F600ACE68D /* DesignSystem.framework in Frameworks */,
+				C753176C2D60CC84000F8A8C /* Glur in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,6 +148,7 @@
 			name = Donmani;
 			packageProductDependencies = (
 				C7A6A2952D4A89D500B4CF35 /* ComposableArchitecture */,
+				C753176B2D60CC84000F8A8C /* Glur */,
 			);
 			productName = Donmani;
 			productReference = C7A6A24E2D4A826B00B4CF35 /* Donmani.app */;
@@ -231,6 +234,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				C7A6A2942D4A89D500B4CF35 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				C753176A2D60CC84000F8A8C /* XCRemoteSwiftPackageReference "Glur" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C7A6A24F2D4A826B00B4CF35 /* Products */;
@@ -605,6 +609,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C753176A2D60CC84000F8A8C /* XCRemoteSwiftPackageReference "Glur" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/joogps/Glur.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.4;
+			};
+		};
 		C7A6A2942D4A89D500B4CF35 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
@@ -616,6 +628,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C753176B2D60CC84000F8A8C /* Glur */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C753176A2D60CC84000F8A8C /* XCRemoteSwiftPackageReference "Glur" */;
+			productName = Glur;
+		};
 		C7A6A2952D4A89D500B4CF35 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C7A6A2942D4A89D500B4CF35 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;

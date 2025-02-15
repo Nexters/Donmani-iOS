@@ -12,9 +12,18 @@ enum RecordContentType: Codable, Equatable {
     var title: String {
         switch self {
         case .good:
-            return "좋은"
+            return "행복"
         case .bad:
             return "후회"
+        }
+    }
+    
+    var selectTitle: String {
+        switch self {
+        case .good:
+            return "행복했"
+        case .bad:
+            return "후회됐"
         }
     }
 }
