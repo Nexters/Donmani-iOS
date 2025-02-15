@@ -5,16 +5,16 @@
 //  Created by 문종식 on 2/6/25.
 //
 
-enum BadCategory: String, CaseIterable, Codable, CategoryProtocol {
+enum BadCategory: String, CaseIterable, CategoryProtocol {
     case greed         // 욕심
     case addiction     // 중독
     case laziness      // 게으름
-    case impulsive     // 충동
-    case useless       // 무의미
-    case vanity        // 과시
-    case badHabit      // 습관반복
-    case forcedSaving  // 억지절약
-    case noSpending    // 무소비
+    case impulse     // 충동
+    case meaninglessness      // 무의미
+    case boastfulness      // 과시
+    case habit      // 습관반복
+    case overfrugality // 과한절약
+    case none    // 무소비
 }
 
 extension BadCategory {
@@ -23,16 +23,47 @@ extension BadCategory {
         case .greed: return  "욕심"
         case .addiction: return  "중독"
         case .laziness: return  "게으름"
-        case .impulsive: return  "충동"
-        case .useless: return  "무의미"
-        case .vanity: return  "과시"
-        case .badHabit: return "습관반복"
-        case .forcedSaving: return  "과한절약"
-        case .noSpending: return  "무소비"
+        case .impulse: return  "충동"
+        case .meaninglessness: return  "무의미"
+        case .boastfulness: return  "과시"
+        case .habit: return "습관반복"
+        case .overfrugality: return  "과한절약"
+        case .none: return  "무소비"
         }
     }
     
     var assetName: String {
         self.rawValue
+    }
+    
+    var dtoValue: String {
+        self.rawValue.uppercased()
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case flag
+        case category
+        case memo
+    }
+}
+
+
+extension BadCategory: Codable {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        
+        guard let value = BadCategory(rawValue: rawValue.lowercased()) else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Invalid value: \(rawValue)"
+            )
+        }
+        self = value
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(self.rawValue.uppercased())
     }
 }

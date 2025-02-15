@@ -7,7 +7,16 @@
 
 struct UserDTO: Codable {
     let userKey: String
-    let userName: String? = nil
-    let updatedUserName: String? = nil
-    let newUserName: String? = nil
+    var userName: String? = nil
+    var updatedUserName: String? = nil
+    var newUserName: String? = nil
+    
+    init(userKey: String) {
+        self.userKey = userKey
+    }
+    
+    init(userKey: String, newUserName: String) {
+        self.userKey = userKey
+        self.newUserName = newUserName
+    }
 }
