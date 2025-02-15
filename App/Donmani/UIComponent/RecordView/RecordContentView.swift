@@ -35,10 +35,32 @@ struct RecordContentView: View {
                 }
             }
             HStack(spacing: 12) {
-                record.category.image
-                    .resizable()
-                    .aspectRatio(1, contentMode: .fit)
-                    .frame(width: 78)
+                ZStack {
+                    record.category.image
+                        .resizable()
+                        .aspectRatio(1, contentMode: .fit)
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            ZStack {
+                                DImage(.starShape).image
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .foregroundStyle(record.category.color)
+                                    .aspectRatio(1, contentMode: .fit)
+                                    .overlay {
+                                        DImage(.starSingleHighlighter).image
+                                            .resizable()
+                                            .aspectRatio(1, contentMode: .fit)
+                                    }
+                                    .frame(width: .s2)
+                                    .offset(x: 0, y: 8)
+                            }
+                        }
+                    }
+                }
+                .frame(width: 78)
                 Text(record.memo)
                     .font(DFont.font(.b1, weight: .medium))
                     .foregroundStyle(DColor(.gray95).color)

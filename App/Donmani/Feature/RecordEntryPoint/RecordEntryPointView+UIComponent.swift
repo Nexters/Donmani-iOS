@@ -119,20 +119,28 @@ extension RecordEntryPointView {
                         }
                     }
                     .background(
-                        RoundedRectangle(
-                            cornerRadius: .defaultLayoutPadding,
-                            style: .continuous
-                        )
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    goodRecord.category.color,
-                                    badRecord.category.color
-                                ]
-                                , startPoint: .topLeading
-                                , endPoint: .bottomTrailing
+                        ZStack {
+                            RoundedRectangle(
+                                cornerRadius: .defaultLayoutPadding,
+                                style: .continuous
                             )
-                        )
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        goodRecord.category.color,
+                                        badRecord.category.color
+                                    ]
+                                    , startPoint: .topLeading
+                                    , endPoint: .bottomTrailing
+                                )
+                                .opacity(0.5)
+                            )
+                            RoundedRectangle(
+                                cornerRadius: .defaultLayoutPadding,
+                                style: .continuous
+                            )
+                            .fill(.white.opacity(0.1))
+                        }
                     )
                 }
             } else {

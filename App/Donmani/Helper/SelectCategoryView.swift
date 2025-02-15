@@ -64,7 +64,7 @@ struct SelectCategoryView: View {
                                 .padding(.horizontal, 15)
                             }
                         }
-                        .padding(.vertical , 24)
+                        .padding(.vertical, .s3)
                         Button {
                             
                         } label: {
@@ -82,7 +82,7 @@ struct SelectCategoryView: View {
                         }
                     }
                     .padding(.horizontal, .defaultLayoutPadding)
-                    .padding(.vertical, 20)
+                    .padding(.vertical, .s4)
                     .background {
                         DColor(.deepBlue60).color
                             .clipShape(
