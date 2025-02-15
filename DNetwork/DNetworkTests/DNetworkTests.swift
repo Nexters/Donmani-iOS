@@ -11,7 +11,7 @@ import Testing
 struct DNetworkTests {
 
     @Test func example() async throws {
-        try DNetwork.shared.requestGET(path: .user, responseType: String.self)
+        
     }
 
 }

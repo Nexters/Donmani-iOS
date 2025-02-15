@@ -6,7 +6,8 @@
 //
 
 import Foundation
+import DNetwork
 
 final class NetworkManager {
-    func
+    let service: DNetworkService = DNetworkService()
 }

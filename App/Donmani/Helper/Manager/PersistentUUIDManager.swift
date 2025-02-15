@@ -16,7 +16,7 @@ final class PersistentUUIDManager {
     private init() {}
     
     /// Keychain에서 UUID 가져오기 (없으면 새로 생성 후 저장)
-    func getPersistentUUID() -> String {
+    public func getPersistentUUID() -> String {
         if let uuid = loadFromKeychain() {
             return uuid
         } else {
