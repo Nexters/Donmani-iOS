@@ -23,7 +23,7 @@ public final class DNetworkService {
         return request
     }
 
-    func requestGET<T: Codable>(
+    public func requestGET<T: Codable>(
         path: DPath,
         addtionalPath: [String] = [],
         parameters: [String: Any]? = nil
@@ -57,7 +57,7 @@ public final class DNetworkService {
         return returnData
     }
     
-    func requestPOST<T: Codable, R: Codable>(
+    public func requestPOST<T: Codable, R: Codable>(
         path: DPath,
         addtionalPath: [String] = [],
         bodyData: T
@@ -79,18 +79,21 @@ public final class DNetworkService {
         
         let (data, response) = try await URLSession.shared.data(for: request)
         let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500
-        if stateCode >= 400 {
+        if stateCode != 200 {
             throw NetworkError.serverError(statusCode: stateCode)
+        }
+        
+        if data.count == 0 {
+            return Data() as! R
         }
         
         guard let responseData = try? JSONDecoder().decode(R.self, from: data) else {
             throw NetworkError.decodingFailed
         }
-        
         return responseData
     }
     
-    func requestPUT<T: Codable, R: Codable> (
+    public func requestPUT<T: Codable, R: Codable> (
         path: DPath,
         addtionalPath: [String] = [],
         bodyData: T

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import DesignSystem
-import Glur
 
 extension RecordWritingView {
     static let categoryColumns = Array(
