@@ -11,7 +11,7 @@ import Security
 final class PersistentUUIDManager {
     static let shared = PersistentUUIDManager()
     
-    private let key = "com.example.app.persistentUUID"
+    private let key = "com.nexters.donmani.app.persistentUUID"
     
     private init() {}
     

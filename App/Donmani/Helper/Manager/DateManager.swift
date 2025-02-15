@@ -25,7 +25,7 @@ final class DateManager {
         }
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
+        dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter.string(from: targetDate)
     }
 }
