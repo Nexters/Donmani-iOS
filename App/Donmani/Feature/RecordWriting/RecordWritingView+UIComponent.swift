@@ -60,7 +60,7 @@ extension RecordWritingView {
                     )
                 }
             }
-            .padding(.vertical , 24)
+            .padding(.vertical, .s3)
             
             DButton(
                 title: "완료",
