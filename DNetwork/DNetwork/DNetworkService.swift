@@ -8,7 +8,7 @@
 import Foundation
 
 public final class DNetworkService {
-    static let shared = DNetworkService()
+    public static let shared = DNetworkService()
     private var baseURL = "http://211.188.60.38:8080"
     
     private init() {
