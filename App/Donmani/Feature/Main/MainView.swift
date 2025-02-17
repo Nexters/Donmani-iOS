@@ -16,7 +16,7 @@ struct MainView: View {
         ZStack {
             MainBackgroundView(starCount: 6)
             VStack {
-                ZStack {
+                VStack(spacing: .s3) {
                     HStack {
                         AccessoryButton(asset: .setting) {
                             SettingView()
@@ -25,9 +25,9 @@ struct MainView: View {
                     }
                     HStack {
                         Spacer()
-                        Text(store.name + "의 별나라")
-                            .font(.b1, .semibold)
-                            .foregroundStyle(.white)
+                        Text(store.name + "님의 별통이")
+                            .font(.h1, .bold)
+                            .foregroundStyle(DColor(.gray95).color)
                         Spacer()
                     }
                 }
@@ -45,9 +45,9 @@ struct MainView: View {
                         .aspectRatio(0.75, contentMode: .fit)
                         .frame(width: .screenWidth * 0.8)
                         .opacity(0.5)
-                    StarBottleView()
-                        .aspectRatio(0.75, contentMode: .fit)
-                        .frame(width: .screenWidth * 0.8)
+                    StarBottleView(records: $store.monthlyRecords)
+                    .aspectRatio(0.75, contentMode: .fit)
+                    .frame(width: .screenWidth * 0.8)
                 }
                 .onTapGesture {
                     store.send(.touchStarBottle)
@@ -55,17 +55,28 @@ struct MainView: View {
                 
                 Spacer()
                 
-                RecordButton()
+                if store.isPresentingRecordEntryButton {
+                    RecordButton()
+                } else {
+                    HStack(spacing: 4) {
+                        DImage(.starShape).image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 22)
+                        Text("오늘 남길 수 있는 기록은 모두 작성했어요!")
+                            .font(DFont.font(.b2, weight: .semibold))
+                            .foregroundStyle(DColor(.pupleBlue90).color)
+                    }
+                }
             }
             .navigationDestination(isPresented: $store.isPresentingRecordEntryView) {
-                RecordEntryPointView(
-                    store: Store(
-                        initialState: RecordEntryPointStore.State(
-                            isCompleteToday: false,
-                            isCompleteYesterday: false
-                        )
-                    ) {
-                        RecordEntryPointStore()
+                let recordEntryPointStore = store.scope(state: \.recordEntryPointState, action: \.reciveRecord)
+                RecordEntryPointView(store: recordEntryPointStore)
+            }
+            .navigationDestination(isPresented: $store.isPresentingRecordListView) {
+                RecordListView(
+                    store: Store(initialState: RecordListStore.State()) {
+                        RecordListStore()
                     }
                 )
             }

@@ -18,12 +18,14 @@ extension NetworkManager {
         }
         
         func registerUser() async throws -> String {
-            let responseData: UserDTO = try await self.service.requestPOST(
-                path: .user,
+            let userKey = NetworkManager.userKey
+            let bodyData = UserDTO(userKey: userKey)
+            let responseData: UserDTO? = try await self.service.requestPOST(
+                path: .users,
                 addtionalPath: ["register"],
-                bodyData: UserDTO(userKey: NetworkManager.userKey)
+                bodyData: bodyData
             )
-            guard let userName = responseData.userName else {
+            guard let userName = responseData?.userName else {
                 throw NetworkError.noData
             }
             return userName
@@ -31,7 +33,7 @@ extension NetworkManager {
         
         func updateUser(name: String) async throws -> String {
             let responseData: UserDTO = try await self.service.requestPUT(
-                path: .user,
+                path: .users,
                 addtionalPath: ["update"],
                 bodyData: UserDTO(userKey: NetworkManager.userKey, newUserName: name)
             )

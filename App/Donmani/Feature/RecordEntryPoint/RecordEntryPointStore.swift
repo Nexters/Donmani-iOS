@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import DNetwork
 
 @Reducer
 struct RecordEntryPointStore {
@@ -24,15 +25,16 @@ struct RecordEntryPointStore {
         
         var isPresentingCancel: Bool = false
         var isPresentingRecordEmpty: Bool = false
-        var isPresentingRecordComplete: Bool = false
         var isPresentingRecordWritingView: Bool = false
         
         var recordWritingState = RecordWritingStore.State(type: .good)
         
-        var showDayToggle: Bool
+        var isPresentingDayToggle: Bool
         var title: String
         
         var isSaveEnabled: Bool = false
+        var isReadyToSave: Bool = false
+        var isLoading: Bool = false
         
         init(isCompleteToday: Bool, isCompleteYesterday: Bool) {
             self.isCompleteToday = isCompleteToday
@@ -47,7 +49,7 @@ struct RecordEntryPointStore {
                 title = "오늘 " + title
             }
             self.title = title
-            self.showDayToggle = !(isCompleteToday || isCompleteYesterday)
+            self.isPresentingDayToggle = !(isCompleteToday || isCompleteYesterday)
         }
     }
     
@@ -62,6 +64,9 @@ struct RecordEntryPointStore {
         
         case binding(BindingAction<State>)
         
+        case touchYesterdayToggleButton
+        case touchTodayToggleButton
+        
         case touchEmptyRecordButton
         case dismissEmtpyRecordBottomSheet
         case recordEmpty
@@ -71,9 +76,13 @@ struct RecordEntryPointStore {
         case setRecord(RecordWritingStore.Action)
         case checkRecord
         
-        case showSaveBottomSheet
-        case dismissSaveBottomSheet
+//        case showSaveBottomSheet
+//        case dismissSaveBottomSheet
+        case readyToSave
+        case cancelSave
+        case errorSave
         case save
+        case sendToMain(Record)
         
         case toggleDay
     }
@@ -90,9 +99,7 @@ struct RecordEntryPointStore {
         BindingReducer()
         
         Reduce { state, action in
-            //            print("State ---- \n", state)
-            //            print("Action ---- \n", action)
-            //            print(#function, "============================\n\n")
+            
             switch action {
             case .showCancelRecordBottomSheet:
                 state.isPresentingCancel = true
@@ -112,6 +119,13 @@ struct RecordEntryPointStore {
                 state.isPresentingRecordWritingView = true
                 return .none
             case .binding:
+                return .none
+                
+            case .touchYesterdayToggleButton:
+                state.dayType = .yesterday
+                return .none
+            case .touchTodayToggleButton:
+                state.dayType = .today
                 return .none
                 
             case .touchEmptyRecordButton:
@@ -147,7 +161,7 @@ struct RecordEntryPointStore {
                 }
             case .setRecord(let event):
                 switch event {
-                case .sendToLogView(let content):
+                case .sendToRecordView(let content):
                     return .run { send in
                         switch content.flag {
                         case .good:
@@ -167,16 +181,39 @@ struct RecordEntryPointStore {
                 }
                 return .none
                 
-            case .showSaveBottomSheet:
-                state.isPresentingRecordComplete = true
+            case .readyToSave:
+                state.isReadyToSave = true
                 return .none
-            case .dismissSaveBottomSheet:
-                state.isPresentingRecordComplete = false
+            case .cancelSave:
+                state.isReadyToSave = false
                 return .none
             case .save:
-                state.isPresentingRecordComplete = false
+                state.isLoading = true
+                var buffer: [RecordContent]? = nil
+                if (state.badRecord != nil && state.goodRecord != nil) {
+                    buffer = [state.goodRecord!, state.badRecord!]
+                }
+                let records = buffer
+                let dayType = state.dayType
+                return .run { send in
+                    let date = DateManager.shared.getFormattedDate(for: dayType)
+                    let networkManager = NetworkManager.NMRecord(service: .shared)
+                    guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
+                        await send(.errorSave)
+                        return
+                    }
+                    await send(.sendToMain(Record(date: date, contents: records)))
+                }
+            
+            case .errorSave:
+                state.isLoading = false
                 return .none
-
+                
+            case .sendToMain(_):
+                let stateManager = HistoryStateManager.shared
+                stateManager.addRecord(for: state.dayType)
+                return .none
+            
             case .toggleDay:
                 return .none
             }

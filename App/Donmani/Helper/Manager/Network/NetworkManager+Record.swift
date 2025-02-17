@@ -10,24 +10,21 @@ import DNetwork
 extension NetworkManager {
     struct NMRecord {
         let service: DNetworkService
-        let dateManager: DateManager
         
         init (
-            service: DNetworkService,
-            dateManager: DateManager
+            service: DNetworkService
         ) {
             self.service = service
-            self.dateManager = dateManager
         }
         
-        func uploadRecord(recordContent: [RecordContent]) async throws {
+        func uploadRecord(date: String, recordContent: [RecordContent]?) async throws {
             let userKey = NetworkManager.userKey
             let bodyData = RecordsDTO(
                 userKey: userKey,
                 records: [
                     RecordDTO(
-                        date: dateManager.getFormattedDate(for: .today),
-                        contents: recordContent.map { content in
+                        date: date,
+                        contents: recordContent?.map { content in
                             RecordContentDTO(
                                 flag: content.flag,
                                 category: content.category,
@@ -37,9 +34,8 @@ extension NetworkManager {
                     )
                 ]
             )
-            let _: Bool = try await self.service.requestPOST(
+            let _ : Data? = try await self.service.requestPOST(
                 path: .expenses,
-                addtionalPath: ["register"],
                 bodyData: bodyData
             )
         }
@@ -54,7 +50,7 @@ extension NetworkManager {
             return responseData.records?.map { record in
                 Record(
                     date: record.date,
-                    contents: record.contents?.map { content in
+                    contents: record.contents?.compactMap{$0}.map { content in
                         RecordContent(
                             flag: content.flag,
                             category: content.category,

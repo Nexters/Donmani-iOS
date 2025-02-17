@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "UselessSticker.png",
+      "filename" : "MeaninglessnessSticker.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "UselessSticker 1.png",
+      "filename" : "MeaninglessnessSticker 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "UselessSticker 2.png",
+      "filename" : "MeaninglessnessSticker 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
