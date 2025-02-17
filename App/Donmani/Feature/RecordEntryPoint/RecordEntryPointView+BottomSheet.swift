@@ -24,7 +24,7 @@ extension RecordEntryPointView {
                         .foregroundStyle(DColor(.deepBlue90).color)
                 }
                 
-                HStack {
+                HStack(spacing: 10) {
                     Button {
                         dismissSheet {
                             store.send(.dismissCancelRecordBottomSheet)
@@ -121,38 +121,38 @@ extension RecordEntryPointView {
         }
     }
     
-    func RecordSaveConfirmView() -> some View {
-        BottomSheetView(
-            closeAction: { store.send(.dismissSaveBottomSheet) }
-        ) { dismissSheet in
-            VStack(spacing: .s3) {
-                HStack {
-                    Text("저장하면\n이 날에 대한 기록은 더 못해요!")
-                        .font(DFont.font(.h2, weight: .bold))
-                        .foregroundStyle(DColor(.gray99).color)
-                        .multilineTextAlignment(.leading)
-                    Spacer()
-                }
-                
-                VStack(alignment: .center) {
-                    DImage(.save).image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 112)
-                        .padding(.s3)
-                }
-                
-                DButton(
-                    title: "오늘도 해냈다!",
-                    isEnabled: true
-                ) {
-                    store.send(.save)
-//                    dismissSheet {
-//                        store.send(.dismissSaveBottomSheet)
-//                    }
-                    dismiss()
-                }
-            }
-        }
-    }
+//    func RecordSaveConfirmView() -> some View {
+//        BottomSheetView(
+//            closeAction: { store.send(.dismissSaveBottomSheet) }
+//        ) { dismissSheet in
+//            VStack(spacing: .s3) {
+//                HStack {
+//                    Text("저장하면\n이 날에 대한 기록은 더 못해요!")
+//                        .font(DFont.font(.h2, weight: .bold))
+//                        .foregroundStyle(DColor(.gray99).color)
+//                        .multilineTextAlignment(.leading)
+//                    Spacer()
+//                }
+//                
+//                VStack(alignment: .center) {
+//                    DImage(.save).image
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                        .frame(width: 112)
+//                        .padding(.s3)
+//                }
+//                
+//                DButton(
+//                    title: "오늘도 해냈다!",
+//                    isEnabled: true
+//                ) {
+//                    store.send(.save)
+////                    dismissSheet {
+////                        store.send(.dismissSaveBottomSheet)
+////                    }
+//                    dismiss()
+//                }
+//            }
+//        }
+//    }
 }

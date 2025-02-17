@@ -44,4 +44,11 @@ extension MainView {
         }
         .frame(width: 70, height: 70)
     }
+    
+//    func StarEffectView(
+//        record: Record
+//    ) -> some View {
+//        Color.black.opacity(0.9)
+//            
+//    }
 }

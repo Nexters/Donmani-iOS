@@ -64,7 +64,7 @@ struct RecordWritingStore {
         case binding(BindingAction<State>)
         case textChanged
         case save
-        case sendToLogView(RecordContent)
+        case sendToRecordView(RecordContent)
     }
     
     // MARK: - Reducer
@@ -122,12 +122,11 @@ struct RecordWritingStore {
                 if let savedCategory = state.savedCategory {
                     let recordContent = RecordContent(flag: state.type, category: savedCategory, memo: state.text)
                     return .run { send in
-                        await send(.sendToLogView(recordContent))
+                        await send(.sendToRecordView(recordContent))
                     }
                 }
                 return .none
-            case .sendToLogView(let content):
-                print(content)
+            case .sendToRecordView(_):
                 return .none
             }
         }

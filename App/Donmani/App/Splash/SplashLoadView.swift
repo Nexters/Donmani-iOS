@@ -33,19 +33,19 @@ struct SplashLoadView: View {
     
     private func loadData() {
         Task {
-            DFont.loadFonts()
             let keychainManager = KeychainManager()
             let (key, isFirst) = keychainManager.generateUUID()
             NetworkManager.userKey = key
-            if isFirst {
-                let newUserName = try await NetworkManager.NMUser(service: .shared).registerUser()
-                keychainManager.setUserName(name: newUserName)
+            let preUserName = keychainManager.getUserName()
+            if isFirst || preUserName.isEmpty {
+                let userName = try await NetworkManager.NMUser(service: .shared).registerUser()
+                keychainManager.setUserName(name: userName)
             }
             let userName = keychainManager.getUserName()
             DataStorage.setUserName(userName)
             let dateManager = DateManager.shared
             let today = dateManager.getFormattedDate(for: .today).components(separatedBy: "-").compactMap(Int.init)
-            let recordDAO = NetworkManager.NMRecord(service: .shared, dateManager: dateManager)
+            let recordDAO = NetworkManager.NMRecord(service: .shared)
             let records = try await recordDAO.fetchRecord(year: today[0], month: today[1])
             records.forEach { record in
                 DataStorage.setRecord(record)

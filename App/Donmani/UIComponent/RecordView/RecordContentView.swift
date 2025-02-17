@@ -44,7 +44,7 @@ struct RecordContentView: View {
                         HStack {
                             Spacer()
                             ZStack {
-                                DImage(.starShape).image
+                                DImage(.smallStar).image
                                     .resizable()
                                     .renderingMode(.template)
                                     .foregroundStyle(record.category.color)

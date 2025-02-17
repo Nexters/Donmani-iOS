@@ -13,11 +13,11 @@ extension RecordEntryPointView {
     func DayToggle() -> some View {
         HStack(spacing: 0) {
             Button {
-                
+                store.send(.touchYesterdayToggleButton)
             } label: {
                 Text("어제")
                     .font(DFont.font(.b2, weight: .semibold))
-                    .foregroundStyle(DColor(.deepBlue80).color)
+                    .foregroundStyle(store.dayType == .today ? DColor(.deepBlue80).color : DColor.accessoryButton)
             }
             .padding(12)
             
@@ -26,11 +26,11 @@ extension RecordEntryPointView {
                 .foregroundStyle(DColor(.deepBlue80).color)
             
             Button {
-                
+                store.send(.touchTodayToggleButton)
             } label: {
                 Text("오늘")
                     .font(DFont.font(.b2, weight: .semibold))
-                    .foregroundStyle(DColor.accessoryButton)
+                    .foregroundStyle(store.dayType == .today ? DColor.accessoryButton : DColor(.deepBlue80).color)
             }
             .padding(12)
         }
@@ -82,27 +82,6 @@ extension RecordEntryPointView {
         }
     }
     
-    func EmptyRecordView() -> some View {
-        ZStack {
-            RoundedRectangle(
-                cornerRadius: .s3,
-                style: .continuous
-            )
-            .fill(DColor.emptyColor)
-            VStack(alignment: .center, spacing: .defaultLayoutPadding) {
-                Text("오늘은 무소비 데이!")
-                    .font(DFont.font(.h2, weight: .bold))
-                    .foregroundStyle(DColor(.gray95).color)
-                DImage(.emptyRecord).image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: .screenWidth / 2)
-            }
-            .padding(.defaultLayoutPadding + 8)
-        }
-        .frame(height: 256)
-    }
-    
     func RecordArea() -> some View {
         Group {
             if store.isSaveEnabled {
@@ -110,37 +89,11 @@ extension RecordEntryPointView {
                     EmptyRecordView()
                 } else if let goodRecord = store.goodRecord,
                           let badRecord = store.badRecord {
-                    VStack {
-                        RecordContentView(record: goodRecord) {
-                            store.send(.editRecordWriting(goodRecord))
-                        }
-                        RecordContentView(record: badRecord) {
-                            store.send(.editRecordWriting(badRecord))
-                        }
-                    }
-                    .background(
-                        ZStack {
-                            RoundedRectangle(
-                                cornerRadius: .defaultLayoutPadding,
-                                style: .continuous
-                            )
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        goodRecord.category.color,
-                                        badRecord.category.color
-                                    ]
-                                    , startPoint: .topLeading
-                                    , endPoint: .bottomTrailing
-                                )
-                                .opacity(0.5)
-                            )
-                            RoundedRectangle(
-                                cornerRadius: .defaultLayoutPadding,
-                                style: .continuous
-                            )
-                            .fill(.white.opacity(0.1))
-                        }
+                    RecordIntegrateView(
+                        goodRecord: goodRecord,
+                        badRecord: badRecord,
+                        goodAction: {store.send(.editRecordWriting(goodRecord))},
+                        badAction: {store.send(.editRecordWriting(badRecord))}
                     )
                 }
             } else {
@@ -160,5 +113,42 @@ extension RecordEntryPointView {
                 }
             }
         }
+    }
+    
+    func ReadyToSaveButton() -> some View {
+        HStack(spacing: 10) {
+            Button {
+                store.send(.cancelSave)
+            } label: {
+                ZStack {
+                    RoundedRectangle(
+                        cornerRadius: 16.0,
+                        style: .continuous
+                    )
+                    .fill(DColor(.deepBlue50).color)
+                    .frame(height: 58)
+                    Text("돌아가기")
+                        .font(DFont.font(.h3, weight: .bold))
+                        .foregroundStyle(.white)
+                }
+            }
+            
+            Button {
+                store.send(.save)
+            } label: {
+                ZStack {
+                    RoundedRectangle(
+                        cornerRadius: 16.0,
+                        style: .continuous
+                    )
+                    .fill(DColor(.gray95).color)
+                    .frame(height: 58)
+                    Text("확인 했어요")
+                        .font(DFont.font(.h3, weight: .bold))
+                        .foregroundStyle(DColor(.deepBlue20).color)
+                }
+            }
+        }
+        .padding(.vertical, 8)
     }
 }

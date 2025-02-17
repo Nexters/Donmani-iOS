@@ -11,6 +11,7 @@ import DesignSystem
 struct SettingView: View {
     @Environment(\.dismiss) private var dismiss
     let width = UIScreen.main.bounds.width
+    @State var isPresentingPrivacyPolicyView = false
     
     // TODO: - Add Store
     
@@ -33,25 +34,43 @@ struct SettingView: View {
                 .padding(.vertical, 14)
                 
                 VStack(alignment: .center, spacing: 12) {
-                    DImage(.tempImage).image
-                    Text("노래하는 농담곰")
-                        .font(.b1, .semibold)
-                        .foregroundStyle(.white)
+                    DImage(.profile).image
+                        .resizable()
+                        .aspectRatio(1, contentMode: .fit)
+                        .frame(width: 100, height: 100)
+                    HStack(spacing: 6) {
+                        Text(DataStorage.getUserName())
+                            .font(.b1, .semibold)
+                            .foregroundStyle(.white)
+//                        Button {
+//                            
+//                        } label: {
+//                            DImage(.edit).image
+//                                .resizable()
+//                                .aspectRatio(1, contentMode: .fit)
+//                                .frame(width: .s4, height: .s4)
+//                        }
+//                        .hidden()
+                    }
                 }
                 .padding(.defaultLayoutPadding)
                 .padding(.bottom, .defaultLayoutPadding)
                 
                 VStack(alignment: .leading, spacing: 0) {
                     MenuButton(title: "개인정보 처리방침") {
-                        
+                        isPresentingPrivacyPolicyView.toggle()
                     }
                     
                     MenuButton(title: "피드백") {
                         
                     }
+                    .hidden()
                 }
                 Spacer()
                 
+            }
+            .sheet(isPresented: $isPresentingPrivacyPolicyView) {
+                PrivacyPolicyView()
             }
         }
         .navigationBarBackButtonHidden()

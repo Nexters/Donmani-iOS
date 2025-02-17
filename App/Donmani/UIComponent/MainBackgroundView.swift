@@ -94,5 +94,5 @@ struct MainBackgroundView: View {
 }
 
 #Preview {
-    MainBackgroundView()
+    MainBackgroundView(starCount: 6)
 }

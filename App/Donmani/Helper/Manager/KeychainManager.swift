@@ -61,6 +61,20 @@ final class KeychainManager {
         SecItemAdd(query as CFDictionary, nil)
     }
     
+    // Must Be Private
+    private func deleteToKeychain(to type: DataType) {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: type.key
+        ]
+        
+        // 기존 값이 있을 경우 업데이트
+        let status = SecItemDelete(query as CFDictionary)
+        if status == errSecSuccess {
+            print("Keychain 데이터 삭제 성공: \(type.key)")
+        }
+    }
+    
     /// Keychain에서 UUID 불러오기
     public func loadValue(from type: DataType) -> String? {
         let query: [String: Any] = [

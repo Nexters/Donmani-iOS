@@ -24,10 +24,12 @@ class DataStorage {
         shared.userName = name
     }
     
+    /// yyyy-MM 형식
     static func getRecord(yearMonth: String) -> [Record]? {
         shared.recordData[yearMonth]
     }
     
+    /// yyyy-MM 형식
     static func setRecord(_ record: Record) {
         let YMD = record.date.components(separatedBy: "-")
         shared.recordData["\(YMD[0])-\(YMD[1])", default: []].append(record)

@@ -6,6 +6,6 @@
 //
 
 public enum DPath: String {
-    case user
+    case users
     case expenses
 }

@@ -44,7 +44,7 @@ public final class DNetworkService {
                 url = components.url ?? url
             }
         }
-        var request = getURLReqeust(method: .GET, url: url)
+        let request = getURLReqeust(method: .GET, url: url)
         let (data, response) = try await URLSession.shared.data(for: request)
         let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500
         if stateCode >= 400 {
@@ -61,7 +61,7 @@ public final class DNetworkService {
         path: DPath,
         addtionalPath: [String] = [],
         bodyData: T
-    ) async throws -> R {
+    ) async throws -> R? {
         guard var url = URL(string: baseURL) else {
             throw NetworkError.invalidURL
         }
@@ -84,7 +84,7 @@ public final class DNetworkService {
         }
         
         if data.count == 0 {
-            return Data() as! R
+            return nil
         }
         
         guard let responseData = try? JSONDecoder().decode(R.self, from: data) else {
