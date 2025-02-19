@@ -6,14 +6,14 @@
 //
 
 import SwiftUI
-
-struct PrivacyPolicyView: View {
-    let url = "https://littlemoom.notion.site/bbs-term?pvs=4"
+struct FeedbackView: View {
+    let url = "https://forms.gle/G32u2RTKjHM8Fwef7"
     var body: some View {
         InnerWebView(urlString: url)
     }
 }
 
 #Preview {
-    PrivacyPolicyView()
+    FeedbackView()
 }
+

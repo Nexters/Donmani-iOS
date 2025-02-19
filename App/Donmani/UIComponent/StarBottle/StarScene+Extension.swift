@@ -41,11 +41,14 @@ extension StarScene {
             return
         }
         nodeSet.insert(record.date)
-
-        let size = CGSize(width: width/6, height: width/6)
+        let starSize = width/6
+        let size = CGSize(width: starSize - 1, height: starSize - 1)
         let starNode = SKSpriteNode(texture: Self.starShapeTexture)
         starNode.size = size
-        starNode.position = CGPoint(x: width / 2, y: width * 1.15 - width/6)
+        starNode.position = CGPoint(
+            x: (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) % 6),
+            y: (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) / 6)
+        )
         starNode.physicsBody = SKPhysicsBody(texture: starNode.texture!, size: starNode.size)
         starNode.physicsBody?.affectedByGravity = true
         

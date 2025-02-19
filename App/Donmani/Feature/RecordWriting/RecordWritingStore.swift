@@ -30,6 +30,7 @@ struct RecordWritingStore {
         var isPresentingSelectCategory: Bool = false
         var isFocused: Bool = false
         var isPresendTextGuide: Bool = false
+        var isFocusToTextField: Bool = false
         
         init(
             type: RecordContentType,
@@ -86,6 +87,7 @@ struct RecordWritingStore {
                 return .none
                 
             case .saveCategory(let category):
+                state.isFocusToTextField = true
                 state.savedCategory = category
                 state.sticker = category.image
                 state.selectedCategory = nil
@@ -96,6 +98,7 @@ struct RecordWritingStore {
                 return .none
                 
             case .closeCategory:
+                state.isFocusToTextField = true
                 state.isPresentingSelectCategory = false
                 return .none
                 

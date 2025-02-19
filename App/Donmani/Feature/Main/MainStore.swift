@@ -27,8 +27,11 @@ struct MainStore {
         var isPresentingRecordEntryButton: Bool = true
         var currentRecord: Record? = nil
         var recordEntryPointState = RecordEntryPointStore.State(isCompleteToday: true, isCompleteYesterday: true)
+        var isPresentingUpdateApp: Bool
+        var isLoading: Bool = false
         
-        init() {
+        init(isLatestVersion: Bool) {
+            self.isPresentingUpdateApp = !isLatestVersion
             let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
             self.monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
             let state = HistoryStateManager.shared.getState()
@@ -45,6 +48,7 @@ struct MainStore {
     // MARK: - Action
     enum Action: BindableAction, Equatable {
         case touchStarBottle
+        case presentRecordListView
         case touchRecordEntryButton
         case touchSettingButton
         case checkEnableRecord
@@ -69,9 +73,20 @@ struct MainStore {
         Reduce { state, action in
             switch action {
             case .touchStarBottle:
+                state.isLoading = true
+                return .run { send in
+                    await send(.presentRecordListView)
+                }
+            case .presentRecordListView:
+                state.isLoading = false
                 state.isPresentingRecordListView = true
                 return .none
             case .touchRecordEntryButton:
+                let stateManager = HistoryStateManager.shared.getState()
+                state.recordEntryPointState = RecordEntryPointStore.State(
+                    isCompleteToday: stateManager[.today, default: false],
+                    isCompleteYesterday: stateManager[.yesterday, default: false]
+                )
                 state.isPresentingRecordEntryView = true
                 return .none
             case .touchSettingButton:

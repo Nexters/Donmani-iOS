@@ -31,45 +31,10 @@ extension RecordWritingView {
                             style: .continuous
                         )
                     )
-                    .offset(x: 0, y: -170)
+                    .offset(x: 0, y: -180)
                     .blur(radius: 70.0)
                     .padding(.horizontal, -.screenWidth)
                 Spacer()
-            }
-        }
-    }
-                        
-    
-    func SelectCategoryView() -> some View {
-        BottomSheetView(
-            closeAction: { store.send(.closeCategory) }
-        ) { dismissSheet in
-            Text("소비가 \(store.type.selectTitle)던 이유는?")
-                .font(DFont.font(.h2, weight: .bold))
-                .foregroundStyle(.white)
-            LazyVGrid(
-                columns: RecordWritingView.categoryColumns,
-                spacing: .s3
-            ) {
-                ForEach(store.category.indices, id: \.self) { i in
-                    CategoryButton(
-                        category: store.category[i],
-                        isSelected: store.category[i].title == (store.selectedCategory?.title ?? ""),
-                        initState: (store.selectedCategory == nil)
-                    )
-                }
-            }
-            .padding(.vertical, .s3)
-            
-            DButton(
-                title: "완료",
-                isEnabled: store.selectedCategory != nil
-            ) {
-                if let selectedCategory = store.selectedCategory {
-                    dismissSheet {
-                        store.send(.saveCategory(selectedCategory))
-                    }
-                }
             }
         }
     }
@@ -101,25 +66,6 @@ extension RecordWritingView {
             }
         }
         .padding(.horizontal, .s5)
-    }
-    
-    func SaveButton(
-        iaActive: Bool,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button {
-            action()
-        } label: {
-            ZStack {
-                Capsule(style: .circular)
-                    .fill((iaActive ? DColor(.gray95) : DColor(.deepBlue20)).color)
-                Text("완료")
-                    .font(DFont.font(.b1, weight: .bold))
-                    .foregroundStyle((iaActive ? DColor(.deepBlue20) : DColor(.deepBlue70)).color)
-            }
-        }
-        .frame(width: 60, height: 40)
-        .padding(.bottom, 8)
     }
     
     func TextGuideView() -> some View {
