@@ -9,7 +9,10 @@ import Foundation
 
 public final class DNetworkService {
     public static let shared = DNetworkService()
-    private var baseURL = "http://211.188.60.38:8080"
+    public static let appStoreURL = "itms-apps://itunes.apple.com/kr/app/apple-store/id6741164570"
+    
+    private let baseURL = "http://211.188.60.38:8080"
+    private let appInfoURL = "https://itunes.apple.com/lookup?bundleId=com.nexters.Donmani"
     
     private init() {
         
@@ -21,6 +24,23 @@ public final class DNetworkService {
         request.setValue("application/json;charset=UTF-8", forHTTPHeaderField: "accept")
         request.setValue("application/json;charset=UTF-8", forHTTPHeaderField: "Content-Type")
         return request
+    }
+    
+    public func requestAppVersion<T: Codable>() async throws -> T  {
+        guard let url = URL(string: appInfoURL) else {
+            throw NetworkError.invalidURL
+        }
+        let request = getURLReqeust(method: .GET, url: url)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500
+        if stateCode >= 400 {
+            throw NetworkError.serverError(statusCode: stateCode)
+        }
+        
+        guard let returnData = try? JSONDecoder().decode(T.self, from: data) else {
+            throw NetworkError.decodingFailed
+        }
+        return returnData
     }
 
     public func requestGET<T: Codable>(

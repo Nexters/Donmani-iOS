@@ -40,11 +40,32 @@ extension NetworkManager {
             )
         }
         
-        func fetchRecord(year: Int, month: Int) async throws -> [Record] {
+        func fetchRecordForCalendar(year: Int, month: Int) async throws -> [Record] {
             let userKey = NetworkManager.userKey
             let responseData: RecordsDTO = try await self.service.requestGET(
                 path: .expenses,
                 addtionalPath: ["calendar", userKey],
+                parameters: ["year": year, "month": month]
+            )
+            return responseData.records?.map { record in
+                Record(
+                    date: record.date,
+                    contents: record.contents?.compactMap{$0}.map { content in
+                        RecordContent(
+                            flag: content.flag,
+                            category: content.category,
+                            memo: content.memo
+                        )
+                    }
+                )
+            } ?? []
+        }
+        
+        func fetchRecordForList(year: Int, month: Int) async throws -> [Record] {
+            let userKey = NetworkManager.userKey
+            let responseData: RecordsDTO = try await self.service.requestGET(
+                path: .expenses,
+                addtionalPath: ["list", userKey],
                 parameters: ["year": year, "month": month]
             )
             return responseData.records?.map { record in

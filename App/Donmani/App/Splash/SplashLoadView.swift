@@ -13,6 +13,7 @@ import ComposableArchitecture
 struct SplashLoadView: View {
     @State var navigationPath = NavigationPath()
     @State var isLoading: Bool = true
+    @State var isLatestVersion: Bool = true
     
     var body: some View {
         if isLoading {
@@ -23,35 +24,12 @@ struct SplashLoadView: View {
         } else {
             NavigationStack(path: $navigationPath) {
                 MainView(
-                    store: Store(initialState: MainStore.State()) {
+                    store: Store(initialState: MainStore.State(
+                        isLatestVersion: isLatestVersion
+                    )) {
                         MainStore()
                     }
                 )
-            }
-        }
-    }
-    
-    private func loadData() {
-        Task {
-            let keychainManager = KeychainManager()
-            let (key, isFirst) = keychainManager.generateUUID()
-            NetworkManager.userKey = key
-            let preUserName = keychainManager.getUserName()
-            if isFirst || preUserName.isEmpty {
-                let userName = try await NetworkManager.NMUser(service: .shared).registerUser()
-                keychainManager.setUserName(name: userName)
-            }
-            let userName = keychainManager.getUserName()
-            DataStorage.setUserName(userName)
-            let dateManager = DateManager.shared
-            let today = dateManager.getFormattedDate(for: .today).components(separatedBy: "-").compactMap(Int.init)
-            let recordDAO = NetworkManager.NMRecord(service: .shared)
-            let records = try await recordDAO.fetchRecord(year: today[0], month: today[1])
-            records.forEach { record in
-                DataStorage.setRecord(record)
-            }
-            withAnimation(.smooth) {
-                isLoading = false
             }
         }
     }
@@ -60,3 +38,14 @@ struct SplashLoadView: View {
 #Preview {
     SplashLoadView()
 }
+
+//extension UINavigationController: @retroactive UIGestureRecognizerDelegate {
+//    override open func viewDidLoad() {
+//        super.viewDidLoad()
+//        interactivePopGestureRecognizer?.delegate = self
+//    }
+//
+//    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+//        return viewControllers.count > 1
+//    }
+//}

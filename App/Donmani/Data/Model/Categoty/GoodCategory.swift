@@ -28,7 +28,7 @@ extension GoodCategory {
         case .dignity: return "품위유지"
         case .affection: return "마음전달"
         case .health: return "건강"
-        case .none: return "무소비"
+        case .none: return "없음"
         }
     }
     

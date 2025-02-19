@@ -19,6 +19,7 @@ struct RecordEntryPointStore {
         
         var goodRecord: RecordContent?
         var badRecord: RecordContent?
+//        = .init(flag: .bad, category: .init(BadCategory.addiction), memo: "asdfasdfasdfasdf")
         var isCheckedEmptyRecord: Bool = false
         
         var dayType: DayType = .today
@@ -26,6 +27,7 @@ struct RecordEntryPointStore {
         var isPresentingCancel: Bool = false
         var isPresentingRecordEmpty: Bool = false
         var isPresentingRecordWritingView: Bool = false
+        var isPresentingRecordGuideView: Bool = false
         
         var recordWritingState = RecordWritingStore.State(type: .good)
         
@@ -37,6 +39,7 @@ struct RecordEntryPointStore {
         var isLoading: Bool = false
         
         init(isCompleteToday: Bool, isCompleteYesterday: Bool) {
+            self.isPresentingRecordGuideView = HistoryStateManager.shared.getGuideState()
             self.isCompleteToday = isCompleteToday
             self.isCompleteYesterday = isCompleteYesterday
             self.dayType = isCompleteToday ? .yesterday : .today
@@ -59,6 +62,8 @@ struct RecordEntryPointStore {
         case dismissCancelRecordBottomSheet
         case cancelRecording
         
+        case dismissRecordGuideBottomSheet
+        
         case editRecordWriting(RecordContent)
         case startRecordWriting(RecordContentType)
         
@@ -76,8 +81,7 @@ struct RecordEntryPointStore {
         case setRecord(RecordWritingStore.Action)
         case checkRecord
         
-//        case showSaveBottomSheet
-//        case dismissSaveBottomSheet
+        
         case readyToSave
         case cancelSave
         case errorSave
@@ -110,6 +114,11 @@ struct RecordEntryPointStore {
             case .cancelRecording:
                 state.isPresentingCancel = false
                 return .none
+                
+            case .dismissRecordGuideBottomSheet:
+                state.isPresentingRecordGuideView = false
+                return .none
+                
             case .editRecordWriting(let content):
                 state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
                 state.isPresentingRecordWritingView = true

@@ -28,7 +28,7 @@ extension BadCategory {
         case .boastfulness: return  "과시"
         case .habit: return "습관반복"
         case .overfrugality: return  "과한절약"
-        case .none: return  "무소비"
+        case .none: return  "없음"
         }
     }
     

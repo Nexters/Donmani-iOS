@@ -35,32 +35,37 @@ struct RecordContentView: View {
                 }
             }
             HStack(spacing: 12) {
-                ZStack {
-                    record.category.image
-                        .resizable()
-                        .aspectRatio(1, contentMode: .fit)
-                    VStack {
-                        Spacer()
-                        HStack {
+                VStack {
+                    ZStack {
+                        record.category.image
+                            .resizable()
+                            .aspectRatio(1, contentMode: .fit)
+                        VStack {
                             Spacer()
-                            ZStack {
-                                DImage(.smallStar).image
-                                    .resizable()
-                                    .renderingMode(.template)
-                                    .foregroundStyle(record.category.color)
-                                    .aspectRatio(1, contentMode: .fit)
-                                    .overlay {
-                                        DImage(.starSingleHighlighter).image
-                                            .resizable()
-                                            .aspectRatio(1, contentMode: .fit)
-                                    }
-                                    .frame(width: .s2)
-                                    .offset(x: 0, y: 8)
+                            HStack {
+                                Spacer()
+                                ZStack {
+                                    DImage(.smallStar).image
+                                        .resizable()
+                                        .renderingMode(.template)
+                                        .foregroundStyle(record.category.color)
+                                        .aspectRatio(1, contentMode: .fit)
+                                        .overlay {
+                                            DImage(.starSingleHighlighter).image
+                                                .resizable()
+                                                .aspectRatio(1, contentMode: .fit)
+                                        }
+                                        .frame(width: .s2)
+                                        .offset(x: 0, y: 8)
+                                }
                             }
                         }
+                        .aspectRatio(1, contentMode: .fit)
                     }
+                    .frame(width: 78)
+                    Spacer()
                 }
-                .frame(width: 78)
+                
                 Text(record.memo)
                     .font(DFont.font(.b1, weight: .medium))
                     .foregroundStyle(DColor(.gray95).color)

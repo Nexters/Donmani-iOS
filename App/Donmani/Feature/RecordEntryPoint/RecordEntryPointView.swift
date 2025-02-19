@@ -11,6 +11,7 @@ import DesignSystem
 
 struct RecordEntryPointView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
     @Bindable var store: StoreOf<RecordEntryPointStore>
     
     var body: some View {
@@ -32,7 +33,15 @@ struct RecordEntryPointView: View {
                 
                 HStack {
                     DBackButton {
-                        store.send(.showCancelRecordBottomSheet)
+                        if (
+                            store.goodRecord == nil
+                            && store.badRecord == nil
+                            && !store.isCheckedEmptyRecord
+                        ) {
+                            dismiss()
+                        } else {
+                            store.send(.showCancelRecordBottomSheet)
+                        }
                     }
                     Spacer()
                     if (store.isPresentingDayToggle) {
@@ -67,11 +76,13 @@ struct RecordEntryPointView: View {
                 // 저장
                 VStack(spacing: 0) {
                     if !store.isReadyToSave {
-                        HStack(spacing: 4) {
-                            DImage(.save).image
+                        HStack(spacing: 0) {
+                            DImage(.starShape).image
                                 .resizable()
+                                .renderingMode(.template)
                                 .aspectRatio(contentMode: .fit)
-                                .frame(height: .s4)
+                                .foregroundStyle(DColor(.pupleBlue90).color)
+                                .frame(width: 22)
                             Text("기록하고 별사탕 받자!")
                                 .font(DFont.font(.b2, weight: .semibold))
                                 .foregroundStyle(DColor(.pupleBlue90).color)
@@ -102,9 +113,10 @@ struct RecordEntryPointView: View {
                 CancelRecordConfirmView()
             }
             
-//            if store.isPresentingRecordComplete {
-//                RecordSaveConfirmView()
-//            }
+            if store.isPresentingRecordGuideView {
+                RecordGuideView()
+            }
+            
             if store.isLoading {
                 Color.black.opacity(0.1)
             }

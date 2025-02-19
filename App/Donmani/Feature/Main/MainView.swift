@@ -61,7 +61,9 @@ struct MainView: View {
                     HStack(spacing: 4) {
                         DImage(.starShape).image
                             .resizable()
+                            .renderingMode(.template)
                             .aspectRatio(contentMode: .fit)
+                            .foregroundStyle(DColor(.pupleBlue90).color)
                             .frame(width: 22)
                         Text("오늘 남길 수 있는 기록은 모두 작성했어요!")
                             .font(DFont.font(.b2, weight: .semibold))
@@ -69,25 +71,36 @@ struct MainView: View {
                     }
                 }
             }
-            .navigationDestination(isPresented: $store.isPresentingRecordEntryView) {
-                let recordEntryPointStore = store.scope(state: \.recordEntryPointState, action: \.reciveRecord)
-                RecordEntryPointView(store: recordEntryPointStore)
-            }
-            .navigationDestination(isPresented: $store.isPresentingRecordListView) {
-                RecordListView(
-                    store: Store(initialState: RecordListStore.State()) {
-                        RecordListStore()
-                    }
-                )
-            }
             .padding(.vertical, 16)
+            
+            if store.isPresentingUpdateApp {
+                AppStoreView()
+            }
+            
+            if store.isLoading {
+                Color.black.opacity(0.1)
+                    .ignoresSafeArea()
+            }
+        }
+        .navigationDestination(isPresented: $store.isPresentingRecordEntryView) {
+            let recordEntryPointStore = store.scope(state: \.recordEntryPointState, action: \.reciveRecord)
+            RecordEntryPointView(store: recordEntryPointStore)
+        }
+        .navigationDestination(isPresented: $store.isPresentingRecordListView) {
+            RecordListView(
+                store: Store(initialState: RecordListStore.State()) {
+                    RecordListStore()
+                }
+            )
         }
     }
 }
 
 #Preview {
     MainView(
-        store: Store(initialState: MainStore.State()) {
+        store: Store(initialState: MainStore.State(
+            isLatestVersion: false
+        )) {
             MainStore()
         }
     )
