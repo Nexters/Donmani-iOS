@@ -32,23 +32,54 @@ extension StarScene {
         addChild(roundRectNode)
     }
     
-    func createStarNode(
+    public func createNewStarNode(
         width: CGFloat,
         height: CGFloat,
         record: Record
     ) {
+        let starSize = width/6
+        let position = CGPoint(
+            x: width / 2,
+            y: height - starSize * 1.7
+        )
+        createStarNode(
+            starSize: starSize,
+            position: position,
+            record: record
+        )
+    }
+    
+    public func createInitStarNode(
+        width: CGFloat,
+        height: CGFloat,
+        record: Record
+    ) {
+        
         if nodeSet.contains(record.date) {
             return
         }
         nodeSet.insert(record.date)
         let starSize = width/6
+        let position = CGPoint(
+            x: (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) % 6),
+            y: (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) / 6) + starSize
+        )
+        createStarNode(
+            starSize: starSize,
+            position: position,
+            record: record
+        )
+    }
+    
+    private func createStarNode(
+        starSize: CGFloat,
+        position: CGPoint,
+        record: Record
+    ) {
         let size = CGSize(width: starSize - 1, height: starSize - 1)
         let starNode = SKSpriteNode(texture: Self.starShapeTexture)
         starNode.size = size
-        starNode.position = CGPoint(
-            x: (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) % 6),
-            y: (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) / 6)
-        )
+        starNode.position = position
         starNode.physicsBody = SKPhysicsBody(texture: starNode.texture!, size: starNode.size)
         starNode.physicsBody?.affectedByGravity = true
         

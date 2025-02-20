@@ -18,7 +18,7 @@ final class StarScene: SKScene {
         super.sceneDidLoad()
         self.scaleMode = .aspectFit
         self.backgroundColor = .clear
-        self.physicsWorld.gravity = CGVector(dx: 0.0, dy: 2.0)
+        self.physicsWorld.gravity = CGVector(dx: 0.0, dy: 0.0)
     }
     
     public func setGravity(dx: Double, dy: Double) {
