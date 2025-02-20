@@ -40,15 +40,15 @@ struct StarBottleView: View {
                 width: width,
                 height: height
             )
-            MotionManager.startGyros { dx, dy in
-                starScene.setGravity(dx: dx, dy: -dy)
-            }
             records.forEach {
-                starScene.createStarNode(
+                starScene.createInitStarNode(
                     width: width,
                     height: height,
                     record: $0
                 )
+            }
+            MotionManager.startGyros { dx, dy in
+                starScene.setGravity(dx: dx, dy: -dy)
             }
         }
         .onDisappear {
@@ -56,13 +56,20 @@ struct StarBottleView: View {
         }
         .onChange(of: records) { (new, old) in
             if let record = records.last {
-                starScene.createStarNode(
+                starScene.createNewStarNode(
                     width: width,
                     height: height,
                     record: record
                 )
             }
         }
+//        .onTapGesture {
+//            starScene.createNewStarNode(
+//                width: width,
+//                height: height,
+//                record: .init(date: "asdf")
+//            )
+//        }
     }
 }
 

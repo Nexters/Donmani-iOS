@@ -75,10 +75,15 @@ extension SettingView {
                     }
                 }
                 .padding(8)
+                
                 HStack(alignment: .top) {
-                    Text("한글, 영문, 숫자, 띄어쓰기 가능해요")
-                        .font(DFont.font(.b2, weight: .regular))
-                        .foregroundStyle(DColor(.deepBlue80).color)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("최소 2자 이상, 최대 12자 이하")
+                        Text("한글, 영문, 숫자, 띄어쓰기 가능해요")
+                    }
+                    .font(DFont.font(.b2, weight: .regular))
+                    .foregroundStyle(DColor(.deepBlue80).color)
+                    
                     Spacer()
                     DCompleteButton(
                         isActive: isSaveEnable
