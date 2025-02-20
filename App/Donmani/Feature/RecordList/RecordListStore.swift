@@ -13,7 +13,11 @@ struct RecordListStore {
     // MARK: - State
     @ObservableState
     struct State {
-        
+        let record: [Record]
+        init() {
+            let yearMonth = DateManager.shared.getFormattedDate(for: .today, .yearMonth)
+            self.record = DataStorage.getRecord(yearMonth: yearMonth) ?? []
+        }
     }
     
     // MARK: - Action

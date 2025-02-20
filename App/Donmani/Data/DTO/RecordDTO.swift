@@ -7,5 +7,5 @@
 
 struct RecordDTO: Codable {
     var date: String
-    var contents: [RecordContentDTO]?
+    var contents: [RecordContentDTO?]?
 }

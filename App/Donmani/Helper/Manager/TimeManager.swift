@@ -7,7 +7,7 @@
 
 import Foundation
 
-class TimeManager {
+final class TimeManager {
     static private var timer: Timer?
     static private var remainingTimeInSeconds: Int = 0
 

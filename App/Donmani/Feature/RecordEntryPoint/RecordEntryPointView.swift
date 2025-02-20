@@ -11,28 +11,48 @@ import DesignSystem
 
 struct RecordEntryPointView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
     @Bindable var store: StoreOf<RecordEntryPointStore>
     
     var body: some View {
         
         ZStack {
             BackgroundView()
+            if store.isReadyToSave {
+                ZStack {
+                    Color.black.opacity(0.6)
+                        .ignoresSafeArea()
+                }
+                .padding(-1)
+            }
             VStack(
                 alignment: .center,
                 spacing: .defaultLayoutPadding
             ) {
                 // Navigation Bar
+                
                 HStack {
                     DBackButton {
-                        store.send(.showCancelRecordBottomSheet)
+                        if (
+                            store.goodRecord == nil
+                            && store.badRecord == nil
+                            && !store.isCheckedEmptyRecord
+                        ) {
+                            dismiss()
+                        } else {
+                            store.send(.showCancelRecordBottomSheet)
+                        }
                     }
                     Spacer()
-                    DayToggle()
+                    if (store.isPresentingDayToggle) {
+                        DayToggle()
+                    }
                 }
                 .frame(height: .navigationBarHeight)
+                .opacity(store.isReadyToSave ? 0 : 1)
                 
                 ScrollView {
-                    Text(store.title)
+                    Text(store.isReadyToSave ? "저장하면 수정할 수 없어요!" : store.title)
                         .font(DFont.font(.h1, weight: .bold))
                         .foregroundStyle(.white)
                         .padding(.bottom, 40)
@@ -43,35 +63,44 @@ struct RecordEntryPointView: View {
                         spacing: .defaultLayoutPadding
                     ) {
                         RecordArea()
-                        EmptyRecordButton(isChecked: store.isCheckedEmptyRecord) {
-                            store.send(.touchEmptyRecordButton)
+                        if !store.isReadyToSave {
+                            EmptyRecordButton(isChecked: store.isCheckedEmptyRecord) {
+                                store.send(.touchEmptyRecordButton)
+                            }
                         }
                         Spacer()
                     }
-                    
-                    
                     Spacer()
                 }
                 
                 // 저장
                 VStack(spacing: 0) {
-                    HStack(spacing: 4) {
-                        DImage(.save).image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: .s4)
-                        Text("기록하고 별사탕 받자!")
-                            .font(DFont.font(.b2, weight: .semibold))
-                            .foregroundStyle(DColor(.pupleBlue90).color)
-                            .padding(8)
+                    if !store.isReadyToSave {
+                        HStack(spacing: 0) {
+                            DImage(.starShape).image
+                                .resizable()
+                                .renderingMode(.template)
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundStyle(DColor(.pupleBlue90).color)
+                                .frame(width: 22)
+                            Text("기록하고 별사탕 받자!")
+                                .font(DFont.font(.b2, weight: .semibold))
+                                .foregroundStyle(DColor(.pupleBlue90).color)
+                                .padding(8)
+                        }
                     }
-                    DButton(
-                        title: "저장하기",
-                        isEnabled: store.isSaveEnabled
-                    ) {
-                        store.send(.showSaveBottomSheet)
+                    
+                    if store.isReadyToSave {
+                        ReadyToSaveButton()
+                    } else {
+                        DButton(
+                            title: "저장하기",
+                            isEnabled: store.isSaveEnabled
+                        ) {
+                            store.send(.readyToSave)
+                        }
+                        .padding(8)
                     }
-                    .padding(8)
                 }
             }
             .padding(.horizontal, .defaultLayoutPadding)
@@ -84,8 +113,12 @@ struct RecordEntryPointView: View {
                 CancelRecordConfirmView()
             }
             
-            if store.isPresentingRecordComplete {
-                RecordSaveConfirmView()
+            if store.isPresentingRecordGuideView {
+                RecordGuideView()
+            }
+            
+            if store.isLoading {
+                Color.black.opacity(0.1)
             }
         }
         .navigationDestination(isPresented: $store.isPresentingRecordWritingView) {

@@ -9,7 +9,7 @@ final class RecordModelConvertor {
     static func DTOtoDataModel(_ dto: RecordDTO) -> (Record) {
         Record(
             date: dto.date,
-            contents: dto.contents?.map { contentDTO in
+            contents: dto.contents?.compactMap{$0}.map { contentDTO in
                 RecordContent(
                     flag: contentDTO.flag,
                     category: contentDTO.category,
