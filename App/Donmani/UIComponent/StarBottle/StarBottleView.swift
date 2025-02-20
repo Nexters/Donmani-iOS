@@ -9,6 +9,8 @@ import SwiftUI
 import SpriteKit
 
 struct StarBottleView: View {
+    @Binding var records: [Record]
+    
     var width: CGFloat {
         .screenWidth * 0.8
     }
@@ -41,19 +43,29 @@ struct StarBottleView: View {
             MotionManager.startGyros { dx, dy in
                 starScene.setGravity(dx: dx, dy: -dy)
             }
+            records.forEach {
+                starScene.createStarNode(
+                    width: width,
+                    height: height,
+                    record: $0
+                )
+            }
         }
         .onDisappear {
             MotionManager.stopGyros()
         }
-//        .onTapGesture {
-//            starScene.addStarNode(
-//                width: width,
-//                height: height
-//            )
-//        }
+        .onChange(of: records) { (new, old) in
+            if let record = records.last {
+                starScene.createStarNode(
+                    width: width,
+                    height: height,
+                    record: record
+                )
+            }
+        }
     }
 }
 
-#Preview {
-    StarBottleView()
-}
+//#Preview {
+//    StarBottleView()
+//}

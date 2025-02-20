@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C753176C2D60CC84000F8A8C /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = C753176B2D60CC84000F8A8C /* Glur */; };
+		C781510E2D60E10C00026BC1 /* DNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C781510D2D60E10C00026BC1 /* DNetwork.framework */; };
+		C781510F2D60E10C00026BC1 /* DNetwork.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C781510D2D60E10C00026BC1 /* DNetwork.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C7A6A2962D4A89D500B4CF35 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = C7A6A2952D4A89D500B4CF35 /* ComposableArchitecture */; };
 		C7BF8A352D50F4F600ACE68D /* DesignSystem.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */; };
 		C7BF8A362D50F4F600ACE68D /* DesignSystem.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -37,6 +38,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C781510F2D60E10C00026BC1 /* DNetwork.framework in Embed Frameworks */,
 				C7BF8A362D50F4F600ACE68D /* DesignSystem.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -45,15 +47,29 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C781510D2D60E10C00026BC1 /* DNetwork.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DNetwork.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7A6A24E2D4A826B00B4CF35 /* Donmani.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Donmani.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7A6A25E2D4A826D00B4CF35 /* DonmaniTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DonmaniTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7A6A2682D4A826D00B4CF35 /* DonmaniUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DonmaniUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DesignSystem.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C78151322D61225C00026BC1 /* Exceptions for "Donmani" folder in "Donmani" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C7A6A24D2D4A826B00B4CF35 /* Donmani */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C7A6A2502D4A826B00B4CF35 /* Donmani */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C78151322D61225C00026BC1 /* Exceptions for "Donmani" folder in "Donmani" target */,
+			);
 			path = Donmani;
 			sourceTree = "<group>";
 		};
@@ -75,8 +91,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7A6A2962D4A89D500B4CF35 /* ComposableArchitecture in Frameworks */,
+				C781510E2D60E10C00026BC1 /* DNetwork.framework in Frameworks */,
 				C7BF8A352D50F4F600ACE68D /* DesignSystem.framework in Frameworks */,
-				C753176C2D60CC84000F8A8C /* Glur in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +137,7 @@
 		C7BF8A332D50F4F600ACE68D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C781510D2D60E10C00026BC1 /* DNetwork.framework */,
 				C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */,
 			);
 			name = Frameworks;
@@ -148,7 +165,6 @@
 			name = Donmani;
 			packageProductDependencies = (
 				C7A6A2952D4A89D500B4CF35 /* ComposableArchitecture */,
-				C753176B2D60CC84000F8A8C /* Glur */,
 			);
 			productName = Donmani;
 			productReference = C7A6A24E2D4A826B00B4CF35 /* Donmani.app */;
@@ -234,7 +250,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				C7A6A2942D4A89D500B4CF35 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
-				C753176A2D60CC84000F8A8C /* XCRemoteSwiftPackageReference "Glur" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C7A6A24F2D4A826B00B4CF35 /* Products */;
@@ -435,11 +450,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_ASSET_PATHS = "\"Donmani/Assets/Preview Content\"";
 				DEVELOPMENT_TEAM = Z629PZ4XVL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Donmani/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "별별소";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -452,12 +468,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nexters.Donmani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -467,11 +485,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_ASSET_PATHS = "\"Donmani/Assets/Preview Content\"";
 				DEVELOPMENT_TEAM = Z629PZ4XVL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Donmani/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "별별소";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -484,12 +503,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nexters.Donmani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -609,14 +630,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C753176A2D60CC84000F8A8C /* XCRemoteSwiftPackageReference "Glur" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/joogps/Glur.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.4;
-			};
-		};
 		C7A6A2942D4A89D500B4CF35 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
@@ -628,11 +641,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C753176B2D60CC84000F8A8C /* Glur */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C753176A2D60CC84000F8A8C /* XCRemoteSwiftPackageReference "Glur" */;
-			productName = Glur;
-		};
 		C7A6A2952D4A89D500B4CF35 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C7A6A2942D4A89D500B4CF35 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;

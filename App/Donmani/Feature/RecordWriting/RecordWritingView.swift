@@ -12,6 +12,7 @@ import DesignSystem
 struct RecordWritingView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<RecordWritingStore>
+    @FocusState var isFocusToTextField: Bool
     
     var body: some View {
         ZStack {
@@ -28,7 +29,7 @@ struct RecordWritingView: View {
                         }
                         Spacer()
                     }
-                    Text(store.type.title)
+                    Text("\(store.type.title) 소비")
                         .font(DFont.font(.b1, weight: .bold))
                         .foregroundStyle(.white)
                 }
@@ -36,24 +37,24 @@ struct RecordWritingView: View {
                 
                 VStack(spacing: .defaultLayoutPadding) {
                     ZStack {
-                        store.sticker
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                        .frame(width: .stickerSize, height: .stickerSize)
-                        .overlay {
-                            VStack(spacing: 0) {
-                                HStack(spacing: 0) {
-                                    Spacer()
-                                    Button {
-                                        store.send(.openCategory)
-                                    } label: {
-                                        DImage(.editCategory).image
+                        Button {
+                            store.send(.openCategory)
+                        } label: {
+                            store.sticker
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: .stickerSize, height: .stickerSize)
+                                .overlay {
+                                    VStack(spacing: 0) {
+                                        HStack(spacing: 0) {
+                                            Spacer()
+                                            DImage(.editCategory).image
+                                            .frame(width: 40, height: 40)
+                                            .offset(x: 20, y: 0)
+                                        }
+                                        Spacer()
                                     }
-                                    .frame(width: 40, height: 40)
-                                    .offset(x: 20, y: 0)
                                 }
-                                Spacer()
-                            }
                         }
                     }
                     Text(store.savedCategory?.title ?? " ")
@@ -66,16 +67,18 @@ struct RecordWritingView: View {
                             text: $store.text,
                             axis: .vertical
                         ) {
-                            Text("어떤 소비를 했나요?")
+                            Text("소비가 \(store.type.selectTitle)던 이유는?")
                                 .font(DFont.font(.b1, weight: .medium))
                                 .foregroundStyle(DColor(.deepBlue80).color)
                         }
+                        .focused($isFocusToTextField)
                         .font(DFont.font(.b1, weight: .medium))
                         .foregroundStyle(.white)
                         .lineLimit(5...)
                         .frame(height: 100)
                         .scrollContentBackground(.hidden)
                         .background(.clear)
+                        .bind($store.isFocusToTextField, to: $isFocusToTextField)
                         
                         HStack {
                             Spacer()
@@ -91,8 +94,8 @@ struct RecordWritingView: View {
                 // Complete Button
                 HStack {
                     Spacer()
-                    SaveButton(
-                        iaActive: store.isSaveEnabled
+                    DCompleteButton(
+                        isActive: store.isSaveEnabled
                     ) {
                         store.send(.save)
                         dismiss()

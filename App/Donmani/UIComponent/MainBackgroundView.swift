@@ -9,17 +9,21 @@ import SwiftUI
 import DesignSystem
 
 struct MainBackgroundView: View {
-    let dotSize: CGFloat = 2
-    let starSize: CGFloat = 12
-    
     struct RandomCoordinate: Identifiable {
         let id = UUID()
         var x: CGFloat
         var y: CGFloat
     }
     
+    let dotSize: CGFloat = 2
+    let starSize: CGFloat = 12
+    let count: Int
     @State private var dotCoordinates: [RandomCoordinate] = []
     @State private var starCoordinates: [RandomCoordinate] = []
+    
+    init (starCount: Int) {
+        self.count = starCount
+    }
     
     var body: some View {
         ZStack {
@@ -73,7 +77,6 @@ struct MainBackgroundView: View {
     }
     
     private func fetchUI(in size: CGRect) {
-        let count: Int = 6
         let edge: CGFloat = 30.0
         starCoordinates = (0..<count).map { _ in
             RandomCoordinate(
@@ -91,5 +94,5 @@ struct MainBackgroundView: View {
 }
 
 #Preview {
-    MainBackgroundView()
+    MainBackgroundView(starCount: 6)
 }
