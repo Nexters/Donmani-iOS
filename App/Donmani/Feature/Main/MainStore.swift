@@ -52,6 +52,7 @@ struct MainStore {
         case touchRecordEntryButton
         case touchSettingButton
         case checkEnableRecord
+        case fetchUserName
         case binding(BindingAction<State>)
         case reciveRecord(RecordEntryPointStore.Action)
         
@@ -95,6 +96,9 @@ struct MainStore {
                 return .none
             case .checkEnableRecord:
                 state.isPresentingRecordEntryButton = (state.isCompleteToday || state.isCompleteYesterday)
+                return .none
+            case .fetchUserName:
+                state.name = DataStorage.getUserName()
                 return .none
             case .reciveRecord(let event):
                 switch event {

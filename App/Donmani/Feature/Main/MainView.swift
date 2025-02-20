@@ -25,7 +25,7 @@ struct MainView: View {
                     }
                     HStack {
                         Spacer()
-                        Text(store.name + "님의 별통이")
+                        Text(store.name)
                             .font(.h1, .bold)
                             .foregroundStyle(DColor(.gray95).color)
                         Spacer()
@@ -92,6 +92,9 @@ struct MainView: View {
                     RecordListStore()
                 }
             )
+        }
+        .onAppear {
+            store.send(.fetchUserName)
         }
     }
 }
