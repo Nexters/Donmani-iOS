@@ -30,6 +30,7 @@ struct RecordWritingStore {
         var isPresentingSelectCategory: Bool = false
         var isFocused: Bool = false
         var isPresendTextGuide: Bool = false
+        var isFocusToTextField: Bool = false
         
         init(
             type: RecordContentType,
@@ -64,7 +65,7 @@ struct RecordWritingStore {
         case binding(BindingAction<State>)
         case textChanged
         case save
-        case sendToLogView(RecordContent)
+        case sendToRecordView(RecordContent)
     }
     
     // MARK: - Reducer
@@ -86,6 +87,7 @@ struct RecordWritingStore {
                 return .none
                 
             case .saveCategory(let category):
+                state.isFocusToTextField = true
                 state.savedCategory = category
                 state.sticker = category.image
                 state.selectedCategory = nil
@@ -96,6 +98,7 @@ struct RecordWritingStore {
                 return .none
                 
             case .closeCategory:
+                state.isFocusToTextField = true
                 state.isPresentingSelectCategory = false
                 return .none
                 
@@ -122,12 +125,11 @@ struct RecordWritingStore {
                 if let savedCategory = state.savedCategory {
                     let recordContent = RecordContent(flag: state.type, category: savedCategory, memo: state.text)
                     return .run { send in
-                        await send(.sendToLogView(recordContent))
+                        await send(.sendToRecordView(recordContent))
                     }
                 }
                 return .none
-            case .sendToLogView(let content):
-                print(content)
+            case .sendToRecordView(_):
                 return .none
             }
         }

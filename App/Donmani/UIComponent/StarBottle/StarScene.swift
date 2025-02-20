@@ -11,12 +11,14 @@ import DesignSystem
 
 final class StarScene: SKScene {
     
+    var nodeSet: Set<String> = []
     var ground: SKSpriteNode?
     
     override func sceneDidLoad() {
         super.sceneDidLoad()
         self.scaleMode = .aspectFit
         self.backgroundColor = .clear
+        self.physicsWorld.gravity = CGVector(dx: 0.0, dy: 2.0)
     }
     
     public func setGravity(dx: Double, dy: Double) {
@@ -32,7 +34,7 @@ final class StarScene: SKScene {
     }
     
     deinit {
-        print("Deinitialize CoinScene")
+        print("Deinitialize Star Bottle Scene")
     }
 }
 

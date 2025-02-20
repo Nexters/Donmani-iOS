@@ -6,22 +6,14 @@
 //
 
 import SwiftUI
-import ComposableArchitecture
 
 @main
 struct DonmaniApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @State var navigationPath = NavigationPath()
-    
+
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path: $navigationPath) {
-                MainView(
-                    store: Store(initialState: MainStore.State()) {
-                        MainStore()
-                    }
-                )
-            }
+            SplashLoadView()
         }
     }
 }

@@ -12,36 +12,36 @@ struct RecordCategory: Equatable {
     
     private let _isEqual: (Any) -> Bool
     private let _hashValue: () -> Int
-    private let _title: () -> String
+    private let _title: String
     private let _instance: any CategoryProtocol
-    private let _color: () -> Color
-    private let _image: () -> Image
-    private let _miniImage: () -> Image
+    private let _color: Color
+    private let _image: Image
+    private let _miniImage: Image
 
     var title: String {
-        _title()
+        _title
     }
     
     var color: Color {
-        _color()
+        _color
     }
     
     var image: Image {
-        _image()
+        _image
     }
     
     var miniImage: Image {
-        _miniImage()
+        _miniImage
     }
-
+    
     init<T: CategoryProtocol>(_ instance: T) {
-        _title = { instance.title }
+        _title = instance.title
         _isEqual = { ($0 as? T) == instance }
         _hashValue = { instance.hashValue }
         _instance = instance
-        _color = { instance.color }
-        _image = { instance.sticker }
-        _miniImage = { instance.miniSticker }
+        _color = instance.color
+        _image = instance.sticker
+        _miniImage = instance.miniSticker
     }
     
     func getInstance<T: CategoryProtocol>() -> T? {
