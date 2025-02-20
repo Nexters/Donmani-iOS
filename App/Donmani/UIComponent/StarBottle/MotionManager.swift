@@ -10,9 +10,11 @@ import CoreMotion
 final class MotionManager {
     static let motion: CMMotionManager = CMMotionManager()
     static var timer: Timer?
+    static var isRunning: Bool = false
     
     static func startGyros(handler: @escaping (Double, Double) -> Void) {
-        if motion.isGyroAvailable {
+        if motion.isGyroAvailable && !isRunning {
+            self.isRunning = true
             self.motion.gyroUpdateInterval = 1.0 / 50.0
             self.motion.startGyroUpdates()
             self.timer = Timer(
@@ -33,6 +35,7 @@ final class MotionManager {
     }
     
     static func stopGyros() {
+        self.isRunning = false
         if self.timer != nil {
             self.timer?.invalidate()
             self.timer = nil

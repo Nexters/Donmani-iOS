@@ -5,9 +5,9 @@
 //  Created by 문종식 on 2/8/25.
 //
 
-enum RecordContentType: Codable, Equatable {
-    case good
-    case bad
+enum RecordContentType: String, Equatable, Codable {
+    case good = "GOOD"
+    case bad = "BAD"
     
     var title: String {
         switch self {

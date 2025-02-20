@@ -9,14 +9,17 @@ import SwiftUI
 import DesignSystem
 
 struct BottomSheetView<Content: View>: View {
+    let isActiveClose: Bool
     let closeAction: () -> Void
     let content: (@escaping (@escaping () -> Void) -> Void) -> Content
     @State private var isPresented = false
     
     init(
+        isActiveClose: Bool = true,
         closeAction: @escaping () -> Void,
         @ViewBuilder _ content: @escaping (@escaping (@escaping () -> Void) -> Void) -> Content
     ) {
+        self.isActiveClose = isActiveClose
         self.closeAction = closeAction
         self.content = content
     }
@@ -26,7 +29,9 @@ struct BottomSheetView<Content: View>: View {
             Color(.black)
                 .opacity(isPresented ? 0.6 : 0)
                 .onTapGesture {
-                    dismiss(nil)
+                    if isActiveClose {
+                        dismiss(nil)
+                    }
                 }
                 .animation(.easeInOut(duration: 0.3), value: isPresented)
                 .ignoresSafeArea()
@@ -36,12 +41,14 @@ struct BottomSheetView<Content: View>: View {
                     VStack(alignment: .leading) {
                         HStack {
                             Spacer()
-                            Button {
-                                dismiss(nil)
-                            } label: {
-                                DImage(.close).image
-                                    .resizable()
-                                    .frame(width: .s2, height: .s2)
+                            if isActiveClose {
+                                Button {
+                                    dismiss(nil)
+                                } label: {
+                                    DImage(.close).image
+                                        .resizable()
+                                        .frame(width: .s2, height: .s2)
+                                }
                             }
                         }
                         .padding(.bottom, .s3)

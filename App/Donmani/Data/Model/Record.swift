@@ -5,7 +5,7 @@
 //  Created by 문종식 on 2/1/25.
 //
 
-struct Record {
+struct Record: Equatable {
     var date: String
     var contents: [RecordContent]?
 }
