@@ -85,6 +85,7 @@ extension SettingView {
                     ) {
                         Task {
                             userName = try await NetworkManager.NMUser(service: .shared).updateUser(name: editUserName)
+                            DataStorage.setUserName(userName)
                             isPresentingEditNameView = false
                         }
                     }

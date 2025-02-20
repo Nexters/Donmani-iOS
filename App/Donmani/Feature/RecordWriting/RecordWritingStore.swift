@@ -106,7 +106,7 @@ struct RecordWritingStore {
                 return .run { send in await send(.textChanged) }
                 
             case .textChanged:
-                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 state.textCount = state.text.count
                 state.isSaveEnabled = (state.textCount > 0 && state.savedCategory != nil)
                 if state.textCount > 100 {

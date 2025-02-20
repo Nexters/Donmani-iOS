@@ -12,11 +12,13 @@ extension SplashLoadView {
         Task {
             let keychainManager = KeychainManager()
             let (key, _) = keychainManager.generateUUID()
+            let isFirstUser = keychainManager.getUserName().isEmpty
             NetworkManager.userKey = key
             var userName = try await NetworkManager.NMUser(service: .shared).registerUser()
-            if !userName.contains("님의 별통이") {
-                userName = try await NetworkManager.NMUser(service: .shared).updateUser(name: "\(userName)님의 별통이")
+            if isFirstUser {
+                userName += "님의 별통이"
             }
+            userName = try await NetworkManager.NMUser(service: .shared).updateUser(name: userName)
             keychainManager.setUserName(name: userName)
             DataStorage.setUserName(userName)
             let dateManager = DateManager.shared
