@@ -45,7 +45,7 @@ struct MainView: View {
                         .aspectRatio(0.75, contentMode: .fit)
                         .frame(width: .screenWidth * 0.8)
                         .opacity(0.5)
-                    StarBottleView(records: $store.monthlyRecords)
+                    StarBottleView(records: store.monthlyRecords)
                     .aspectRatio(0.75, contentMode: .fit)
                     .frame(width: .screenWidth * 0.8)
                 }

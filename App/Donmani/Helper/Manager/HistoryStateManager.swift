@@ -17,13 +17,19 @@ final class HistoryStateManager {
     
     private init() {}
     
-    func getGuideState() -> Bool {
-        guard let _ = userDefaults.string(forKey: guideShownKey) else {
-            userDefaults.set(guideShownKey, forKey: guideShownKey)
-            return true
-        }
-        return false
+    func getGuideState() -> String? {
+        userDefaults.string(forKey: guideShownKey)
+//        guard let _ = else {
+//            userDefaults.set(guideShownKey, forKey: guideShownKey)
+//            return true
+//        }
+//        return false
     }
+    
+    func setGuideState() {
+        userDefaults.set(guideShownKey, forKey: guideShownKey)
+    }
+        
     
     func addRecord(for type: DayType) {
         let newDateString = DateManager.shared.getFormattedDate(for: type)

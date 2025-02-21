@@ -28,7 +28,7 @@ struct RecordWritingStore {
         var savedCategory: RecordCategory?
         var text: String = ""
         var isPresentingSelectCategory: Bool = false
-        var isFocused: Bool = false
+//        var isFocused: Bool = false
         var isPresendTextGuide: Bool = false
         var isFocusToTextField: Bool = false
         
@@ -106,7 +106,7 @@ struct RecordWritingStore {
                 return .run { send in await send(.textChanged) }
                 
             case .textChanged:
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
                 state.textCount = state.text.count
                 state.isSaveEnabled = (state.textCount > 0 && state.savedCategory != nil)
                 if state.textCount > 100 {

@@ -67,6 +67,46 @@ extension SettingView {
                         .font(DFont.font(.b1, weight: .medium))
                         .foregroundStyle(DColor(.gray95).color)
                         .focused($isFocusToTextField)
+                        .onChange(of: editUserName) { oldValue, newValue in
+                            let isValidCharacter = (editUserName.range(of: pattern, options: .regularExpression) != nil)
+                            if !isValidCharacter {
+                                if !(isPresentingSymbolGuideToastView || isPresentingLengthGuideToastView) {
+                                    withAnimation(.linear(duration: 0.5)) {
+                                        isPresentingSymbolGuideToastView = true
+                                    } completion: {
+                                        Task(priority: .low) {
+                                            try await Task.sleep(nanoseconds: 3_000_000_000)
+                                            withAnimation(.linear(duration: 0.5)) {
+                                                isPresentingSymbolGuideToastView = false
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                editUserName = oldValue
+                                return
+                            }
+                            if newValue.count > 12 {
+                                if !(isPresentingSymbolGuideToastView || isPresentingLengthGuideToastView) {
+                                    withAnimation(.linear(duration: 0.5)) {
+                                        isPresentingLengthGuideToastView = true
+                                    } completion: {
+                                        Task(priority: .low) {
+                                            try await Task.sleep(nanoseconds: 3_000_000_000)
+                                            withAnimation(.linear(duration: 0.5)) {
+                                                isPresentingLengthGuideToastView = false
+                                            }
+                                        }
+//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                                            withAnimation(.linear(duration: 0.5)) {
+//                                                isPresentingLengthGuideToastView = false
+//                                            }
+//                                        }
+                                    }
+                                }
+                                editUserName = oldValue
+                            }
+                        }
                     HStack {
                         Spacer()
                         Text("\(editUserName.count)/12")
@@ -98,5 +138,6 @@ extension SettingView {
                 }
             }
         }
+        
     }
 }

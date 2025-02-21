@@ -9,7 +9,7 @@ import SwiftUI
 import SpriteKit
 
 struct StarBottleView: View {
-    @Binding var records: [Record]
+    var records: [Record]
     
     var width: CGFloat {
         .screenWidth * 0.8
@@ -63,16 +63,30 @@ struct StarBottleView: View {
                 )
             }
         }
-//        .onTapGesture {
-//            starScene.createNewStarNode(
-//                width: width,
-//                height: height,
-//                record: .init(date: "asdf")
-//            )
-//        }
+        //        .onTapGesture {
+        //            starScene.createNewStarNode(
+        //            starScene.createInitStarNode(
+        //                width: width,
+        //                height: height,
+        //                record: .init(date: "", contents: [
+        //                    .init(flag: .good, category: .init(GoodCategory.allCases.shuffled().first!), memo: ""),
+        //                    .init(flag: .bad, category: .init(BadCategory.allCases.shuffled().first!), memo: "")
+        //                ])
+        //            )
+        //        }
     }
 }
 
-//#Preview {
-//    StarBottleView()
-//}
+#Preview {
+    StarBottleView(
+        records: (0..<31).map {
+            .init(
+                date: "\($0)",
+                contents: [
+                    .init(flag: .good, category: .init(GoodCategory.allCases.shuffled().first!), memo: ""),
+                    .init(flag: .bad, category: .init(BadCategory.allCases.shuffled().first!), memo: "")
+                ]
+            )
+        }
+    )
+}
