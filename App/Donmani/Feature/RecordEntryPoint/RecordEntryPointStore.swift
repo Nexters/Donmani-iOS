@@ -19,7 +19,6 @@ struct RecordEntryPointStore {
         
         var goodRecord: RecordContent?
         var badRecord: RecordContent?
-//        = .init(flag: .bad, category: .init(BadCategory.addiction), memo: "asdfasdfasdfasdf")
         var isCheckedEmptyRecord: Bool = false
         
         var dayType: DayType = .today
@@ -39,7 +38,7 @@ struct RecordEntryPointStore {
         var isLoading: Bool = false
         
         init(isCompleteToday: Bool, isCompleteYesterday: Bool) {
-            self.isPresentingRecordGuideView = HistoryStateManager.shared.getGuideState()
+            self.isPresentingRecordGuideView = (HistoryStateManager.shared.getGuideState() == nil)
             self.isCompleteToday = isCompleteToday
             self.isCompleteYesterday = isCompleteYesterday
             self.dayType = isCompleteToday ? .yesterday : .today
@@ -117,6 +116,7 @@ struct RecordEntryPointStore {
                 
             case .dismissRecordGuideBottomSheet:
                 state.isPresentingRecordGuideView = false
+                HistoryStateManager.shared.setGuideState()
                 return .none
                 
             case .editRecordWriting(let content):
