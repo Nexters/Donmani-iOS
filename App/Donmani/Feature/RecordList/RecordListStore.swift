@@ -16,7 +16,9 @@ struct RecordListStore {
         let record: [Record]
         init() {
             let yearMonth = DateManager.shared.getFormattedDate(for: .today, .yearMonth)
-            self.record = DataStorage.getRecord(yearMonth: yearMonth) ?? []
+            self.record = (DataStorage.getRecord(yearMonth: yearMonth) ?? []).sorted {
+                $0.date > $1.date
+            }
         }
     }
     
