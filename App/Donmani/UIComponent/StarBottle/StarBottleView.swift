@@ -63,17 +63,17 @@ struct StarBottleView: View {
                 )
             }
         }
-        //        .onTapGesture {
-        //            starScene.createNewStarNode(
-        //            starScene.createInitStarNode(
-        //                width: width,
-        //                height: height,
-        //                record: .init(date: "", contents: [
-        //                    .init(flag: .good, category: .init(GoodCategory.allCases.shuffled().first!), memo: ""),
-        //                    .init(flag: .bad, category: .init(BadCategory.allCases.shuffled().first!), memo: "")
-        //                ])
-        //            )
-        //        }
+//                .onTapGesture {
+////                    starScene.createNewStarNode(
+//                    starScene.createInitStarNode(
+//                        width: width,
+//                        height: height,
+//                        record: .init(date: "", contents: [
+//                            .init(flag: .good, category: .init(GoodCategory.allCases.shuffled().first!), memo: ""),
+//                            .init(flag: .bad, category: .init(BadCategory.allCases.shuffled().first!), memo: "")
+//                        ])
+//                    )
+//                }
     }
 }
 

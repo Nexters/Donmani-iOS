@@ -45,6 +45,39 @@ extension MainView {
         .frame(width: 70, height: 70)
     }
     
+    func guidePopoverView() -> some View {
+        VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                HStack {
+                    Text("어제 소비도 정리해 보아요")
+                        .font(DFont.font(.b3, weight: .bold))
+                        .foregroundStyle(.white)
+                    Button {
+                        store.send(.closePopover)
+                    } label: {
+                        DImage(.close).image
+                            .resizable()
+                            .frame(width: .s5, height: .s5)
+                    }
+                }
+                .padding(.horizontal, 12)
+                .padding(.top, 10)
+                .padding(.bottom, 8)
+                .background(.black)
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                Spacer()
+            }
+            HStack {
+                Spacer()
+                Triangle(direction: .down)
+                    .fill(.black)
+                    .frame(width: 14, height: 8)
+                Spacer()
+            }
+        }
+    }
+    
 //    func StarEffectView(
 //        record: Record
 //    ) -> some View {
