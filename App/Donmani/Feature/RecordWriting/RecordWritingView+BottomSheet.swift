@@ -16,16 +16,21 @@ extension RecordWritingView {
             Text("소비가 \(store.type.selectTitle)던 이유는?")
                 .font(DFont.font(.h2, weight: .bold))
                 .foregroundStyle(.white)
-            LazyVGrid(
-                columns: RecordWritingView.categoryColumns,
-                spacing: .s3
-            ) {
-                ForEach(store.category.indices, id: \.self) { i in
-                    CategoryButton(
-                        category: store.category[i],
-                        isSelected: store.category[i].title == (store.selectedCategory?.title ?? ""),
-                        initState: (store.selectedCategory == nil)
-                    )
+            Grid(alignment: .center, horizontalSpacing: 0, verticalSpacing: .s3) {
+                ForEach(0..<3, id: \.self) { row in
+                    GridRow {
+                        ForEach(0..<3) { column in
+                            HStack {
+                                Spacer()
+                                CategoryButton(
+                                    category: store.category[row * 3 + column],
+                                    isSelected: store.category[row * 3 + column].title == (store.selectedCategory?.title ?? ""),
+                                    initState: (store.selectedCategory == nil)
+                                )
+                                Spacer()
+                            }
+                        }
+                    }
                 }
             }
             .padding(.vertical, .s3)

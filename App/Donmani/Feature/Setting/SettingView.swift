@@ -18,16 +18,20 @@ struct SettingView: View {
     @State var isSaveEnabled = true
     @State var userName = DataStorage.getUserName()
     @State var editUserName: String = ""
+    @State var isPresentingLengthGuideToastView = false
+    @State var isPresentingSymbolGuideToastView = false
     
     @FocusState var isFocusToTextField: Bool
+    
+    let pattern = "^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9\\s]+$"
     var isSaveEnable: Bool {
         let isValidCount = (2 <= editUserName.count && editUserName.count <= 12)
-        let pattern = "^[ㄱ-ㅎ가-힣a-zA-Z0-9\\s]+$"
         let isValidCharacter = (editUserName.range(of: pattern, options: .regularExpression) != nil)
         return isValidCount && isValidCharacter
     }
     
     // TODO: - Add Store
+    
     var body: some View {
         ZStack {
             BackgroundView()
@@ -94,6 +98,20 @@ struct SettingView: View {
             if isPresentingEditNameView {
                 EditNameView()
             }
+            
+            VStack {
+                Spacer()
+                ToastView(title: "최대로 작성했어요")
+                    .padding(40)
+            }
+            .opacity(isPresentingLengthGuideToastView ? 1 : 0)
+            
+            VStack {
+                Spacer()
+                ToastView(title: "특수문자는 입력할 수 없어요")
+                    .padding(40)
+            }
+            .opacity(isPresentingSymbolGuideToastView ? 1 : 0)
         }
         .sheet(isPresented: $isPresentingPrivacyPolicyView) {
             PrivacyPolicyView()

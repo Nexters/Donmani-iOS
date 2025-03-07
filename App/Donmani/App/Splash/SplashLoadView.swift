@@ -19,6 +19,9 @@ struct SplashLoadView: View {
         if isLoading {
             SplashView()
                 .onAppear {
+//                    let k = KeychainManager()
+//                    k.deleteToKeychain(to: .uuid)
+//                    k.deleteToKeychain(to: .name)
                     loadData()
                 }
         } else {

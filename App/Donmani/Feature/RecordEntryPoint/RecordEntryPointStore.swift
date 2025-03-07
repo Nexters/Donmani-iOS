@@ -10,7 +10,7 @@ import DNetwork
 
 @Reducer
 struct RecordEntryPointStore {
-    
+    let scheduler = DispatchQueue.main.eraseToAnyScheduler()
     // MARK: - State
     @ObservableState
     struct State: Equatable {
@@ -19,9 +19,9 @@ struct RecordEntryPointStore {
         
         var goodRecord: RecordContent?
         var badRecord: RecordContent?
-//        = .init(flag: .bad, category: .init(BadCategory.addiction), memo: "asdfasdfasdfasdf")
         var isCheckedEmptyRecord: Bool = false
         
+        let dateString: String
         var dayType: DayType = .today
         
         var isPresentingCancel: Bool = false
@@ -33,13 +33,27 @@ struct RecordEntryPointStore {
         
         var isPresentingDayToggle: Bool
         var title: String
+        var guide: String {
+            if remainingTime > 7200 {
+                return "기록하고 별사탕 받자!"
+            } else if remainingTime <= 0 {
+                return "기록을 마무리하면 별사탕을 받을 수 있어요!"
+            } else {
+                let hours = remainingTime / 3600
+                let minutes = (remainingTime % 3600) / 60
+                let seconds = remainingTime % 60
+                return "\(hours)시간 \(minutes)분 \(seconds)초 안에 별사탕 받자!"
+            }
+        }
+        var remainingTime: Int
+        var isPresentingPopover: Bool = true
         
         var isSaveEnabled: Bool = false
         var isReadyToSave: Bool = false
         var isLoading: Bool = false
         
         init(isCompleteToday: Bool, isCompleteYesterday: Bool) {
-            self.isPresentingRecordGuideView = HistoryStateManager.shared.getGuideState()
+            self.isPresentingRecordGuideView = (HistoryStateManager.shared.getGuideState() == nil)
             self.isCompleteToday = isCompleteToday
             self.isCompleteYesterday = isCompleteYesterday
             self.dayType = isCompleteToday ? .yesterday : .today
@@ -52,7 +66,9 @@ struct RecordEntryPointStore {
                 title = "오늘 " + title
             }
             self.title = title
+            self.dateString = DateManager.shared.getFormattedDate(for: isCompleteToday ? .yesterday : .today)
             self.isPresentingDayToggle = !(isCompleteToday || isCompleteYesterday)
+            self.remainingTime = TimeManager.getRemainingTime()
         }
     }
     
@@ -73,6 +89,7 @@ struct RecordEntryPointStore {
         case touchTodayToggleButton
         
         case touchEmptyRecordButton
+        case closePopover
         case dismissEmtpyRecordBottomSheet
         case recordEmpty
         
@@ -81,14 +98,15 @@ struct RecordEntryPointStore {
         case setRecord(RecordWritingStore.Action)
         case checkRecord
         
-        
         case readyToSave
         case cancelSave
         case errorSave
         case save
         case sendToMain(Record)
         
-        case toggleDay
+        case startTimer
+        case checkRemainingTime
+        case updateTime(Int)
     }
     
     // MARK: - Reducer
@@ -103,7 +121,6 @@ struct RecordEntryPointStore {
         BindingReducer()
         
         Reduce { state, action in
-            
             switch action {
             case .showCancelRecordBottomSheet:
                 state.isPresentingCancel = true
@@ -117,6 +134,7 @@ struct RecordEntryPointStore {
                 
             case .dismissRecordGuideBottomSheet:
                 state.isPresentingRecordGuideView = false
+                HistoryStateManager.shared.setGuideState()
                 return .none
                 
             case .editRecordWriting(let content):
@@ -138,6 +156,7 @@ struct RecordEntryPointStore {
                 return .none
                 
             case .touchEmptyRecordButton:
+                state.isPresentingPopover = false
                 if state.isCheckedEmptyRecord {
                     state.isCheckedEmptyRecord = false
                     state.isSaveEnabled = false
@@ -145,7 +164,9 @@ struct RecordEntryPointStore {
                     state.isPresentingRecordEmpty = true
                 }
                 return .none
-                
+            case .closePopover:
+                state.isPresentingPopover = false
+                return .none
             case .dismissEmtpyRecordBottomSheet:
                 state.isPresentingRecordEmpty = false
                 return .none
@@ -203,9 +224,8 @@ struct RecordEntryPointStore {
                     buffer = [state.goodRecord!, state.badRecord!]
                 }
                 let records = buffer
-                let dayType = state.dayType
+                let date = state.dateString
                 return .run { send in
-                    let date = DateManager.shared.getFormattedDate(for: dayType)
                     let networkManager = NetworkManager.NMRecord(service: .shared)
                     guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
                         await send(.errorSave)
@@ -213,7 +233,7 @@ struct RecordEntryPointStore {
                     }
                     await send(.sendToMain(Record(date: date, contents: records)))
                 }
-            
+                
             case .errorSave:
                 state.isLoading = false
                 return .none
@@ -222,9 +242,26 @@ struct RecordEntryPointStore {
                 let stateManager = HistoryStateManager.shared
                 stateManager.addRecord(for: state.dayType)
                 return .none
-            
-            case .toggleDay:
+            case .startTimer:
+                return .run { send in
+                    while true {
+                        let remainingTime = TimeManager.getRemainingTime()
+                        await send(.updateTime(remainingTime))
+                        try await Task.sleep(nanoseconds: 1_000_000_000)
+                    }
+                }
+                .cancellable(id: "Timer", cancelInFlight: true)
+                
+            case .updateTime(let seconds):
+                state.remainingTime = seconds
+                if seconds == 0 {
+                    return .cancel(id: "Timer")
+                }
                 return .none
+                
+            case .checkRemainingTime:
+                let remainingTime = TimeManager.getRemainingTime()
+                return .send(.updateTime(remainingTime))
             }
         }
     }

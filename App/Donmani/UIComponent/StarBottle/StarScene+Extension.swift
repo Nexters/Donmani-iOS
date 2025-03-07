@@ -32,23 +32,68 @@ extension StarScene {
         addChild(roundRectNode)
     }
     
-    func createStarNode(
+    public func createNewStarNode(
         width: CGFloat,
         height: CGFloat,
+        record: Record
+    ) {
+        let starSize = width/6
+        let position = CGPoint(
+            x: width / 2,
+            y: height - starSize * 1.7
+        )
+        createStarNode(
+            starSize: starSize,
+            position: position,
+            record: record
+        )
+    }
+    
+    public func createInitStarNode(
+        width: CGFloat,
+        height: CGFloat,
+        record: Record
+    ) {
+//        var record = record
+//        record.date = (Array(nodeSet).last ?? "Test") + "\(nodeSet.count)"
+//        if nodeSet.contains(record.date) {
+//            return
+//        }
+//        nodeSet.insert(record.date)
+//        let ratio: CGFloat = 5.0
+//        let starSize: CGFloat = width / ratio
+//        let x = (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) % Int(ratio))
+//        let y = (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) / Int(ratio)) + starSize / 2
+//        let position = CGPoint(x: x, y: y)
+        let starSize = width/6
+        var position = CGPoint(
+            x: (starSize / 2) + starSize * CGFloat((nodeSet.count) % 6),
+            y: (starSize / 2) + starSize * CGFloat((nodeSet.count) / 6) + starSize
+        )
+        
+        if nodeSet.count == 30 {
+            position.x = width / 2
+        }
+        createStarNode(
+            starSize: starSize,
+            position: position,
+            record: record
+        )
+    }
+    
+    private func createStarNode(
+        starSize: CGFloat,
+        position: CGPoint,
         record: Record
     ) {
         if nodeSet.contains(record.date) {
             return
         }
         nodeSet.insert(record.date)
-        let starSize = width/6
         let size = CGSize(width: starSize - 1, height: starSize - 1)
         let starNode = SKSpriteNode(texture: Self.starShapeTexture)
         starNode.size = size
-        starNode.position = CGPoint(
-            x: (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) % 6),
-            y: (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) / 6)
-        )
+        starNode.position = position
         starNode.physicsBody = SKPhysicsBody(texture: starNode.texture!, size: starNode.size)
         starNode.physicsBody?.affectedByGravity = true
         

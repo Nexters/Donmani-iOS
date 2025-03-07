@@ -11,18 +11,32 @@ final class HistoryStateManager {
     static let shared = HistoryStateManager()
     
     private let userDefaults = UserDefaults.standard
+    private let isFirstRecordKey = "IS_FIRST_RECORD"
     private let guideShownKey = "GUIDE_SHOWN"
     private let lastRecordKey = "LAST_RECORD"
     private let secondToLastRecordKey = "SECOND_TO_LAST_RECORD"
     
     private init() {}
     
-    func getGuideState() -> Bool {
-        guard let _ = userDefaults.string(forKey: guideShownKey) else {
-            userDefaults.set(guideShownKey, forKey: guideShownKey)
-            return true
-        }
-        return false
+    func getGuideState() -> String? {
+        userDefaults.string(forKey: guideShownKey)
+//        guard let _ = else {
+//            userDefaults.set(guideShownKey, forKey: guideShownKey)
+//            return true
+//        }
+//        return false
+    }
+    
+    func setGuideState() {
+        userDefaults.set(guideShownKey, forKey: guideShownKey)
+    }
+    
+    func getIsFirstRecord() -> String? {
+        userDefaults.string(forKey: isFirstRecordKey)
+    }
+    
+    func setIsFirstRecord() {
+        userDefaults.set(isFirstRecordKey, forKey: isFirstRecordKey)
     }
     
     func addRecord(for type: DayType) {

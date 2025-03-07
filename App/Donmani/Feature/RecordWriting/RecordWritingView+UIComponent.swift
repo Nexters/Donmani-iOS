@@ -9,11 +9,6 @@ import SwiftUI
 import DesignSystem
 
 extension RecordWritingView {
-    static let categoryColumns = Array(
-        repeating: GridItem(.flexible(minimum: 100, maximum: 500)),
-        count: 3
-    )
-    
     func ColorBackgroundView(
         color: Color
     ) -> some View {
