@@ -34,23 +34,25 @@ struct MainView: View {
                 .padding(.horizontal, .s4)
                 
                 Spacer()
-                
                 ZStack {
                     DImage(.starBottleBackground).image
                         .resizable()
-                        .aspectRatio(0.75, contentMode: .fit)
                         .frame(width: .screenWidth * 0.9)
-                    DImage(.starBottle).image
-                        .resizable()
                         .aspectRatio(0.75, contentMode: .fit)
-                        .frame(width: .screenWidth * 0.8)
-                        .opacity(0.5)
-                    StarBottleView(records: store.monthlyRecords)
-                    .aspectRatio(0.75, contentMode: .fit)
-                    .frame(width: .screenWidth * 0.8)
-                }
-                .onTapGesture {
-                    store.send(.touchStarBottle)
+                    
+                    ZStack {
+                        DImage(.starBottle).image
+                            .resizable()
+                            .frame(width: .screenWidth * 0.8)
+                            .aspectRatio(0.75, contentMode: .fit)
+                            .opacity(0.5)
+                        StarBottleView(records: store.monthlyRecords)
+                            .frame(width: .screenWidth * 0.8)
+                            .aspectRatio(0.75, contentMode: .fit)
+                    }
+                    .onTapGesture {
+                        store.send(.touchStarBottle)
+                    }
                 }
                 
                 Spacer()
@@ -72,6 +74,19 @@ struct MainView: View {
                 }
             }
             .padding(.vertical, 16)
+            
+            if store.isPresentingRecordEntryButton && store.isPresentingPopover {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        guidePopoverView()
+                            .frame(width: .screenWidth)
+                        
+                        Spacer()
+                    }
+                }.padding(.vertical, 16 + 70 + 5)
+            }
             
             if store.isPresentingUpdateApp {
                 AppStoreView()
@@ -95,6 +110,7 @@ struct MainView: View {
         }
         .onAppear {
             store.send(.fetchUserName)
+            store.send(.checkPopover)
         }
     }
 }

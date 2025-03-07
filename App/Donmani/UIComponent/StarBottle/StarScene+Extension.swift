@@ -67,12 +67,12 @@ extension StarScene {
 //        let position = CGPoint(x: x, y: y)
         let starSize = width/6
         var position = CGPoint(
-            x: (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) % 6),
-            y: (starSize / 2) + starSize * CGFloat((nodeSet.count - 1) / 6) + starSize
+            x: (starSize / 2) + starSize * CGFloat((nodeSet.count) % 6),
+            y: (starSize / 2) + starSize * CGFloat((nodeSet.count) / 6) + starSize
         )
         
-        if nodeSet.count == 31 {
-            position = CGPoint(x: width / 2, y: starSize / 2)
+        if nodeSet.count == 30 {
+            position.x = width / 2
         }
         createStarNode(
             starSize: starSize,

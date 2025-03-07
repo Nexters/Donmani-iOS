@@ -33,6 +33,9 @@ public enum DImageAsset: String {
     case splashLogo = "SplashLogo"
     
     case profile = "Profile"
+   
+    // Image 16
+    case close = "Close"
     
     // Image 20
     case check = "Check"
@@ -48,7 +51,7 @@ public enum DImageAsset: String {
     
     // Image 28
     case plus = "Plus"
-    case close = "Close"
+    case circleClose = "CircleClose"
     
     // Image 32
     case addLog = "AddLog"

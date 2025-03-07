@@ -64,9 +64,7 @@ struct RecordEntryPointView: View {
                     ) {
                         RecordArea()
                         if !store.isReadyToSave {
-                            EmptyRecordButton(isChecked: store.isCheckedEmptyRecord) {
-                                store.send(.touchEmptyRecordButton)
-                            }
+                            EmptyRecordArea()
                         }
                         Spacer()
                     }
@@ -76,18 +74,7 @@ struct RecordEntryPointView: View {
                 // 저장
                 VStack(spacing: 0) {
                     if !store.isReadyToSave {
-                        HStack(spacing: 0) {
-                            DImage(.starShape).image
-                                .resizable()
-                                .renderingMode(.template)
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundStyle(DColor(.pupleBlue90).color)
-                                .frame(width: 22)
-                            Text("기록하고 별사탕 받자!")
-                                .font(DFont.font(.b2, weight: .semibold))
-                                .foregroundStyle(DColor(.pupleBlue90).color)
-                                .padding(8)
-                        }
+                        RecordGuideText()
                     }
                     
                     if store.isReadyToSave {
@@ -125,9 +112,13 @@ struct RecordEntryPointView: View {
             let recordWritingStore = store.scope(state: \.recordWritingState, action: \.setRecord)
             return RecordWritingView(store: recordWritingStore)
         }
+        .onAppear {
+            store.send(.startTimer)
+        }
         .navigationBarBackButtonHidden()
     }
 }
+
 
 #Preview {
     RecordEntryPointView(
