@@ -62,7 +62,7 @@ final class KeychainManager {
     }
     
     // Must Be Private
-    private func deleteToKeychain(to type: DataType) {
+    public func deleteToKeychain(to type: DataType) {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: type.key

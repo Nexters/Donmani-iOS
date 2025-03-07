@@ -67,6 +67,46 @@ extension SettingView {
                         .font(DFont.font(.b1, weight: .medium))
                         .foregroundStyle(DColor(.gray95).color)
                         .focused($isFocusToTextField)
+                        .onChange(of: editUserName) { oldValue, newValue in
+                            let isValidCharacter = (editUserName.range(of: pattern, options: .regularExpression) != nil)
+                            if !isValidCharacter {
+                                if !(isPresentingSymbolGuideToastView || isPresentingLengthGuideToastView) {
+                                    withAnimation(.linear(duration: 0.5)) {
+                                        isPresentingSymbolGuideToastView = true
+                                    } completion: {
+                                        Task(priority: .low) {
+                                            try await Task.sleep(nanoseconds: 3_000_000_000)
+                                            withAnimation(.linear(duration: 0.5)) {
+                                                isPresentingSymbolGuideToastView = false
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                editUserName = oldValue
+                                return
+                            }
+                            if newValue.count > 12 {
+                                if !(isPresentingSymbolGuideToastView || isPresentingLengthGuideToastView) {
+                                    withAnimation(.linear(duration: 0.5)) {
+                                        isPresentingLengthGuideToastView = true
+                                    } completion: {
+                                        Task(priority: .low) {
+                                            try await Task.sleep(nanoseconds: 3_000_000_000)
+                                            withAnimation(.linear(duration: 0.5)) {
+                                                isPresentingLengthGuideToastView = false
+                                            }
+                                        }
+//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                                            withAnimation(.linear(duration: 0.5)) {
+//                                                isPresentingLengthGuideToastView = false
+//                                            }
+//                                        }
+                                    }
+                                }
+                                editUserName = oldValue
+                            }
+                        }
                     HStack {
                         Spacer()
                         Text("\(editUserName.count)/12")
@@ -75,16 +115,22 @@ extension SettingView {
                     }
                 }
                 .padding(8)
+                
                 HStack(alignment: .top) {
-                    Text("한글, 영문, 숫자, 띄어쓰기 가능해요")
-                        .font(DFont.font(.b2, weight: .regular))
-                        .foregroundStyle(DColor(.deepBlue80).color)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("최소 2자 이상, 최대 12자 이하")
+                        Text("한글, 영문, 숫자, 띄어쓰기 가능해요")
+                    }
+                    .font(DFont.font(.b2, weight: .regular))
+                    .foregroundStyle(DColor(.deepBlue80).color)
+                    
                     Spacer()
                     DCompleteButton(
                         isActive: isSaveEnable
                     ) {
                         Task {
                             userName = try await NetworkManager.NMUser(service: .shared).updateUser(name: editUserName)
+                            DataStorage.setUserName(userName)
                             isPresentingEditNameView = false
                         }
                     }
@@ -92,5 +138,6 @@ extension SettingView {
                 }
             }
         }
+        
     }
 }

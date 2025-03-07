@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import StoreKit
 
 @Reducer
 struct MainStore {
@@ -25,9 +26,10 @@ struct MainStore {
         var isPresentingRecordListView: Bool = false
         var isPresentingRecordEntryView: Bool = false
         var isPresentingRecordEntryButton: Bool = true
-        var currentRecord: Record? = nil
+//        var currentRecord: Record? = nil
         var recordEntryPointState = RecordEntryPointStore.State(isCompleteToday: true, isCompleteYesterday: true)
         var isPresentingUpdateApp: Bool
+        var isPresentingPopover: Bool = false
         var isLoading: Bool = false
         
         init(isLatestVersion: Bool) {
@@ -52,9 +54,11 @@ struct MainStore {
         case touchRecordEntryButton
         case touchSettingButton
         case checkEnableRecord
+        case fetchUserName
         case binding(BindingAction<State>)
         case reciveRecord(RecordEntryPointStore.Action)
-        
+        case closePopover
+        case checkPopover
         case showReciveStar
     }
     
@@ -96,6 +100,9 @@ struct MainStore {
             case .checkEnableRecord:
                 state.isPresentingRecordEntryButton = (state.isCompleteToday || state.isCompleteYesterday)
                 return .none
+            case .fetchUserName:
+                state.name = DataStorage.getUserName()
+                return .none
             case .reciveRecord(let event):
                 switch event {
                 case .sendToMain(let record):
@@ -110,11 +117,29 @@ struct MainStore {
                     DataStorage.setRecord(record)
                     state.monthlyRecords.append(record)
                     state.isPresentingRecordEntryView = false
-                    state.currentRecord = record
-                    return .none
+//                    state.currentRecord = record
+                    return .run { _ in
+                        let isFirstRecord = HistoryStateManager.shared.getIsFirstRecord()
+                        if isFirstRecord == nil {
+                            let connectedScenes = await UIApplication.shared.connectedScenes
+                            if let windowScene = connectedScenes.map({$0}).first as? UIWindowScene {
+                                await AppStore.requestReview(in: windowScene)
+                                HistoryStateManager.shared.setIsFirstRecord()
+                            }
+                        }
+                    }
                 default:
                     return .none
                 }
+            case .closePopover:
+                state.isPresentingPopover = false
+                return .none
+            case .checkPopover:
+                let stateManager = HistoryStateManager.shared.getState()
+                if stateManager[.today, default: false] && !stateManager[.yesterday, default: false] {
+                    state.isPresentingPopover = true
+                }
+                return .none
             case .showReciveStar:
                 return .none
             }

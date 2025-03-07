@@ -64,6 +64,63 @@ extension RecordEntryPointView {
         .frame(height: 118)
     }
     
+    func RecordGuideText() -> some View {
+            HStack(spacing: 0) {
+                DImage(.starShape).image
+                    .resizable()
+                    .renderingMode(.template)
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundStyle(DColor(.pupleBlue90).color)
+                    .frame(width: 22)
+                Text(store.guide)
+                    .font(DFont.font(.b2, weight: .semibold))
+                    .foregroundStyle(DColor(.pupleBlue90).color)
+                    .padding(8)
+            }
+    }
+    
+    func EmptyRecordArea() -> some View {
+        VStack(spacing: 2) {
+            HStack {
+                EmptyRecordButton(isChecked: store.isCheckedEmptyRecord) {
+                    store.send(.touchEmptyRecordButton)
+                }
+                Spacer()
+            }
+            if store.isPresentingPopover {
+                VStack(spacing: 0) {
+                    HStack {
+                        Triangle()
+                            .fill(.black)
+                            .frame(width: 14, height: 8)
+                            .padding(.leading, 11)
+                        Spacer()
+                    }
+                    HStack {
+                        HStack {
+                            Text("선택하면 무소비 날도 기록할 수 있어요!")
+                                .font(DFont.font(.b3, weight: .bold))
+                                .foregroundStyle(.white)
+                            Button {
+                                store.send(.closePopover)
+                            } label: {
+                                DImage(.close).image
+                                    .resizable()
+                                    .frame(width: .s5, height: .s5)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.top, 10)
+                        .padding(.bottom, 8)
+                        .background(.black)
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        Spacer()
+                    }
+                }
+            }
+        }
+    }
+    
     func EmptyRecordButton(
         isChecked: Bool,
         action: @escaping () -> Void
@@ -80,6 +137,8 @@ extension RecordEntryPointView {
                     .foregroundStyle((isChecked ? DColor(.gray95) : DColor(.deepBlue80)).color)
             }
         }
+        .padding(.horizontal, 8)
+        .padding(.top, 8)
     }
     
     func RecordArea() -> some View {

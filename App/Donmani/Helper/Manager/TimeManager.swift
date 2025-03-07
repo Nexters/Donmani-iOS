@@ -38,6 +38,6 @@ final class TimeManager {
     }
 
     static func getRemainingTime() -> Int {
-        return remainingTimeInSeconds
+        return calculateTimeRemaining()
     }
 }
