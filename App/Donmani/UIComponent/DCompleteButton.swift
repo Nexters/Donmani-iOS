@@ -32,6 +32,7 @@ struct DCompleteButton: View {
                     .foregroundStyle((isActive ? DColor(.deepBlue20) : DColor(.deepBlue70)).color)
             }
         }
+        .allowsHitTesting(isActive)
         .frame(width: 60, height: 40)
         .padding(.bottom, 12)
     }
