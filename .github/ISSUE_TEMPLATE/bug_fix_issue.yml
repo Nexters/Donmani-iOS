@@ -1,5 +1,5 @@
 name: Bug Fix Issue
-description: 화면 개발 및 수정
+description: 버그 수정
 title: "[Bug Fix] <제목>"
 labels: ["bug"]
 body:
