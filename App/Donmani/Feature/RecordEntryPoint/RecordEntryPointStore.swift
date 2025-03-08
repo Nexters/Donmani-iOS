@@ -21,7 +21,7 @@ struct RecordEntryPointStore {
         var badRecord: RecordContent?
         var isCheckedEmptyRecord: Bool = false
         
-        let dateString: String
+        var dateString: String
         var dayType: DayType = .today
         
         var isPresentingCancel: Bool = false
@@ -150,9 +150,11 @@ struct RecordEntryPointStore {
                 
             case .touchYesterdayToggleButton:
                 state.dayType = .yesterday
+                state.dateString = DateManager.shared.getFormattedDate(for: .yesterday)
                 return .none
             case .touchTodayToggleButton:
                 state.dayType = .today
+                state.dateString = DateManager.shared.getFormattedDate(for: .today)
                 return .none
                 
             case .touchEmptyRecordButton:
