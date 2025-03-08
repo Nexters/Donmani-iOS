@@ -69,6 +69,9 @@ extension SettingView {
                         .focused($isFocusToTextField)
                         .onChange(of: editUserName) { oldValue, newValue in
                             let isValidCharacter = (editUserName.range(of: pattern, options: .regularExpression) != nil)
+                            if (newValue.count == 0) {
+                                return
+                            }
                             if !isValidCharacter {
                                 if !(isPresentingSymbolGuideToastView || isPresentingLengthGuideToastView) {
                                     withAnimation(.linear(duration: 0.5)) {
