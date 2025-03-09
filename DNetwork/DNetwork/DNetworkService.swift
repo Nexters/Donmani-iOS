@@ -9,10 +9,8 @@ import Foundation
 
 public final class DNetworkService {
     public static let shared = DNetworkService()
-    public static let appStoreURL = "itms-apps://itunes.apple.com/kr/app/apple-store/id6741164570"
     
-    private let baseURL = "http://211.188.60.38:8080"
-    private let appInfoURL = "https://itunes.apple.com/lookup?bundleId=com.nexters.Donmani"
+    private let baseURL = DURLManager.api.urlString
     
     private init() {
         
@@ -27,7 +25,7 @@ public final class DNetworkService {
     }
     
     public func requestAppVersion<T: Codable>() async throws -> T  {
-        guard let url = URL(string: appInfoURL) else {
+        guard let url = URL(string: DURLManager.appInfo.urlString) else {
             throw NetworkError.invalidURL
         }
         let request = getURLReqeust(method: .GET, url: url)

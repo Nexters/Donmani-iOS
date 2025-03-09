@@ -24,7 +24,7 @@ extension MainView {
                     .font(DFont.font(.b1, weight: .regular))
                     .foregroundStyle(DColor(.gray95).color)
                 
-                if let url = URL(string: DNetworkService.appStoreURL) {
+                if let url = URL(string: DURLManager.appStore.urlString) {
                     Link(destination: url) {
                         ZStack {
                             RoundedRectangle(
