@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DesignSystem
+import DNetwork
 
 struct SettingView: View {
     @Environment(\.dismiss) private var dismiss
@@ -114,10 +115,12 @@ struct SettingView: View {
             .opacity(isPresentingSymbolGuideToastView ? 1 : 0)
         }
         .sheet(isPresented: $isPresentingPrivacyPolicyView) {
-            PrivacyPolicyView()
+            // Privacy Policy WebView
+            InnerWebView(urlString: DURLManager.privacyPolicy.urlString)
         }
         .sheet(isPresented: $isPresentingFeedbackView) {
-            FeedbackView()
+            // Feeback WebView
+            InnerWebView(urlString: DURLManager.feedback.urlString)
         }
         .navigationBarBackButtonHidden()
     }
