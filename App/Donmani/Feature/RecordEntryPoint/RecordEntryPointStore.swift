@@ -46,7 +46,7 @@ struct RecordEntryPointStore {
             }
         }
         var remainingTime: Int
-        var isPresentingPopover: Bool = true
+        var isPresentingPopover: Bool
         
         var isSaveEnabled: Bool = false
         var isReadyToSave: Bool = false
@@ -54,6 +54,7 @@ struct RecordEntryPointStore {
         
         init(isCompleteToday: Bool, isCompleteYesterday: Bool) {
             self.isPresentingRecordGuideView = (HistoryStateManager.shared.getGuideState() == nil)
+            self.isPresentingPopover = HistoryStateManager.shared.getEmptyRecordGuideKey()
             self.isCompleteToday = isCompleteToday
             self.isCompleteYesterday = isCompleteYesterday
             self.dayType = isCompleteToday ? .yesterday : .today
@@ -168,6 +169,7 @@ struct RecordEntryPointStore {
                 return .none
             case .closePopover:
                 state.isPresentingPopover = false
+                HistoryStateManager.shared.setEmptyRecordGuideKey()
                 return .none
             case .dismissEmtpyRecordBottomSheet:
                 state.isPresentingRecordEmpty = false
