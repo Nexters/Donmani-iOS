@@ -100,11 +100,6 @@ extension SettingView {
                                                 isPresentingLengthGuideToastView = false
                                             }
                                         }
-//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//                                            withAnimation(.linear(duration: 0.5)) {
-//                                                isPresentingLengthGuideToastView = false
-//                                            }
-//                                        }
                                     }
                                 }
                                 editUserName = oldValue

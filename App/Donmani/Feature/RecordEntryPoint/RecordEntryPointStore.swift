@@ -5,6 +5,7 @@
 //  Created by 문종식 on 2/5/25.
 //
 
+import UIKit
 import ComposableArchitecture
 import DNetwork
 
@@ -217,9 +218,11 @@ struct RecordEntryPointStore {
                 
             case .readyToSave:
                 state.isReadyToSave = true
+                UINavigationController.swipeNavigationPopIsEnabled = false
                 return .none
             case .cancelSave:
                 state.isReadyToSave = false
+                UINavigationController.swipeNavigationPopIsEnabled = true
                 return .none
             case .save:
                 state.isLoading = true
