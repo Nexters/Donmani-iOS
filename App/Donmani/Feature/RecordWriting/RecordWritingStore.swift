@@ -81,6 +81,7 @@ struct RecordWritingStore {
             case .openCategory:
                 UIApplication.shared.endEditing()
                 state.isPresentingSelectCategory = true
+                UINavigationController.swipeNavigationPopIsEnabled = false
                 state.selectedCategory = state.savedCategory
                 return .none
                 
@@ -89,19 +90,20 @@ struct RecordWritingStore {
                 return .none
                 
             case .saveCategory(let category):
-                state.isFocusToTextField = true
                 state.savedCategory = category
                 state.sticker = category.image
                 state.selectedCategory = nil
-                state.isPresentingSelectCategory = false
                 if (state.textCount > 0) {
                     state.isSaveEnabled = true
                 }
-                return .none
+                return .run { send in
+                    await send(.closeCategory)
+                }
                 
             case .closeCategory:
                 state.isFocusToTextField = true
                 state.isPresentingSelectCategory = false
+                UINavigationController.swipeNavigationPopIsEnabled = true
                 return .none
                 
             case .binding(_):
