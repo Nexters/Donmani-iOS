@@ -15,20 +15,24 @@ final class HistoryStateManager {
     private let guideShownKey = "GUIDE_SHOWN"
     private let lastRecordKey = "LAST_RECORD"
     private let secondToLastRecordKey = "SECOND_TO_LAST_RECORD"
+    private let emptyRecordGuideKey = "EMPTY_RECORD_GUIDE"
     
     private init() {}
     
     func getGuideState() -> String? {
         userDefaults.string(forKey: guideShownKey)
-//        guard let _ = else {
-//            userDefaults.set(guideShownKey, forKey: guideShownKey)
-//            return true
-//        }
-//        return false
     }
     
     func setGuideState() {
         userDefaults.set(guideShownKey, forKey: guideShownKey)
+    }
+    
+    func getEmptyRecordGuideKey() -> Bool {
+        return userDefaults.string(forKey: emptyRecordGuideKey) != nil
+    }
+    
+    func setEmptyRecordGuideKey() {
+        userDefaults.set(emptyRecordGuideKey, forKey: emptyRecordGuideKey)
     }
     
     func getIsFirstRecord() -> String? {
