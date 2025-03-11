@@ -76,6 +76,7 @@ struct RecordWritingView: View {
                         .font(DFont.font(.b1, weight: .medium))
                         .foregroundStyle(.white)
                         .lineLimit(5...)
+                        .lineSpacing(6)
                         .frame(height: 100)
                         .scrollContentBackground(.hidden)
                         .background(.clear)

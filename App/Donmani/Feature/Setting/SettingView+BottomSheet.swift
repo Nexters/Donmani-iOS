@@ -30,7 +30,7 @@ extension SettingView {
                 .foregroundStyle(DColor(.gray95).color)
                 
                 Text("규칙은 설정에서 다시 확인할 수 있어요")
-                    .font(DFont.font(.b2, weight: .bold))
+                    .font(DFont.font(.b2, weight: .regular))
                     .foregroundStyle(DColor(.deepBlue90).color)
                 
                 Button {
