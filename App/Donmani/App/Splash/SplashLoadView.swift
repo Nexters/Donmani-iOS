@@ -13,7 +13,7 @@ import ComposableArchitecture
 struct SplashLoadView: View {
     @State var navigationPath = NavigationPath()
     @State var isLoading: Bool = true
-    @State var isLatestVersion: Bool = true
+    @State var isLatestVersion: Bool = false
     
     var body: some View {
         if isLoading {
