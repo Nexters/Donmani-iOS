@@ -63,8 +63,10 @@ struct RecordWritingStore {
         case saveCategory(RecordCategory)
         case closeCategory
         case binding(BindingAction<State>)
-        case textChanged
-        case save
+        case textChanged(Int)
+        case showTextLengthGuide
+        case hideTextLengthGuide
+        case save(String)
         case sendToRecordView(RecordContent)
     }
     
@@ -103,27 +105,33 @@ struct RecordWritingStore {
                 return .none
                 
             case .binding(_):
-                return .run { send in await send(.textChanged) }
-                
-            case .textChanged:
-                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-                state.textCount = state.text.count
-                state.isSaveEnabled = (state.textCount > 0 && state.savedCategory != nil)
-                if state.textCount > 100 {
-                    state.text = String(state.text.prefix(100))
-                    state.isPresendTextGuide = true
-                }
-                if state.textCount >= 100 {
-                    state.isPresendTextGuide = true
-                } else {
-                    state.isPresendTextGuide = false
-                }
                 return .none
                 
-            case .save:
+            case .textChanged(let textCount):
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                state.isSaveEnabled = (textCount > 0 && state.savedCategory != nil)
+                return .none
+                
+            case .showTextLengthGuide:
+                if (state.isPresendTextGuide) {
+                    return .none
+                }
+                state.isPresendTextGuide = true
+                return .run { send in
+                    try await Task.sleep(nanoseconds: 3_000_000_000)
+                    await send(
+                        .hideTextLengthGuide,
+                        animation: .linear(duration: 0.5)
+                    )
+                }
+                
+            case .hideTextLengthGuide:
+                state.isPresendTextGuide = false
+                return .none
+            case .save(let text):
                 UIApplication.shared.endEditing()
                 if let savedCategory = state.savedCategory {
-                    let recordContent = RecordContent(flag: state.type, category: savedCategory, memo: state.text)
+                    let recordContent = RecordContent(flag: state.type, category: savedCategory, memo: text)
                     return .run { send in
                         await send(.sendToRecordView(recordContent))
                     }
