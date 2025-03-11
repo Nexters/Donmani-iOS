@@ -54,18 +54,18 @@ extension SplashLoadView {
     
     private func compareVersion(store: String, current: String) {
         let v1Components = store.split(separator: ".").compactMap { Int($0) }
-         let v2Components = current.split(separator: ".").compactMap { Int($0) }
-         
-         let maxLength = max(v1Components.count, v2Components.count)
-         
-         for i in 0..<maxLength {
-             let num1 = i < v1Components.count ? v1Components[i] : 0
-             let num2 = i < v2Components.count ? v2Components[i] : 0
-             
-             if num1 > num2 {
-                 isLatestVersion = false
-                 return
-             }
-         }
+        let v2Components = current.split(separator: ".").compactMap { Int($0) }
+        
+        let maxLength = max(v1Components.count, v2Components.count)
+        
+        for i in 0..<maxLength {
+            let num1 = i < v1Components.count ? v1Components[i] : 0
+            let num2 = i < v2Components.count ? v2Components[i] : 0
+            
+            if num1 < num2 {
+                isLatestVersion = true
+                return
+            }
+        }
     }
 }
