@@ -33,7 +33,7 @@ struct MainView: View {
                 }
                 .padding(.horizontal, .s4)
                 
-                Spacer()
+                Spacer(minLength: 86)
                 ZStack {
                     DImage(.starBottleBackground).image
                         .resizable()
@@ -45,7 +45,7 @@ struct MainView: View {
                             .resizable()
                             .frame(width: .screenWidth * 0.8)
                             .aspectRatio(0.75, contentMode: .fit)
-                            .opacity(0.5)
+                            .opacity(1)
                         StarBottleView(records: store.monthlyRecords)
                             .frame(width: .screenWidth * 0.8)
                             .aspectRatio(0.75, contentMode: .fit)
