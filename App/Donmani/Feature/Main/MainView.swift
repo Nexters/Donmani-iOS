@@ -41,14 +41,14 @@ struct MainView: View {
                         .aspectRatio(0.75, contentMode: .fit)
                     
                     ZStack {
+                        StarBottleView(records: store.monthlyRecords)
+                            .frame(width: .screenWidth * 0.8)
+                            .aspectRatio(0.75, contentMode: .fit)
                         DImage(.starBottle).image
                             .resizable()
                             .frame(width: .screenWidth * 0.8)
                             .aspectRatio(0.75, contentMode: .fit)
                             .opacity(1)
-                        StarBottleView(records: store.monthlyRecords)
-                            .frame(width: .screenWidth * 0.8)
-                            .aspectRatio(0.75, contentMode: .fit)
                     }
                     .onTapGesture {
                         store.send(.touchStarBottle)
