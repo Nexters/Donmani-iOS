@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C781510E2D60E10C00026BC1 /* DNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C781510D2D60E10C00026BC1 /* DNetwork.framework */; };
-		C781510F2D60E10C00026BC1 /* DNetwork.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C781510D2D60E10C00026BC1 /* DNetwork.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C7A5DA922D7D6ED100C3BC6D /* DesignSystem.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */; };
+		C7A5DA932D7D6ED100C3BC6D /* DesignSystem.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C7A5DA942D7D6ED200C3BC6D /* DNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C781510D2D60E10C00026BC1 /* DNetwork.framework */; };
+		C7A5DA952D7D6ED200C3BC6D /* DNetwork.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C781510D2D60E10C00026BC1 /* DNetwork.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C7A6A2962D4A89D500B4CF35 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = C7A6A2952D4A89D500B4CF35 /* ComposableArchitecture */; };
-		C7BF8A352D50F4F600ACE68D /* DesignSystem.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */; };
-		C7BF8A362D50F4F600ACE68D /* DesignSystem.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,14 +32,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		C7BF8A372D50F4F600ACE68D /* Embed Frameworks */ = {
+		C7A5DA962D7D6ED200C3BC6D /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C781510F2D60E10C00026BC1 /* DNetwork.framework in Embed Frameworks */,
-				C7BF8A362D50F4F600ACE68D /* DesignSystem.framework in Embed Frameworks */,
+				C7A5DA952D7D6ED200C3BC6D /* DNetwork.framework in Embed Frameworks */,
+				C7A5DA932D7D6ED100C3BC6D /* DesignSystem.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -91,8 +91,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7A6A2962D4A89D500B4CF35 /* ComposableArchitecture in Frameworks */,
-				C781510E2D60E10C00026BC1 /* DNetwork.framework in Frameworks */,
-				C7BF8A352D50F4F600ACE68D /* DesignSystem.framework in Frameworks */,
+				C7A5DA942D7D6ED200C3BC6D /* DNetwork.framework in Frameworks */,
+				C7A5DA922D7D6ED100C3BC6D /* DesignSystem.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,7 +153,7 @@
 				C7A6A24A2D4A826B00B4CF35 /* Sources */,
 				C7A6A24B2D4A826B00B4CF35 /* Frameworks */,
 				C7A6A24C2D4A826B00B4CF35 /* Resources */,
-				C7BF8A372D50F4F600ACE68D /* Embed Frameworks */,
+				C7A5DA962D7D6ED200C3BC6D /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -468,7 +468,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nexters.Donmani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -503,7 +503,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nexters.Donmani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -634,8 +634,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.17.1;
+				kind = exactVersion;
+				version = 1.17.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

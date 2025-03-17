@@ -5,6 +5,7 @@
 //  Created by 문종식 on 2/5/25.
 //
 
+import UIKit
 import ComposableArchitecture
 import DNetwork
 
@@ -46,7 +47,7 @@ struct RecordEntryPointStore {
             }
         }
         var remainingTime: Int
-        var isPresentingPopover: Bool = true
+        var isPresentingPopover: Bool
         
         var isSaveEnabled: Bool = false
         var isReadyToSave: Bool = false
@@ -54,6 +55,7 @@ struct RecordEntryPointStore {
         
         init(isCompleteToday: Bool, isCompleteYesterday: Bool) {
             self.isPresentingRecordGuideView = (HistoryStateManager.shared.getGuideState() == nil)
+            self.isPresentingPopover = HistoryStateManager.shared.getEmptyRecordGuideKey()
             self.isCompleteToday = isCompleteToday
             self.isCompleteYesterday = isCompleteYesterday
             self.dayType = isCompleteToday ? .yesterday : .today
@@ -168,6 +170,7 @@ struct RecordEntryPointStore {
                 return .none
             case .closePopover:
                 state.isPresentingPopover = false
+                HistoryStateManager.shared.setEmptyRecordGuideKey()
                 return .none
             case .dismissEmtpyRecordBottomSheet:
                 state.isPresentingRecordEmpty = false
@@ -215,9 +218,11 @@ struct RecordEntryPointStore {
                 
             case .readyToSave:
                 state.isReadyToSave = true
+                UINavigationController.swipeNavigationPopIsEnabled = false
                 return .none
             case .cancelSave:
                 state.isReadyToSave = false
+                UINavigationController.swipeNavigationPopIsEnabled = true
                 return .none
             case .save:
                 state.isLoading = true

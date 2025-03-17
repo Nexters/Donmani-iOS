@@ -13,6 +13,7 @@ struct RecordWritingView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<RecordWritingStore>
     @FocusState var isFocusToTextField: Bool
+    @State var editingText: String = ""
     
     var body: some View {
         ZStack {
@@ -64,7 +65,7 @@ struct RecordWritingView: View {
                     
                     VStack(spacing: 4) {
                         TextField(
-                            text: $store.text,
+                            text: $editingText,
                             axis: .vertical
                         ) {
                             Text("소비가 \(store.type.selectTitle)던 이유는?")
@@ -75,14 +76,25 @@ struct RecordWritingView: View {
                         .font(DFont.font(.b1, weight: .medium))
                         .foregroundStyle(.white)
                         .lineLimit(5...)
+                        .lineSpacing(6)
                         .frame(height: 100)
                         .scrollContentBackground(.hidden)
                         .background(.clear)
+                        .onChange(of: editingText) { oldValue, newValue in
+                            store.send(.textChanged(newValue.count))
+                            if newValue.count > 100 {
+                                editingText = oldValue
+                                store.send(
+                                    .showTextLengthGuide,
+                                    animation: .linear(duration: 0.5)
+                                )
+                            }
+                        }
                         .bind($store.isFocusToTextField, to: $isFocusToTextField)
                         
                         HStack {
                             Spacer()
-                            Text("\(store.textCount)/100")
+                            Text("\(editingText.count)/100")
                                 .font(DFont.font(.b2))
                                 .foregroundStyle(DColor(.deepBlue80).color)
                         }
@@ -97,21 +109,23 @@ struct RecordWritingView: View {
                     DCompleteButton(
                         isActive: store.isSaveEnabled
                     ) {
-                        store.send(.save)
+                        store.send(.save(editingText))
                         dismiss()
                     }
                 }
             }
             .padding(.horizontal, .defaultLayoutPadding)
             .onAppear {
+                editingText = store.text
                 if store.text.isEmpty {
                     store.send(.openCategory)
                 }
             }
             
-            if store.isPresendTextGuide {
-                TextGuideView()
-            }
+            TextGuideView()
+                .opacity(store.isPresendTextGuide ? 1 : 0)
+                .offset(x: 0, y: store.isPresendTextGuide ? 0 : 4)
+            
             if store.isPresentingSelectCategory {
                 SelectCategoryView()
             }

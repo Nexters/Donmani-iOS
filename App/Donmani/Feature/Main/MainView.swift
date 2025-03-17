@@ -33,7 +33,7 @@ struct MainView: View {
                 }
                 .padding(.horizontal, .s4)
                 
-                Spacer()
+                Spacer(minLength: 86)
                 ZStack {
                     DImage(.starBottleBackground).image
                         .resizable()
@@ -41,14 +41,14 @@ struct MainView: View {
                         .aspectRatio(0.75, contentMode: .fit)
                     
                     ZStack {
+                        StarBottleView(records: store.monthlyRecords)
+                            .frame(width: .screenWidth * 0.8)
+                            .aspectRatio(0.75, contentMode: .fit)
                         DImage(.starBottle).image
                             .resizable()
                             .frame(width: .screenWidth * 0.8)
                             .aspectRatio(0.75, contentMode: .fit)
-                            .opacity(0.5)
-                        StarBottleView(records: store.monthlyRecords)
-                            .frame(width: .screenWidth * 0.8)
-                            .aspectRatio(0.75, contentMode: .fit)
+                            .opacity(1)
                     }
                     .onTapGesture {
                         store.send(.touchStarBottle)
