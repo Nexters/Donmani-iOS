@@ -99,7 +99,7 @@ extension RecordEntryPointView {
                     HStack {
                         HStack {
                             Text("선택하면 무소비 날도 기록할 수 있어요!")
-                                .font(DFont.font(.b3, weight: .bold))
+                                .font(DFont.font(.b3, weight: .medium))
                                 .foregroundStyle(.white)
                             Button {
                                 store.send(.closePopover)
