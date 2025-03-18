@@ -32,6 +32,14 @@ public enum DImageAsset: String {
     case splashLogo = "SplashLogo"
     
     case profile = "Profile"
+    
+    // Onboaring
+    case onboardingCover = "OnboardingCover"
+    case onboardingPage0 = "OnboardingPage0"
+    case onboardingPage1 = "OnboardingPage1"
+    case onboardingPage2 = "OnboardingPage2"
+    case onboardingPage3 = "OnboardingPage3"
+    case onboardingPage4 = "OnboardingPage4"
    
     // Image 16
     case close = "Close"
