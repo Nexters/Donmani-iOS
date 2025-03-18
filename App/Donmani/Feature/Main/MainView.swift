@@ -14,7 +14,14 @@ struct MainView: View {
     
     var body: some View {
         ZStack {
-            MainBackgroundView(starCount: 6)
+            BackgroundView(colors: [
+                DColor.backgroundTop,
+                DColor.backgroundBottom,
+            ])
+            DImage(.mainBackgroundStar).image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
             VStack {
                 VStack(spacing: .s3) {
                     HStack {
@@ -117,9 +124,11 @@ struct MainView: View {
 
 #Preview {
     MainView(
-        store: Store(initialState: MainStore.State(
-            isLatestVersion: false
-        )) {
+        store: Store(
+            initialState: MainStore.State(
+                isLatestVersion: true
+            )
+        ) {
             MainStore()
         }
     )

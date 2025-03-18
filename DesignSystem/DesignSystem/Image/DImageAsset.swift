@@ -9,8 +9,8 @@ import SwiftUI
 
 public enum DImageAsset: String {
     // Image
-    case backgroundDot = "BackgroundDot"
-    case backgroundStar = "BackgroundStar"
+    case splashBackgroundStar = "SplashBackgroundStar"
+    case mainBackgroundStar = "MainBackgroundStar"
     case tempImage = "TempImage"
     case defaultGoodSticker = "DefaultGoodSticker"
     case defaultBadSticker = "DefaultBadSticker"
@@ -21,7 +21,6 @@ public enum DImageAsset: String {
     case starBottle = "StarBottle"
     case starBottleBackground = "StarBottleBackground"
     case save = "Save"
-//    case star = "Star"
     
     case smallStar = "SmallStar"
     case starShape = "StarShape"
