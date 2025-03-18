@@ -11,7 +11,14 @@ import DesignSystem
 struct SplashView: View {
     var body: some View {
         ZStack {
-            MainBackgroundView(starCount: 10)
+            BackgroundView(colors: [
+                DColor.backgroundTop,
+                DColor.backgroundBottom,
+            ])
+            DImage(.splashBackgroundStar).image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: .screenWidth - 4 * .defaultLayoutPadding)
             DImage(.splashLogo).image
                 .resizable()
                 .aspectRatio(contentMode: .fit)

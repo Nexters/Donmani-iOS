@@ -16,17 +16,12 @@ extension MainView {
         NavigationLink {
             destination()
         } label: {
-            ZStack {
-                Circle()
-                    .fill(DColor.accessoryButton)
-                    .opacity(0.1)
-                DImage(asset).image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: .s3)
-            }
+            DImage(asset).image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: .s3)
         }
-        .frame(width: 48, height: 48)
+        .frame(width: .s3 * 2, height: .s3 * 2)
     }
     
     func RecordButton() -> some View {
