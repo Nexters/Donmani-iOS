@@ -95,40 +95,37 @@ struct MainView: View {
                 }.padding(.vertical, 16 + 70 + 5)
             }
             
-            if store.isPresentingUpdateApp {
-                AppStoreView()
-            }
+//            if store.isPresentingUpdateApp {
+//                AppStoreView()
+//            }
             
             if store.isLoading {
                 Color.black.opacity(0.1)
                     .ignoresSafeArea()
             }
         }
-        .navigationDestination(isPresented: $store.isPresentingRecordEntryView) {
-            let recordEntryPointStore = store.scope(state: \.recordEntryPointState, action: \.reciveRecord)
-            RecordEntryPointView(store: recordEntryPointStore)
-        }
-        .navigationDestination(isPresented: $store.isPresentingRecordListView) {
-            RecordListView(
-                store: Store(initialState: RecordListStore.State()) {
-                    RecordListStore()
-                }
-            )
-        }
+//        .navigationDestination(isPresented: $store.isPresentingRecordEntryView) {
+//            let recordEntryPointStore = store.scope(state: \.recordEntryPointState, action: \.reciveRecord)
+//            RecordEntryPointView(store: recordEntryPointStore)
+//        }
+//        .navigationDestination(isPresented: $store.isPresentingRecordListView) {
+//            RecordListView(
+//                store: Store(initialState: RecordListStore.State()) {
+//                    RecordListStore()
+//                }
+//            )
+//        }
         .onAppear {
             store.send(.fetchUserName)
             store.send(.checkPopover)
         }
+        .navigationBarBackButtonHidden()
     }
 }
 
 #Preview {
     MainView(
-        store: Store(
-            initialState: MainStore.State(
-                isLatestVersion: true
-            )
-        ) {
+        store: Store(initialState: MainStore.State()) {
             MainStore()
         }
     )

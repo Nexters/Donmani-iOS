@@ -1,5 +1,5 @@
 //
-//  SplashLoadView+Extension.swift
+//  SplashView+Extension.swift
 //  Donmani
 //
 //  Created by 문종식 on 2/19/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension SplashLoadView {
+extension SplashView {
     func loadData() {
         Task {
             let keychainManager = KeychainManager()
@@ -47,7 +47,7 @@ extension SplashLoadView {
             self.isLatestVersion = VersionManager().isLastestVersion(store: storeVerion, current: appVersion)
             
             withAnimation(.smooth) {
-                isLoading = false
+                isPresentingSplash = false
             }
         }
     }

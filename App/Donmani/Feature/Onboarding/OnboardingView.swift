@@ -12,15 +12,10 @@ import DesignSystem
 struct OnboardingView: View {
     @Bindable var store: StoreOf<OnboardingStore>
     
-    init() {
-        self.store = Store(initialState: OnboardingStore.State()) { OnboardingStore() }
-    }
-    
     var body: some View {
         ZStack {
             DColor(.deepBlue20).color
                 .ignoresSafeArea()
-            
             switch store.step {
             case .cover:
                 coverStepView
@@ -32,5 +27,11 @@ struct OnboardingView: View {
 }
 
 #Preview {
-    OnboardingView()
+    OnboardingView(
+        store: Store(
+            initialState: OnboardingStore.State()
+        ) {
+            OnboardingStore()
+        }
+    )
 }
