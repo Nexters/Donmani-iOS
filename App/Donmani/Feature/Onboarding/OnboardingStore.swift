@@ -60,7 +60,13 @@ struct OnboardingStore {
         case touchNextPage
         case touchHomeButton
         case touchRecordButton
+        case delegate(Delegate)
         case binding(BindingAction<State>)
+        
+        enum Delegate: Equatable {
+            case pushMainView
+            case pushRecordEntryPointView
+        }
     }
     
     // MARK: - Dependency
@@ -77,12 +83,12 @@ struct OnboardingStore {
             case .touchNextPage:
                 state.pageIndex += 1
                 return .none
+            case .delegate:
+                return .none
             case .touchHomeButton:
-                // Go to Home
-                return .none
+                return .send(.delegate(.pushMainView))
             case .touchRecordButton:
-                // Go to Record
-                return .none
+                return .send(.delegate(.pushRecordEntryPointView))
             case .binding(\.pageIndex):
                 state.step = state.pageIndex < 4 ? .page : .final
                 return .none

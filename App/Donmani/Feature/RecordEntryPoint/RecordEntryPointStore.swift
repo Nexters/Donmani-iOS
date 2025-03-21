@@ -52,8 +52,20 @@ struct RecordEntryPointStore {
         var isSaveEnabled: Bool = false
         var isReadyToSave: Bool = false
         var isLoading: Bool = false
+        var isFromMain: Bool = true
         
-        init(isCompleteToday: Bool, isCompleteYesterday: Bool) {
+        init() {
+            self.isCompleteToday = false
+            self.isCompleteYesterday = false
+            self.dateString = DateManager.shared.getFormattedDate(for: .today)
+            self.isPresentingDayToggle = true
+            self.title = "하루 소비 정리해 볼까요?"
+            self.remainingTime = TimeManager.getRemainingTime()
+            self.isPresentingPopover = true
+        }
+        
+        init(isCompleteToday: Bool, isCompleteYesterday: Bool, isFromMain: Bool = true) {
+            self.isFromMain = isFromMain
             self.isPresentingRecordGuideView = (HistoryStateManager.shared.getGuideState() == nil)
             self.isPresentingPopover = HistoryStateManager.shared.getEmptyRecordGuideKey()
             self.isCompleteToday = isCompleteToday
@@ -104,11 +116,16 @@ struct RecordEntryPointStore {
         case cancelSave
         case errorSave
         case save
-        case sendToMain(Record)
+        
         
         case startTimer
         case checkRemainingTime
         case updateTime(Int)
+        
+        case delegate(Delegate)
+        enum Delegate: Equatable {
+            case addNewRecord(Record)
+        }
     }
     
     // MARK: - Reducer
@@ -232,22 +249,19 @@ struct RecordEntryPointStore {
                 }
                 let records = buffer
                 let date = state.dateString
+                let stateManager = HistoryStateManager.shared
+                stateManager.addRecord(for: state.dayType)
                 return .run { send in
                     let networkManager = NetworkManager.NMRecord(service: .shared)
                     guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
                         await send(.errorSave)
                         return
                     }
-                    await send(.sendToMain(Record(date: date, contents: records)))
+                    let record = Record(date: date, contents: records)
+                    await send(.delegate(.addNewRecord(record)))
                 }
-                
             case .errorSave:
                 state.isLoading = false
-                return .none
-                
-            case .sendToMain(_):
-                let stateManager = HistoryStateManager.shared
-                stateManager.addRecord(for: state.dayType)
                 return .none
             case .startTimer:
                 return .run { send in
@@ -269,6 +283,8 @@ struct RecordEntryPointStore {
             case .checkRemainingTime:
                 let remainingTime = TimeManager.getRemainingTime()
                 return .send(.updateTime(remainingTime))
+            case .delegate:
+                return .none
             }
         }
     }

@@ -11,7 +11,6 @@ import DesignSystem
 
 struct RecordEntryPointView: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
     @Bindable var store: StoreOf<RecordEntryPointStore>
     
     var body: some View {
