@@ -24,7 +24,6 @@ struct RecordListStore {
     
     // MARK: - Action
     enum Action {
-        case touchRecordButton
         case delegate(Delegate)
         enum Delegate {
             case pushRecordEntryPointView
@@ -35,8 +34,6 @@ struct RecordListStore {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .touchRecordButton:
-                return .send(.delegate(.pushRecordEntryPointView))
             case .delegate:
                 return .none
             }
