@@ -40,11 +40,12 @@ struct StarBottleView: View {
                 width: width,
                 height: height
             )
-            records.forEach {
+            (0..<records.count).forEach { i in
                 starScene.createInitStarNode(
                     width: width,
                     height: height,
-                    record: $0
+                    record: records[i],
+                    index: i
                 )
             }
             MotionManager.startGyros { dx, dy in
@@ -63,17 +64,6 @@ struct StarBottleView: View {
                 )
             }
         }
-//                .onTapGesture {
-////                    starScene.createNewStarNode(
-//                    starScene.createInitStarNode(
-//                        width: width,
-//                        height: height,
-//                        record: .init(date: "", contents: [
-//                            .init(flag: .good, category: .init(GoodCategory.allCases.shuffled().first!), memo: ""),
-//                            .init(flag: .bad, category: .init(BadCategory.allCases.shuffled().first!), memo: "")
-//                        ])
-//                    )
-//                }
     }
 }
 

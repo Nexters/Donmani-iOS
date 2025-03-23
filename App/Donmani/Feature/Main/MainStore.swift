@@ -64,7 +64,7 @@ struct MainStore {
 
         case delegate(Delegate)
         enum Delegate {
-            case pushSettingButton
+            case pushSettingView
             case pushRecordEntryPointView
             case pushRecordListView
         }
@@ -92,8 +92,6 @@ struct MainStore {
 //                state.isPresentingRecordEntryView = true
 //                return .none
 //                return .send(.delegate(.pushRecordEntryPointView))
-            case .delegate:
-                return .none
             case .binding:
                 return .none
             case .checkEnableRecord:

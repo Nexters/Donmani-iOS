@@ -26,7 +26,7 @@ struct MainView: View {
                 VStack(spacing: .s3) {
                     HStack {
                         AccessoryButton(asset: .setting) {
-                            store.send(.delegate(.pushSettingButton))
+                            store.send(.delegate(.pushSettingView))
                         }
                         Spacer()
                     }
