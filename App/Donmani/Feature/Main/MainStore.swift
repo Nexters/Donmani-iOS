@@ -51,50 +51,39 @@ struct MainStore {
     
     // MARK: - Action
     enum Action: BindableAction {
-        case touchStarBottle
-        case presentRecordListView
-        case touchRecordEntryButton
-        case touchSettingButton
+//        case touchStarBottle
+//        case presentRecordListView
+//        case touchRecordEntryButton
+        
         case checkEnableRecord
         case fetchUserName
         case binding(BindingAction<State>)
         case closePopover
         case checkPopover
         case showReciveStar
-        
-        case recordEntryPointAction(RecordEntryPointStore.Action)
-        case recordListAction(RecordListStore.Action)
+
         case delegate(Delegate)
         enum Delegate {
-            case pushRecordEntryPointView(Bool)
+            case pushSettingButton
+            case pushRecordEntryPointView
             case pushRecordListView
         }
     }
     
     // MARK: - Dependency
     
-    
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
-        Scope(
-            state: \.recordEntryPointState,
-            action: \.recordEntryPointAction
-        ) {
-            RecordEntryPointStore()
-        }
+//        Scope(
+//            state: \.recordEntryPointState,
+//            action: \.recordEntryPointAction
+//        ) {
+//            RecordEntryPointStore()
+//        }
         BindingReducer()
         Reduce { state, action in
             switch action {
-            case .touchStarBottle:
-                state.isLoading = true
-                return .run { send in
-                    await send(.presentRecordListView)
-                }
-            case .presentRecordListView:
-                state.isLoading = false
-                state.isPresentingRecordListView = true
-                return .send(.delegate(.pushRecordListView))
-            case .touchRecordEntryButton:
+//            case .touchRecordEntryButton:
 //                let stateManager = HistoryStateManager.shared.getState()
 //                state.recordEntryPointState = RecordEntryPointStore.State(
 //                    isCompleteToday: stateManager[.today, default: false],
@@ -102,10 +91,8 @@ struct MainStore {
 //                )
 //                state.isPresentingRecordEntryView = true
 //                return .none
-                return .send(.delegate(.pushRecordEntryPointView(true)))
+//                return .send(.delegate(.pushRecordEntryPointView))
             case .delegate:
-                return .none
-            case .touchSettingButton:
                 return .none
             case .binding:
                 return .none
@@ -117,37 +104,32 @@ struct MainStore {
                 return .none
                 
                 // RecordEntryPoint Action
-            case .recordEntryPointAction(.delegate(.addNewRecord(let record))):
-                let stateManager = HistoryStateManager.shared.getState()
-                state.recordEntryPointState = RecordEntryPointStore.State(
-                    isCompleteToday: stateManager[.today, default: false],
-                    isCompleteYesterday: stateManager[.yesterday, default: false]
-                )
-                state.isCompleteToday = stateManager[.today, default: false]
-                state.isCompleteYesterday = stateManager[.yesterday, default: false]
-                state.isPresentingRecordEntryButton = !(stateManager[.today, default: false] && stateManager[.yesterday, default: false])
-                DataStorage.setRecord(record)
-                state.monthlyRecords.append(record)
-                state.isPresentingRecordEntryView = false
-//                    state.currentRecord = record
-                return .run { _ in
-                    let isFirstRecord = HistoryStateManager.shared.getIsFirstRecord()
-                    if isFirstRecord == nil {
-                        let connectedScenes = await UIApplication.shared.connectedScenes
-                        if let windowScene = connectedScenes.map({$0}).first as? UIWindowScene {
-                            await AppStore.requestReview(in: windowScene)
-                            HistoryStateManager.shared.setIsFirstRecord()
-                        }
-                    }
-                }
-            case .recordEntryPointAction(_):
-                return .none
+//            case .recordEntryPointAction(.delegate(.addNewRecord(let record))):
+//                let stateManager = HistoryStateManager.shared.getState()
+//                state.recordEntryPointState = RecordEntryPointStore.State(
+//                    isCompleteToday: stateManager[.today, default: false],
+//                    isCompleteYesterday: stateManager[.yesterday, default: false]
+//                )
+//                state.isCompleteToday = stateManager[.today, default: false]
+//                state.isCompleteYesterday = stateManager[.yesterday, default: false]
+//                state.isPresentingRecordEntryButton = !(stateManager[.today, default: false] && stateManager[.yesterday, default: false])
+//                DataStorage.setRecord(record)
+//                state.monthlyRecords.append(record)
+//                state.isPresentingRecordEntryView = false
+////                    state.currentRecord = record
+//                return .run { _ in
+//                    let isFirstRecord = HistoryStateManager.shared.getIsFirstRecord()
+//                    if isFirstRecord == nil {
+//                        let connectedScenes = await UIApplication.shared.connectedScenes
+//                        if let windowScene = connectedScenes.map({$0}).first as? UIWindowScene {
+//                            await AppStore.requestReview(in: windowScene)
+//                            HistoryStateManager.shared.setIsFirstRecord()
+//                        }
+//                    }
+//                }
+//            case .recordEntryPointAction(_):
+//                return .none
                 
-                // RecordList Action
-            case .recordListAction(.delegate(.pushRecordEntryPointView)):
-                return .send(.delegate(.pushRecordEntryPointView(false)))
-            case .recordListAction(_):
-                return .none
             case .closePopover:
                 state.isPresentingPopover = false
                 return .none
@@ -158,6 +140,8 @@ struct MainStore {
                 }
                 return .none
             case .showReciveStar:
+                return .none
+            case .delegate:
                 return .none
             }
         }

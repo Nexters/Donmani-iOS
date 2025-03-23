@@ -12,7 +12,7 @@ struct RecordListStore {
     
     // MARK: - State
     @ObservableState
-    struct State {
+    struct State: Equatable {
         let record: [Record]
         init() {
             let yearMonth = DateManager.shared.getFormattedDate(for: .today, .yearMonth)

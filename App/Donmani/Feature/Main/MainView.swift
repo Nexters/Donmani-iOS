@@ -26,7 +26,7 @@ struct MainView: View {
                 VStack(spacing: .s3) {
                     HStack {
                         AccessoryButton(asset: .setting) {
-                            SettingView()
+                            store.send(.delegate(.pushSettingButton))
                         }
                         Spacer()
                     }
@@ -58,7 +58,7 @@ struct MainView: View {
                             .opacity(1)
                     }
                     .onTapGesture {
-                        store.send(.touchStarBottle)
+                        store.send(.delegate(.pushRecordListView))
                     }
                 }
                 

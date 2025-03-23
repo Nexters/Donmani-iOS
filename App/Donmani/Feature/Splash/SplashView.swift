@@ -47,7 +47,7 @@ struct SplashView: View {
                     Spacer()
                 }
                 .padding(.top, 72)
-                if isLatestVersion {
+                if !isLatestVersion {
                     AppStoreView()
                 }
             }

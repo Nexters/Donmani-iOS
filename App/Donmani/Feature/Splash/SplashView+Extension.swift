@@ -44,10 +44,12 @@ extension SplashView {
             
             let appVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "0.0"
             let storeVerion = try await NetworkManager.Version(service: .shared).requsetAppVersion()
-            self.isLatestVersion = VersionManager().isLastestVersion(store: storeVerion, current: appVersion)
-            
-            withAnimation(.smooth) {
-                isPresentingSplash = false
+            let isLatestVersion = VersionManager().isLastestVersion(store: storeVerion, current: appVersion)
+            self.isLatestVersion = isLatestVersion
+            if isLatestVersion {
+                withAnimation(.smooth) {
+                    isPresentingSplash = false
+                }
             }
         }
     }

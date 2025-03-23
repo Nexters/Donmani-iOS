@@ -125,6 +125,7 @@ struct RecordEntryPointStore {
         case delegate(Delegate)
         enum Delegate: Equatable {
             case addNewRecord(Record)
+            case popRecordEntryPointView
         }
     }
     
