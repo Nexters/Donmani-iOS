@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 import ComposableArchitecture
 
 enum RootType {
@@ -144,6 +145,7 @@ struct NavigationStore {
                     isCompleteToday: stateManager[.today, default: false],
                     isCompleteYesterday: stateManager[.yesterday, default: false]
                 )
+                UINavigationController.swipeNavigationPopIsEnabled = false
                 state.path.append(contentsOf: [
                     .main(state.mainState),
                     .recordEntryPoint(state.recordEntryPointState)
@@ -159,23 +161,89 @@ struct NavigationStore {
             case .mainAction:
                 return .none
                 
-                // Path - Main Action
-            case .path(.element(id: _, action: .main(.delegate(.pushRecordListView)))):
-                state.path.append(.recordList(state.recordListState))
-                return .none
-            case .path(.element(id: _, action: .main(.delegate(.pushRecordEntryPointView)))):
-                let stateManager = HistoryStateManager.shared.getState()
-                state.recordEntryPointState = RecordEntryPointStore.State(
-                    isCompleteToday: stateManager[.today, default: false],
-                    isCompleteYesterday: stateManager[.yesterday, default: false]
-                )
-                state.path.append(.recordEntryPoint(state.recordEntryPointState))
-                return .none
-            case .path(.element(id: _, action: .main(.delegate(.pushSettingButton)))):
-                state.path.append(.setting)
-                return .none
-            case .path(_):
-                return .none
+                // Path Action
+            case .path(let element):
+                switch element {
+                    // Path - Main Action
+                case .element(
+                    id: let id,
+                    action: .main(.delegate(.pushRecordListView))
+                ):
+                    print(id)
+                    state.path.append(.recordList(state.recordListState))
+                    return .none
+                case .element(
+                    id: _,
+                    action: .main(.delegate(.pushRecordEntryPointView))
+                ):
+                    let stateManager = HistoryStateManager.shared.getState()
+                    state.recordEntryPointState = RecordEntryPointStore.State(
+                        isCompleteToday: stateManager[.today, default: false],
+                        isCompleteYesterday: stateManager[.yesterday, default: false]
+                    )
+                    UINavigationController.swipeNavigationPopIsEnabled = false
+                    state.path.append(.recordEntryPoint(state.recordEntryPointState))
+                    return .none
+                case .element(
+                    id: _,
+                    action: .main(.delegate(.pushSettingButton))
+                ):
+                    state.path.append(.setting)
+                    return .none
+                    
+                    // Path - Record List Action
+                case .element(
+                    id: _,
+                    action: .recordList(.delegate(.pushRecordEntryPointView))
+                ):
+                    let stateManager = HistoryStateManager.shared.getState()
+                    state.recordEntryPointState = RecordEntryPointStore.State(
+                        isCompleteToday: stateManager[.today, default: false],
+                        isCompleteYesterday: stateManager[.yesterday, default: false]
+                    )
+                    UINavigationController.swipeNavigationPopIsEnabled = false
+                    state.path.append(.recordEntryPoint(state.recordEntryPointState))
+                    return .none
+                    
+                    // Path - Record EntryPoint Action
+                case .element(
+                    id: _,
+                    action: .recordEntryPoint(.delegate(.popToMainView))
+                ):
+                    switch state.rootType {
+                    case .main:
+                        state.path.removeAll()
+                    case .onboarding:
+                        if let mainViewID = state.path.ids.first {
+                            state.path.pop(to: mainViewID)
+                        }
+                    }
+                    UINavigationController.swipeNavigationPopIsEnabled = true
+                    return .none
+                    
+                case .element(
+                    id: _,
+                    action: .recordEntryPoint(.delegate(.popToMainViewWith(let record)))
+                ):
+                    switch state.rootType {
+                    case .main:
+                        state.path.removeAll()
+                    case .onboarding:
+                        if let mainViewID = state.path.ids.first {
+                            state.path.pop(to: mainViewID)
+                        }
+                    }
+                    UINavigationController.swipeNavigationPopIsEnabled = true
+                    return .none
+                    
+                    // Path - Record Writing Action
+                    
+                    
+                    // Other Path Action
+                default:
+                    return .none
+                }
+                
             }
         }
         .forEach(\.path, action: \.path)

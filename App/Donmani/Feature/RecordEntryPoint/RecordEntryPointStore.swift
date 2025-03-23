@@ -124,8 +124,8 @@ struct RecordEntryPointStore {
         
         case delegate(Delegate)
         enum Delegate: Equatable {
-            case addNewRecord(Record)
-            case popRecordEntryPointView
+            case popToMainViewWith(Record)
+            case popToMainView
         }
     }
     
@@ -259,7 +259,7 @@ struct RecordEntryPointStore {
                         return
                     }
                     let record = Record(date: date, contents: records)
-                    await send(.delegate(.addNewRecord(record)))
+                    await send(.delegate(.popToMainViewWith(record)))
                 }
             case .errorSave:
                 state.isLoading = false

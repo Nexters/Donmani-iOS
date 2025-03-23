@@ -10,7 +10,7 @@ import ComposableArchitecture
 import DesignSystem
 
 struct RecordEntryPointView: View {
-    @Environment(\.dismiss) var dismiss
+//    @Environment(\.dismiss) var dismiss
     @Bindable var store: StoreOf<RecordEntryPointStore>
     
     var body: some View {
@@ -37,7 +37,7 @@ struct RecordEntryPointView: View {
                             && store.badRecord == nil
                             && !store.isCheckedEmptyRecord
                         ) {
-                            dismiss()
+                            store.send(.delegate(.popToMainView))
                         } else {
                             store.send(.showCancelRecordBottomSheet)
                         }
