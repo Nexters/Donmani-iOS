@@ -15,6 +15,7 @@ enum RootType {
 
 @Reducer
 struct NavigationStore {
+    
     @ObservableState
     struct State {
         // 자식 View State
@@ -41,15 +42,67 @@ struct NavigationStore {
     
     @Reducer
     enum Path {
+//    struct Path {
         case main(MainStore)
         case recordEntryPoint(RecordEntryPointStore)
         case recordList(RecordListStore)
         case setting
+        
+//        @ObservableState
+//        struct State {
+//            var mainState: MainStore.State
+//            var onboardingState: OnboardingStore.State
+//            var recordEntryPointState: RecordEntryPointStore.State
+//            var recordListState: RecordListStore.State
+//            init() {
+//                self.mainState = MainStore.State()
+//                self.onboardingState = OnboardingStore.State()
+//                self.recordEntryPointState = RecordEntryPointStore.State()
+//                self.recordListState = RecordListStore.State()
+//            }
+//        }
+//        enum State {
+//            case mainState(MainStore.State)
+//            case onboardingState(OnboardingStore.State)
+//            case recordEntryPointState(RecordEntryPointStore.State)
+//            case recordListState(RecordListStore.State)
+//        }
+        
+//        enum Action {
+//            case mainAction(MainStore.Action)
+//            case onboardingAction(OnboardingStore.Action)
+//            case recordEntryPointAction(RecordEntryPointStore.Action)
+//            case recordListAction(RecordListStore.Action)
+//        }
+//        
+//        var body: some ReducerOf<Self> {
+//            // Main Scope
+//            Scope(state: \.mainState, action: \.mainAction) {
+//                MainStore()
+//            }
+//            
+//            // Onboarding Scope
+//            Scope(state: \.onboardingState, action: \.onboardingAction) {
+//                OnboardingStore()
+//            }
+//            
+//            // Record Entry Point Scope
+//            Scope(state: \.recordEntryPointState, action: \.recordEntryPointAction) {
+//                RecordEntryPointStore()
+//            }
+//            
+//            // Record List Scope
+//            Scope(state: \.recordListState, action: \.recordListAction) {
+//                RecordListStore()
+//            }
+//        }
     }
     
     enum Action {
         case mainAction(MainStore.Action)
         case onboardingAction(OnboardingStore.Action)
+//        case recordEntryPointAction(RecordEntryPointStore.Action)
+//        case recordListAction(RecordListStore.Action)
         case path(StackActionOf<Path>)
     }
     
@@ -60,20 +113,27 @@ struct NavigationStore {
     //    }
     
     var body: some ReducerOf<Self> {
+        // Main Scope
         Scope(state: \.mainState, action: \.mainAction) {
             MainStore()
         }
-        
+        // Onboarding Scope
         Scope(state: \.onboardingState, action: \.onboardingAction) {
             OnboardingStore()
         }
+//        
+//        // Record Entry Point Scope
+//        Scope(state: \.recordEntryPointState, action: \.recordEntryPointAction) {
+//            RecordEntryPointStore()
+//        }
+//        
+//        // Record List Scope
+//        Scope(state: \.recordListState, action: \.recordListAction) {
+//            RecordListStore()
+//        }
         
         Reduce { state, action in
             switch action {
-            case .path(let pathAction):
-                print(pathAction)
-                return .none
-                
                 // Onboarding Action
             case .onboardingAction(.delegate(.pushMainView)):
                 state.path.append(.main(state.mainState))
@@ -91,25 +151,30 @@ struct NavigationStore {
                 return .none
             case .onboardingAction:
                 return .none
-            
+                
                 // Main Action
-            case .mainAction(.delegate(.pushRecordEntryPointView(let isFromMain))):
+            case .mainAction(.delegate(.pushRecordListView)):
+                state.path.append(.recordList(state.recordListState))
+                return .none
+            case .mainAction:
+                return .none
+                
+                // Path - Main Action
+            case .path(.element(id: _, action: .main(.delegate(.pushRecordListView)))):
+                state.path.append(.recordList(state.recordListState))
+                return .none
+            case .path(.element(id: _, action: .main(.delegate(.pushRecordEntryPointView)))):
                 let stateManager = HistoryStateManager.shared.getState()
                 state.recordEntryPointState = RecordEntryPointStore.State(
                     isCompleteToday: stateManager[.today, default: false],
-                    isCompleteYesterday: stateManager[.yesterday, default: false],
-                    isFromMain: isFromMain
+                    isCompleteYesterday: stateManager[.yesterday, default: false]
                 )
-                state.path.append(contentsOf: [
-                    .recordEntryPoint(state.recordEntryPointState)
-                ])
+                state.path.append(.recordEntryPoint(state.recordEntryPointState))
                 return .none
-            case .mainAction(.delegate(.pushRecordListView)):
-                state.path.append(contentsOf: [
-                    .recordList(state.recordListState)
-                ])
+            case .path(.element(id: _, action: .main(.delegate(.pushSettingButton)))):
+                state.path.append(.setting)
                 return .none
-            case .mainAction:
+            case .path(_):
                 return .none
             }
         }

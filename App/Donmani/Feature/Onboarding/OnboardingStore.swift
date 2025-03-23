@@ -82,6 +82,7 @@ struct OnboardingStore {
                 return .none
             case .touchNextPage:
                 state.pageIndex += 1
+                state.step = state.pageIndex < 4 ? .page : .final
                 return .none
             case .delegate:
                 return .none

@@ -81,7 +81,7 @@ extension OnboardingView {
             Group {
                 if store.step == .page {
                     DButton(title: "다음") {
-                        store.send(.touchNextPage)
+                        store.send(.touchNextPage, animation: .linear)
                     }
                 } else {
                     HStack {

@@ -11,10 +11,10 @@ import DesignSystem
 extension MainView {
     func AccessoryButton(
         asset: DImageAsset,
-        destination: () -> some View
+        action: @escaping () -> Void
     ) -> some View {
-        NavigationLink {
-            destination()
+        Button {
+            action()
         } label: {
             DImage(asset).image
                 .resizable()
@@ -26,7 +26,7 @@ extension MainView {
     
     func RecordButton() -> some View {
         Button {
-            store.send(.touchRecordEntryButton)
+            store.send(.delegate(.pushRecordEntryPointView))
         } label: {
             ZStack {
                 Circle()
