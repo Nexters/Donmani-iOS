@@ -158,6 +158,18 @@ struct NavigationStore {
             case .mainAction(.delegate(.pushRecordListView)):
                 state.path.append(.recordList(state.recordListState))
                 return .none
+            case .mainAction(.delegate(.pushRecordEntryPointView)):
+                let stateManager = HistoryStateManager.shared.getState()
+                state.recordEntryPointState = RecordEntryPointStore.State(
+                    isCompleteToday: stateManager[.today, default: false],
+                    isCompleteYesterday: stateManager[.yesterday, default: false]
+                )
+                UINavigationController.swipeNavigationPopIsEnabled = false
+                state.path.append(.recordEntryPoint(state.recordEntryPointState))
+                return .none
+            case .mainAction(.delegate(.pushSettingView)):
+                state.path.append(.setting)
+                return .none
             case .mainAction:
                 return .none
                 
@@ -169,7 +181,6 @@ struct NavigationStore {
                     id: let id,
                     action: .main(.delegate(.pushRecordListView))
                 ):
-                    print(id)
                     state.path.append(.recordList(state.recordListState))
                     return .none
                 case .element(
@@ -186,7 +197,7 @@ struct NavigationStore {
                     return .none
                 case .element(
                     id: _,
-                    action: .main(.delegate(.pushSettingButton))
+                    action: .main(.delegate(.pushSettingView))
                 ):
                     state.path.append(.setting)
                     return .none
