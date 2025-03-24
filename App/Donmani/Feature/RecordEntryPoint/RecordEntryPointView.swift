@@ -29,7 +29,6 @@ struct RecordEntryPointView: View {
                 spacing: .defaultLayoutPadding
             ) {
                 // Navigation Bar
-                
                 HStack {
                     DBackButton {
                         if (
@@ -72,9 +71,13 @@ struct RecordEntryPointView: View {
                 
                 // 저장
                 VStack(spacing: 0) {
-                    if !store.isReadyToSave {
+                    if store.isFullWriting {
                         RecordGuideText()
+                    } else {
+                        RecordIsNotFullText()
                     }
+                    
+                    
                     
                     if store.isReadyToSave {
                         ReadyToSaveButton()
