@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 import ComposableArchitecture
 
 enum RootType {
@@ -23,6 +22,7 @@ struct NavigationStore {
         var mainState: MainStore.State
         var onboardingState: OnboardingStore.State
         var recordEntryPointState: RecordEntryPointStore.State
+        var recordWritingState: RecordWritingStore.State
         // 아직 없는 Store
         // var setting: SettingStore.State
         var recordListState: RecordListStore.State
@@ -37,81 +37,36 @@ struct NavigationStore {
             self.mainState = MainStore.State()
             self.onboardingState = OnboardingStore.State()
             self.recordEntryPointState = RecordEntryPointStore.State()
+            self.recordWritingState = RecordWritingStore.State(type: .good)
             self.recordListState = RecordListStore.State()
+        }
+        
+        mutating func updateRecordContent(_ content: RecordContent) {
+            switch content.flag {
+            case .good:
+                recordEntryPointState.goodRecord = content
+            case .bad:
+                recordEntryPointState.badRecord = content
+            }
+            let isSaveEnabled = (recordEntryPointState.badRecord != nil && recordEntryPointState.goodRecord != nil)
+            recordEntryPointState.isSaveEnabled = isSaveEnabled
         }
     }
     
     @Reducer
     enum Path {
-//    struct Path {
         case main(MainStore)
         case recordEntryPoint(RecordEntryPointStore)
+        case recordWriting(RecordWritingStore)
         case recordList(RecordListStore)
         case setting
-        
-//        @ObservableState
-//        struct State {
-//            var mainState: MainStore.State
-//            var onboardingState: OnboardingStore.State
-//            var recordEntryPointState: RecordEntryPointStore.State
-//            var recordListState: RecordListStore.State
-//            init() {
-//                self.mainState = MainStore.State()
-//                self.onboardingState = OnboardingStore.State()
-//                self.recordEntryPointState = RecordEntryPointStore.State()
-//                self.recordListState = RecordListStore.State()
-//            }
-//        }
-//        enum State {
-//            case mainState(MainStore.State)
-//            case onboardingState(OnboardingStore.State)
-//            case recordEntryPointState(RecordEntryPointStore.State)
-//            case recordListState(RecordListStore.State)
-//        }
-        
-//        enum Action {
-//            case mainAction(MainStore.Action)
-//            case onboardingAction(OnboardingStore.Action)
-//            case recordEntryPointAction(RecordEntryPointStore.Action)
-//            case recordListAction(RecordListStore.Action)
-//        }
-//        
-//        var body: some ReducerOf<Self> {
-//            // Main Scope
-//            Scope(state: \.mainState, action: \.mainAction) {
-//                MainStore()
-//            }
-//            
-//            // Onboarding Scope
-//            Scope(state: \.onboardingState, action: \.onboardingAction) {
-//                OnboardingStore()
-//            }
-//            
-//            // Record Entry Point Scope
-//            Scope(state: \.recordEntryPointState, action: \.recordEntryPointAction) {
-//                RecordEntryPointStore()
-//            }
-//            
-//            // Record List Scope
-//            Scope(state: \.recordListState, action: \.recordListAction) {
-//                RecordListStore()
-//            }
-//        }
     }
     
     enum Action {
         case mainAction(MainStore.Action)
         case onboardingAction(OnboardingStore.Action)
-//        case recordEntryPointAction(RecordEntryPointStore.Action)
-//        case recordListAction(RecordListStore.Action)
         case path(StackActionOf<Path>)
     }
-    
-    //    enum NavigationAction {
-    //        case onboarding(OnboardingStore.Action)
-    //        case main(MainStore.Action)
-    //        case recordEntryPoint(RecordEntryPointStore.Action)
-    //    }
     
     var body: some ReducerOf<Self> {
         // Main Scope
@@ -122,16 +77,6 @@ struct NavigationStore {
         Scope(state: \.onboardingState, action: \.onboardingAction) {
             OnboardingStore()
         }
-//        
-//        // Record Entry Point Scope
-//        Scope(state: \.recordEntryPointState, action: \.recordEntryPointAction) {
-//            RecordEntryPointStore()
-//        }
-//        
-//        // Record List Scope
-//        Scope(state: \.recordListState, action: \.recordListAction) {
-//            RecordListStore()
-//        }
         
         Reduce { state, action in
             switch action {
@@ -178,7 +123,7 @@ struct NavigationStore {
                 switch element {
                     // Path - Main Action
                 case .element(
-                    id: let id,
+                    id: _,
                     action: .main(.delegate(.pushRecordListView))
                 ):
                     state.path.append(.recordList(state.recordListState))
@@ -221,34 +166,73 @@ struct NavigationStore {
                     id: _,
                     action: .recordEntryPoint(.delegate(.popToMainView))
                 ):
-                    switch state.rootType {
-                    case .main:
-                        state.path.removeAll()
-                    case .onboarding:
-                        if let mainViewID = state.path.ids.first {
-                            state.path.pop(to: mainViewID)
-                        }
+                    if let recordEntryPointViewID = state.path.ids.last {
+                        state.path.pop(from: recordEntryPointViewID)
                     }
                     UINavigationController.swipeNavigationPopIsEnabled = true
                     return .none
-                    
+
                 case .element(
                     id: _,
                     action: .recordEntryPoint(.delegate(.popToMainViewWith(let record)))
                 ):
-                    switch state.rootType {
-                    case .main:
-                        state.path.removeAll()
-                    case .onboarding:
+                    if state.rootType == .onboarding {
                         if let mainViewID = state.path.ids.first {
-                            state.path.pop(to: mainViewID)
+                            if case .main(var mainState) = state.path[id: mainViewID] {
+                                mainState.addNewRecord(record)
+                                state.path[id: mainViewID] = .main(mainState)
+                            }
                         }
+                    } else {
+                        state.mainState.addNewRecord(record)
+                    }
+                    if let recordEntryPointViewID = state.path.ids.last {
+                        state.path.pop(from: recordEntryPointViewID)
                     }
                     UINavigationController.swipeNavigationPopIsEnabled = true
                     return .none
+                case .element(
+                    id: _,
+                    action: .recordEntryPoint(.delegate(.pushRecordWritingViewWith(let content)))
+                ):
+                    state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
+                    state.path.append(.recordWriting(state.recordWritingState))
+                    return .none
+                case .element(
+                    id: _,
+                    action: .recordEntryPoint(.delegate(.pushRecordWritingView(let type)))
+                ):
+                    state.recordWritingState = RecordWritingStore.State(type: type)
+                    state.path.append(.recordWriting(state.recordWritingState))
+                    return .none
                     
                     // Path - Record Writing Action
+                case .element(
+                    id: _,
+                    action: .recordWriting(.delegate(.popToRecordEntrypointView))
+                ):
+                    state.path.removeLast()
+                    return .none
                     
+                case .element(
+                    id: _,
+                    action: .recordWriting(.delegate(.popToRecordEntrypointViewWith(let content)))
+                ):
+                    var recordEntrypointViewID: StackElementID?
+                    for (id, element) in zip(state.path.ids, state.path) {
+                        switch element {
+                        case .recordEntryPoint:
+                            recordEntrypointViewID = id
+                        default:
+                            break
+                        }
+                    }
+                    state.updateRecordContent(content)
+                    if let recordEntrypointViewID = recordEntrypointViewID {
+                        state.path[id: recordEntrypointViewID] = .recordEntryPoint(state.recordEntryPointState)
+                    }
+                    state.path.removeLast()
+                    return .none
                     
                     // Other Path Action
                 default:

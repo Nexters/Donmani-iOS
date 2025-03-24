@@ -12,7 +12,7 @@ import ComposableArchitecture
 struct DonmaniApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State var isPresentingSplash: Bool = true
-    @State var rootType: RootType = .main // .onboarding
+    @State var rootType: RootType = .main// .onboarding
     
     var body: some Scene {
         WindowGroup {
