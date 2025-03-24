@@ -12,9 +12,7 @@ import ComposableArchitecture
 
 struct SplashView: View {
     @State var navigationPath = NavigationPath()
-//    @State var isLoading: Bool = true
     @State var isLatestVersion: Bool = true
-//    @State var isFirstUser: Bool = true
     @Binding var isPresentingSplash: Bool
     
     var body: some View {
@@ -54,15 +52,6 @@ struct SplashView: View {
             .onAppear {
                 loadData()
             }
-//            NavigationStack(path: $navigationPath) {
-//                MainView(
-//                    store: Store(initialState: MainStore.State(
-//                        isLatestVersion: isLatestVersion
-//                    )) {
-//                        MainStore()
-//                    }
-//                )
-//            }
         
     }
 }

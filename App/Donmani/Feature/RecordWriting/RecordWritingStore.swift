@@ -37,12 +37,15 @@ struct RecordWritingStore {
             content: RecordContent? = nil
         ) {
             self.type = type
+            var tempCategory: [RecordCategory]
             switch type {
             case .good:
-                self.category = GoodCategory.allCases.map { RecordCategory($0) }
+                tempCategory = GoodCategory.allCases.map { RecordCategory($0) }
             case .bad:
-                self.category = BadCategory.allCases.map { RecordCategory($0) }
+                tempCategory = BadCategory.allCases.map { RecordCategory($0) }
             }
+            _ = tempCategory.popLast()
+            self.category = tempCategory
             self.selectedCategory = content?.category
             self.savedCategory = content?.category
             if let content = content {
