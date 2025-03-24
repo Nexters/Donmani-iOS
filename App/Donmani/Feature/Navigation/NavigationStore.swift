@@ -65,6 +65,7 @@ struct NavigationStore {
     enum Action {
         case mainAction(MainStore.Action)
         case onboardingAction(OnboardingStore.Action)
+        case addNewRecord(Record)
         case path(StackActionOf<Path>)
     }
     
@@ -90,7 +91,6 @@ struct NavigationStore {
                     isCompleteToday: stateManager[.today, default: false],
                     isCompleteYesterday: stateManager[.yesterday, default: false]
                 )
-                UINavigationController.swipeNavigationPopIsEnabled = false
                 state.path.append(contentsOf: [
                     .main(state.mainState),
                     .recordEntryPoint(state.recordEntryPointState)
@@ -109,22 +109,36 @@ struct NavigationStore {
                     isCompleteToday: stateManager[.today, default: false],
                     isCompleteYesterday: stateManager[.yesterday, default: false]
                 )
-                UINavigationController.swipeNavigationPopIsEnabled = false
                 state.path.append(.recordEntryPoint(state.recordEntryPointState))
                 return .none
             case .mainAction(.delegate(.pushSettingView)):
+                UINavigationController.swipeNavigationPopIsEnabled = true
                 state.path.append(.setting)
                 return .none
             case .mainAction:
                 return .none
                 
+            case .addNewRecord(let record):
+                if state.rootType == .onboarding {
+                    if let mainViewID = state.path.ids.first {
+                        if case .main(var mainState) = state.path[id: mainViewID] {
+                            mainState.addNewRecord(record)
+                            state.path[id: mainViewID] = .main(mainState)
+                        }
+                    }
+                } else {
+                    state.mainState.addNewRecord(record)
+                }
+                return .none
+                
                 // Path Action
             case .path(let element):
                 switch element {
-                case .element(id: let id, action: let action):
+                case .element(id: _, action: let action):
                     switch action {
                         // Path - Main Action
                     case .main(.delegate(.pushRecordListView)):
+                        UINavigationController.swipeNavigationPopIsEnabled = true
                         state.path.append(.recordList(state.recordListState))
                         return .none
                         
@@ -134,11 +148,11 @@ struct NavigationStore {
                             isCompleteToday: stateManager[.today, default: false],
                             isCompleteYesterday: stateManager[.yesterday, default: false]
                         )
-                        UINavigationController.swipeNavigationPopIsEnabled = false
                         state.path.append(.recordEntryPoint(state.recordEntryPointState))
                         return .none
                         
                     case .main(.delegate(.pushSettingView)):
+                        UINavigationController.swipeNavigationPopIsEnabled = true
                         state.path.append(.setting)
                         return .none
                         
@@ -149,41 +163,40 @@ struct NavigationStore {
                             isCompleteToday: stateManager[.today, default: false],
                             isCompleteYesterday: stateManager[.yesterday, default: false]
                         )
-                        UINavigationController.swipeNavigationPopIsEnabled = false
                         state.path.append(.recordEntryPoint(state.recordEntryPointState))
                         return .none
                         
                         // Path - Record EntryPoint Action
                     case .recordEntryPoint(.delegate(.popToMainView)):
-                        if let recordEntryPointViewID = state.path.ids.last {
-                            state.path.pop(from: recordEntryPointViewID)
+                        if state.rootType == .onboarding {
+                            if let mainViewID = state.path.ids.first {
+                                state.path.pop(to: mainViewID)
+                            }
+                        } else {
+                            state.path.removeAll()
                         }
-                        UINavigationController.swipeNavigationPopIsEnabled = true
                         return .none
                         
                     case .recordEntryPoint(.delegate(.popToMainViewWith(let record))):
                         if state.rootType == .onboarding {
                             if let mainViewID = state.path.ids.first {
-                                if case .main(var mainState) = state.path[id: mainViewID] {
-                                    mainState.addNewRecord(record)
-                                    state.path[id: mainViewID] = .main(mainState)
-                                }
+                                state.path.pop(to: mainViewID)
                             }
                         } else {
-                            state.mainState.addNewRecord(record)
+                            state.path.removeAll()
                         }
-                        if let recordEntryPointViewID = state.path.ids.last {
-                            state.path.pop(from: recordEntryPointViewID)
+                        return .run { send in
+                            await send(.addNewRecord(record))
                         }
-                        UINavigationController.swipeNavigationPopIsEnabled = true
-                        return .none
-                        
+                    
                     case .recordEntryPoint(.delegate(.pushRecordWritingViewWith(let content))):
+                        UINavigationController.swipeNavigationPopIsEnabled = true
                         state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
                         state.path.append(.recordWriting(state.recordWritingState))
                         return .none
                         
                     case .recordEntryPoint(.delegate(.pushRecordWritingView(let type))):
+                        UINavigationController.swipeNavigationPopIsEnabled = true
                         state.recordWritingState = RecordWritingStore.State(type: type)
                         state.path.append(.recordWriting(state.recordWritingState))
                         return .none

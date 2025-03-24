@@ -11,6 +11,7 @@ final class HistoryStateManager {
     static let shared = HistoryStateManager()
     
     private let userDefaults = UserDefaults.standard
+    private let isShownOnboarding = "IS_SHOWN_ONBOARDING"
     private let isFirstRecordKey = "IS_FIRST_RECORD"
     private let guideShownKey = "GUIDE_SHOWN"
     private let lastRecordKey = "LAST_RECORD"
@@ -18,6 +19,18 @@ final class HistoryStateManager {
     private let emptyRecordGuideKey = "EMPTY_RECORD_GUIDE"
     
     private init() {}
+    
+    func getOnboardingState() -> Bool {
+        if userDefaults.string(forKey: isShownOnboarding) == nil {
+            return true
+        }
+        setOnboardingState()
+        return false
+    }
+    
+    func setOnboardingState() {
+        userDefaults.set(isShownOnboarding, forKey: isShownOnboarding)
+    }
     
     func getGuideState() -> String? {
         userDefaults.string(forKey: guideShownKey)
