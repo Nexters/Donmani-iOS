@@ -9,15 +9,24 @@ import SwiftUI
 
 struct RecordView: View {
     let record: RecordContent
-    let action: (() -> Void)?
+//    let action: (() -> Void)?
+    let isEditable: Bool
     
-    init(record: RecordContent, action: (() -> Void)? = nil) {
+//    init(record: RecordContent, action: (() -> Void)? = nil) {
+//        self.record = record
+//        self.action = action
+//    }
+    
+    init(
+        record: RecordContent,
+        isEditable: Bool = true
+    ) {
         self.record = record
-        self.action = action
+        self.isEditable = isEditable
     }
     
     var body: some View {
-        RecordContentView(record: record, action: action)
+        RecordContentView(record: record, isEditable: isEditable)
         .background {
             RecordBackgroundView(record.category.color)
         }

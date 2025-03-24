@@ -44,9 +44,7 @@ extension RecordEntryPointView {
                     }
                     
                     Button {
-//                        store.send(.dismissCancelRecordBottomSheet)
-//                        dismiss()
-                        store.send(.delegate(.popToMainView))
+                        store.send(.cancelRecording)
                     } label: {
                         ZStack {
                             RoundedRectangle(
