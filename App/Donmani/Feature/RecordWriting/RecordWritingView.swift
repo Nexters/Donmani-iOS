@@ -117,6 +117,8 @@ struct RecordWritingView: View {
                 editingText = store.text
                 if store.text.isEmpty {
                     store.send(.openCategory)
+                } else {
+                    isFocusToTextField = true
                 }
             }
             

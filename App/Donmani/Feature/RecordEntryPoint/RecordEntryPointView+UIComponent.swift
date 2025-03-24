@@ -13,7 +13,7 @@ extension RecordEntryPointView {
     func DayToggle() -> some View {
         HStack(spacing: 0) {
             Button {
-                store.send(.touchYesterdayToggleButton)
+                store.send(.touchDayTypeToggleButton)
             } label: {
                 Text("어제")
                     .font(DFont.font(.b2, weight: .semibold))
@@ -26,7 +26,7 @@ extension RecordEntryPointView {
                 .foregroundStyle(DColor(.deepBlue80).color)
             
             Button {
-                store.send(.touchTodayToggleButton)
+                store.send(.touchDayTypeToggleButton)
             } label: {
                 Text("오늘")
                     .font(DFont.font(.b2, weight: .semibold))
@@ -77,6 +77,28 @@ extension RecordEntryPointView {
                     .foregroundStyle(DColor(.pupleBlue90).color)
                     .padding(8)
             }
+    }
+    
+    func RecordIsNotFullText() -> some View {
+        HStack(alignment: .top, spacing: .s5 / 2) {
+            VStack {
+                DImage(.notice).image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: .s3, height: .s3)
+            }
+            VStack(spacing: 4) {
+                Text("\(store.goodRecord == nil ? "행복" : "후회") 소비를 작성하지 않았어요!")
+                    .font(DFont.font(.b1, weight: .semibold))
+                    .foregroundStyle(DColor(.gray99).color)
+                Text("돌아가기를 누르면 기록할 수 있어요")
+                    .font(DFont.font(.b2, weight: .regular))
+                    .foregroundStyle(DColor(.gray99).color)
+                
+            }
+            Spacer()
+        }
+        .padding(.s5)
     }
     
     func EmptyRecordArea() -> some View {
@@ -143,11 +165,10 @@ extension RecordEntryPointView {
     
     func RecordArea() -> some View {
         Group {
-            if store.isSaveEnabled {
-                if store.isCheckedEmptyRecord {
-                    EmptyRecordView()
-                } else if let goodRecord = store.goodRecord,
-                          let badRecord = store.badRecord {
+            if store.isCheckedEmptyRecord {
+                EmptyRecordView()
+            } else {
+                if let goodRecord = store.goodRecord, let badRecord = store.badRecord {
                     RecordIntegrateView(
                         goodRecord: goodRecord,
                         badRecord: badRecord,
@@ -158,21 +179,29 @@ extension RecordEntryPointView {
                             store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
                         }
                     )
-                }
-            } else {
-                if let goodRecord = store.goodRecord {
-                    RecordView(record: goodRecord) {
-                        store.send(.delegate(.pushRecordWritingViewWith(goodRecord)))
-                    }
                 } else {
-                    RecordWritingButton(type: .good)
-                }
-                if let badRecord = store.badRecord {
-                    RecordView(record: badRecord) {
-                        store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
+                    if let goodRecord = store.goodRecord {
+                        Button {
+                            store.send(.delegate(.pushRecordWritingViewWith(goodRecord)))
+                        } label: {
+                            RecordView(record: goodRecord, isEditable: true)
+                        }
+                    } else {
+                        if !store.isReadyToSave {
+                            RecordWritingButton(type: .good)
+                        }
                     }
-                } else {
-                    RecordWritingButton(type: .bad)
+                    if let badRecord = store.badRecord {
+                        Button {
+                            store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
+                        } label: {
+                            RecordView(record: badRecord, isEditable: true)
+                        }
+                    } else {
+                        if !store.isReadyToSave {
+                            RecordWritingButton(type: .bad)
+                        }
+                    }
                 }
             }
         }

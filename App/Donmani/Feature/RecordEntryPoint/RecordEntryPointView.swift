@@ -29,17 +29,16 @@ struct RecordEntryPointView: View {
                 spacing: .defaultLayoutPadding
             ) {
                 // Navigation Bar
-                
                 HStack {
                     DBackButton {
                         if (
-                            store.goodRecord == nil
-                            && store.badRecord == nil
-                            && !store.isCheckedEmptyRecord
+                            store.isCheckedEmptyRecord
+                            || store.goodRecord != nil
+                            || store.badRecord != nil
                         ) {
-                            store.send(.delegate(.popToMainView))
-                        } else {
                             store.send(.showCancelRecordBottomSheet)
+                        } else {
+                            store.send(.delegate(.popToMainView))
                         }
                     }
                     Spacer()
@@ -69,11 +68,13 @@ struct RecordEntryPointView: View {
                     }
                     Spacer()
                 }
-                
+                Spacer()
                 // 저장
                 VStack(spacing: 0) {
-                    if !store.isReadyToSave {
+                    if !store.isReadyToSave || store.isFullWriting {
                         RecordGuideText()
+                    } else {
+                        RecordIsNotFullText()
                     }
                     
                     if store.isReadyToSave {

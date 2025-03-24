@@ -58,7 +58,6 @@ struct StarBottleView: View {
                 }
                 
             }
-            
             MotionManager.startGyros { dx, dy in
                 starScene.setGravity(dx: dx, dy: -dy)
             }
@@ -66,15 +65,6 @@ struct StarBottleView: View {
         .onDisappear {
             MotionManager.stopGyros()
         }
-//        .onChange(of: newRecord) { (new, old) in
-//            if let record = new {
-//                starScene.createNewStarNode(
-//                    width: width,
-//                    height: height,
-//                    record: record
-//                )
-//            }
-//        }
     }
 }
 
