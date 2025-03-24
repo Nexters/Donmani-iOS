@@ -48,7 +48,7 @@ struct NavigationStore {
             case .bad:
                 recordEntryPointState.badRecord = content
             }
-            let isSaveEnabled = (recordEntryPointState.badRecord != nil && recordEntryPointState.goodRecord != nil)
+            let isSaveEnabled = !(recordEntryPointState.badRecord == nil && recordEntryPointState.goodRecord == nil)
             recordEntryPointState.isSaveEnabled = isSaveEnabled
         }
     }
