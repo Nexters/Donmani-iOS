@@ -30,8 +30,21 @@ struct RecordIntegrateView: View {
     
     var body: some View {
         VStack {
-            RecordContentView(record: goodRecord, action: goodAction)
-            RecordContentView(record: badRecord, action: badAction)
+            Button {
+                goodAction?()
+            } label: {
+                RecordContentView(record: goodRecord, isEditable: goodAction != nil)
+            }
+            .allowsHitTesting(goodAction != nil)
+            
+            Button {
+                badAction?()
+            } label: {
+                RecordContentView(record: badRecord, isEditable: badAction != nil)
+            }
+            .allowsHitTesting(badAction != nil)
+            
+            
         }
         .background(
             ZStack {

@@ -79,6 +79,24 @@ extension RecordEntryPointView {
             }
     }
     
+    func RecordIsNotFullText() -> some View {
+        HStack(spacing: .s5 / 2) {
+            DImage(.notice).image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: .s3, height: .s3)
+            VStack(spacing: 4) {
+                Text("\(store.goodRecord == nil ? "행복" : "후회") 소비를 작성하지 않았어요!")
+                    .font(DFont.font(.b1, weight: .semibold))
+                    .foregroundStyle(DColor(.gray99).color)
+                Text("돌아가기를 누르면 기록할 수 있어요")
+                    .font(DFont.font(.b2, weight: .regular))
+                    .foregroundStyle(DColor(.gray99).color)
+            }
+        }
+        .padding(.s5)
+    }
+    
     func EmptyRecordArea() -> some View {
         VStack(spacing: 2) {
             HStack {
@@ -161,15 +179,19 @@ extension RecordEntryPointView {
                 }
             } else {
                 if let goodRecord = store.goodRecord {
-                    RecordView(record: goodRecord) {
+                    Button {
                         store.send(.delegate(.pushRecordWritingViewWith(goodRecord)))
+                    } label: {
+                        RecordView(record: goodRecord, isEditable: true)
                     }
                 } else {
                     RecordWritingButton(type: .good)
                 }
                 if let badRecord = store.badRecord {
-                    RecordView(record: badRecord) {
+                    Button {
                         store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
+                    } label: {
+                        RecordView(record: badRecord, isEditable: true)
                     }
                 } else {
                     RecordWritingButton(type: .bad)

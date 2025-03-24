@@ -10,11 +10,20 @@ import DesignSystem
 
 struct RecordContentView: View {
     let record: RecordContent
-    let action: (() -> Void)?
+//    let action: (() -> Void)?
+    let isEditable: Bool
     
-    init(record: RecordContent, action: (() -> Void)? = nil) {
+//    init(record: RecordContent, action: (() -> Void)? = nil) {
+//        self.record = record
+//        self.action = action
+//    }
+    
+    init(
+        record: RecordContent,
+        isEditable: Bool = true
+    ) {
         self.record = record
-        self.action = action
+        self.isEditable = isEditable
     }
     
     var body: some View {
@@ -24,14 +33,10 @@ struct RecordContentView: View {
                     .font(DFont.font(.h3, weight: .bold))
                     .foregroundStyle(.white)
                 Spacer()
-                if let action {
-                    Button {
-                        action()
-                    } label: {
-                        DImage(.edit).image
-                            .resizable()
-                            .frame(width: .s4, height: .s4)
-                    }
+                if isEditable {
+                    DImage(.edit).image
+                        .resizable()
+                        .frame(width: .s4, height: .s4)
                 }
             }
             HStack(spacing: 12) {
@@ -83,7 +88,5 @@ struct RecordContentView: View {
             category: RecordCategory(BadCategory.greed),
             memo: "망했어요"
         )
-    ) {
-        
-    }
+    )
 }

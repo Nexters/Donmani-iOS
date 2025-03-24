@@ -49,6 +49,7 @@ struct RecordEntryPointStore {
         
         var isSaveEnabled: Bool = false
         var isReadyToSave: Bool = false
+        var isFullWriting: Bool = false
         var isLoading: Bool = false
         var isFromMain: Bool = true
         
@@ -174,6 +175,12 @@ struct RecordEntryPointStore {
                 
             case .readyToSave:
                 state.isReadyToSave = true
+                state.isFullWriting = true
+                if !state.isCheckedEmptyRecord {
+                    if (state.goodRecord == nil || state.badRecord == nil) {
+                        state.isFullWriting = false
+                    }
+                }
                 UINavigationController.swipeNavigationPopIsEnabled = false
                 return .none
             case .cancelSave:
