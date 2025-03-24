@@ -44,8 +44,9 @@ extension RecordEntryPointView {
                     }
                     
                     Button {
-                        store.send(.dismissCancelRecordBottomSheet)
-                        dismiss()
+//                        store.send(.dismissCancelRecordBottomSheet)
+//                        dismiss()
+                        store.send(.delegate(.popToMainView))
                     } label: {
                         ZStack {
                             RoundedRectangle(
@@ -135,17 +136,13 @@ extension RecordEntryPointView {
                     .font(DFont.font(.h2, weight: .bold))
                     .foregroundStyle(DColor(.gray95).color)
                 
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 16) {
                     Text("• 매일 행복, 후회 소비를 각각 한 개씩 기록해요")
                     Text("• 기록을 저장한 후에는 수정할 수 없어요")
                     Text("• 어제, 오늘의 소비만 기록할 수 있어요")
                 }
                 .font(DFont.font(.b1, weight: .regular))
                 .foregroundStyle(DColor(.gray95).color)
-                
-                Text("규칙은 설정에서 다시 확인할 수 있어요")
-                    .font(DFont.font(.b2, weight: .regular))
-                    .foregroundStyle(DColor(.deepBlue90).color)
                 
                 Button {
                     dismissSheet {

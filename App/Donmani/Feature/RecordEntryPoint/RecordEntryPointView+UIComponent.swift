@@ -41,7 +41,7 @@ extension RecordEntryPointView {
         type: RecordContentType
     ) -> some View {
         Button {
-            store.send(.startRecordWriting(type))
+            store.send(.delegate(.pushRecordWritingView(type)))
         } label: {
             ZStack {
                 RoundedRectangle(
@@ -151,21 +151,25 @@ extension RecordEntryPointView {
                     RecordIntegrateView(
                         goodRecord: goodRecord,
                         badRecord: badRecord,
-                        goodAction: {store.send(.editRecordWriting(goodRecord))},
-                        badAction: {store.send(.editRecordWriting(badRecord))}
+                        goodAction: {
+                            store.send(.delegate(.pushRecordWritingViewWith(goodRecord)))
+                        },
+                        badAction: {
+                            store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
+                        }
                     )
                 }
             } else {
                 if let goodRecord = store.goodRecord {
                     RecordView(record: goodRecord) {
-                        store.send(.editRecordWriting(goodRecord))
+                        store.send(.delegate(.pushRecordWritingViewWith(goodRecord)))
                     }
                 } else {
                     RecordWritingButton(type: .good)
                 }
                 if let badRecord = store.badRecord {
                     RecordView(record: badRecord) {
-                        store.send(.editRecordWriting(badRecord))
+                        store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
                     }
                 } else {
                     RecordWritingButton(type: .bad)

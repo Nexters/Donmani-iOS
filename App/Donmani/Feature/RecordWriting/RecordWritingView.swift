@@ -10,7 +10,6 @@ import ComposableArchitecture
 import DesignSystem
 
 struct RecordWritingView: View {
-    @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<RecordWritingStore>
     @FocusState var isFocusToTextField: Bool
     @State var editingText: String = ""
@@ -26,7 +25,7 @@ struct RecordWritingView: View {
                 ZStack {
                     HStack {
                         DBackButton {
-                            dismiss()
+                            store.send(.delegate(.popToRecordEntrypointView))
                         }
                         Spacer()
                     }
@@ -110,7 +109,6 @@ struct RecordWritingView: View {
                         isActive: store.isSaveEnabled
                     ) {
                         store.send(.save(editingText))
-                        dismiss()
                     }
                 }
             }

@@ -11,27 +11,22 @@ import DesignSystem
 extension MainView {
     func AccessoryButton(
         asset: DImageAsset,
-        destination: () -> some View
+        action: @escaping () -> Void
     ) -> some View {
-        NavigationLink {
-            destination()
+        Button {
+            action()
         } label: {
-            ZStack {
-                Circle()
-                    .fill(DColor.accessoryButton)
-                    .opacity(0.1)
-                DImage(asset).image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: .s3)
-            }
+            DImage(asset).image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: .s3)
         }
-        .frame(width: 48, height: 48)
+        .frame(width: .s3 * 2, height: .s3 * 2)
     }
     
     func RecordButton() -> some View {
         Button {
-            store.send(.touchRecordEntryButton)
+            store.send(.delegate(.pushRecordEntryPointView))
         } label: {
             ZStack {
                 Circle()

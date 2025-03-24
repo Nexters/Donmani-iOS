@@ -40,13 +40,25 @@ struct StarBottleView: View {
                 width: width,
                 height: height
             )
-            records.forEach {
-                starScene.createInitStarNode(
-                    width: width,
-                    height: height,
-                    record: $0
-                )
+            
+            (0..<records.count).forEach { i in
+                if i == records.count - 1 {
+                    starScene.createNewStarNode(
+                        width: width,
+                        height: height,
+                        record: records[i]
+                    )
+                } else {
+                    starScene.createInitStarNode(
+                        width: width,
+                        height: height,
+                        record: records[i],
+                        index: i
+                    )
+                }
+                
             }
+            
             MotionManager.startGyros { dx, dy in
                 starScene.setGravity(dx: dx, dy: -dy)
             }
@@ -54,26 +66,15 @@ struct StarBottleView: View {
         .onDisappear {
             MotionManager.stopGyros()
         }
-        .onChange(of: records) { (new, old) in
-            if let record = records.last {
-                starScene.createNewStarNode(
-                    width: width,
-                    height: height,
-                    record: record
-                )
-            }
-        }
-//                .onTapGesture {
-////                    starScene.createNewStarNode(
-//                    starScene.createInitStarNode(
-//                        width: width,
-//                        height: height,
-//                        record: .init(date: "", contents: [
-//                            .init(flag: .good, category: .init(GoodCategory.allCases.shuffled().first!), memo: ""),
-//                            .init(flag: .bad, category: .init(BadCategory.allCases.shuffled().first!), memo: "")
-//                        ])
-//                    )
-//                }
+//        .onChange(of: newRecord) { (new, old) in
+//            if let record = new {
+//                starScene.createNewStarNode(
+//                    width: width,
+//                    height: height,
+//                    record: record
+//                )
+//            }
+//        }
     }
 }
 

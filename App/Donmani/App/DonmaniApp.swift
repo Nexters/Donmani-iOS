@@ -6,14 +6,25 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct DonmaniApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-
+    @State var isPresentingSplash: Bool = true
+    @State var rootType: RootType = .main// .onboarding
+    
     var body: some Scene {
         WindowGroup {
-            SplashLoadView()
+            if isPresentingSplash {
+                SplashView(isPresentingSplash: $isPresentingSplash)
+            } else {
+                NavigationCoordinateView(
+                    store: Store(initialState: NavigationStore.State(rootType)) {
+                            NavigationStore()
+                        }
+                )
+            }
         }
     }
 }

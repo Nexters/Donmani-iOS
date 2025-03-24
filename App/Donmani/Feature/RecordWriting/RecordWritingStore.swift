@@ -37,12 +37,15 @@ struct RecordWritingStore {
             content: RecordContent? = nil
         ) {
             self.type = type
+            var tempCategory: [RecordCategory]
             switch type {
             case .good:
-                self.category = GoodCategory.allCases.map { RecordCategory($0) }
+                tempCategory = GoodCategory.allCases.map { RecordCategory($0) }
             case .bad:
-                self.category = BadCategory.allCases.map { RecordCategory($0) }
+                tempCategory = BadCategory.allCases.map { RecordCategory($0) }
             }
+            _ = tempCategory.popLast()
+            self.category = tempCategory
             self.selectedCategory = content?.category
             self.savedCategory = content?.category
             if let content = content {
@@ -57,26 +60,28 @@ struct RecordWritingStore {
     }
     
     // MARK: - Action
-    enum Action: BindableAction, Equatable {
+    enum Action: BindableAction {
         case openCategory
         case selectCategory(RecordCategory)
         case saveCategory(RecordCategory)
         case closeCategory
-        case binding(BindingAction<State>)
         case textChanged(Int)
         case showTextLengthGuide
         case hideTextLengthGuide
         case save(String)
-        case sendToRecordView(RecordContent)
+
+        case binding(BindingAction<State>)
+        case delegate(Delegate)
+        enum Delegate {
+            case popToRecordEntrypointView
+            case popToRecordEntrypointViewWith(RecordContent)
+        }
     }
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
         BindingReducer()
         Reduce { state, action in
-            //            print("State ---- \n", state)
-            //            print("Action ---- \n", action)
-            //            print(#function, "============================\n\n")
             switch action {
             case .openCategory:
                 UIApplication.shared.endEditing()
@@ -106,9 +111,6 @@ struct RecordWritingStore {
                 UINavigationController.swipeNavigationPopIsEnabled = true
                 return .none
                 
-            case .binding(_):
-                return .none
-                
             case .textChanged(let textCount):
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 state.isSaveEnabled = (textCount > 0 && state.savedCategory != nil)
@@ -126,7 +128,6 @@ struct RecordWritingStore {
                         animation: .linear(duration: 0.5)
                     )
                 }
-                
             case .hideTextLengthGuide:
                 state.isPresendTextGuide = false
                 return .none
@@ -135,11 +136,14 @@ struct RecordWritingStore {
                 if let savedCategory = state.savedCategory {
                     let recordContent = RecordContent(flag: state.type, category: savedCategory, memo: text)
                     return .run { send in
-                        await send(.sendToRecordView(recordContent))
+                        await send(.delegate(.popToRecordEntrypointViewWith(recordContent)))
                     }
                 }
                 return .none
-            case .sendToRecordView(_):
+                
+            case .binding:
+                return .none
+            case .delegate:
                 return .none
             }
         }
