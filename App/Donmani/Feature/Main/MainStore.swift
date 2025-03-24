@@ -24,7 +24,6 @@ struct MainStore {
         var isCompleteYesterday: Bool
         var monthlyRecords: [Record]
         var isPresentingRecordEntryButton: Bool = true
-        var newRecord: Record? = nil
         var recordEntryPointState = RecordEntryPointStore.State(isCompleteToday: true, isCompleteYesterday: true)
         var isPresentingPopover: Bool = false
         var isLoading: Bool = false
@@ -43,27 +42,26 @@ struct MainStore {
         }
         
         mutating func addNewRecord(_ record: Record) {
-            let stateManager = HistoryStateManager.shared.getState()
-            self.recordEntryPointState = RecordEntryPointStore.State(
-                isCompleteToday: stateManager[.today, default: false],
-                isCompleteYesterday: stateManager[.yesterday, default: false]
-            )
-            self.isCompleteToday = stateManager[.today, default: false]
-            self.isCompleteYesterday = stateManager[.yesterday, default: false]
-            self.isPresentingRecordEntryButton = !(stateManager[.today, default: false] && stateManager[.yesterday, default: false])
-            DataStorage.setRecord(record)
+//            let stateManager = HistoryStateManager.shared.getState()
+//            self.recordEntryPointState = RecordEntryPointStore.State(
+//                isCompleteToday: stateManager[.today, default: false],
+//                isCompleteYesterday: stateManager[.yesterday, default: false]
+//            )
+//            self.isCompleteToday = stateManager[.today, default: false]
+//            self.isCompleteYesterday = stateManager[.yesterday, default: false]
+//            self.isPresentingRecordEntryButton = !(stateManager[.today, default: false] && stateManager[.yesterday, default: false])
+//            DataStorage.setRecord(record)
             self.monthlyRecords.append(record)
-            self.newRecord = record
-            Task {
-                let isFirstRecord = HistoryStateManager.shared.getIsFirstRecord()
-                if isFirstRecord == nil {
-                    let connectedScenes = await UIApplication.shared.connectedScenes
-                    if let windowScene = connectedScenes.map({$0}).first as? UIWindowScene {
-                        await AppStore.requestReview(in: windowScene)
-                        HistoryStateManager.shared.setIsFirstRecord()
-                    }
-                }
-            }
+//            Task {
+//                let isFirstRecord = HistoryStateManager.shared.getIsFirstRecord()
+//                if isFirstRecord == nil {
+//                    let connectedScenes = await UIApplication.shared.connectedScenes
+//                    if let windowScene = connectedScenes.map({$0}).first as? UIWindowScene {
+//                        await AppStore.requestReview(in: windowScene)
+//                        HistoryStateManager.shared.setIsFirstRecord()
+//                    }
+//                }
+//            }
         }
     }
     

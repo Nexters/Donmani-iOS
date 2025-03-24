@@ -24,6 +24,7 @@ struct RecordEntryPointStore {
         
         var dateString: String
         var dayType: DayType = .today
+        var isChangingDayType = false
         
         var isPresentingCancel: Bool = false
         var isPresentingRecordEmpty: Bool = false
@@ -92,8 +93,11 @@ struct RecordEntryPointStore {
         case cancelRecording
         
         case dismissRecordGuideBottomSheet
-        case touchYesterdayToggleButton
-        case touchTodayToggleButton
+//        case touchYesterdayToggleButton
+//        case touchTodayToggleButton
+        
+        case touchDayTypeToggleButton
+        case toggleDayType
         
         case touchEmptyRecordButton
         case closePopover
@@ -129,25 +133,49 @@ struct RecordEntryPointStore {
                 return .none
             case .dismissCancelRecordBottomSheet:
                 state.isPresentingCancel = false
+                state.isChangingDayType = false
                 return .none
             case .cancelRecording:
                 state.isPresentingCancel = false
-                return .none
-                
+                if state.isChangingDayType {
+                    return .run { send in
+                        await send(.toggleDayType)
+                    }
+                } else {
+                    return .run { send in
+                        await send(.delegate(.popToMainView))
+                    }
+                }
             case .dismissRecordGuideBottomSheet:
                 state.isPresentingRecordGuideView = false
                 HistoryStateManager.shared.setGuideState()
                 return .none
                 
-            case .touchYesterdayToggleButton:
-                state.dayType = .yesterday
-                state.dateString = DateManager.shared.getFormattedDate(for: .yesterday)
-                return .none
-            case .touchTodayToggleButton:
-                state.dayType = .today
-                state.dateString = DateManager.shared.getFormattedDate(for: .today)
-                return .none
+            case .touchDayTypeToggleButton:
+                if (state.isCheckedEmptyRecord || state.goodRecord != nil || state.badRecord != nil) {
+                    state.isChangingDayType = true
+                    state.isPresentingCancel = true
+                    return .none
+                } else {
+                    return .run { send in
+                        await send(.toggleDayType)
+                    }
+                }
                 
+            case .toggleDayType:
+                state.isChangingDayType = false
+                switch state.dayType {
+                case .today:
+                    state.dayType = .yesterday
+                    state.dateString = DateManager.shared.getFormattedDate(for: .yesterday)
+                case .yesterday:
+                    state.dayType = .today
+                    state.dateString = DateManager.shared.getFormattedDate(for: .today)
+                }
+                state.isCheckedEmptyRecord = false
+                state.goodRecord = nil
+                state.badRecord = nil
+                return .none
             case .touchEmptyRecordButton:
                 state.isPresentingPopover = false
                 if state.isCheckedEmptyRecord {
@@ -195,7 +223,7 @@ struct RecordEntryPointStore {
                 let records = buffer
                 let date = state.dateString
 //                let stateManager = HistoryStateManager.shared
-//                stateManager.addRecord(for: state.dayType)
+//                stateManager.addRecord(for: state.dayType)ZXscdvfbgnhj,kjghnbfvdcsxzaZASDXCFVGBHN
                 return .run { send in
                     let networkManager = NetworkManager.NMRecord(service: .shared)
 //                    guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
