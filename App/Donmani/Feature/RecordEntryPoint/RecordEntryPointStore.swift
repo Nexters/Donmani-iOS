@@ -30,8 +30,6 @@ struct RecordEntryPointStore {
         var isPresentingRecordWritingView: Bool = false
         var isPresentingRecordGuideView: Bool = false
         
-        var recordWritingState = RecordWritingStore.State(type: .good)
-        
         var isPresentingDayToggle: Bool
         var title: String
         var guide: String {
@@ -52,8 +50,20 @@ struct RecordEntryPointStore {
         var isSaveEnabled: Bool = false
         var isReadyToSave: Bool = false
         var isLoading: Bool = false
+        var isFromMain: Bool = true
         
-        init(isCompleteToday: Bool, isCompleteYesterday: Bool) {
+        init() {
+            self.isCompleteToday = false
+            self.isCompleteYesterday = false
+            self.dateString = DateManager.shared.getFormattedDate(for: .today)
+            self.isPresentingDayToggle = true
+            self.title = "하루 소비 정리해 볼까요?"
+            self.remainingTime = TimeManager.getRemainingTime()
+            self.isPresentingPopover = true
+        }
+        
+        init(isCompleteToday: Bool, isCompleteYesterday: Bool, isFromMain: Bool = true) {
+            self.isFromMain = isFromMain
             self.isPresentingRecordGuideView = (HistoryStateManager.shared.getGuideState() == nil)
             self.isPresentingPopover = HistoryStateManager.shared.getEmptyRecordGuideKey()
             self.isCompleteToday = isCompleteToday
@@ -75,18 +85,12 @@ struct RecordEntryPointStore {
     }
     
     // MARK: - Action
-    enum Action: BindableAction, Equatable {
+    enum Action: BindableAction {
         case showCancelRecordBottomSheet
         case dismissCancelRecordBottomSheet
         case cancelRecording
         
         case dismissRecordGuideBottomSheet
-        
-        case editRecordWriting(RecordContent)
-        case startRecordWriting(RecordContentType)
-        
-        case binding(BindingAction<State>)
-        
         case touchYesterdayToggleButton
         case touchTodayToggleButton
         
@@ -95,33 +99,28 @@ struct RecordEntryPointStore {
         case dismissEmtpyRecordBottomSheet
         case recordEmpty
         
-        case setGoodRecord(RecordContent)
-        case setBadRecord(RecordContent)
-        case setRecord(RecordWritingStore.Action)
-        case checkRecord
-        
         case readyToSave
         case cancelSave
         case errorSave
         case save
-        case sendToMain(Record)
         
         case startTimer
         case checkRemainingTime
         case updateTime(Int)
+        
+        case binding(BindingAction<State>)
+        case delegate(Delegate)
+        enum Delegate: Equatable {
+            case pushRecordWritingView(RecordContentType)
+            case pushRecordWritingViewWith(RecordContent)
+            case popToMainView
+            case popToMainViewWith(Record)
+        }
     }
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
-        Scope(
-            state: \.recordWritingState,
-            action: \.setRecord
-        ) {
-            RecordWritingStore()
-        }
-        
         BindingReducer()
-        
         Reduce { state, action in
             switch action {
             case .showCancelRecordBottomSheet:
@@ -137,17 +136,6 @@ struct RecordEntryPointStore {
             case .dismissRecordGuideBottomSheet:
                 state.isPresentingRecordGuideView = false
                 HistoryStateManager.shared.setGuideState()
-                return .none
-                
-            case .editRecordWriting(let content):
-                state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
-                state.isPresentingRecordWritingView = true
-                return .none
-            case .startRecordWriting(let type):
-                state.recordWritingState = RecordWritingStore.State(type: type)
-                state.isPresentingRecordWritingView = true
-                return .none
-            case .binding:
                 return .none
                 
             case .touchYesterdayToggleButton:
@@ -184,45 +172,12 @@ struct RecordEntryPointStore {
                 state.badRecord = nil
                 return .none
                 
-            case .setGoodRecord(let recordContent):
-                state.goodRecord = recordContent
-                return .run { send in
-                    await send(.checkRecord)
-                }
-            case .setBadRecord(let recordContent):
-                state.badRecord = recordContent
-                return .run { send in
-                    await send(.checkRecord)
-                }
-            case .setRecord(let event):
-                switch event {
-                case .sendToRecordView(let content):
-                    return .run { send in
-                        switch content.flag {
-                        case .good:
-                            await send(.setGoodRecord(content))
-                        case .bad:
-                            await send(.setBadRecord(content))
-                        }
-                    }
-                default:
-                    return .none
-                }
-            case .checkRecord:
-                if (state.badRecord != nil && state.goodRecord != nil) {
-                    state.isSaveEnabled = true
-                } else {
-                    state.isSaveEnabled = false
-                }
-                return .none
-                
             case .readyToSave:
                 state.isReadyToSave = true
                 UINavigationController.swipeNavigationPopIsEnabled = false
                 return .none
             case .cancelSave:
                 state.isReadyToSave = false
-                UINavigationController.swipeNavigationPopIsEnabled = true
                 return .none
             case .save:
                 state.isLoading = true
@@ -232,22 +187,19 @@ struct RecordEntryPointStore {
                 }
                 let records = buffer
                 let date = state.dateString
+//                let stateManager = HistoryStateManager.shared
+//                stateManager.addRecord(for: state.dayType)
                 return .run { send in
                     let networkManager = NetworkManager.NMRecord(service: .shared)
-                    guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
-                        await send(.errorSave)
-                        return
-                    }
-                    await send(.sendToMain(Record(date: date, contents: records)))
+//                    guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
+//                        await send(.errorSave)
+//                        return
+//                    }
+                    let record = Record(date: date, contents: records)
+                    await send(.delegate(.popToMainViewWith(record)))
                 }
-                
             case .errorSave:
                 state.isLoading = false
-                return .none
-                
-            case .sendToMain(_):
-                let stateManager = HistoryStateManager.shared
-                stateManager.addRecord(for: state.dayType)
                 return .none
             case .startTimer:
                 return .run { send in
@@ -269,6 +221,11 @@ struct RecordEntryPointStore {
             case .checkRemainingTime:
                 let remainingTime = TimeManager.getRemainingTime()
                 return .send(.updateTime(remainingTime))
+                
+            case .binding:
+                return .none
+            case .delegate:
+                return .none
             }
         }
     }

@@ -12,7 +12,7 @@ struct RecordListStore {
     
     // MARK: - State
     @ObservableState
-    struct State {
+    struct State: Equatable {
         let record: [Record]
         init() {
             let yearMonth = DateManager.shared.getFormattedDate(for: .today, .yearMonth)
@@ -24,13 +24,19 @@ struct RecordListStore {
     
     // MARK: - Action
     enum Action {
-        
+        case delegate(Delegate)
+        enum Delegate {
+            case pushRecordEntryPointView
+        }
     }
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
         Reduce { state, action in
-            return .none
+            switch action {
+            case .delegate:
+                return .none
+            }
         }
     }
 }

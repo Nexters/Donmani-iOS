@@ -14,12 +14,19 @@ struct MainView: View {
     
     var body: some View {
         ZStack {
-            MainBackgroundView(starCount: 6)
+            BackgroundView(colors: [
+                DColor.backgroundTop,
+                DColor.backgroundBottom,
+            ])
+            DImage(.mainBackgroundStar).image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
             VStack {
                 VStack(spacing: .s3) {
                     HStack {
                         AccessoryButton(asset: .setting) {
-                            SettingView()
+                            store.send(.delegate(.pushSettingView))
                         }
                         Spacer()
                     }
@@ -51,7 +58,7 @@ struct MainView: View {
                             .opacity(1)
                     }
                     .onTapGesture {
-                        store.send(.touchStarBottle)
+                        store.send(.delegate(.pushRecordListView))
                     }
                 }
                 
@@ -88,38 +95,26 @@ struct MainView: View {
                 }.padding(.vertical, 16 + 70 + 5)
             }
             
-            if store.isPresentingUpdateApp {
-                AppStoreView()
-            }
+//            if store.isPresentingUpdateApp {
+//                AppStoreView()
+//            }
             
             if store.isLoading {
                 Color.black.opacity(0.1)
                     .ignoresSafeArea()
             }
         }
-        .navigationDestination(isPresented: $store.isPresentingRecordEntryView) {
-            let recordEntryPointStore = store.scope(state: \.recordEntryPointState, action: \.reciveRecord)
-            RecordEntryPointView(store: recordEntryPointStore)
-        }
-        .navigationDestination(isPresented: $store.isPresentingRecordListView) {
-            RecordListView(
-                store: Store(initialState: RecordListStore.State()) {
-                    RecordListStore()
-                }
-            )
-        }
         .onAppear {
             store.send(.fetchUserName)
             store.send(.checkPopover)
         }
+        .navigationBarBackButtonHidden()
     }
 }
 
 #Preview {
     MainView(
-        store: Store(initialState: MainStore.State(
-            isLatestVersion: false
-        )) {
+        store: Store(initialState: MainStore.State()) {
             MainStore()
         }
     )

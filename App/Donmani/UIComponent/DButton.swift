@@ -23,6 +23,15 @@ struct DButton: View {
         self.isEnabled = isEnabled
     }
     
+    init(
+        title: String,
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.action = action
+        self.isEnabled = true
+    }
+    
     var body: some View {
         Button {
             if isEnabled {

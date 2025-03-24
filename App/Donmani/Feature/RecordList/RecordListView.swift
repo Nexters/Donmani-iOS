@@ -44,7 +44,7 @@ struct RecordListView: View {
                                 .font(DFont.font(.h2, weight: .semibold))
                                 .foregroundStyle(DColor(.gray95).color)
                             DButton(title: "기록하기", isEnabled: true) {
-                                dismiss()
+                                store.send(.delegate(.pushRecordEntryPointView))
                             }
                             .frame(width: 100)
                             Spacer()

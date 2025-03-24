@@ -10,8 +10,7 @@ import ComposableArchitecture
 import DesignSystem
 
 struct RecordEntryPointView: View {
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
+//    @Environment(\.dismiss) var dismiss
     @Bindable var store: StoreOf<RecordEntryPointStore>
     
     var body: some View {
@@ -38,7 +37,7 @@ struct RecordEntryPointView: View {
                             && store.badRecord == nil
                             && !store.isCheckedEmptyRecord
                         ) {
-                            dismiss()
+                            store.send(.delegate(.popToMainView))
                         } else {
                             store.send(.showCancelRecordBottomSheet)
                         }
@@ -108,10 +107,10 @@ struct RecordEntryPointView: View {
                 Color.black.opacity(0.1)
             }
         }
-        .navigationDestination(isPresented: $store.isPresentingRecordWritingView) {
-            let recordWritingStore = store.scope(state: \.recordWritingState, action: \.setRecord)
-            return RecordWritingView(store: recordWritingStore)
-        }
+//        .navigationDestination(isPresented: $store.isPresentingRecordWritingView) {
+//            let recordWritingStore = store.scope(state: \.recordWritingState, action: \.setRecord)
+//            return RecordWritingView(store: recordWritingStore)
+//        }
         .onAppear {
             store.send(.startTimer)
         }
