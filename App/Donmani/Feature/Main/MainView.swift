@@ -104,17 +104,6 @@ struct MainView: View {
                     .ignoresSafeArea()
             }
         }
-//        .navigationDestination(isPresented: $store.isPresentingRecordEntryView) {
-//            let recordEntryPointStore = store.scope(state: \.recordEntryPointState, action: \.reciveRecord)
-//            RecordEntryPointView(store: recordEntryPointStore)
-//        }
-//        .navigationDestination(isPresented: $store.isPresentingRecordListView) {
-//            RecordListView(
-//                store: Store(initialState: RecordListStore.State()) {
-//                    RecordListStore()
-//                }
-//            )
-//        }
         .onAppear {
             store.send(.fetchUserName)
             store.send(.checkPopover)
