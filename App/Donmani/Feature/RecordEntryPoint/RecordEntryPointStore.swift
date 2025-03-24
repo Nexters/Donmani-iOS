@@ -217,19 +217,19 @@ struct RecordEntryPointStore {
             case .save:
                 state.isLoading = true
                 var buffer: [RecordContent]? = nil
-                if (state.badRecord != nil && state.goodRecord != nil) {
-                    buffer = [state.goodRecord!, state.badRecord!]
+                if (state.badRecord != nil || state.goodRecord != nil) {
+                    buffer = [state.goodRecord, state.badRecord].compactMap{$0}
                 }
                 let records = buffer
                 let date = state.dateString
-//                let stateManager = HistoryStateManager.shared
-//                stateManager.addRecord(for: state.dayType)ZXscdvfbgnhj,kjghnbfvdcsxzaZASDXCFVGBHN
+                let stateManager = HistoryStateManager.shared
+                stateManager.addRecord(for: state.dayType)
                 return .run { send in
                     let networkManager = NetworkManager.NMRecord(service: .shared)
-//                    guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
-//                        await send(.errorSave)
-//                        return
-//                    }
+                    guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
+                        await send(.errorSave)
+                        return
+                    }
                     let record = Record(date: date, contents: records)
                     await send(.delegate(.popToMainViewWith(record)))
                 }

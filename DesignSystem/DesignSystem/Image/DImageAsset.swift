@@ -40,6 +40,7 @@ public enum DImageAsset: String {
     case onboardingPage2 = "OnboardingPage2"
     case onboardingPage3 = "OnboardingPage3"
     case onboardingPage4 = "OnboardingPage4"
+    case onboardingEnd = "OnboardingEnd"
    
     // Image 16
     case close = "Close"

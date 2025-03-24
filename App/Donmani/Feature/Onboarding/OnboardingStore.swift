@@ -20,8 +20,15 @@ struct OnboardingStore {
             case final
         }
         
+        enum NextStep {
+            case main
+            case record
+        }
+        
         var step: Step = .cover
+        var nextStep: NextStep = .main
         var pageIndex = 0
+        var isPresentingEndOnboardingView = false
         
         let guidePageCount = 5
         
@@ -58,6 +65,8 @@ struct OnboardingStore {
     enum Action: BindableAction, Equatable {
         case touchStartOnboarding
         case touchNextPage
+        case touchEndOnboarding
+        
         case touchHomeButton
         case touchRecordButton
         
@@ -84,10 +93,24 @@ struct OnboardingStore {
                 state.pageIndex += 1
                 state.step = state.pageIndex < 4 ? .page : .final
                 return .none
+                
             case .touchHomeButton:
-                return .send(.delegate(.pushMainView))
+                state.nextStep = .main
+                state.isPresentingEndOnboardingView = true
+                return .none
             case .touchRecordButton:
-                return .send(.delegate(.pushRecordEntryPointView))
+                state.nextStep = .record
+                state.isPresentingEndOnboardingView = true
+                return .none
+            
+            case .touchEndOnboarding:
+                switch state.nextStep {
+                case .main:
+                    return .send(.delegate(.pushMainView))
+                case .record:
+                    return .send(.delegate(.pushRecordEntryPointView))
+                }
+                
             case .binding(\.pageIndex):
                 state.step = state.pageIndex < 4 ? .page : .final
                 return .none
