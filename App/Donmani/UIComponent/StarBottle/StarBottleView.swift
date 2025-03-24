@@ -40,14 +40,25 @@ struct StarBottleView: View {
                 width: width,
                 height: height
             )
+            
             (0..<records.count).forEach { i in
-                starScene.createInitStarNode(
-                    width: width,
-                    height: height,
-                    record: records[i],
-                    index: i
-                )
+                if i == records.count - 1 {
+                    starScene.createNewStarNode(
+                        width: width,
+                        height: height,
+                        record: records[i]
+                    )
+                } else {
+                    starScene.createInitStarNode(
+                        width: width,
+                        height: height,
+                        record: records[i],
+                        index: i
+                    )
+                }
+                
             }
+            
             MotionManager.startGyros { dx, dy in
                 starScene.setGravity(dx: dx, dy: -dy)
             }
@@ -55,15 +66,15 @@ struct StarBottleView: View {
         .onDisappear {
             MotionManager.stopGyros()
         }
-        .onChange(of: records) { (new, old) in
-            if let record = records.last {
-                starScene.createNewStarNode(
-                    width: width,
-                    height: height,
-                    record: record
-                )
-            }
-        }
+//        .onChange(of: newRecord) { (new, old) in
+//            if let record = new {
+//                starScene.createNewStarNode(
+//                    width: width,
+//                    height: height,
+//                    record: record
+//                )
+//            }
+//        }
     }
 }
 

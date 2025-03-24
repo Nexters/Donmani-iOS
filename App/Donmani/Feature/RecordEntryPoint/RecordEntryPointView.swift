@@ -107,10 +107,10 @@ struct RecordEntryPointView: View {
                 Color.black.opacity(0.1)
             }
         }
-        .navigationDestination(isPresented: $store.isPresentingRecordWritingView) {
-            let recordWritingStore = store.scope(state: \.recordWritingState, action: \.setRecord)
-            return RecordWritingView(store: recordWritingStore)
-        }
+//        .navigationDestination(isPresented: $store.isPresentingRecordWritingView) {
+//            let recordWritingStore = store.scope(state: \.recordWritingState, action: \.setRecord)
+//            return RecordWritingView(store: recordWritingStore)
+//        }
         .onAppear {
             store.send(.startTimer)
         }

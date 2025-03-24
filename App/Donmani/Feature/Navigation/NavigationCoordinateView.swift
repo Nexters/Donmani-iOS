@@ -27,6 +27,8 @@ struct NavigationCoordinateView: View {
                 MainView(store: store)
             case .recordEntryPoint(let store):
                 RecordEntryPointView(store: store)
+            case .recordWriting(let store):
+                RecordWritingView(store: store)
             case .recordList(let store):
                 RecordListView(store: store)
             case .setting:

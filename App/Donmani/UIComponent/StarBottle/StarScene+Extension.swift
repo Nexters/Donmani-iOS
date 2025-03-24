@@ -56,8 +56,8 @@ extension StarScene {
         index: Int
     ) {
         // Test Code
-        var record = record
-        record.date = "Test\(index)"
+//        var record = record
+//        record.date = "Test\(index)"
         
         let starCountInLine: Int = 5
         let starSize = width / CGFloat(starCountInLine)
