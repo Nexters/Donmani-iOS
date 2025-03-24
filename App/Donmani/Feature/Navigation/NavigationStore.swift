@@ -121,120 +121,99 @@ struct NavigationStore {
                 // Path Action
             case .path(let element):
                 switch element {
-                    // Path - Main Action
-                case .element(
-                    id: _,
-                    action: .main(.delegate(.pushRecordListView))
-                ):
-                    state.path.append(.recordList(state.recordListState))
-                    return .none
-                case .element(
-                    id: _,
-                    action: .main(.delegate(.pushRecordEntryPointView))
-                ):
-                    let stateManager = HistoryStateManager.shared.getState()
-                    state.recordEntryPointState = RecordEntryPointStore.State(
-                        isCompleteToday: stateManager[.today, default: false],
-                        isCompleteYesterday: stateManager[.yesterday, default: false]
-                    )
-                    UINavigationController.swipeNavigationPopIsEnabled = false
-                    state.path.append(.recordEntryPoint(state.recordEntryPointState))
-                    return .none
-                case .element(
-                    id: _,
-                    action: .main(.delegate(.pushSettingView))
-                ):
-                    state.path.append(.setting)
-                    return .none
+                case .element(id: let id, action: let action):
+                    switch action {
+                        // Path - Main Action
+                    case .main(.delegate(.pushRecordListView)):
+                        state.path.append(.recordList(state.recordListState))
+                        return .none
+                        
+                    case .main(.delegate(.pushRecordEntryPointView)):
+                        let stateManager = HistoryStateManager.shared.getState()
+                        state.recordEntryPointState = RecordEntryPointStore.State(
+                            isCompleteToday: stateManager[.today, default: false],
+                            isCompleteYesterday: stateManager[.yesterday, default: false]
+                        )
+                        UINavigationController.swipeNavigationPopIsEnabled = false
+                        state.path.append(.recordEntryPoint(state.recordEntryPointState))
+                        return .none
+                        
+                    case .main(.delegate(.pushSettingView)):
+                        state.path.append(.setting)
+                        return .none
+                        
+                        // Path - Record List Action
+                    case  .recordList(.delegate(.pushRecordEntryPointView)):
+                        let stateManager = HistoryStateManager.shared.getState()
+                        state.recordEntryPointState = RecordEntryPointStore.State(
+                            isCompleteToday: stateManager[.today, default: false],
+                            isCompleteYesterday: stateManager[.yesterday, default: false]
+                        )
+                        UINavigationController.swipeNavigationPopIsEnabled = false
+                        state.path.append(.recordEntryPoint(state.recordEntryPointState))
+                        return .none
+                        
+                        // Path - Record EntryPoint Action
+                    case .recordEntryPoint(.delegate(.popToMainView)):
+                        if let recordEntryPointViewID = state.path.ids.last {
+                            state.path.pop(from: recordEntryPointViewID)
+                        }
+                        UINavigationController.swipeNavigationPopIsEnabled = true
+                        return .none
+                        
+                    case .recordEntryPoint(.delegate(.popToMainViewWith(let record))):
+                        if state.rootType == .onboarding {
+                            if let mainViewID = state.path.ids.first {
+                                if case .main(var mainState) = state.path[id: mainViewID] {
+                                    mainState.addNewRecord(record)
+                                    state.path[id: mainViewID] = .main(mainState)
+                                }
+                            }
+                        } else {
+                            state.mainState.addNewRecord(record)
+                        }
+                        if let recordEntryPointViewID = state.path.ids.last {
+                            state.path.pop(from: recordEntryPointViewID)
+                        }
+                        UINavigationController.swipeNavigationPopIsEnabled = true
+                        return .none
+                        
+                    case .recordEntryPoint(.delegate(.pushRecordWritingViewWith(let content))):
+                        state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
+                        state.path.append(.recordWriting(state.recordWritingState))
+                        return .none
+                        
+                    case .recordEntryPoint(.delegate(.pushRecordWritingView(let type))):
+                        state.recordWritingState = RecordWritingStore.State(type: type)
+                        state.path.append(.recordWriting(state.recordWritingState))
+                        return .none
                     
-                    // Path - Record List Action
-                case .element(
-                    id: _,
-                    action: .recordList(.delegate(.pushRecordEntryPointView))
-                ):
-                    let stateManager = HistoryStateManager.shared.getState()
-                    state.recordEntryPointState = RecordEntryPointStore.State(
-                        isCompleteToday: stateManager[.today, default: false],
-                        isCompleteYesterday: stateManager[.yesterday, default: false]
-                    )
-                    UINavigationController.swipeNavigationPopIsEnabled = false
-                    state.path.append(.recordEntryPoint(state.recordEntryPointState))
-                    return .none
+                        // Path - Record Writing Action
+                    case .recordWriting(.delegate(.popToRecordEntrypointView)):
+                        state.path.removeLast()
+                        return .none
                     
-                    // Path - Record EntryPoint Action
-                case .element(
-                    id: _,
-                    action: .recordEntryPoint(.delegate(.popToMainView))
-                ):
-                    if let recordEntryPointViewID = state.path.ids.last {
-                        state.path.pop(from: recordEntryPointViewID)
-                    }
-                    UINavigationController.swipeNavigationPopIsEnabled = true
-                    return .none
-
-                case .element(
-                    id: _,
-                    action: .recordEntryPoint(.delegate(.popToMainViewWith(let record)))
-                ):
-                    if state.rootType == .onboarding {
-                        if let mainViewID = state.path.ids.first {
-                            if case .main(var mainState) = state.path[id: mainViewID] {
-                                mainState.addNewRecord(record)
-                                state.path[id: mainViewID] = .main(mainState)
+                    case .recordWriting(.delegate(.popToRecordEntrypointViewWith(let content))):
+                        var recordEntrypointViewID: StackElementID?
+                        for (id, element) in zip(state.path.ids, state.path) {
+                            switch element {
+                            case .recordEntryPoint:
+                                recordEntrypointViewID = id
+                            default:
+                                break
                             }
                         }
-                    } else {
-                        state.mainState.addNewRecord(record)
-                    }
-                    if let recordEntryPointViewID = state.path.ids.last {
-                        state.path.pop(from: recordEntryPointViewID)
-                    }
-                    UINavigationController.swipeNavigationPopIsEnabled = true
-                    return .none
-                case .element(
-                    id: _,
-                    action: .recordEntryPoint(.delegate(.pushRecordWritingViewWith(let content)))
-                ):
-                    state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
-                    state.path.append(.recordWriting(state.recordWritingState))
-                    return .none
-                case .element(
-                    id: _,
-                    action: .recordEntryPoint(.delegate(.pushRecordWritingView(let type)))
-                ):
-                    state.recordWritingState = RecordWritingStore.State(type: type)
-                    state.path.append(.recordWriting(state.recordWritingState))
-                    return .none
-                    
-                    // Path - Record Writing Action
-                case .element(
-                    id: _,
-                    action: .recordWriting(.delegate(.popToRecordEntrypointView))
-                ):
-                    state.path.removeLast()
-                    return .none
-                    
-                case .element(
-                    id: _,
-                    action: .recordWriting(.delegate(.popToRecordEntrypointViewWith(let content)))
-                ):
-                    var recordEntrypointViewID: StackElementID?
-                    for (id, element) in zip(state.path.ids, state.path) {
-                        switch element {
-                        case .recordEntryPoint:
-                            recordEntrypointViewID = id
-                        default:
-                            break
+                        state.updateRecordContent(content)
+                        if let recordEntrypointViewID = recordEntrypointViewID {
+                            state.path[id: recordEntrypointViewID] = .recordEntryPoint(state.recordEntryPointState)
                         }
+                        state.path.removeLast()
+                        return .none
+                     
+                        // Other Path Action
+                    default:
+                        return .none
                     }
-                    state.updateRecordContent(content)
-                    if let recordEntrypointViewID = recordEntrypointViewID {
-                        state.path[id: recordEntrypointViewID] = .recordEntryPoint(state.recordEntryPointState)
-                    }
-                    state.path.removeLast()
-                    return .none
-                    
-                    // Other Path Action
                 default:
                     return .none
                 }
