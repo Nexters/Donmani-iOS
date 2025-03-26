@@ -26,6 +26,7 @@ struct NavigationStore {
         // 아직 없는 Store
         // var setting: SettingStore.State
         var recordListState: RecordListStore.State
+        var bottleListState: BottleListStore.State
         
         // Path
         var path = StackState<Path.State>()
@@ -39,6 +40,7 @@ struct NavigationStore {
             self.recordEntryPointState = RecordEntryPointStore.State()
             self.recordWritingState = RecordWritingStore.State(type: .good)
             self.recordListState = RecordListStore.State()
+            self.bottleListState = BottleListStore.State()
         }
         
         mutating func updateRecordContent(_ content: RecordContent) {
@@ -59,6 +61,7 @@ struct NavigationStore {
         case recordEntryPoint(RecordEntryPointStore)
         case recordWriting(RecordWritingStore)
         case recordList(RecordListStore)
+        case bottleList(BottleListStore)
         case setting
     }
     
@@ -101,6 +104,7 @@ struct NavigationStore {
                 
                 // Main Action
             case .mainAction(.delegate(.pushRecordListView)):
+                UINavigationController.swipeNavigationPopIsEnabled = true
                 state.path.append(.recordList(state.recordListState))
                 return .none
             case .mainAction(.delegate(.pushRecordEntryPointView)):
@@ -115,6 +119,11 @@ struct NavigationStore {
                 UINavigationController.swipeNavigationPopIsEnabled = true
                 state.path.append(.setting)
                 return .none
+                
+            case .mainAction(.delegate(.pushBottleListView)):
+                state.path.append(.bottleList(state.bottleListState))
+                return .none
+                
             case .mainAction:
                 return .none
                 
@@ -154,6 +163,10 @@ struct NavigationStore {
                     case .main(.delegate(.pushSettingView)):
                         UINavigationController.swipeNavigationPopIsEnabled = true
                         state.path.append(.setting)
+                        return .none
+                        
+                    case .main(.delegate(.pushBottleListView)):
+                        state.path.append(.bottleList(state.bottleListState))
                         return .none
                         
                         // Path - Record List Action

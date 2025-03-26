@@ -17,8 +17,30 @@ final class HistoryStateManager {
     private let lastRecordKey = "LAST_RECORD"
     private let secondToLastRecordKey = "SECOND_TO_LAST_RECORD"
     private let emptyRecordGuideKey = "EMPTY_RECORD_GUIDE"
+    private let isFirstDayOfMonth = "IS_FIRST_DAY_OF_MONTH"
+    private let monthlyBottleGuide = "MONTHLY_BOTTLE_GUIDE"
     
     private init() {}
+    
+    func getMonthlyBottleGuide() -> Bool {
+        userDefaults.string(forKey: monthlyBottleGuide) == nil
+    }
+    
+    func setMonthlyBottleGuide() {
+        userDefaults.set(monthlyBottleGuide, forKey: monthlyBottleGuide)
+    }
+    
+    func removeIsFirstDayOfMonth() {
+        userDefaults.removeObject(forKey: isFirstDayOfMonth)
+    }
+    
+    func getIsFirstDayOfMonth() -> Bool {
+        userDefaults.string(forKey: isFirstDayOfMonth) == nil
+    }
+    
+    func setIsFirstDayOfMonth() {
+        userDefaults.set(isFirstDayOfMonth, forKey: isFirstDayOfMonth)
+    }
     
     func getOnboardingState() -> Bool {
         userDefaults.string(forKey: isShownOnboarding) == nil
