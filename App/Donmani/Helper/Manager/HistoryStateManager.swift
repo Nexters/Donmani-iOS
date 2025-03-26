@@ -21,11 +21,7 @@ final class HistoryStateManager {
     private init() {}
     
     func getOnboardingState() -> Bool {
-        if userDefaults.string(forKey: isShownOnboarding) == nil {
-            return true
-        }
-        setOnboardingState()
-        return false
+        userDefaults.string(forKey: isShownOnboarding) == nil
     }
     
     func setOnboardingState() {

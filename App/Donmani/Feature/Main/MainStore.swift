@@ -5,6 +5,7 @@
 //  Created by 문종식 on 2/13/25.
 //
 
+import UIKit
 import ComposableArchitecture
 import StoreKit
 
@@ -73,6 +74,7 @@ struct MainStore {
         case closePopover
         case checkPopover
         case showReciveStar
+        case checkNotificationPermission
 
         case delegate(Delegate)
         enum Delegate {
@@ -107,6 +109,9 @@ struct MainStore {
                 }
                 return .none
             case .showReciveStar:
+                return .none
+            case .checkNotificationPermission:
+                NotificationManager().checkNotificationPermission()
                 return .none
             case .delegate:
                 return .none

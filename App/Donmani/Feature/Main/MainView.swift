@@ -11,6 +11,7 @@ import DesignSystem
 
 struct MainView: View {
     @Bindable var store: StoreOf<MainStore>
+    @State private var opacity: CGFloat = 0.0
     
     var body: some View {
         ZStack {
@@ -51,6 +52,7 @@ struct MainView: View {
                         StarBottleView(records: store.monthlyRecords)
                             .frame(width: .screenWidth * 0.8)
                             .aspectRatio(0.75, contentMode: .fit)
+                            .opacity(opacity)
                         DImage(.starBottle).image
                             .resizable()
                             .frame(width: .screenWidth * 0.8)
@@ -108,6 +110,11 @@ struct MainView: View {
             UINavigationController.swipeNavigationPopIsEnabled = false
             store.send(.fetchUserName)
             store.send(.checkPopover)
+            Task(priority: .background) {
+                try? await Task.sleep(nanoseconds: 2_000_000)
+                store.send(.checkNotificationPermission)
+                opacity = 1.0
+            }
         }
         .navigationBarBackButtonHidden()
     }

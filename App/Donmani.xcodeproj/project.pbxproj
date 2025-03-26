@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C72CD4B02D92FCAC00274F37 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = C72CD4AF2D92FCAC00274F37 /* FirebaseAnalytics */; };
+		C72CD4B22D92FCAC00274F37 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = C72CD4B12D92FCAC00274F37 /* FirebaseCrashlytics */; };
+		C72CD4B42D92FCAC00274F37 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = C72CD4B32D92FCAC00274F37 /* FirebaseInAppMessaging-Beta */; };
+		C72CD4B62D92FCAC00274F37 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = C72CD4B52D92FCAC00274F37 /* FirebaseMessaging */; };
 		C7A5DA922D7D6ED100C3BC6D /* DesignSystem.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */; };
 		C7A5DA932D7D6ED100C3BC6D /* DesignSystem.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C7BF8A342D50F4F600ACE68D /* DesignSystem.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C7A5DA942D7D6ED200C3BC6D /* DNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C781510D2D60E10C00026BC1 /* DNetwork.framework */; };
@@ -92,7 +96,11 @@
 			files = (
 				C7A6A2962D4A89D500B4CF35 /* ComposableArchitecture in Frameworks */,
 				C7A5DA942D7D6ED200C3BC6D /* DNetwork.framework in Frameworks */,
+				C72CD4B62D92FCAC00274F37 /* FirebaseMessaging in Frameworks */,
+				C72CD4B22D92FCAC00274F37 /* FirebaseCrashlytics in Frameworks */,
+				C72CD4B02D92FCAC00274F37 /* FirebaseAnalytics in Frameworks */,
 				C7A5DA922D7D6ED100C3BC6D /* DesignSystem.framework in Frameworks */,
+				C72CD4B42D92FCAC00274F37 /* FirebaseInAppMessaging-Beta in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,6 +173,10 @@
 			name = Donmani;
 			packageProductDependencies = (
 				C7A6A2952D4A89D500B4CF35 /* ComposableArchitecture */,
+				C72CD4AF2D92FCAC00274F37 /* FirebaseAnalytics */,
+				C72CD4B12D92FCAC00274F37 /* FirebaseCrashlytics */,
+				C72CD4B32D92FCAC00274F37 /* FirebaseInAppMessaging-Beta */,
+				C72CD4B52D92FCAC00274F37 /* FirebaseMessaging */,
 			);
 			productName = Donmani;
 			productReference = C7A6A24E2D4A826B00B4CF35 /* Donmani.app */;
@@ -250,6 +262,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				C7A6A2942D4A89D500B4CF35 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				C72CD4AE2D92FCAC00274F37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C7A6A24F2D4A826B00B4CF35 /* Products */;
@@ -449,6 +462,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Donmani/Donmani.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Donmani/Assets/Preview Content\"";
@@ -484,6 +498,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Donmani/Donmani.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Donmani/Assets/Preview Content\"";
@@ -630,6 +645,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C72CD4AE2D92FCAC00274F37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 11.10.0;
+			};
+		};
 		C7A6A2942D4A89D500B4CF35 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
@@ -641,6 +664,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C72CD4AF2D92FCAC00274F37 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C72CD4AE2D92FCAC00274F37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		C72CD4B12D92FCAC00274F37 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C72CD4AE2D92FCAC00274F37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		C72CD4B32D92FCAC00274F37 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C72CD4AE2D92FCAC00274F37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		C72CD4B52D92FCAC00274F37 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C72CD4AE2D92FCAC00274F37 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		C7A6A2952D4A89D500B4CF35 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C7A6A2942D4A89D500B4CF35 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
