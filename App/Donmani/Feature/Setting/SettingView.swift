@@ -22,8 +22,10 @@ struct SettingView: View {
     @State var editUserName: String = ""
     @State var isPresentingLengthGuideToastView = false
     @State var isPresentingSymbolGuideToastView = false
+    @State var isNotificationEnabled = false
     
     @FocusState var isFocusToTextField: Bool
+    @Environment(\.scenePhase) private var scenePhase
     
     let pattern = "^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9\\s]+$"
     var isSaveEnable: Bool {
@@ -78,6 +80,26 @@ struct SettingView: View {
                 .padding(.bottom, .defaultLayoutPadding)
                 
                 VStack(alignment: .leading, spacing: 0) {
+                    MenuButton(title: "앱 푸시 알림") { }
+                    .allowsHitTesting(false)
+                    .overlay {
+                        HStack {
+                            Spacer()
+                            DToggle(isOn: $isNotificationEnabled) {
+                                if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                                    if UIApplication.shared.canOpenURL(appSettings) {
+                                        UIApplication.shared.open(appSettings)
+                                    }
+                                }
+
+                            }
+                        }
+                        .padding(.horizontal, .defaultLayoutPadding)
+                    }
+                    MenuButton(title: "공지사항") {
+                        NotificationManager().unregisterForRemoteNotifications()
+                        
+                    }
                     MenuButton(title: "별별소 기록 규칙") {
                         isPresentingRecordGuideView.toggle()
                     }
@@ -123,6 +145,25 @@ struct SettingView: View {
             // Feeback WebView
             InnerWebView(urlString: DURLManager.feedback.urlString)
         }
+        .onChange(of: scenePhase) { oldPhase, newPhase  in
+//            print("OnAppear")
+            if newPhase == .active {
+                let notification = NotificationManager()
+                notification.getNotificationPermissionStatus { status in
+                    if (status == .authorized) {
+                        notification.registerForRemoteNotifications()
+                    } else {
+                        notification.unregisterForRemoteNotifications()
+                    }
+                    isNotificationEnabled = (status == .authorized)
+                }
+            }
+        }
+        .onAppear() {
+            NotificationManager().getNotificationPermissionStatus { status in
+                isNotificationEnabled = (status == .authorized)
+            }
+        }
         .navigationBarBackButtonHidden()
     }
     
@@ -138,7 +179,7 @@ struct SettingView: View {
                 .foregroundStyle(.white)
                 .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
                 .padding(.horizontal, .defaultLayoutPadding)
-                .padding(.vertical, 16)
+                .padding(.vertical, 18)
         }
     }
 }

@@ -104,6 +104,7 @@ struct OnboardingStore {
                 return .none
             
             case .touchEndOnboarding:
+                HistoryStateManager.shared.setOnboardingState()
                 switch state.nextStep {
                 case .main:
                     return .send(.delegate(.pushMainView))
