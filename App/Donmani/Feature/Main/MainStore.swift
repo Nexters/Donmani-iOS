@@ -28,9 +28,12 @@ struct MainStore {
         var recordEntryPointState = RecordEntryPointStore.State(isCompleteToday: true, isCompleteYesterday: true)
         var isPresentingPopover: Bool = false
         var isLoading: Bool = false
+        var isNewStarBottle: Bool = false
+        var month = 0
         
         init() {
-            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-").compactMap(Int.init)
+            self.month = today[1]
             self.monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
             let state = HistoryStateManager.shared.getState()
             self.recordEntryPointState = RecordEntryPointStore.State(
@@ -40,6 +43,17 @@ struct MainStore {
             self.isCompleteToday = state[.today, default: false]
             self.isCompleteYesterday = state[.yesterday, default: false]
             self.isPresentingRecordEntryButton = !(self.isCompleteToday && self.isCompleteYesterday)
+            
+            
+            isNewStarBottle = true
+//            if (today[2] == 1) {
+//                if HistoryStateManager.shared.getIsFirstDayOfMonth() {
+//                    isNewStarBottle = true
+//                    HistoryStateManager.shared.setIsFirstDayOfMonth()
+//                }
+//            } else {
+//                HistoryStateManager.shared.removeIsFirstDayOfMonth()
+//            }
         }
         
         mutating func addNewRecord(_ record: Record) {
@@ -75,12 +89,14 @@ struct MainStore {
         case checkPopover
         case showReciveStar
         case checkNotificationPermission
+        case dismissNewStarBottleView
 
         case delegate(Delegate)
         enum Delegate {
             case pushSettingView
             case pushRecordEntryPointView
             case pushRecordListView
+            case pushBottleListView
         }
     }
     
@@ -113,6 +129,12 @@ struct MainStore {
             case .checkNotificationPermission:
                 NotificationManager().checkNotificationPermission()
                 return .none
+            case .dismissNewStarBottleView:
+                state.isNewStarBottle = false
+                return .run { send in
+                    await send(.delegate(.pushBottleListView))
+                }
+                
             case .delegate:
                 return .none
             }

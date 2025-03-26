@@ -43,4 +43,52 @@ extension MainView {
             }
         }
     }
+    
+    func NewStarBottleView() -> some View {
+        BottomSheetView(
+            isActiveClose: false,
+            closeAction: { }
+        ) { dismissSheet in
+            VStack(alignment: .center, spacing: .s3) {
+                VStack(spacing: 8) {
+                    Text("\(store.month)월 별통이가 열렸어요!")
+                        .font(DFont.font(.h1, weight: .bold))
+                        .foregroundStyle(DColor(.gray99).color)
+                    
+                    Text("매 월 1일에 새로운 별통이가 열려요")
+                        .font(DFont.font(.b1, weight: .regular))
+                        .foregroundStyle(DColor(.gray95).color)
+                }
+                
+                ZStack {
+                    DImage(.newStarBottleBackground).image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 200)
+                    
+                    DImage(.newStarBottle).image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 167)
+                }
+                
+                HStack(spacing: 4) {
+                    Text("매 월 1일에 새로운 별통이가 열려요")
+                        .font(DFont.font(.b1, weight: .regular))
+                        .foregroundStyle(DColor(.deepBlue90).color)
+                    
+                    DImage(.rightArrow).image
+                        .renderingMode(.template)
+                        .resizable()
+                        .foregroundStyle(DColor(.deepBlue90).color)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: .s5, height: .s5)
+                }
+                
+                DButton(title: "확인했어요") {
+                    store.send(.dismissNewStarBottleView)
+                }
+            }
+        }
+    }
 }

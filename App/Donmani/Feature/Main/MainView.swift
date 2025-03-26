@@ -96,7 +96,9 @@ struct MainView: View {
                     }
                 }.padding(.vertical, 16 + 70 + 5)
             }
-            
+            if store.isNewStarBottle {
+                NewStarBottleView()
+            }
 //            if store.isPresentingUpdateApp {
 //                AppStoreView()
 //            }

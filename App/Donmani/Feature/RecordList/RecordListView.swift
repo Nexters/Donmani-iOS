@@ -37,45 +37,9 @@ struct RecordListView: View {
                 .padding(.horizontal, .defaultLayoutPadding)
                 
                 if store.record.isEmpty {
-                    ZStack {
-                        VStack(spacing: 16) {
-                            Spacer()
-                            Text("아직 기록이 없어요")
-                                .font(DFont.font(.h2, weight: .semibold))
-                                .foregroundStyle(DColor(.gray95).color)
-                            DButton(title: "기록하기", isEnabled: true) {
-                                store.send(.delegate(.pushRecordEntryPointView))
-                            }
-                            .frame(width: 100)
-                            Spacer()
-                        }
-                    }
+                    EmptyGuideView()
                 } else {
-                    ScrollView {
-                        LazyVStack {
-                            ForEach(store.record, id: \.date) { record in
-                                VStack {
-                                    HStack {
-                                        Text(convertDateTitle(record.date) ?? "")
-                                            .font(DFont.font(.b2, weight: .medium))
-                                            .foregroundStyle(DColor(.gray95).color)
-                                        Spacer()
-                                    }
-                                    if let contents = record.contents {
-                                        RecordIntegrateView(
-                                            goodRecord: contents[0],
-                                            badRecord: contents[1]
-                                        )
-                                    } else {
-                                        EmptyRecordView()
-                                    }
-                                }
-                                .padding(.bottom, 60)
-                            }
-                            .padding(.horizontal, .defaultLayoutPadding)
-                        }
-                    }
-                    .padding(.top, 17)
+                    RecordScrollView()
                 }
             }
         }

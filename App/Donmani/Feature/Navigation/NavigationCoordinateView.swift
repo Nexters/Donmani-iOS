@@ -31,6 +31,8 @@ struct NavigationCoordinateView: View {
                 RecordWritingView(store: store)
             case .recordList(let store):
                 RecordListView(store: store)
+            case .bottleList(let store):
+                BottleListView(store: store)
             case .setting:
                 SettingView()
             }
