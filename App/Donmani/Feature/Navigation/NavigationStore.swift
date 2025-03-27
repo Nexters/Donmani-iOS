@@ -179,6 +179,11 @@ struct NavigationStore {
                         state.path.append(.recordEntryPoint(state.recordEntryPointState))
                         return .none
                         
+                    case  .recordList(.delegate(.pushBottleListView)):
+                        state.path.append(.bottleList(state.bottleListState))
+                        return .none
+                        
+                        
                         // Path - Record EntryPoint Action
                     case .recordEntryPoint(.delegate(.popToMainView)):
                         if state.rootType == .onboarding {
@@ -203,13 +208,11 @@ struct NavigationStore {
                         }
                     
                     case .recordEntryPoint(.delegate(.pushRecordWritingViewWith(let content))):
-                        UINavigationController.swipeNavigationPopIsEnabled = true
                         state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
                         state.path.append(.recordWriting(state.recordWritingState))
                         return .none
                         
                     case .recordEntryPoint(.delegate(.pushRecordWritingView(let type))):
-                        UINavigationController.swipeNavigationPopIsEnabled = true
                         state.recordWritingState = RecordWritingStore.State(type: type)
                         state.path.append(.recordWriting(state.recordWritingState))
                         return .none

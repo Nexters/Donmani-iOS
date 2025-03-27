@@ -24,8 +24,13 @@ struct RecordWritingView: View {
                 // Navigation Bar
                 ZStack {
                     HStack {
-                        DBackButton {
-                            store.send(.delegate(.popToRecordEntrypointView))
+                        DNavigationBarButton(.leftArrow) {
+                            if (editingText.count > 0) {
+                                isFocusToTextField = false
+                                store.send(.showCancelRecordBottomSheet)
+                            } else {
+                                store.send(.delegate(.popToRecordEntrypointView))
+                            }
                         }
                         Spacer()
                     }
@@ -128,6 +133,9 @@ struct RecordWritingView: View {
             
             if store.isPresentingSelectCategory {
                 SelectCategoryView()
+            }
+            if store.isPresentingCancel {
+                CancelRecordConfirmView()
             }
         }
         .navigationBarBackButtonHidden()

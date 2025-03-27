@@ -21,14 +21,18 @@ struct RecordListView: View {
                 ZStack {
                     HStack {
                         Spacer()
-                        Text("기록")
+                        Text("\(store.yearMonth.year)년 \(store.yearMonth.month)월 기록")
                             .font(.b1, .semibold)
                             .foregroundStyle(.white)
                         Spacer()
                     }
                     HStack {
-                        DBackButton {
+                        DNavigationBarButton(.leftArrow) {
                             dismiss()
+                        }
+                        Spacer()
+                        DNavigationBarButton(.bottleIcon) {
+                            store.send(.delegate(.pushBottleListView))
                         }
                         Spacer()
                     }

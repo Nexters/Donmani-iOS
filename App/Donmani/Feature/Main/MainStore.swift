@@ -30,10 +30,11 @@ struct MainStore {
         var isLoading: Bool = false
         var isNewStarBottle: Bool = false
         var month = 0
+        var day = 0
         
         init() {
-            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-").compactMap(Int.init)
-            self.month = today[1]
+            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+            self.month = Int(today[1]) ?? 1
             self.monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
             let state = HistoryStateManager.shared.getState()
             self.recordEntryPointState = RecordEntryPointStore.State(
@@ -46,14 +47,15 @@ struct MainStore {
             
             
             isNewStarBottle = true
-//            if (today[2] == 1) {
-//                if HistoryStateManager.shared.getIsFirstDayOfMonth() {
-//                    isNewStarBottle = true
-//                    HistoryStateManager.shared.setIsFirstDayOfMonth()
-//                }
-//            } else {
-//                HistoryStateManager.shared.removeIsFirstDayOfMonth()
-//            }
+            self.day = Int(today[2]) ?? 1
+            if (day == 1) {
+                if HistoryStateManager.shared.getIsFirstDayOfMonth() {
+                    isNewStarBottle = true
+                    HistoryStateManager.shared.setIsFirstDayOfMonth()
+                }
+            } else {
+                HistoryStateManager.shared.removeIsFirstDayOfMonth()
+            }
         }
         
         mutating func addNewRecord(_ record: Record) {
@@ -131,9 +133,7 @@ struct MainStore {
                 return .none
             case .dismissNewStarBottleView:
                 state.isNewStarBottle = false
-                return .run { send in
-                    await send(.delegate(.pushBottleListView))
-                }
+                return .none
                 
             case .delegate:
                 return .none

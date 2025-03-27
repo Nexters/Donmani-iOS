@@ -12,11 +12,17 @@ struct BottleListStore {
     
     // MARK: - State
     @ObservableState
-    struct State: Equatable {
+    struct State {
         var isPresentingTopBanner: Bool
+        var rowIndex: Int = 0
+        
+        var starCount: [Int:Int] = [3:8, 4:0, 5:2, 6:-1, 7:-1, 8:-1, 9:-1, 10:-1, 11:-1, 12:-1]
+        var starCountSort: [(Int,Int)] = []
         
         init() {
             self.isPresentingTopBanner = HistoryStateManager.shared.getMonthlyBottleGuide()
+            self.starCountSort = self.starCount.sorted { $0.key < $1.key }
+            self.rowIndex = (starCount.count / 3) + 1 
         }
 
     }
