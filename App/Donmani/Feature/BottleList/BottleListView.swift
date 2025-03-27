@@ -13,7 +13,6 @@ struct BottleListView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<BottleListStore>
     
-    var starCount: [Int:Int] = [:]
     
     var body: some View {
         ZStack {
@@ -29,7 +28,7 @@ struct BottleListView: View {
                         Spacer()
                     }
                     HStack {
-                        DBackButton {
+                        DNavigationBarButton(.leftArrow) {
                             dismiss()
                         }
                         Spacer()
@@ -40,6 +39,8 @@ struct BottleListView: View {
                 
                 ScrollView {
                     TopBannerView()
+                    MonthlyBottleGridView()
+                        .padding(.top, 16)
                 }
             }
         }

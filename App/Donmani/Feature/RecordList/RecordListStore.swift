@@ -12,11 +12,16 @@ struct RecordListStore {
     
     // MARK: - State
     @ObservableState
-    struct State: Equatable {
+    struct State {
         let record: [Record]
+        let yearMonth: (year: Int, month: Int)
+        
         init() {
-            let yearMonth = DateManager.shared.getFormattedDate(for: .today, .yearMonth)
-            self.record = (DataStorage.getRecord(yearMonth: yearMonth) ?? []).sorted {
+            let yearMonth = DateManager.shared.getFormattedDate(
+                for: .today, .yearMonth
+            ).components(separatedBy: "-")
+            self.yearMonth = (Int(yearMonth[0])! % 100, Int(yearMonth[1])!)
+            self.record = (DataStorage.getRecord(yearMonth: "\(yearMonth[0])-\(yearMonth[1])") ?? []).sorted {
                 $0.date > $1.date
             }
         }
@@ -26,6 +31,7 @@ struct RecordListStore {
     enum Action {
         case delegate(Delegate)
         enum Delegate {
+            case pushBottleListView
             case pushRecordEntryPointView
         }
     }

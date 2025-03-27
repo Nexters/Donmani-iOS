@@ -94,7 +94,7 @@ struct MainView: View {
                         
                         Spacer()
                     }
-                }.padding(.vertical, 16 + 70 + 5)
+                }.padding(.vertical, 16 + 70)
             }
             if store.isNewStarBottle {
                 NewStarBottleView()

@@ -30,7 +30,7 @@ struct RecordEntryPointView: View {
             ) {
                 // Navigation Bar
                 HStack {
-                    DBackButton {
+                    DNavigationBarButton(.leftArrow) {
                         if (
                             store.isCheckedEmptyRecord
                             || store.goodRecord != nil

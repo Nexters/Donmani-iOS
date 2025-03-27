@@ -40,10 +40,18 @@ extension RecordListView {
                             Spacer()
                         }
                         if let contents = record.contents {
-                            RecordIntegrateView(
-                                goodRecord: contents[0],
-                                badRecord: contents[1]
-                            )
+                            if contents.count > 1 {
+                                RecordIntegrateView(
+                                    goodRecord: contents[0],
+                                    badRecord: contents[1]
+                                )
+                            } else {
+                                RecordView(
+                                    record: contents[0],
+                                    isEditable: false
+                                )
+                            }
+                            
                         } else {
                             EmptyRecordView()
                         }

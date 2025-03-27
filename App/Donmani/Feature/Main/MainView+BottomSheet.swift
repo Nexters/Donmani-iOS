@@ -72,21 +72,33 @@ extension MainView {
                         .frame(height: 167)
                 }
                 
-                HStack(spacing: 4) {
-                    Text("매 월 1일에 새로운 별통이가 열려요")
-                        .font(DFont.font(.b1, weight: .regular))
-                        .foregroundStyle(DColor(.deepBlue90).color)
-                    
-                    DImage(.rightArrow).image
-                        .renderingMode(.template)
-                        .resizable()
-                        .foregroundStyle(DColor(.deepBlue90).color)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: .s5, height: .s5)
+                Button {
+                    withAnimation {
+                        store.send(.dismissNewStarBottleView, animation: .linear)
+                        store.send(.delegate(.pushBottleListView))
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Text("지난 달 별통이 보러가기")
+                            .font(DFont.font(.b1, weight: .regular))
+                            .foregroundStyle(DColor(.deepBlue90).color)
+                        
+                        DImage(.rightArrow).image
+                            .renderingMode(.template)
+                            .resizable()
+                            .foregroundStyle(DColor(.deepBlue90).color)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: .s5, height: .s5)
+                    }
                 }
                 
+                
                 DButton(title: "확인했어요") {
-                    store.send(.dismissNewStarBottleView)
+                    Task {
+                        withAnimation {
+                            store.send(.dismissNewStarBottleView, animation: .linear)
+                        }
+                    }
                 }
             }
         }

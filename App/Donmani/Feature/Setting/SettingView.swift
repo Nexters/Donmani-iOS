@@ -42,7 +42,7 @@ struct SettingView: View {
             VStack(alignment: .center, spacing: .defaultLayoutPadding) {
                 ZStack {
                     HStack {
-                        DBackButton {
+                        DNavigationBarButton(.leftArrow) {
                             dismiss()
                         }
                         Spacer()

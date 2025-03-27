@@ -28,6 +28,7 @@ struct RecordWritingStore {
         var savedCategory: RecordCategory?
         var text: String = ""
         var isPresentingSelectCategory: Bool = false
+        var isPresentingCancel: Bool = false
 //        var isFocused: Bool = false
         var isPresendTextGuide: Bool = false
         var isFocusToTextField: Bool = false
@@ -69,6 +70,8 @@ struct RecordWritingStore {
         case showTextLengthGuide
         case hideTextLengthGuide
         case save(String)
+        case showCancelRecordBottomSheet
+        case dismissCancelRecordBottomSheet
 
         case binding(BindingAction<State>)
         case delegate(Delegate)
@@ -139,6 +142,15 @@ struct RecordWritingStore {
                         await send(.delegate(.popToRecordEntrypointViewWith(recordContent)))
                     }
                 }
+                return .none
+                
+            case .showCancelRecordBottomSheet:
+                state.isPresentingCancel = true
+                return .none
+                
+            case .dismissCancelRecordBottomSheet:
+                state.isFocusToTextField = true
+                state.isPresentingCancel = false
                 return .none
                 
             case .binding:

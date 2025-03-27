@@ -78,4 +78,6 @@ extension RecordWritingView {
                 .fill(DColor.textGuide.opacity(0.9))
         }
     }
+    
+    
 }
