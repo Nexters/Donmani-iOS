@@ -23,8 +23,9 @@ extension BottleListView {
                     .font(DFont.font(.b1, weight: .regular))
                     .foregroundStyle(DColor(.gray95).color)
                 Spacer()
+                
                 Button {
-                    
+                    store.send(.closeTopBanner)
                 } label: {
                     DImage(.close).image
                         .resizable()
@@ -50,34 +51,17 @@ extension BottleListView {
                         month: month.0,
                         count: month.1
                     )
+                    .onTapGesture {
+                        if (month.1 == 0) {
+                            store.send(.showEmptyBottleToast)
+                        } else if month.1 != -1 {
+                            store.send(.delegate(.pushMonthlyBottleView(2025, month.0)))
+                        }
+                    }
                     Spacer()
                 }
             }
         }
-//        Grid(
-//            alignment: .center,
-//            horizontalSpacing: 0,
-//            verticalSpacing: .s3
-//        ) {
-//            ForEach(
-//                0..<store.rowIndex, id: \.self
-//            ) { row in
-//                GridRow {
-//                    ForEach(
-//                        0..<(starCountSort.count % 3) + 1, id: \.self
-//                    ) { col in
-//                        HStack {
-//                            Spacer()
-//                            MonthlyBottleView(
-//                                month: starCountSort[row * 3 + col].0,
-//                                count: starCountSort[row * 3 + col].1
-//                            )
-//                            Spacer()
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
     
     func MonthlyBottleView(
@@ -86,13 +70,13 @@ extension BottleListView {
     ) -> some View {
         VStack(alignment: .center, spacing: 4) {
             if (count == -1) {
-                DImage(.lockedBottle).image
+                DImage(.miniLockedBottle).image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 116)
             } else {
                 ZStack {
-                    DImage(.openedBottle).image
+                    DImage(.miniOpenedBottle).image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                     VStack(spacing: 4) {
@@ -100,7 +84,16 @@ extension BottleListView {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: .s4, height: .s4)
+                        HStack(alignment: .bottom,spacing: 0) {
+                            Text("\(count)")
+                                .font(DFont.font(.b2, weight: .semibold))
+                                .foregroundStyle(DColor(.gray80).color)
+                            Text("/\(store.endOfDay[month, default: 0])")
+                                .font(DFont.font(.b3, weight: .semibold))
+                                .foregroundStyle(DColor(.deepBlue80).color)
+                        }
                     }
+                    .padding(.top, 6)
                 }
                 .frame(height: 116)
             }
@@ -110,6 +103,22 @@ extension BottleListView {
                 .foregroundStyle(DColor(
                     (count > -1) ? .gray99 : .deepBlue80
                 ).color)
+        }
+    }
+    
+    func TextGuideView() -> some View {
+        HStack(spacing: 8) {
+            DImage(.warning).image
+                .resizable()
+                .frame(width: .s3, height: .s3)
+            Text("앗! 이달은 기록이 없어요")
+                .font(DFont.font(.b2, weight: .bold))
+                .foregroundStyle(.white)
+        }
+        .padding(.s5)
+        .background {
+            Capsule(style: .continuous)
+                .fill(DColor.textGuide.opacity(0.9))
         }
     }
 }

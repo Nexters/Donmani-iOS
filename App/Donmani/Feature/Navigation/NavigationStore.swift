@@ -27,6 +27,8 @@ struct NavigationStore {
         // var setting: SettingStore.State
         var recordListState: RecordListStore.State
         var bottleListState: BottleListStore.State
+        var monthlyStarBottleState: MonthlyStarBottleStore.State
+        var statisticsState: StatisticsStore.State
         
         // Path
         var path = StackState<Path.State>()
@@ -41,6 +43,8 @@ struct NavigationStore {
             self.recordWritingState = RecordWritingStore.State(type: .good)
             self.recordListState = RecordListStore.State()
             self.bottleListState = BottleListStore.State()
+            self.monthlyStarBottleState = MonthlyStarBottleStore.State(year: 0, month: 0)
+            self.statisticsState = StatisticsStore.State(year: 0, month: 0)
         }
         
         mutating func updateRecordContent(_ content: RecordContent) {
@@ -62,6 +66,8 @@ struct NavigationStore {
         case recordWriting(RecordWritingStore)
         case recordList(RecordListStore)
         case bottleList(BottleListStore)
+        case monthlyStarBottle(MonthlyStarBottleStore)
+        case statistics(StatisticsStore)
         case setting
     }
     
@@ -143,7 +149,7 @@ struct NavigationStore {
                 // Path Action
             case .path(let element):
                 switch element {
-                case .element(id: _, action: let action):
+                case .element(id: let id, action: let action):
                     switch action {
                         // Path - Main Action
                     case .main(.delegate(.pushRecordListView)):
@@ -180,7 +186,13 @@ struct NavigationStore {
                         return .none
                         
                     case  .recordList(.delegate(.pushBottleListView)):
+                        UINavigationController.swipeNavigationPopIsEnabled = true
                         state.path.append(.bottleList(state.bottleListState))
+                        return .none
+                        
+                    case  .recordList(.delegate(.pushStatisticsView(let year, let month))):
+                        state.statisticsState = StatisticsStore.State(year: year, month: month)
+                        state.path.append(.statistics(state.statisticsState))
                         return .none
                         
                         
@@ -238,7 +250,29 @@ struct NavigationStore {
                         }
                         state.path.removeLast()
                         return .none
-                     
+                        
+                        // Path - Bottle List Action
+                    case .bottleList(.delegate(.popToPreviousView)):
+                        state.path.pop(to: id)
+                        return .none
+                        
+                    case .bottleList(.delegate(.pushMonthlyBottleView(let year, let month))):
+                        UINavigationController.swipeNavigationPopIsEnabled = true
+                        state.monthlyStarBottleState = MonthlyStarBottleStore.State(year: year, month: month)
+                        state.path.append(.monthlyStarBottle(state.monthlyStarBottleState))
+                        return .none
+                        
+                        // Path - Monthly StarBottle Action
+                    case .monthlyStarBottle(.delegate(.popToPreviousView)):
+                        state.path.pop(from: id)
+                        return .none
+                        
+                    case .monthlyStarBottle(.delegate(.pushRecordListView(let year, let month))):
+                        state.recordListState = RecordListStore.State(year: year, month: month, isShowNavigationButton: false)
+                        state.path.append(.recordList(state.recordListState))
+                        return .none
+                        
+                        
                         // Other Path Action
                     default:
                         return .none

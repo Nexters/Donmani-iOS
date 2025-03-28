@@ -1,18 +1,18 @@
 //
-//  BottleListView.swift
+//  StatisticsView.swift
 //  Donmani
 //
-//  Created by 문종식 on 3/26/25.
+//  Created by 문종식 on 3/28/25.
 //
 
 import SwiftUI
-import ComposableArchitecture
 import DesignSystem
+import ComposableArchitecture
 
-struct BottleListView: View {
+
+struct StatisticsView: View {
     @Environment(\.dismiss) private var dismiss
-    @Bindable var store: StoreOf<BottleListStore>
-    
+    @Bindable var store: StoreOf<StatisticsStore>
     
     var body: some View {
         ZStack {
@@ -22,7 +22,7 @@ struct BottleListView: View {
                 ZStack {
                     HStack {
                         Spacer()
-                        Text("별통이 모아보기")
+                        Text("\(store.yearMonth.year)년 \(store.yearMonth.month)월 기록 통계")
                             .font(.b1, .semibold)
                             .foregroundStyle(.white)
                         Spacer()
@@ -38,31 +38,18 @@ struct BottleListView: View {
                 .padding(.horizontal, .defaultLayoutPadding)
                 
                 ScrollView {
-                    if store.isPresentingTopBanner {
+                    VStack(spacing: .s3) {
                         TopBannerView()
+                        CategoryStatisticsView(flag: .good)
+                        CategoryStatisticsView(flag: .bad)
                     }
-                    MonthlyBottleGridView()
-                        .padding(.top, 16)
                 }
-            }
-            VStack {
-                Spacer()
-                TextGuideView()
-                    .opacity(store.isPresendTextGuide ? 1 : 0)
-                    .offset(x: 0, y: store.isPresendTextGuide ? 0 : 4)
-                    .padding(.bottom, .s4 * 2)
             }
         }
         .navigationBarBackButtonHidden()
     }
 }
 
-#Preview {
-    BottleListView(
-        store: Store(
-            initialState: BottleListStore.State()
-        ) {
-            BottleListStore()
-        }
-    )
-}
+//#Preview {
+//    StatisticsView()
+//}

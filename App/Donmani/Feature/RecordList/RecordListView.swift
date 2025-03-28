@@ -31,10 +31,11 @@ struct RecordListView: View {
                             dismiss()
                         }
                         Spacer()
-                        DNavigationBarButton(.bottleIcon) {
-                            store.send(.delegate(.pushBottleListView))
+                        if store.isShowNavigationButton {
+                            DNavigationBarButton(.bottleIcon) {
+                                store.send(.delegate(.pushBottleListView))
+                            }
                         }
-                        Spacer()
                     }
                 }
                 .frame(height: .navigationBarHeight)
