@@ -83,3 +83,5 @@ Podfile.lock
 ### Auth File ###
 *.p8
 
+### GoogleService-Info ###
+GoogleService-Info.plist
