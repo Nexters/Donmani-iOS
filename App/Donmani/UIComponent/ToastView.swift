@@ -13,7 +13,7 @@ struct ToastView: View {
     
     var body: some View {
         HStack(spacing: 8) {
-            DImage(.textMaxLength).image
+            DImage(.warning).image
                 .resizable()
                 .frame(width: .s3, height: .s3)
             Text(title)

@@ -46,7 +46,7 @@ struct MainStore {
             self.isPresentingRecordEntryButton = !(self.isCompleteToday && self.isCompleteYesterday)
             
             
-            isNewStarBottle = true
+//            isNewStarBottle = true
             self.day = Int(today[2]) ?? 1
             if (day == 1) {
                 if HistoryStateManager.shared.getIsFirstDayOfMonth() {

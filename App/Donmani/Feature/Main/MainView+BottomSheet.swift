@@ -73,8 +73,8 @@ extension MainView {
                 }
                 
                 Button {
-                    withAnimation {
-                        store.send(.dismissNewStarBottleView, animation: .linear)
+                    dismissSheet {
+                        store.send(.dismissNewStarBottleView)
                         store.send(.delegate(.pushBottleListView))
                     }
                 } label: {
@@ -92,12 +92,9 @@ extension MainView {
                     }
                 }
                 
-                
                 DButton(title: "확인했어요") {
-                    Task {
-                        withAnimation {
-                            store.send(.dismissNewStarBottleView, animation: .linear)
-                        }
+                    dismissSheet {
+                        store.send(.dismissNewStarBottleView)
                     }
                 }
             }

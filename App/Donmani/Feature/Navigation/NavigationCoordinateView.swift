@@ -33,6 +33,10 @@ struct NavigationCoordinateView: View {
                 RecordListView(store: store)
             case .bottleList(let store):
                 BottleListView(store: store)
+            case .monthlyStarBottle(let store):
+                MonthlyStarBottleView(store: store)
+            case .statistics(let store):
+                StatisticsView(store: store)
             case .setting:
                 SettingView()
             }
