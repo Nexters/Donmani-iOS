@@ -25,6 +25,8 @@ struct StatisticsStore {
         let yearMonth: (year: Int, month: Int)
         var records: [Record]
         
+        var isPresentingProposeFunctionView = false
+        
         var sortedGoodRecordIndex: [GoodCategory] {
             let allCases = GoodCategory.allCases
             return (0..<9).sorted { i, j in
@@ -41,7 +43,7 @@ struct StatisticsStore {
             let allCases = BadCategory.allCases
             return (0..<9).sorted { i, j in
                 if badRecord[allCases[i], default: 0] == badRecord[allCases[j], default: 0] {
-                    return i > j
+                    return i < j
                 }
                 return badRecord[allCases[i], default: 0] > badRecord[allCases[j], default: 0]
             }.map {
@@ -57,13 +59,19 @@ struct StatisticsStore {
                 if let contents = record.contents {
                     for content in contents {
                         if content.flag == .good {
-                            self.goodTotalCount += 1
                             if let c: GoodCategory = content.category.getInstance() {
+                                if c == .none {
+                                    continue
+                                }
+                                self.goodTotalCount += 1
                                 self.goodRecord[c, default: 0] += 1
                             }
                         } else {
-                            self.badTotalCount += 1
                             if let c: BadCategory = content.category.getInstance() {
+                                if c == .none {
+                                    continue
+                                }
+                                self.badTotalCount += 1
                                 self.badRecord[c, default: 0] += 1
                             }
                         }
@@ -77,21 +85,26 @@ struct StatisticsStore {
             for item in badRecord {
                 badRecordRatio[item.key] = CGFloat(item.value) / CGFloat(badTotalCount)
             }
-            printf(goodRecord)
-            printf(badRecord)
+            print(goodRecordRatio)
+            print(badRecordRatio)
         }
     }
     
     // MARK: - Action
-    enum Action {
+    enum Action: BindableAction {
         case touchProposeFunction
+        case binding(BindingAction<State>)
     }
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
+        BindingReducer()
         Reduce { state, action in
             switch action {
             case .touchProposeFunction:
+                state.isPresentingProposeFunctionView.toggle()
+                return .none
+            case .binding:
                 return .none
             }
         }

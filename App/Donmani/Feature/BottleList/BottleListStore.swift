@@ -17,15 +17,18 @@ struct BottleListStore {
         var isPresendTextGuide: Bool = false
         var rowIndex: Int = 0
         
-        var starCount: [Int:Int] = [3:8, 4:0, 5:2, 6:-1, 7:-1, 8:-1, 9:-1, 10:-1, 11:-1, 12:-1]
+        var starCount: [Int:Int] = [:]
         var starCountSort: [(Int,Int)] = []
         var endOfDay: [Int: Int] = [:]
         
-        init(year: Int = 2025) {
+        init(starCount: [String: SummaryMonthly]) {
             self.isPresentingTopBanner = HistoryStateManager.shared.getMonthlyBottleGuide()
-            self.starCountSort = self.starCount.sorted { $0.key < $1.key }
             self.rowIndex = (starCount.count / 3) + 1
-            self.endOfDay = DateManager.shared.generateEndOfDay(year: year)
+            for month in (3...12) {
+                self.starCount[month] = starCount["\(month)"]?.recordCount ?? -1
+                self.endOfDay[month] = starCount["\(month)"]?.totalDaysInMonth ?? 0
+            }
+            self.starCountSort = self.starCount.sorted { $0.key < $1.key }
         }
     }
     
@@ -34,6 +37,7 @@ struct BottleListStore {
         case closeTopBanner
         case showEmptyBottleToast
         case dismissEmptyBottleToast
+        case fetchMonthlyRecord(Int, Int)
         case delegate(Delegate)
         enum Delegate {
             case popToPreviousView
@@ -66,6 +70,17 @@ struct BottleListStore {
             case .dismissEmptyBottleToast:
                 state.isPresendTextGuide = false
                 return .none
+                
+            case .fetchMonthlyRecord(let year, let month):
+                return .run { send in
+                    let key = "2025-\(String(format: "%02d", month))"
+                    if DataStorage.getRecord(yearMonth: key) == nil {
+                        let result = try await NetworkManager.NMRecord(service: .shared)
+                            .fetchRecordForList(year: year, month: month)
+                        DataStorage.setMonthRecords(year: year, month: month, result)
+                    }
+                    await send(.delegate(.pushMonthlyBottleView(year, month)))
+                }
                 
             case .delegate:
                 return .none

@@ -33,7 +33,11 @@ struct RecordListView: View {
                         Spacer()
                         if store.isShowNavigationButton {
                             DNavigationBarButton(.bottleIcon) {
-                                store.send(.delegate(.pushBottleListView))
+                                Task {
+                                    let recordDAO = NetworkManager.NMRecord(service: .shared)
+                                    let result = try await recordDAO.fetchMonthlyRecord(year: 2025).monthlyRecords
+                                    store.send(.delegate(.pushBottleListView(result)))
+                                }
                             }
                         }
                     }
@@ -72,7 +76,7 @@ struct RecordListView: View {
 #Preview {
     RecordListView(
         store: Store(
-            initialState: RecordListStore.State()
+            initialState: RecordListStore.State(year: 2025, month: 3, isShowNavigationButton: false)
         ) {
             RecordListStore()
         }

@@ -24,8 +24,9 @@ extension NavigationStore {
             state.path.append(.recordEntryPoint(state.recordEntryPointState))
             return .none
             
-        case  .pushBottleListView:
+        case  .pushBottleListView(let result):
             UINavigationController.swipeNavigationPopIsEnabled = true
+            state.bottleListState = BottleListStore.State(starCount: result)
             state.path.append(.bottleList(state.bottleListState))
             return .none
             

@@ -11,6 +11,8 @@ public enum DURLManager {
     case api
     case appInfo
     case appStore
+    case proposeFunction
+    case notice
     
     public var urlString: String {
         switch self {
@@ -24,6 +26,10 @@ public enum DURLManager {
             return "https://itunes.apple.com/lookup?bundleId=com.nexters.Donmani"
         case .appStore:
             return "itms-apps://itunes.apple.com/kr/app/apple-store/id6741164570"
+        case .proposeFunction:
+            return "https://forms.gle/6of9Y96wY65S9iuL8"
+        case .notice:
+            return ""
         }
     }
 }

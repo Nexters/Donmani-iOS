@@ -27,17 +27,28 @@ struct RecordListStore {
             isShowNavigationButton: Bool
         ) {
             self.yearMonth = (year % 100, month)
-            let monthString = String(format: "%02d", month)
-            self.record = (DataStorage.getRecord(yearMonth: "\(year)-\(monthString)") ?? []).sorted {
+            let key = "\(year)-\(String(format: "%02d", month))"
+            print(key)
+            self.record = (DataStorage.getRecord(yearMonth: key) ?? []).sorted {
                 $0.date > $1.date
             }
             let count = self.record.reduce(into: (0,0)) { count, item in
                 if let contents = item.contents {
                     for c in contents {
                         if c.flag == .good {
-                            count.0 += 1
+                            if let c: GoodCategory = c.category.getInstance() {
+                                if c == .none {
+                                    continue
+                                }
+                                count.0 += 1
+                            }
                         } else {
-                            count.1 += 1
+                            if let c: BadCategory = c.category.getInstance() {
+                                if c == .none {
+                                    continue
+                                }
+                                count.1 += 1
+                            }
                         }
                     }
                 }
@@ -48,38 +59,9 @@ struct RecordListStore {
             if (count.0 + count.1) > 0 {
                 self.progressPoint = CGFloat(count.0) / CGFloat(count.0 + count.1)
             } else {
-                self.progressPoint = 0.0
+                self.progressPoint = -1
             }
             
-        }
-        
-        init() {
-            let yearMonth = DateManager.shared.getFormattedDate(
-                for: .today, .yearMonth
-            ).components(separatedBy: "-")
-            self.yearMonth = (Int(yearMonth[0])! % 100, Int(yearMonth[1])!)
-            self.record = (DataStorage.getRecord(yearMonth: "\(yearMonth[0])-\(yearMonth[1])") ?? []).sorted {
-                $0.date > $1.date
-            }
-            isShowNavigationButton = true
-            let count = self.record.reduce(into: (0,0)) { count, item in
-                if let contents = item.contents {
-                    for c in contents {
-                        if c.flag == .good {
-                            count.1 += 1
-                        } else {
-                            count.0 += 1
-                        }
-                    }
-                }
-            }
-            self.goodCount = count.0
-            self.badCount = count.1
-            if (count.0 + count.1) > 0 {
-                self.progressPoint = CGFloat(count.0) / CGFloat(count.0 + count.1)
-            } else {
-                self.progressPoint = 0.0
-            }
         }
     }
     
@@ -87,7 +69,7 @@ struct RecordListStore {
     enum Action {
         case delegate(Delegate)
         enum Delegate {
-            case pushBottleListView
+            case pushBottleListView([String: SummaryMonthly])
             case pushRecordEntryPointView
             case pushStatisticsView(Int, Int)
         }

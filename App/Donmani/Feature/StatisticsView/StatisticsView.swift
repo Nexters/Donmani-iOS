@@ -8,7 +8,7 @@
 import SwiftUI
 import DesignSystem
 import ComposableArchitecture
-
+import DNetwork
 
 struct StatisticsView: View {
     @Environment(\.dismiss) private var dismiss
@@ -45,6 +45,10 @@ struct StatisticsView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: $store.isPresentingProposeFunctionView) {
+            // Feeback WebView
+            InnerWebView(urlString: DURLManager.feedback.urlString)
         }
         .navigationBarBackButtonHidden()
     }

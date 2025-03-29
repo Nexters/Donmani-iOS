@@ -35,16 +35,17 @@ struct NavigationStore {
         
         init(_ rootType: RootType) {
             self.rootType = rootType
+            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
             if rootType == .onboarding {
                 self.mainState = MainStore.State()
             } else {
-                let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
                 self.mainState = MainStore.State(today: today)
             }
             self.onboardingState = OnboardingStore.State()
             self.recordEntryPointState = RecordEntryPointStore.State()
-            self.recordListState = RecordListStore.State()
-            self.bottleListState = BottleListStore.State()
+            let yearMonth = (Int(today[0])!, Int(today[1])!)
+            self.recordListState = RecordListStore.State(year: yearMonth.0, month: yearMonth.1, isShowNavigationButton: true)
+            self.bottleListState = BottleListStore.State(starCount: [:])
             self.monthlyStarBottleState = MonthlyStarBottleStore.State(year: 0, month: 0)
             self.statisticsState = StatisticsStore.State(year: 0, month: 0)
         }
