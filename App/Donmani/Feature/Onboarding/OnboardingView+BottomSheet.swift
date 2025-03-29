@@ -23,11 +23,12 @@ extension OnboardingView {
                     DImage(.onboardingEnd).image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                    DButton(title: "다음") {
+                    DButton(title: "확인했어요") {
                         store.send(.touchEndOnboarding)
                     }
                 }
             }
+            .padding(.top, -10)
         }
     }
 }
