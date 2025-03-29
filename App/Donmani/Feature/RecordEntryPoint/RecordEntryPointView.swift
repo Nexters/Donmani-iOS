@@ -112,6 +112,10 @@ struct RecordEntryPointView: View {
             UINavigationController.swipeNavigationPopIsEnabled = false
             store.send(.startTimer)
         }
+        .navigationDestination(isPresented: $store.isPresentingRecordWritingView) {
+            let recordWritingStore = store.scope(state: \.recordWritingState, action: \.recordWritingAction)
+            RecordWritingView(store: recordWritingStore)
+        }
         .navigationBarBackButtonHidden()
     }
 }

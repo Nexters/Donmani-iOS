@@ -58,6 +58,8 @@ struct RecordEntryPointStore {
         var isLoading: Bool = false
         var isFromMain: Bool = true
         
+        var recordWritingState: RecordWritingStore.State = RecordWritingStore.State(type: .good)
+        
         init() {
             self.isCompleteToday = false
             self.isCompleteYesterday = false
@@ -97,8 +99,6 @@ struct RecordEntryPointStore {
         case cancelRecording
         
         case dismissRecordGuideBottomSheet
-//        case touchYesterdayToggleButton
-//        case touchTodayToggleButton
         
         case touchDayTypeToggleButton
         case toggleDayType
@@ -117,11 +117,15 @@ struct RecordEntryPointStore {
         case checkRemainingTime
         case updateTime(Int)
         
+        // Record Writing
+        case recordWritingAction(RecordWritingStore.Action)
+        case pushRecordWritingView(RecordContentType)
+        case pushRecordWritingViewWith(RecordContent)
+        
         case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate: Equatable {
-            case pushRecordWritingView(RecordContentType)
-            case pushRecordWritingViewWith(RecordContent)
+            
             case popToMainView
             case popToMainViewWith(Record)
         }
@@ -129,6 +133,10 @@ struct RecordEntryPointStore {
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
+        Scope(state: \.recordWritingState, action: \.recordWritingAction) {
+            RecordWritingStore()
+        }
+        
         BindingReducer()
         Reduce { state, action in
             switch action {
@@ -260,6 +268,29 @@ struct RecordEntryPointStore {
             case .checkRemainingTime:
                 let remainingTime = TimeManager.getRemainingTime()
                 return .send(.updateTime(remainingTime))
+                
+            case .pushRecordWritingViewWith(let content):
+                state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
+                state.isPresentingRecordWritingView = true
+                return .none
+                
+            case .pushRecordWritingView(let type):
+                state.recordWritingState = RecordWritingStore.State(type: type)
+                state.isPresentingRecordWritingView = true
+                return .none
+                
+            case .recordWritingAction(.delegate(.popToRecordEntrypointViewWith(let content))):
+                switch content.flag {
+                case .good:
+                    state.goodRecord = content
+                case .bad:
+                    state.badRecord = content
+                }
+                state.isSaveEnabled = !(state.badRecord == nil && state.goodRecord == nil)
+                state.isPresentingRecordWritingView = false
+                return .none
+            case .recordWritingAction:
+                return .none
                 
             case .binding:
                 return .none

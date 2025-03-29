@@ -83,7 +83,8 @@ extension RecordWritingView {
                     }
                     
                     Button {
-                        store.send(.delegate(.popToRecordEntrypointView))
+                        dismiss()
+//                        store.send(.delegate(.popToRecordEntrypointView))
                     } label: {
                         ZStack {
                             RoundedRectangle(

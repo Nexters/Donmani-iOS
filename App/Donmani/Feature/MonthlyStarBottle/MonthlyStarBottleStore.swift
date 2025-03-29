@@ -31,7 +31,7 @@ struct MonthlyStarBottleStore {
     enum Action {
         case delegate(Delegate)
         enum Delegate {
-            case popToPreviousView
+            // Scope 처리
             case pushRecordListView(Int, Int)
         }
     }

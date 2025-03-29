@@ -15,10 +15,6 @@ extension NavigationStore {
         action: MonthlyStarBottleStore.Action.Delegate
     ) -> Effect<NavigationStore.Action> {
         switch action {
-        case .popToPreviousView:
-            state.path.pop(from: id)
-            return .none
-            
         case .pushRecordListView(let year, let month):
             state.recordListState = RecordListStore.State(year: year, month: month, isShowNavigationButton: false)
             state.path.append(.recordList(state.recordListState))

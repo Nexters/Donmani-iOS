@@ -96,8 +96,12 @@ struct MainView: View {
                     }
                 }.padding(.vertical, 16 + 70)
             }
-            if store.isNewStarBottle {
+            if store.isPresentingNewStarBottle {
                 NewStarBottleView()
+            }
+            
+            if store.isPresentingAlreadyWrite {
+                OnboardingEndView()
             }
             
             if store.isLoading {
