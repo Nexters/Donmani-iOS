@@ -77,22 +77,12 @@ struct StatisticsStore {
             for item in badRecord {
                 badRecordRatio[item.key] = CGFloat(item.value) / CGFloat(badTotalCount)
             }
-            
-            print(goodRecordRatio)
-            print(badRecordRatio)
         }
     }
     
     // MARK: - Action
     enum Action {
         case touchProposeFunction
-        
-        case delegate(Delegate)
-        enum Delegate {
-            case pushBottleListView
-            case pushRecordEntryPointView
-            case pushStatisticsView
-        }
     }
     
     // MARK: - Reducer
@@ -100,9 +90,6 @@ struct StatisticsStore {
         Reduce { state, action in
             switch action {
             case .touchProposeFunction:
-                return .none
-                
-            case .delegate:
                 return .none
             }
         }

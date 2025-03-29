@@ -99,9 +99,6 @@ struct MainView: View {
             if store.isNewStarBottle {
                 NewStarBottleView()
             }
-//            if store.isPresentingUpdateApp {
-//                AppStoreView()
-//            }
             
             if store.isLoading {
                 Color.black.opacity(0.1)
@@ -114,7 +111,7 @@ struct MainView: View {
             store.send(.checkPopover)
             Task(priority: .background) {
                 try? await Task.sleep(nanoseconds: 2_000_000)
-                store.send(.checkNotificationPermission)
+//                store.send(.checkNotificationPermission)
                 opacity = 1.0
             }
         }

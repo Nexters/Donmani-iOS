@@ -107,6 +107,7 @@ extension OnboardingView {
                         }
                     }
                 }
+                .padding(.bottom, .s5 / 2)
                 .padding(.horizontal, .defaultLayoutPadding)
             }
             if store.isPresentingEndOnboardingView {

@@ -34,15 +34,19 @@ struct RecordEntryPointStore {
         var isPresentingDayToggle: Bool
         var title: String
         var guide: String {
-            if remainingTime > 7200 {
-                return "기록하고 별사탕 받자!"
-            } else if remainingTime <= 0 {
-                return "기록을 마무리하면 별사탕을 받을 수 있어요!"
+            if dayType == .yesterday {
+                if remainingTime > 7200 {
+                    return "기록하고 별사탕 받자!"
+                } else if remainingTime <= 0 {
+                    return "기록을 마무리하면 별사탕을 받을 수 있어요!"
+                } else {
+                    let hours = remainingTime / 3600
+                    let minutes = (remainingTime % 3600) / 60
+                    let seconds = remainingTime % 60
+                    return "\(hours)시간 \(minutes)분 \(seconds)초 안에 별사탕 받자!"
+                }
             } else {
-                let hours = remainingTime / 3600
-                let minutes = (remainingTime % 3600) / 60
-                let seconds = remainingTime % 60
-                return "\(hours)시간 \(minutes)분 \(seconds)초 안에 별사탕 받자!"
+                return "기록하고 별사탕 받자!"
             }
         }
         var remainingTime: Int

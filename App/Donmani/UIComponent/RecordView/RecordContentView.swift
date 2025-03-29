@@ -75,6 +75,7 @@ struct RecordContentView: View {
                     .font(DFont.font(.b1, weight: .medium))
                     .foregroundStyle(DColor(.gray95).color)
                     .lineLimit(10)
+                    .multilineTextAlignment(.leading)
             }
         }
         .padding(.defaultLayoutPadding)
