@@ -20,11 +20,9 @@ struct NavigationStore {
     struct State {
         // 자식 View State
         var mainState: MainStore.State
+//        var childMainState: MainStore.State
         var onboardingState: OnboardingStore.State
         var recordEntryPointState: RecordEntryPointStore.State
-        var recordWritingState: RecordWritingStore.State
-        // 아직 없는 Store
-        // var setting: SettingStore.State
         var recordListState: RecordListStore.State
         var bottleListState: BottleListStore.State
         var monthlyStarBottleState: MonthlyStarBottleStore.State
@@ -37,25 +35,18 @@ struct NavigationStore {
         
         init(_ rootType: RootType) {
             self.rootType = rootType
-            self.mainState = MainStore.State()
+            if rootType == .onboarding {
+                self.mainState = MainStore.State()
+            } else {
+                let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+                self.mainState = MainStore.State(today: today)
+            }
             self.onboardingState = OnboardingStore.State()
             self.recordEntryPointState = RecordEntryPointStore.State()
-            self.recordWritingState = RecordWritingStore.State(type: .good)
             self.recordListState = RecordListStore.State()
             self.bottleListState = BottleListStore.State()
             self.monthlyStarBottleState = MonthlyStarBottleStore.State(year: 0, month: 0)
             self.statisticsState = StatisticsStore.State(year: 0, month: 0)
-        }
-        
-        mutating func updateRecordContent(_ content: RecordContent) {
-            switch content.flag {
-            case .good:
-                recordEntryPointState.goodRecord = content
-            case .bad:
-                recordEntryPointState.badRecord = content
-            }
-            let isSaveEnabled = !(recordEntryPointState.badRecord == nil && recordEntryPointState.goodRecord == nil)
-            recordEntryPointState.isSaveEnabled = isSaveEnabled
         }
     }
     
@@ -63,7 +54,6 @@ struct NavigationStore {
     enum Path {
         case main(MainStore)
         case recordEntryPoint(RecordEntryPointStore)
-        case recordWriting(RecordWritingStore)
         case recordList(RecordListStore)
         case bottleList(BottleListStore)
         case monthlyStarBottle(MonthlyStarBottleStore)
@@ -83,6 +73,7 @@ struct NavigationStore {
         Scope(state: \.mainState, action: \.mainAction) {
             MainStore()
         }
+        
         // Onboarding Scope
         Scope(state: \.onboardingState, action: \.onboardingAction) {
             OnboardingStore()
@@ -91,17 +82,23 @@ struct NavigationStore {
         Reduce { state, action in
             switch action {
                 // Onboarding Action
-            case .onboardingAction(.delegate(.pushMainView)):
-                state.path.append(.main(state.mainState))
+            case .onboardingAction(.delegate(.pushMainView(let isAlreadyWrite))):
+                let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+                var mainState: MainStore.State = MainStore.State(today: today)
+                mainState.isPresentingAlreadyWrite = isAlreadyWrite
+                state.path.append(.main(mainState))
                 return .none
+                
             case .onboardingAction(.delegate(.pushRecordEntryPointView)):
                 let stateManager = HistoryStateManager.shared.getState()
                 state.recordEntryPointState = RecordEntryPointStore.State(
                     isCompleteToday: stateManager[.today, default: false],
                     isCompleteYesterday: stateManager[.yesterday, default: false]
                 )
+                let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+                let mainState: MainStore.State = MainStore.State(today: today)
                 state.path.append(contentsOf: [
-                    .main(state.mainState),
+                    .main(mainState),
                     .recordEntryPoint(state.recordEntryPointState)
                 ])
                 return .none
@@ -125,11 +122,9 @@ struct NavigationStore {
                 UINavigationController.swipeNavigationPopIsEnabled = true
                 state.path.append(.setting)
                 return .none
-                
             case .mainAction(.delegate(.pushBottleListView)):
                 state.path.append(.bottleList(state.bottleListState))
                 return .none
-                
             case .mainAction:
                 return .none
                 
@@ -137,12 +132,12 @@ struct NavigationStore {
                 if state.rootType == .onboarding {
                     if let mainViewID = state.path.ids.first {
                         if case .main(var mainState) = state.path[id: mainViewID] {
-                            mainState.addNewRecord(record)
+                            addNewRecord(mainState: &mainState, record: record)
                             state.path[id: mainViewID] = .main(mainState)
                         }
                     }
                 } else {
-                    state.mainState.addNewRecord(record)
+                    addNewRecord(mainState: &state.mainState, record: record)
                 }
                 return .none
                 

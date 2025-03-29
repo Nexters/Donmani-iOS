@@ -37,15 +37,15 @@ extension NavigationStore {
                 await send(.addNewRecord(record))
             }
         
-        case .pushRecordWritingViewWith(let content):
-            state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
-            state.path.append(.recordWriting(state.recordWritingState))
-            return .none
-            
-        case .pushRecordWritingView(let type):
-            state.recordWritingState = RecordWritingStore.State(type: type)
-            state.path.append(.recordWriting(state.recordWritingState))
-            return .none
+//        case .pushRecordWritingViewWith(let content):
+//            state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
+//            state.path.append(.recordWriting(state.recordWritingState))
+//            return .none
+//            
+//        case .pushRecordWritingView(let type):
+//            state.recordWritingState = RecordWritingStore.State(type: type)
+//            state.path.append(.recordWriting(state.recordWritingState))
+//            return .none
         }
     }
 }

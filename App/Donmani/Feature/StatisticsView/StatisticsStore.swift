@@ -77,6 +77,8 @@ struct StatisticsStore {
             for item in badRecord {
                 badRecordRatio[item.key] = CGFloat(item.value) / CGFloat(badTotalCount)
             }
+            printf(goodRecord)
+            printf(badRecord)
         }
     }
     

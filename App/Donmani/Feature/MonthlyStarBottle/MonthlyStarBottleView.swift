@@ -10,6 +10,7 @@ import DesignSystem
 import ComposableArchitecture
 
 struct MonthlyStarBottleView: View {
+    @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<MonthlyStarBottleStore>
     
     var body: some View {
@@ -35,7 +36,7 @@ struct MonthlyStarBottleView: View {
                     }
                     HStack {
                         DNavigationBarButton(.leftArrow) {
-                            store.send(.delegate(.popToPreviousView))
+                            dismiss()
                         }
                         Spacer()
                     }

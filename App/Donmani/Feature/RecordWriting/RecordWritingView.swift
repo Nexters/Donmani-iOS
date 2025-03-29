@@ -10,6 +10,7 @@ import ComposableArchitecture
 import DesignSystem
 
 struct RecordWritingView: View {
+    @Environment(\.dismiss) var dismiss
     @Bindable var store: StoreOf<RecordWritingStore>
     @FocusState var isFocusToTextField: Bool
     @State var editingText: String = ""

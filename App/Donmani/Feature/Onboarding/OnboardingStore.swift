@@ -73,7 +73,7 @@ struct OnboardingStore {
         case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate: Equatable {
-            case pushMainView
+            case pushMainView(Bool)
             case pushRecordEntryPointView
         }
     }
@@ -107,8 +107,12 @@ struct OnboardingStore {
                 HistoryStateManager.shared.setOnboardingState()
                 switch state.nextStep {
                 case .main:
-                    return .send(.delegate(.pushMainView))
+                    return .send(.delegate(.pushMainView(false)))
                 case .record:
+                    let state = HistoryStateManager.shared.getState()
+                    if state[.today, default: false] && state[.yesterday, default: false] {
+                        return .send(.delegate(.pushMainView(true)))
+                    }
                     return .send(.delegate(.pushRecordEntryPointView))
                 }
                 

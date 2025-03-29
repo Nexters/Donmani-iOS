@@ -10,7 +10,7 @@ import DesignSystem
 import ComposableArchitecture
 
 struct RecordListView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss) var dismiss
     @Bindable var store: StoreOf<RecordListStore>
     
     var body: some View {
