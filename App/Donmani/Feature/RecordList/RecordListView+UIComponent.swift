@@ -84,18 +84,26 @@ extension RecordListView {
                             .frame(width: .s5, height: .s5)
                     }
                     
-                    Capsule()
-                        .fill(
-                            LinearGradient(
-                                stops: [
-                                    .init(color: DColor(.pupleBlue70).color, location: store.progressPoint),
-                                    .init(color: DColor(.pupleBlue99).color, location: store.progressPoint)
-                                ],
-                                startPoint: .leading,
-                                endPoint: .trailing
+                    if store.progressPoint == -1 {
+                        Capsule()
+                            .fill(DColor(.deepBlue80).color)
+                            .frame(height: .s4)
+                    } else {
+                        
+                        Capsule()
+                            .fill(
+                                LinearGradient(
+                                    stops: [
+                                        .init(color: DColor(.pupleBlue70).color, location: store.progressPoint),
+                                        .init(color: DColor(.pupleBlue99).color, location: store.progressPoint)
+                                    ],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
                             )
-                        )
-                        .frame(height: .s4)
+                            .frame(height: .s4)
+                        
+                    }
                     
                     VStack(spacing: 4) {
                         HStack(spacing: 8) {

@@ -16,6 +16,7 @@ struct SettingView: View {
     @State var isPresentingRecordGuideView = false
     @State var isPresentingFeedbackView = false
     @State var isPresentingPrivacyPolicyView = false
+    @State var isPresentingNoticeView = false
     @State var isPresentingEditNameView = false
     @State var isSaveEnabled = true
     @State var userName = DataStorage.getUserName()
@@ -91,15 +92,14 @@ struct SettingView: View {
                                         UIApplication.shared.open(appSettings)
                                     }
                                 }
-
                             }
                         }
                         .padding(.horizontal, .defaultLayoutPadding)
                     }
-                    MenuButton(title: "공지사항") {
-                        NotificationManager().unregisterForRemoteNotifications()
-                        
-                    }
+//                    MenuButton(title: "공지사항") {
+//                        NotificationManager().unregisterForRemoteNotifications()
+//                        isPresentingNoticeView.toggle()
+//                    }
                     MenuButton(title: "별별소 기록 규칙") {
                         isPresentingRecordGuideView.toggle()
                     }
@@ -144,6 +144,10 @@ struct SettingView: View {
         .sheet(isPresented: $isPresentingFeedbackView) {
             // Feeback WebView
             InnerWebView(urlString: DURLManager.feedback.urlString)
+        }
+        .sheet(isPresented: $isPresentingFeedbackView) {
+            // Notice WebView
+            InnerWebView(urlString: DURLManager.notice.urlString)
         }
         .onChange(of: scenePhase) { oldPhase, newPhase  in
 //            print("OnAppear")

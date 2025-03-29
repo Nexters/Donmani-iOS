@@ -55,7 +55,7 @@ extension BottleListView {
                         if (month.1 == 0) {
                             store.send(.showEmptyBottleToast)
                         } else if month.1 != -1 {
-                            store.send(.delegate(.pushMonthlyBottleView(2025, month.0)))
+                            store.send(.fetchMonthlyRecord(2025, month.0))
                         }
                     }
                     Spacer()

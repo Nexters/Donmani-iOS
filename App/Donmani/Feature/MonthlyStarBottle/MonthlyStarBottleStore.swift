@@ -18,7 +18,7 @@ struct MonthlyStarBottleStore {
         let month: Int
         
         init(year: Int, month: Int) {
-            self.year = year % 100
+            self.year = year
             self.month = month
             let key = "\(year)-\(String(format: "%02d", month))"
             self.record = (DataStorage.getRecord(yearMonth: key) ?? []).sorted {

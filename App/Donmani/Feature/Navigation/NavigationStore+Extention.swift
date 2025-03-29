@@ -24,6 +24,8 @@ extension NavigationStore {
                 return recordListDelegateAction(id: id, state: &state, action: recordListAction)
             case .recordEntryPoint(.delegate(let recordEntryPointAction)):
                 return recordEntryPointDelegateAction(id: id, state: &state, action: recordEntryPointAction)
+            case .monthlyStarBottle(.delegate(let monthlyStarBottleAction)):
+                return monthlyStarBottleDelegateAction(id: id, state: &state, action: monthlyStarBottleAction)
             case .statistics(_):
                 return .none
             case .setting:
@@ -40,27 +42,26 @@ extension NavigationStore {
         mainState: inout MainStore.State,
         record: Record
     ) {
-        
-            let stateManager = HistoryStateManager.shared.getState()
-            mainState.recordEntryPointState = RecordEntryPointStore.State(
-                isCompleteToday: stateManager[.today, default: false],
-                isCompleteYesterday: stateManager[.yesterday, default: false]
-            )
-            mainState.isCompleteToday = stateManager[.today, default: false]
-            mainState.isCompleteYesterday = stateManager[.yesterday, default: false]
-            mainState.isPresentingRecordEntryButton = !(stateManager[.today, default: false] && stateManager[.yesterday, default: false])
-            DataStorage.setRecord(record)
-            mainState.monthlyRecords.append(record)
-            Task {
-                let isFirstRecord = HistoryStateManager.shared.getIsFirstRecord()
-                if isFirstRecord == nil {
-                    let connectedScenes = await UIApplication.shared.connectedScenes
-                    if let windowScene = connectedScenes.map({$0}).first as? UIWindowScene {
-                        await AppStore.requestReview(in: windowScene)
-                        HistoryStateManager.shared.setIsFirstRecord()
-                    }
+        let stateManager = HistoryStateManager.shared.getState()
+        mainState.recordEntryPointState = RecordEntryPointStore.State(
+            isCompleteToday: stateManager[.today, default: false],
+            isCompleteYesterday: stateManager[.yesterday, default: false]
+        )
+        mainState.isCompleteToday = stateManager[.today, default: false]
+        mainState.isCompleteYesterday = stateManager[.yesterday, default: false]
+        mainState.isPresentingRecordEntryButton = !(stateManager[.today, default: false] && stateManager[.yesterday, default: false])
+        DataStorage.setRecord(record)
+        mainState.monthlyRecords.append(record)
+        Task {
+            let isFirstRecord = HistoryStateManager.shared.getIsFirstRecord()
+            if isFirstRecord == nil {
+                let connectedScenes = await UIApplication.shared.connectedScenes
+                if let windowScene = connectedScenes.map({$0}).first as? UIWindowScene {
+                    await AppStore.requestReview(in: windowScene)
+                    HistoryStateManager.shared.setIsFirstRecord()
                 }
             }
+        }
     }
 }
 

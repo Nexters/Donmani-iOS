@@ -27,7 +27,7 @@ extension StatisticsView {
                         .foregroundStyle(DColor(.deepBlue95).color)
                 }
                 Button {
-                    
+                    store.send(.touchProposeFunction)
                 } label: {
                     HStack(spacing: 4) {
                         Text("기능 요청하기")

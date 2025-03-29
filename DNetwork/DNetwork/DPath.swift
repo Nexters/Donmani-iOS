@@ -8,4 +8,5 @@
 public enum DPath: String {
     case users
     case expenses
+    case api
 }
