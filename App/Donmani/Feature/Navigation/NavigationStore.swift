@@ -36,11 +36,6 @@ struct NavigationStore {
         init(_ rootType: RootType) {
             self.rootType = rootType
             let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
-            if rootType == .onboarding {
-                self.mainState = MainStore.State()
-            } else {
-                self.mainState = MainStore.State(today: today)
-            }
             self.onboardingState = OnboardingStore.State()
             self.recordEntryPointState = RecordEntryPointStore.State()
             let yearMonth = (Int(today[0])!, Int(today[1])!)
@@ -48,6 +43,12 @@ struct NavigationStore {
             self.bottleListState = BottleListStore.State(starCount: [:])
             self.monthlyStarBottleState = MonthlyStarBottleStore.State(year: 0, month: 0)
             self.statisticsState = StatisticsStore.State(year: 0, month: 0)
+            if rootType == .onboarding {
+                self.mainState = MainStore.State()
+            } else {
+                self.mainState = MainStore.State(today: today)
+                self.mainState.isRequestNotificationPermission = true
+            }
         }
     }
     
@@ -87,6 +88,7 @@ struct NavigationStore {
                 let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
                 var mainState: MainStore.State = MainStore.State(today: today)
                 mainState.isPresentingAlreadyWrite = isAlreadyWrite
+                mainState.isRequestNotificationPermission = true
                 state.path.append(.main(mainState))
                 return .none
                 

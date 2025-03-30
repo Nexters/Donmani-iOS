@@ -10,6 +10,39 @@ import SwiftUI
 import DesignSystem
 
 extension RecordListView {
+    func BottleListToopTipView() -> some View {
+        VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                Triangle(direction: .up)
+                    .fill(DColor(.deepBlue80).color)
+                    .frame(width: 14, height: 8)
+                    .padding(.trailing, 12)
+            }
+            HStack {
+                Spacer()
+                HStack {
+                    Text("별통이만 모아볼 수 있어요!")
+                        .font(DFont.font(.b3, weight: .semibold))
+                        .foregroundStyle(.white)
+                    Button {
+                        store.send(.closeBottleListToopTip)
+                    } label: {
+                        DImage(.close).image
+                            .resizable()
+                            .frame(width: .s5, height: .s5)
+                    }
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
+                .background(DColor(.deepBlue80).color)
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            }
+            Spacer()
+        }
+        .padding(.top, 42)
+        .padding(.horizontal, 13)
+    }
     
     func EmptyGuideView() -> some View {
         ZStack {
@@ -105,7 +138,7 @@ extension RecordListView {
                         
                     }
                     
-                    VStack(spacing: 4) {
+                    VStack(alignment: .leading, spacing: 4) {
                         HStack(spacing: 8) {
                             Circle()
                                 .fill(DColor(.pupleBlue70).color)

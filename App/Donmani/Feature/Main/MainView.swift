@@ -84,12 +84,12 @@ struct MainView: View {
             }
             .padding(.vertical, 16)
             
-            if store.isPresentingRecordEntryButton && store.isPresentingPopover {
+            if store.isPresentingRecordEntryButton && store.isPresentingRecordYesterdayToopTip {
                 VStack {
                     Spacer()
                     HStack {
                         Spacer()
-                        guidePopoverView()
+                        RecordYesterdayViewToolTip()
                             .frame(width: .screenWidth)
                         
                         Spacer()
@@ -115,7 +115,7 @@ struct MainView: View {
             store.send(.checkPopover)
             Task(priority: .background) {
                 try? await Task.sleep(nanoseconds: 2_000_000)
-//                store.send(.checkNotificationPermission)
+                store.send(.checkNotificationPermission)
                 opacity = 1.0
             }
         }

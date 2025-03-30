@@ -24,6 +24,7 @@ struct SettingView: View {
     @State var isPresentingLengthGuideToastView = false
     @State var isPresentingSymbolGuideToastView = false
     @State var isNotificationEnabled = false
+    @State var isNoticeNotRead = false
     
     @FocusState var isFocusToTextField: Bool
     @Environment(\.scenePhase) private var scenePhase
@@ -96,10 +97,12 @@ struct SettingView: View {
                         }
                         .padding(.horizontal, .defaultLayoutPadding)
                     }
-//                    MenuButton(title: "공지사항") {
-//                        NotificationManager().unregisterForRemoteNotifications()
-//                        isPresentingNoticeView.toggle()
-//                    }
+                    MenuButton(title: "공지사항", isNoticeNotRead) {
+                        Task {
+                            try await NetworkManager.NMUser(service: .shared).updateNoticeStatus()
+                            isPresentingNoticeView.toggle()
+                        }
+                    }
                     MenuButton(title: "별별소 기록 규칙") {
                         isPresentingRecordGuideView.toggle()
                     }
@@ -145,7 +148,7 @@ struct SettingView: View {
             // Feeback WebView
             InnerWebView(urlString: DURLManager.feedback.urlString)
         }
-        .sheet(isPresented: $isPresentingFeedbackView) {
+        .sheet(isPresented: $isPresentingNoticeView) {
             // Notice WebView
             InnerWebView(urlString: DURLManager.notice.urlString)
         }
@@ -167,23 +170,38 @@ struct SettingView: View {
             NotificationManager().getNotificationPermissionStatus { status in
                 isNotificationEnabled = (status == .authorized)
             }
+            Task {
+                isNoticeNotRead = !(try await NetworkManager.NMUser(service: .shared).fetchNoticeStatus())
+            }
         }
         .navigationBarBackButtonHidden()
     }
     
     private func MenuButton(
         title: String,
+        _ isNoticeNotRead: Bool = false,
         action: @escaping () -> Void
     ) -> some View {
         Button {
             action()
         } label: {
-            Text(title)
-                .font(.b1, .bold)
-                .foregroundStyle(.white)
-                .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
-                .padding(.horizontal, .defaultLayoutPadding)
-                .padding(.vertical, 18)
+            HStack(spacing: 4) {
+                Text(title)
+                    .font(.b1, .bold)
+                    .foregroundStyle(.white)
+                if isNoticeNotRead {
+                    HStack(alignment: .top) {
+                        Circle()
+                            .fill(DColor.noticeColor)
+                            .frame(width: 6, height: 6)
+                            .padding(.bottom, 18)
+                    }
+                }
+                Spacer()
+            }
+            .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
+            .padding(.horizontal, .defaultLayoutPadding)
+            .padding(.vertical, 18)
         }
     }
 }

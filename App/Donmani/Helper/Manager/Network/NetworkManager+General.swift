@@ -9,7 +9,7 @@
 import DNetwork
 
 extension NetworkManager {
-    struct Version {
+    struct NMVersion {
         let service: DNetworkService
         
         init (

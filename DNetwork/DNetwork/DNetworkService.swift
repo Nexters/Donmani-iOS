@@ -139,6 +139,10 @@ public final class DNetworkService {
             throw NetworkError.serverError(statusCode: stateCode)
         }
         
+        if data.count == 0 {
+            return Data() as! R
+        }
+        
         guard let responseData = try? JSONDecoder().decode(R.self, from: data) else {
             throw NetworkError.decodingFailed
         }

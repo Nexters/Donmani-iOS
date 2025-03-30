@@ -54,7 +54,7 @@ extension StatisticsView {
     }
     
     func CategoryStatisticsView(flag: RecordContentType) -> some View {
-        VStack(spacing: 16) {
+        VStack(alignment: .leading, spacing: 16) {
             Text("\(flag.title) 소비 \(flag == .good ? store.goodTotalCount : store.badTotalCount)")
                 .font(DFont.font(.b1, weight: .bold))
                 .foregroundStyle(DColor(.gray99).color)
@@ -119,13 +119,14 @@ extension StatisticsView {
                         endPoint: .trailing
                     )
                 )
-                .frame(width: 120, height: 6)
-            
-            Text("\(String(format: "%.f", ratio * 100))%")
-                .font(DFont.font(.b2, weight: .semibold))
-                .foregroundStyle(DColor(.gray95).color)
-                .frame(width: 40)
-                .multilineTextAlignment(.trailing)
+                .frame(width: .screenWidth / 3, height: 6)
+            VStack(alignment: .trailing) {
+                Text("\(String(format: "%.f", ratio * 100))%")
+                    .font(DFont.font(.b2, weight: .semibold))
+                    .foregroundStyle(DColor(.gray95).color)
+                    .frame(width: 40)
+                    .multilineTextAlignment(.trailing)
+            }
         }
     }
 }

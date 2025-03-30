@@ -125,9 +125,7 @@ struct RecordEntryPointStore {
         case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate: Equatable {
-            
-            case popToMainView
-            case popToMainViewWith(Record)
+            case popToMainView(Record?)
         }
     }
     
@@ -155,7 +153,7 @@ struct RecordEntryPointStore {
                     }
                 } else {
                     return .run { send in
-                        await send(.delegate(.popToMainView))
+                        await send(.delegate(.popToMainView(nil)))
                     }
                 }
             case .dismissRecordGuideBottomSheet:
@@ -243,7 +241,7 @@ struct RecordEntryPointStore {
                         return
                     }
                     let record = Record(date: date, contents: records)
-                    await send(.delegate(.popToMainViewWith(record)))
+                    await send(.delegate(.popToMainView(record)))
                 }
             case .errorSave:
                 state.isLoading = false

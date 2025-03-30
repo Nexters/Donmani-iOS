@@ -115,7 +115,7 @@ struct RecordWritingStore {
                 return .none
                 
             case .textChanged(let textCount):
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
                 state.isSaveEnabled = (textCount > 0 && state.savedCategory != nil)
                 return .none
                 

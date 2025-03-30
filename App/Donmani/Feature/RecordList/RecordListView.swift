@@ -51,6 +51,11 @@ struct RecordListView: View {
                     RecordScrollView()
                 }
             }
+            
+            if store.isPresentingBottleListToopTipView {
+                BottleListToopTipView()
+            }
+            
         }
         .navigationBarBackButtonHidden()
     }
