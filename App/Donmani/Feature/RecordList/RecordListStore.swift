@@ -20,6 +20,7 @@ struct RecordListStore {
         let goodCount: Int
         let badCount: Int
         let progressPoint: CGFloat
+        var isPresentingBottleListToopTipView: Bool = false
         
         init(
             year: Int,
@@ -61,12 +62,14 @@ struct RecordListStore {
             } else {
                 self.progressPoint = -1
             }
+            self.isPresentingBottleListToopTipView = (HistoryStateManager.shared.getIsShownBottleListToopTip() == nil)
             
         }
     }
     
     // MARK: - Action
     enum Action {
+        case closeBottleListToopTip
         case delegate(Delegate)
         enum Delegate {
             case pushBottleListView([String: SummaryMonthly])
@@ -79,6 +82,14 @@ struct RecordListStore {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
+            case .closeBottleListToopTip:
+                state.isPresentingBottleListToopTipView = false
+                HistoryStateManager.shared.setIsShownBottleListToopTip()
+                return .none
+            case .delegate(.pushBottleListView(_)):
+                state.isPresentingBottleListToopTipView = false
+                HistoryStateManager.shared.setIsShownBottleListToopTip()
+                return .none
             case .delegate:
                 return .none
             }

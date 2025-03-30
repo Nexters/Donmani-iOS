@@ -38,7 +38,7 @@ struct RecordEntryPointView: View {
                         ) {
                             store.send(.showCancelRecordBottomSheet)
                         } else {
-                            store.send(.delegate(.popToMainView))
+                            store.send(.delegate(.popToMainView(nil)))
                         }
                     }
                     Spacer()

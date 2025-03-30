@@ -47,8 +47,8 @@ struct StatisticsView: View {
             }
         }
         .sheet(isPresented: $store.isPresentingProposeFunctionView) {
-            // Feeback WebView
-            InnerWebView(urlString: DURLManager.feedback.urlString)
+            // Propose Function WebView
+            InnerWebView(urlString: DURLManager.proposeFunction.urlString)
         }
         .navigationBarBackButtonHidden()
     }

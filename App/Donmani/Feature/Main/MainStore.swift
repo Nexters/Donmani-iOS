@@ -26,9 +26,10 @@ struct MainStore {
         var monthlyRecords: [Record]
         var isPresentingRecordEntryButton: Bool = true
         var recordEntryPointState = RecordEntryPointStore.State(isCompleteToday: true, isCompleteYesterday: true)
-        var isPresentingPopover: Bool = false
+        var isPresentingRecordYesterdayToopTip: Bool = false
         var isPresentingAlreadyWrite: Bool = false
         var isPresentingNewStarBottle: Bool = false
+        var isRequestNotificationPermission: Bool = false
         var isLoading: Bool = false
         
         var month = 0
@@ -102,18 +103,21 @@ struct MainStore {
                 state.name = DataStorage.getUserName()
                 return .none
             case .closePopover:
-                state.isPresentingPopover = false
+                state.isPresentingRecordYesterdayToopTip = false
                 return .none
             case .checkPopover:
                 let stateManager = HistoryStateManager.shared.getState()
                 if stateManager[.today, default: false] && !stateManager[.yesterday, default: false] {
-                    state.isPresentingPopover = true
+                    state.isPresentingRecordYesterdayToopTip = true
                 }
                 return .none
             case .showReciveStar:
                 return .none
             case .checkNotificationPermission:
-                NotificationManager().checkNotificationPermission()
+                if state.isRequestNotificationPermission {
+                    NotificationManager().checkNotificationPermission()
+                    state.isRequestNotificationPermission = false
+                }
                 return .none
             case .dismissNewStarBottleView:
                 state.isPresentingNewStarBottle = false

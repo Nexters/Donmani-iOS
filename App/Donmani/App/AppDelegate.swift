@@ -7,6 +7,8 @@
 
 import UIKit
 import DesignSystem
+import FirebaseCore
+import FirebaseMessaging
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -16,12 +18,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         // Set Notifiacation Center
         UNUserNotificationCenter.current().delegate = self
-//        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-//        UNUserNotificationCenter.current().requestAuthorization(
-//          options: authOptions,
-//          completionHandler: { _, _ in }
-//        )
-//        application.registerForRemoteNotifications()
+        
+        // Firebase
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        Messaging.messaging().isAutoInitEnabled = true
+        
         return true
     }
     
@@ -32,13 +34,25 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-//        print("APNs으로 부터 받은 디바이스 토큰:" + deviceToken.description)
         let tokenString = deviceToken.map { String(format: "%02x", $0) }.joined()
-        print("🔥 디바이스 토큰: \(tokenString)")
-        // 파베랑 연결 필요
+        print("APNs Token:", tokenString)
+        HistoryStateManager.shared.setAPNsToken(token: deviceToken)
+        Messaging.messaging().apnsToken = deviceToken
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-//        print("APNs 등록 및 디바이스 토큰 받기 실패:" + error.localizedDescription)
+        //        print("APNs 등록 및 디바이스 토큰 받기 실패:" + error.localizedDescription)
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        return [.badge, .sound]
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        print(response.notification.request.content.title)
+        print(response.notification.request.content.body)
+        print(response.notification.request.content.subtitle)
+        print(response.notification.request.content.badge)
+        
     }
 }

@@ -20,7 +20,45 @@ final class HistoryStateManager {
     private let isFirstDayOfMonth = "IS_FIRST_DAY_OF_MONTH"
     private let monthlyBottleGuide = "MONTHLY_BOTTLE_GUIDE"
     
+    // APNs Token
+    private let apnsToken = "APNS_TOKEN"
+    // Firebase Messaging Token
+    private let firebaseToken = "FIREBASE_TOKEN"
+    // Notification Permission
+    private let requestNotificationPermission = "REQUSET_NOTIFICATION_PERMISSION"
+    
+    //
+    private let isShownBottleListToopTip = "IS_SHOWN_BOTTLE_LIST_TOOP_TIP"
+    
     private init() {}
+
+    func getIsShownBottleListToopTip() -> String? {
+        userDefaults.string(forKey: isShownBottleListToopTip)
+    }
+    func setIsShownBottleListToopTip() {
+        userDefaults.set(isShownBottleListToopTip, forKey: isShownBottleListToopTip)
+    }
+    
+    func getRequestNotificationPermission() -> String? {
+        userDefaults.string(forKey: requestNotificationPermission)
+    }
+    func setRequestNotificationPermission() {
+        userDefaults.set(requestNotificationPermission, forKey: requestNotificationPermission)
+    }
+    
+    func getAPNsToken() -> Bool {
+        userDefaults.data(forKey: apnsToken) == nil
+    }
+    func setAPNsToken(token: Data) {
+        userDefaults.set(token, forKey: apnsToken)
+    }
+    
+    func getFirebaseToken() -> String? {
+        userDefaults.string(forKey: firebaseToken)
+    }
+    func setFirebaseToken(token: String) {
+        userDefaults.set(token, forKey: firebaseToken)
+    }
     
     func getMonthlyBottleGuide() -> Bool {
         userDefaults.string(forKey: monthlyBottleGuide) == nil
