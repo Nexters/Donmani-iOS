@@ -34,4 +34,9 @@ class DataStorage {
         let YMD = record.date.components(separatedBy: "-")
         shared.recordData["\(YMD[0])-\(YMD[1])", default: []].append(record)
     }
+    
+    static func setMonthRecords(year: Int, month: Int, _ records: [Record]) {
+        let key = "\(year)-\(String(format: "%02d", month))"
+        shared.recordData[key] = records
+    }
 }

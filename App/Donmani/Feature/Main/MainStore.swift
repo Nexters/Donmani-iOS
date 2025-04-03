@@ -5,8 +5,9 @@
 //  Created by 문종식 on 2/13/25.
 //
 
+import UIKit
 import ComposableArchitecture
-import StoreKit
+
 
 @Reducer
 struct MainStore {
@@ -25,11 +26,17 @@ struct MainStore {
         var monthlyRecords: [Record]
         var isPresentingRecordEntryButton: Bool = true
         var recordEntryPointState = RecordEntryPointStore.State(isCompleteToday: true, isCompleteYesterday: true)
-        var isPresentingPopover: Bool = false
+        var isPresentingRecordYesterdayToopTip: Bool = false
+        var isPresentingAlreadyWrite: Bool = false
+        var isPresentingNewStarBottle: Bool = false
+        var isRequestNotificationPermission: Bool = false
         var isLoading: Bool = false
         
-        init() {
-            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+        var month = 0
+        var day = 0
+        
+        init(today: [String]) {
+            self.month = Int(today[1]) ?? 1
             self.monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
             let state = HistoryStateManager.shared.getState()
             self.recordEntryPointState = RecordEntryPointStore.State(
@@ -39,29 +46,23 @@ struct MainStore {
             self.isCompleteToday = state[.today, default: false]
             self.isCompleteYesterday = state[.yesterday, default: false]
             self.isPresentingRecordEntryButton = !(self.isCompleteToday && self.isCompleteYesterday)
+            
+//            isNewStarBottle = true
+            self.day = Int(today[2]) ?? 1
+            if (day == 1) {
+                if HistoryStateManager.shared.getIsFirstDayOfMonth() {
+                    isPresentingNewStarBottle = true
+                    HistoryStateManager.shared.setIsFirstDayOfMonth()
+                }
+            } else {
+                HistoryStateManager.shared.removeIsFirstDayOfMonth()
+            }
         }
         
-        mutating func addNewRecord(_ record: Record) {
-//            let stateManager = HistoryStateManager.shared.getState()
-//            self.recordEntryPointState = RecordEntryPointStore.State(
-//                isCompleteToday: stateManager[.today, default: false],
-//                isCompleteYesterday: stateManager[.yesterday, default: false]
-//            )
-//            self.isCompleteToday = stateManager[.today, default: false]
-//            self.isCompleteYesterday = stateManager[.yesterday, default: false]
-//            self.isPresentingRecordEntryButton = !(stateManager[.today, default: false] && stateManager[.yesterday, default: false])
-//            DataStorage.setRecord(record)
-            self.monthlyRecords.append(record)
-//            Task {
-//                let isFirstRecord = HistoryStateManager.shared.getIsFirstRecord()
-//                if isFirstRecord == nil {
-//                    let connectedScenes = await UIApplication.shared.connectedScenes
-//                    if let windowScene = connectedScenes.map({$0}).first as? UIWindowScene {
-//                        await AppStore.requestReview(in: windowScene)
-//                        HistoryStateManager.shared.setIsFirstRecord()
-//                    }
-//                }
-//            }
+        init() {
+            isCompleteToday = true
+            isCompleteYesterday = true
+            monthlyRecords = []
         }
     }
     
@@ -73,12 +74,16 @@ struct MainStore {
         case closePopover
         case checkPopover
         case showReciveStar
+        case checkNotificationPermission
+        case dismissNewStarBottleView
+        case dismissAlreadyWrite
 
         case delegate(Delegate)
         enum Delegate {
             case pushSettingView
             case pushRecordEntryPointView
             case pushRecordListView
+            case pushBottleListView([String: SummaryMonthly])
         }
     }
     
@@ -98,15 +103,37 @@ struct MainStore {
                 state.name = DataStorage.getUserName()
                 return .none
             case .closePopover:
-                state.isPresentingPopover = false
+                state.isPresentingRecordYesterdayToopTip = false
+                HistoryStateManager.shared.setLastYesterdayToopTipDay()
                 return .none
             case .checkPopover:
-                let stateManager = HistoryStateManager.shared.getState()
+                let historyManager = HistoryStateManager.shared
+                let stateManager = historyManager.getState()
                 if stateManager[.today, default: false] && !stateManager[.yesterday, default: false] {
-                    state.isPresentingPopover = true
+                    if let dateString = historyManager.getLastYesterdayToopTipDay() {
+                        print(#function, dateString)
+                        let lastDay = Day(yyyymmdd: dateString)
+                        let todayDateString = DateManager.shared.getFormattedDate(for: .today)
+                        let today = Day(yyyymmdd: todayDateString)
+                        state.isPresentingRecordYesterdayToopTip = today > lastDay
+                    } else {
+                        state.isPresentingRecordYesterdayToopTip = true
+                    }
                 }
                 return .none
             case .showReciveStar:
+                return .none
+            case .checkNotificationPermission:
+                if state.isRequestNotificationPermission {
+                    NotificationManager().checkNotificationPermission()
+                    state.isRequestNotificationPermission = false
+                }
+                return .none
+            case .dismissNewStarBottleView:
+                state.isPresentingNewStarBottle = false
+                return .none
+            case .dismissAlreadyWrite:
+                state.isPresentingAlreadyWrite = false
                 return .none
             case .delegate:
                 return .none

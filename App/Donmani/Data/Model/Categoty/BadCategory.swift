@@ -18,6 +18,7 @@ enum BadCategory: String, CaseIterable, CategoryProtocol {
     case none             // 무소비
 }
 
+
 extension BadCategory {
     var title: String {
         switch self {

@@ -40,7 +40,7 @@ extension MainView {
         .frame(width: 70, height: 70)
     }
     
-    func guidePopoverView() -> some View {
+    func RecordYesterdayViewToolTip() -> some View {
         VStack(spacing: 0) {
             HStack {
                 Spacer()

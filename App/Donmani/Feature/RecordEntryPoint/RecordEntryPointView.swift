@@ -30,7 +30,7 @@ struct RecordEntryPointView: View {
             ) {
                 // Navigation Bar
                 HStack {
-                    DBackButton {
+                    DNavigationBarButton(.leftArrow) {
                         if (
                             store.isCheckedEmptyRecord
                             || store.goodRecord != nil
@@ -38,7 +38,7 @@ struct RecordEntryPointView: View {
                         ) {
                             store.send(.showCancelRecordBottomSheet)
                         } else {
-                            store.send(.delegate(.popToMainView))
+                            store.send(.delegate(.popToMainView(nil)))
                         }
                     }
                     Spacer()
@@ -108,12 +108,13 @@ struct RecordEntryPointView: View {
                 Color.black.opacity(0.1)
             }
         }
-//        .navigationDestination(isPresented: $store.isPresentingRecordWritingView) {
-//            let recordWritingStore = store.scope(state: \.recordWritingState, action: \.setRecord)
-//            return RecordWritingView(store: recordWritingStore)
-//        }
         .onAppear {
+            UINavigationController.swipeNavigationPopIsEnabled = false
             store.send(.startTimer)
+        }
+        .navigationDestination(isPresented: $store.isPresentingRecordWritingView) {
+            let recordWritingStore = store.scope(state: \.recordWritingState, action: \.recordWritingAction)
+            RecordWritingView(store: recordWritingStore)
         }
         .navigationBarBackButtonHidden()
     }

@@ -12,7 +12,7 @@ import ComposableArchitecture
 struct DonmaniApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State var isPresentingSplash: Bool = true
-    @State var rootType: RootType = .main// .onboarding
+    @State var rootType: RootType = HistoryStateManager.shared.getOnboardingState() ? .onboarding : .main
     
     var body: some Scene {
         WindowGroup {
@@ -24,6 +24,11 @@ struct DonmaniApp: App {
                             NavigationStore()
                         }
                 )
+                .onAppear {
+                    if let token = HistoryStateManager.shared.getFirebaseToken() {
+                        print(token)
+                    }
+                }
             }
         }
     }

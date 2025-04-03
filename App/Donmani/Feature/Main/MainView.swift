@@ -11,6 +11,7 @@ import DesignSystem
 
 struct MainView: View {
     @Bindable var store: StoreOf<MainStore>
+    @State private var opacity: CGFloat = 0.0
     
     var body: some View {
         ZStack {
@@ -51,6 +52,7 @@ struct MainView: View {
                         StarBottleView(records: store.monthlyRecords)
                             .frame(width: .screenWidth * 0.8)
                             .aspectRatio(0.75, contentMode: .fit)
+                            .opacity(opacity)
                         DImage(.starBottle).image
                             .resizable()
                             .frame(width: .screenWidth * 0.8)
@@ -82,22 +84,25 @@ struct MainView: View {
             }
             .padding(.vertical, 16)
             
-            if store.isPresentingRecordEntryButton && store.isPresentingPopover {
+            if store.isPresentingRecordEntryButton && store.isPresentingRecordYesterdayToopTip {
                 VStack {
                     Spacer()
                     HStack {
                         Spacer()
-                        guidePopoverView()
+                        RecordYesterdayViewToolTip()
                             .frame(width: .screenWidth)
                         
                         Spacer()
                     }
-                }.padding(.vertical, 16 + 70 + 5)
+                }.padding(.vertical, 16 + 70)
+            }
+            if store.isPresentingNewStarBottle {
+                NewStarBottleView()
             }
             
-//            if store.isPresentingUpdateApp {
-//                AppStoreView()
-//            }
+            if store.isPresentingAlreadyWrite {
+                OnboardingEndView()
+            }
             
             if store.isLoading {
                 Color.black.opacity(0.1)
@@ -105,8 +110,14 @@ struct MainView: View {
             }
         }
         .onAppear {
+            UINavigationController.swipeNavigationPopIsEnabled = false
             store.send(.fetchUserName)
             store.send(.checkPopover)
+            Task(priority: .background) {
+                try? await Task.sleep(nanoseconds: 2_000_000)
+                store.send(.checkNotificationPermission)
+                opacity = 1.0
+            }
         }
         .navigationBarBackButtonHidden()
     }

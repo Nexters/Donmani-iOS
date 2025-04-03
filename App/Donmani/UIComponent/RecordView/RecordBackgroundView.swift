@@ -27,6 +27,11 @@ struct RecordBackgroundView: View {
                 style: .continuous
             )
             .fill(.white.opacity(0.1))
+            RoundedRectangle(
+                cornerRadius: .defaultLayoutPadding,
+                style: .continuous
+            )
+            .strokeBorder(.white.opacity(0.1), lineWidth: 2)
         }
     }
 }

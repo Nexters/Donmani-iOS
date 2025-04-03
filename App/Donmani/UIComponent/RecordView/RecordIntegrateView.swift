@@ -43,8 +43,6 @@ struct RecordIntegrateView: View {
                 RecordContentView(record: badRecord, isEditable: badAction != nil)
             }
             .allowsHitTesting(badAction != nil)
-            
-            
         }
         .background(
             ZStack {

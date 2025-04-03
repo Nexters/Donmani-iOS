@@ -20,8 +20,15 @@ struct OnboardingStore {
             case final
         }
         
+        enum NextStep {
+            case main
+            case record
+        }
+        
         var step: Step = .cover
+        var nextStep: NextStep = .main
         var pageIndex = 0
+        var isPresentingEndOnboardingView = false
         
         let guidePageCount = 5
         
@@ -34,7 +41,7 @@ struct OnboardingStore {
         ]
         
         let guideContents: [String] = [
-            "쉽게 예시를\n소비가 남긴 감정에 더 집중할 수 있어",
+            "하루에 한 개씩만 적으니까\n소비가 남긴 감정에 더 집중할 수 있어",
             "고민하다 보면 자연스럽게\n더 나은 선택을 하게 될 거야",
             "소비 당시 있는 그대로의\n감정이 중요하기 때문이야",
             "지난 과거는 기억이 바뀌잖아\n별별소는 하루의 솔직한 감정을\n중요하게 생각해",
@@ -58,13 +65,15 @@ struct OnboardingStore {
     enum Action: BindableAction, Equatable {
         case touchStartOnboarding
         case touchNextPage
+        case touchEndOnboarding
+        
         case touchHomeButton
         case touchRecordButton
         
         case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate: Equatable {
-            case pushMainView
+            case pushMainView(Bool)
             case pushRecordEntryPointView
         }
     }
@@ -84,10 +93,29 @@ struct OnboardingStore {
                 state.pageIndex += 1
                 state.step = state.pageIndex < 4 ? .page : .final
                 return .none
+                
             case .touchHomeButton:
-                return .send(.delegate(.pushMainView))
+                state.nextStep = .main
+                state.isPresentingEndOnboardingView = true
+                return .none
             case .touchRecordButton:
-                return .send(.delegate(.pushRecordEntryPointView))
+                state.nextStep = .record
+                state.isPresentingEndOnboardingView = true
+                return .none
+            
+            case .touchEndOnboarding:
+                HistoryStateManager.shared.setOnboardingState()
+                switch state.nextStep {
+                case .main:
+                    return .send(.delegate(.pushMainView(false)))
+                case .record:
+                    let state = HistoryStateManager.shared.getState()
+                    if state[.today, default: false] && state[.yesterday, default: false] {
+                        return .send(.delegate(.pushMainView(true)))
+                    }
+                    return .send(.delegate(.pushRecordEntryPointView))
+                }
+                
             case .binding(\.pageIndex):
                 state.step = state.pageIndex < 4 ? .page : .final
                 return .none

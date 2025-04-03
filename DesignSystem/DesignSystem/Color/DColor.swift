@@ -13,6 +13,7 @@ public struct DColor {
     public static let backgroundBottom: Color = Color("BackgroundBottom", bundle: .designSystem)
     
     public static let textGuide: Color = Color("TextGuide", bundle: .designSystem)
+    public static let noticeColor: Color = Color("NoticeColor", bundle: .designSystem) 
     public static let emptyColor: Color = Color("EmptyColor", bundle: .designSystem)
     
     public var type: DColorType = .deepBlue50
