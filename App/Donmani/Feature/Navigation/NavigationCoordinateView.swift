@@ -29,6 +29,8 @@ struct NavigationCoordinateView: View {
                 RecordEntryPointView(store: store)
             case .recordList(let store):
                 RecordListView(store: store)
+            case .recordWriting(let store):
+                RecordWritingView(store: store)
             case .bottleList(let store):
                 BottleListView(store: store)
             case .monthlyStarBottle(let store):
@@ -38,6 +40,9 @@ struct NavigationCoordinateView: View {
             case .setting:
                 SettingView()
             }
+        }
+        .onAppear {
+            UINavigationController.store = store
         }
     }
 }

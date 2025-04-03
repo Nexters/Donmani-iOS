@@ -29,7 +29,6 @@ struct RecordWritingStore {
         var text: String = ""
         var isPresentingSelectCategory: Bool = false
         var isPresentingCancel: Bool = false
-//        var isFocused: Bool = false
         var isPresendTextGuide: Bool = false
         var isFocusToTextField: Bool = false
         
@@ -89,7 +88,6 @@ struct RecordWritingStore {
             case .openCategory:
                 UIApplication.shared.endEditing()
                 state.isPresentingSelectCategory = true
-                UINavigationController.swipeNavigationPopIsEnabled = false
                 state.selectedCategory = state.savedCategory
                 return .none
                 
@@ -111,7 +109,6 @@ struct RecordWritingStore {
             case .closeCategory:
                 state.isFocusToTextField = true
                 state.isPresentingSelectCategory = false
-                UINavigationController.swipeNavigationPopIsEnabled = true
                 return .none
                 
             case .textChanged(let textCount):
