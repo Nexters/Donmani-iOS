@@ -49,7 +49,9 @@ extension MainView {
     func NewStarBottleView() -> some View {
         BottomSheetView(
             isActiveClose: false,
-            closeAction: { }
+            closeAction: {
+                UINavigationController.blockSwipe = false
+            }
         ) { dismissSheet in
             VStack(alignment: .center, spacing: .s3) {
                 VStack(spacing: 8) {
@@ -80,6 +82,7 @@ extension MainView {
                             store.send(.dismissNewStarBottleView)
                             let recordDAO = NetworkManager.NMRecord(service: .shared)
                             let result = try await recordDAO.fetchMonthlyRecord(year: 2025).monthlyRecords
+                            UINavigationController.blockSwipe = false
                             store.send(.delegate(.pushBottleListView(result)))
                         }
                     }
@@ -100,6 +103,7 @@ extension MainView {
                 
                 DButton(title: "확인했어요") {
                     dismissSheet {
+                        UINavigationController.blockSwipe = false 
                         store.send(.dismissNewStarBottleView)
                     }
                 }
@@ -110,7 +114,9 @@ extension MainView {
     func OnboardingEndView() -> some View {
         BottomSheetView(
             isActiveClose: false,
-            closeAction: { }
+            closeAction: {
+                UINavigationController.blockSwipe = false
+            }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
                 Text("앗! 어제 오늘 소비 모두 기록 했어요\n내일 또 기록 할 수 있어요!")
@@ -122,6 +128,7 @@ extension MainView {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                     DButton(title: "확인했어요") {
+                        UINavigationController.blockSwipe = false
                         store.send(.dismissAlreadyWrite)
                     }
                 }

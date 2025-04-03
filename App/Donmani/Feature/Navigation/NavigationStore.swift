@@ -114,6 +114,9 @@ struct NavigationStore {
                 
                 // Main Action
             case .mainAction(.delegate(.pushRecordListView)):
+                let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+                let yearMonth = (Int(today[0])!, Int(today[1])!)
+                state.recordListState = RecordListStore.State(year: yearMonth.0, month: yearMonth.1, isShowNavigationButton: true)
                 state.path.append(.recordList(state.recordListState))
                 return .none
             case .mainAction(.delegate(.pushRecordEntryPointView)):
@@ -134,6 +137,7 @@ struct NavigationStore {
                 return .none
                 
             case .addNewRecord(let record):
+                UINavigationController.swipeNavigationPopIsEnabled = true
                 if state.rootType == .onboarding {
                     if let mainViewID = state.path.ids.first {
                         if case .main(var mainState) = state.path[id: mainViewID] {
