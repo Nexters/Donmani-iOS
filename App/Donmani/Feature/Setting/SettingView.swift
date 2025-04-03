@@ -11,6 +11,29 @@ import DesignSystem
 import DNetwork
 
 struct SettingView: View {
+    enum Menutype {
+        case notification
+        case notice
+        case recordGuide
+        case feedback
+        case privacyPolicy
+        
+        var title: String {
+            switch self {
+            case .notification:
+                return "앱 푸시 알림"
+            case .notice:
+                return "공지사항"
+            case .recordGuide:
+                return "별별소 기록 규칙"
+            case .feedback:
+                return "피드백"
+            case .privacyPolicy:
+                return "개인정보 처리방침"
+            }
+        }
+    }
+    
     @Environment(\.dismiss) private var dismiss
     let width = UIScreen.main.bounds.width
     @State var isPresentingRecordGuideView = false
@@ -82,36 +105,28 @@ struct SettingView: View {
                 .padding(.bottom, .defaultLayoutPadding)
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    MenuButton(title: "앱 푸시 알림") { }
-                    .allowsHitTesting(false)
-                    .overlay {
-                        HStack {
-                            Spacer()
-                            DToggle(isOn: $isNotificationEnabled) {
-                                if let appSettings = URL(string: UIApplication.openSettingsURLString) {
-                                    if UIApplication.shared.canOpenURL(appSettings) {
-                                        UIApplication.shared.open(appSettings)
-                                    }
-                                }
+                    MenuButton(type: .notification) {
+                        if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                            if UIApplication.shared.canOpenURL(appSettings) {
+                                UIApplication.shared.open(appSettings)
                             }
                         }
-                        .padding(.horizontal, .defaultLayoutPadding)
                     }
-                    MenuButton(title: "공지사항", isNoticeNotRead) {
+                    MenuButton(type: .notice) {
                         Task {
                             try await NetworkManager.NMUser(service: .shared).updateNoticeStatus()
                             isPresentingNoticeView.toggle()
                         }
                     }
-                    MenuButton(title: "별별소 기록 규칙") {
+                    MenuButton(type: .recordGuide) {
                         isPresentingRecordGuideView.toggle()
                     }
                     
-                    MenuButton(title: "피드백") {
+                    MenuButton(type: .feedback) {
                         isPresentingFeedbackView.toggle()
                     }
                     
-                    MenuButton(title: "개인정보 처리방침") {
+                    MenuButton(type: .privacyPolicy) {
                         isPresentingPrivacyPolicyView.toggle()
                     }
                 }
@@ -178,18 +193,17 @@ struct SettingView: View {
     }
     
     private func MenuButton(
-        title: String,
-        _ isNoticeNotRead: Bool = false,
+        type: Menutype,
         action: @escaping () -> Void
     ) -> some View {
         Button {
             action()
         } label: {
             HStack(spacing: 4) {
-                Text(title)
+                Text(type.title)
                     .font(.b1, .bold)
                     .foregroundStyle(.white)
-                if isNoticeNotRead {
+                if type == .notice {
                     HStack(alignment: .top) {
                         Circle()
                             .fill(DColor.noticeColor)
@@ -197,7 +211,12 @@ struct SettingView: View {
                             .padding(.bottom, 18)
                     }
                 }
+                
                 Spacer()
+                
+                if type == .notification {
+                    DToggle(isOn: $isNotificationEnabled)
+                }
             }
             .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
             .padding(.horizontal, .defaultLayoutPadding)

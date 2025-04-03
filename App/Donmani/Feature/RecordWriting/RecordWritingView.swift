@@ -30,7 +30,7 @@ struct RecordWritingView: View {
                                 isFocusToTextField = false
                                 store.send(.showCancelRecordBottomSheet)
                             } else {
-                                store.send(.delegate(.popToRecordEntrypointView))
+                                dismiss()
                             }
                         }
                         Spacer()

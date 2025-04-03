@@ -83,7 +83,7 @@ struct MainStore {
             case pushSettingView
             case pushRecordEntryPointView
             case pushRecordListView
-            case pushBottleListView
+            case pushBottleListView([String: SummaryMonthly])
         }
     }
     
@@ -104,11 +104,21 @@ struct MainStore {
                 return .none
             case .closePopover:
                 state.isPresentingRecordYesterdayToopTip = false
+                HistoryStateManager.shared.setLastYesterdayToopTipDay()
                 return .none
             case .checkPopover:
-                let stateManager = HistoryStateManager.shared.getState()
+                let historyManager = HistoryStateManager.shared
+                let stateManager = historyManager.getState()
                 if stateManager[.today, default: false] && !stateManager[.yesterday, default: false] {
-                    state.isPresentingRecordYesterdayToopTip = true
+                    if let dateString = historyManager.getLastYesterdayToopTipDay() {
+                        print(#function, dateString)
+                        let lastDay = Day(yyyymmdd: dateString)
+                        let todayDateString = DateManager.shared.getFormattedDate(for: .today)
+                        let today = Day(yyyymmdd: todayDateString)
+                        state.isPresentingRecordYesterdayToopTip = today > lastDay
+                    } else {
+                        state.isPresentingRecordYesterdayToopTip = true
+                    }
                 }
                 return .none
             case .showReciveStar:

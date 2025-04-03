@@ -108,7 +108,7 @@ extension RecordListView {
             .overlay {
                 VStack(alignment: .leading, spacing: .s5)  {
                     HStack {
-                        Text("\(store.yearMonth.year)월 기록 통계")
+                        Text("\(store.yearMonth.month)월 기록 통계")
                             .font(DFont.font(.b1, weight: .semibold))
                             .foregroundStyle(DColor(.gray99).color)
                         DImage(.rightArrow).image

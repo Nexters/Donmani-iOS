@@ -74,8 +74,12 @@ extension MainView {
                 
                 Button {
                     dismissSheet {
-                        store.send(.dismissNewStarBottleView)
-                        store.send(.delegate(.pushBottleListView))
+                        Task {
+                            store.send(.dismissNewStarBottleView)
+                            let recordDAO = NetworkManager.NMRecord(service: .shared)
+                            let result = try await recordDAO.fetchMonthlyRecord(year: 2025).monthlyRecords
+                            store.send(.delegate(.pushBottleListView(result)))
+                        }
                     }
                 } label: {
                     HStack(spacing: 4) {
