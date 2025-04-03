@@ -20,6 +20,8 @@ final class HistoryStateManager {
     private let isFirstDayOfMonth = "IS_FIRST_DAY_OF_MONTH"
     private let monthlyBottleGuide = "MONTHLY_BOTTLE_GUIDE"
     
+    private let lastYesterdayToopTipDay =  "LAST_YESTERDAY_TOOP_TIP_DAY"
+    
     // APNs Token
     private let apnsToken = "APNS_TOKEN"
     // Firebase Messaging Token
@@ -32,6 +34,17 @@ final class HistoryStateManager {
     
     private init() {}
 
+    func getLastYesterdayToopTipDay() -> String? {
+        userDefaults.string(forKey: lastYesterdayToopTipDay)
+    }
+    func setLastYesterdayToopTipDay() {
+        let dateString = DateManager.shared.getFormattedDate(for: .today)
+        userDefaults.set(
+            dateString,
+            forKey: lastYesterdayToopTipDay
+        )
+    }
+    
     func getIsShownBottleListToopTip() -> String? {
         userDefaults.string(forKey: isShownBottleListToopTip)
     }

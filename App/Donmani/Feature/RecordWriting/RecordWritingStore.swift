@@ -115,7 +115,8 @@ struct RecordWritingStore {
                 return .none
                 
             case .textChanged(let textCount):
-                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                HapticManager.shared.playHapticTransient()
+//                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
                 state.isSaveEnabled = (textCount > 0 && state.savedCategory != nil)
                 return .none
                 

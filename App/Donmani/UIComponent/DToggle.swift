@@ -10,7 +10,6 @@ import DesignSystem
 
 struct DToggle: View {
     @Binding var isOn: Bool
-    var toggleAction: () -> Void
     
     var body: some View {
         Capsule(style: .continuous)
@@ -30,14 +29,9 @@ struct DToggle: View {
                     }
                 }
             }
-            .onTapGesture {
-                toggleAction()
-            }
     }
 }
 
 #Preview {
-    DToggle(isOn: .constant(true)) {
-        
-    }
+    DToggle(isOn: .constant(true))
 }

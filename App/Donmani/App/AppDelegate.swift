@@ -49,10 +49,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-        print(response.notification.request.content.title)
-        print(response.notification.request.content.body)
-        print(response.notification.request.content.subtitle)
-        print(response.notification.request.content.badge)
+//        print(response.notification.request.content.title)
+//        print(response.notification.request.content.body)
+//        print(response.notification.request.content.subtitle)
+//        print(response.notification.request.content.badge)
+        center.setBadgeCount(0, withCompletionHandler: nil)
         
     }
 }
