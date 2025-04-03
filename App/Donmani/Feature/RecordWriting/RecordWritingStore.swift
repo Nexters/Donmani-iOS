@@ -44,8 +44,10 @@ struct RecordWritingStore {
             case .bad:
                 tempCategory = BadCategory.allCases.map { RecordCategory($0) }
             }
+            
             _ = tempCategory.popLast()
             self.category = tempCategory
+            self.recordContent = content
             self.selectedCategory = content?.category
             self.savedCategory = content?.category
             if let content = content {
@@ -75,6 +77,7 @@ struct RecordWritingStore {
         case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate {
+            case checkSwipeValidation
             case popToRecordEntrypointView
             case popToRecordEntrypointViewWith(RecordContent)
         }
@@ -102,6 +105,9 @@ struct RecordWritingStore {
                 if (state.textCount > 0) {
                     state.isSaveEnabled = true
                 }
+                if let originCategory = state.recordContent?.category {
+                    UINavigationController.swipeNavigationPopIsEnabled = (originCategory == category)
+                }
                 return .run { send in
                     await send(.closeCategory)
                 }
@@ -109,6 +115,7 @@ struct RecordWritingStore {
             case .closeCategory:
                 state.isFocusToTextField = true
                 state.isPresentingSelectCategory = false
+                UINavigationController.blockSwipe = false
                 return .none
                 
             case .textChanged(let textCount):
@@ -149,6 +156,7 @@ struct RecordWritingStore {
             case .dismissCancelRecordBottomSheet:
                 state.isFocusToTextField = true
                 state.isPresentingCancel = false
+                UINavigationController.blockSwipe = false
                 return .none
                 
             case .binding:

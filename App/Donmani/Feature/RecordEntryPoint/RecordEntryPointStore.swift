@@ -139,6 +139,7 @@ struct RecordEntryPointStore {
             case .dismissCancelRecordBottomSheet:
                 state.isPresentingCancel = false
                 state.isChangingDayType = false
+                UINavigationController.blockSwipe = false
                 return .none
             case .cancelRecording:
                 state.isPresentingCancel = false
@@ -148,6 +149,7 @@ struct RecordEntryPointStore {
                     }
                 } else {
                     UINavigationController.swipeNavigationPopIsEnabled = true
+                    UINavigationController.blockSwipe = false
                     return .run { send in
                         await send(.delegate(.popToMainView(nil)))
                     }
@@ -188,9 +190,9 @@ struct RecordEntryPointStore {
                 if state.isCheckedEmptyRecord {
                     state.isCheckedEmptyRecord = false
                     state.isSaveEnabled = false
-                    UINavigationController.swipeNavigationPopIsEnabled = true
                 } else {
                     state.isPresentingRecordEmpty = true
+                    UINavigationController.blockSwipe = true
                 }
                 return .none
             case .closePopover:
@@ -199,6 +201,7 @@ struct RecordEntryPointStore {
                 return .none
             case .dismissEmtpyRecordBottomSheet:
                 state.isPresentingRecordEmpty = false
+                UINavigationController.blockSwipe = false
                 return .none
                 
             case .recordEmpty:
@@ -207,6 +210,7 @@ struct RecordEntryPointStore {
                 state.isPresentingRecordEmpty = false
                 state.goodRecord = nil
                 state.badRecord = nil
+                UINavigationController.blockSwipe = false
                 UINavigationController.swipeNavigationPopIsEnabled = false
                 return .none
                 

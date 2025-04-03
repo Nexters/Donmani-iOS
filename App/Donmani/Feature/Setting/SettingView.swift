@@ -115,6 +115,7 @@ struct SettingView: View {
                     MenuButton(type: .notice) {
                         Task {
                             try await NetworkManager.NMUser(service: .shared).updateNoticeStatus()
+                            isNoticeNotRead = false
                             isPresentingNoticeView.toggle()
                         }
                     }
@@ -210,6 +211,7 @@ struct SettingView: View {
                             .frame(width: 6, height: 6)
                             .padding(.bottom, 18)
                     }
+                    .opacity(isNoticeNotRead ? 1 : 0)
                 }
                 
                 Spacer()
