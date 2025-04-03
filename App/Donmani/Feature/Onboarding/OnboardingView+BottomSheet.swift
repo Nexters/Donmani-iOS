@@ -24,6 +24,7 @@ extension OnboardingView {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                     DButton(title: "확인했어요") {
+                        UINavigationController.blockSwipe = false
                         store.send(.touchEndOnboarding)
                     }
                 }
