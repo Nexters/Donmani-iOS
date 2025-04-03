@@ -60,54 +60,61 @@ extension OnboardingView {
     }
     
     var pageStepView: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 12) {
-                ForEach(0..<store.guidePageCount, id: \.self) { i in
-                    Circle()
-                        .fill(.white.opacity(i == store.pageIndex ? 1.0 : 0.1))
-                        .frame(width: 6, height: 6)
-                }
-            }
-            .padding(.top, 50)
-            .padding(.bottom, .s4)
-            
-            TabView(selection: $store.pageIndex) {
-                ForEach(0..<store.guidePageCount, id: \.self) { i in
-                    PageGuideView(index: i)
-                }
-            }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            
-            Group {
-                if store.step == .page {
-                    DButton(title: "다음") {
-                        store.send(.touchNextPage, animation: .linear)
+        ZStack {
+            VStack(spacing: 0) {
+                HStack(spacing: 12) {
+                    ForEach(0..<store.guidePageCount, id: \.self) { i in
+                        Circle()
+                            .fill(.white.opacity(i == store.pageIndex ? 1.0 : 0.1))
+                            .frame(width: 6, height: 6)
                     }
-                } else {
-                    HStack {
-                        Button {
-                            store.send(.touchHomeButton)
-                        } label: {
-                            ZStack {
-                                RoundedRectangle(
-                                    cornerRadius: 16.0,
-                                    style: .continuous
-                                )
-                                .fill(DColor(.deepBlue50).color)
-                                .frame(height: 58)
-                                Text("홈으로")
-                                    .font(DFont.font(.h3, weight: .bold))
-                                    .foregroundStyle(.white)
+                }
+                .padding(.top, 50)
+                .padding(.bottom, .s4)
+                
+                TabView(selection: $store.pageIndex) {
+                    ForEach(0..<store.guidePageCount, id: \.self) { i in
+                        PageGuideView(index: i)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                
+                Group {
+                    if store.step == .page {
+                        DButton(title: "다음") {
+                            store.send(.touchNextPage, animation: .linear)
+                        }
+                    } else {
+                        HStack {
+                            Button {
+                                store.send(.touchHomeButton)
+                            } label: {
+                                ZStack {
+                                    RoundedRectangle(
+                                        cornerRadius: 16.0,
+                                        style: .continuous
+                                    )
+                                    .fill(DColor(.deepBlue50).color)
+                                    .frame(height: 58)
+                                    Text("홈으로")
+                                        .font(DFont.font(.h3, weight: .bold))
+                                        .foregroundStyle(.white)
+                                }
+                            }
+                            DButton(title: "기록해 보기") {
+                                store.send(.touchRecordButton)
                             }
                         }
-                        DButton(title: "기록해 보기") {
-                            store.send(.touchRecordButton)
-                        }
                     }
                 }
+                .padding(.bottom, .s5 / 2)
+                .padding(.horizontal, .defaultLayoutPadding)
             }
-            .padding(.horizontal, .defaultLayoutPadding)
+            if store.isPresentingEndOnboardingView {
+                OnboardingEndView()
+            }
         }
+        
     }
     
     func PageGuideView(index: Int) -> some View {

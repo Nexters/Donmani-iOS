@@ -20,15 +20,15 @@ extension RecordWritingView {
                     .clipShape(
                         .rect(
                             topLeadingRadius: 0,
-                            bottomLeadingRadius: 27,
-                            bottomTrailingRadius: 27,
+                            bottomLeadingRadius: 120,
+                            bottomTrailingRadius: 120,
                             topTrailingRadius: 0,
                             style: .continuous
                         )
                     )
-                    .offset(x: 0, y: -180)
+                    .offset(x: 0, y: -210)
                     .blur(radius: 70.0)
-                    .padding(.horizontal, -.screenWidth)
+                    .padding(.horizontal, -.defaultLayoutPadding * 2)
                 Spacer()
             }
         }
@@ -65,7 +65,7 @@ extension RecordWritingView {
     
     func TextGuideView() -> some View {
         HStack(spacing: 8) {
-            DImage(.textMaxLength).image
+            DImage(.warning).image
                 .resizable()
                 .frame(width: .s3, height: .s3)
             Text("최대로 작성했어요")
@@ -78,4 +78,6 @@ extension RecordWritingView {
                 .fill(DColor.textGuide.opacity(0.9))
         }
     }
+    
+    
 }

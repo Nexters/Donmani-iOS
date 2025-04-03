@@ -19,6 +19,7 @@ public enum DImageAsset: String {
     
     case emptyRecord = "EmptyRecord"
     case starBottle = "StarBottle"
+    case lockedStarBottle = "LockedStarBottle"
     case starBottleBackground = "StarBottleBackground"
     case save = "Save"
     
@@ -32,6 +33,11 @@ public enum DImageAsset: String {
     case splashLogo = "SplashLogo"
     
     case profile = "Profile"
+    case newStarBottle = "NewStarBottle"
+    case newStarBottleBackground = "NewStarBottleBackground"
+    
+    case miniLockedBottle = "MiniLockedBottle"
+    case miniOpenedBottle = "MiniOpenedBottle"
     
     // Onboaring
     case onboardingCover = "OnboardingCover"
@@ -40,6 +46,7 @@ public enum DImageAsset: String {
     case onboardingPage2 = "OnboardingPage2"
     case onboardingPage3 = "OnboardingPage3"
     case onboardingPage4 = "OnboardingPage4"
+    case onboardingEnd = "OnboardingEnd"
    
     // Image 16
     case close = "Close"
@@ -54,7 +61,8 @@ public enum DImageAsset: String {
     case rightArrow = "RightArrow"
     case calendar = "Calendar"
     case setting = "Setting"
-    case textMaxLength = "TextMaxLength"
+    case bottleIcon = "BottleIcon"
+    case warning = "Warning"
     case notice = "Notice"
     
     // Image 28

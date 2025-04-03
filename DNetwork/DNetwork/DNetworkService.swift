@@ -114,7 +114,7 @@ public final class DNetworkService {
     public func requestPUT<T: Codable, R: Codable> (
         path: DPath,
         addtionalPath: [String] = [],
-        bodyData: T
+        bodyData: T?
     ) async throws -> R {
         guard var url = URL(string: baseURL) else {
             throw NetworkError.invalidURL
@@ -123,18 +123,24 @@ public final class DNetworkService {
         for addtional in addtionalPath {
             url.append(path: addtional)
         }
-        
-        guard let body = try? JSONEncoder().encode(bodyData) else {
-            throw NetworkError.encodingFailed
-        }
+       
         
         var request = getURLReqeust(method: .PUT, url: url)
-        request.httpBody = body
+        if let bodyData = bodyData {
+            guard let body = try? JSONEncoder().encode(bodyData) else {
+                throw NetworkError.encodingFailed
+            }
+            request.httpBody = body
+        }
         
         let (data, response) = try await URLSession.shared.data(for: request)
         let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500
         if stateCode >= 400 {
             throw NetworkError.serverError(statusCode: stateCode)
+        }
+        
+        if data.count == 0 {
+            return Data() as! R
         }
         
         guard let responseData = try? JSONDecoder().decode(R.self, from: data) else {

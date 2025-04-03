@@ -81,5 +81,15 @@ extension NetworkManager {
                 )
             } ?? []
         }
+        
+        func fetchMonthlyRecord(year: Int) async throws -> SummaryDTO {
+            let userKey = NetworkManager.userKey
+            let monthlySummary: SummaryDTO = try await self.service.requestGET(
+                path: .api,
+                addtionalPath: ["v1", "expenses", "summary", userKey],
+                parameters: ["year": year]
+            )
+            return monthlySummary
+        }
     }
 }

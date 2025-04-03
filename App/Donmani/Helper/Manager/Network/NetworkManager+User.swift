@@ -42,5 +42,21 @@ extension NetworkManager {
             }
             return userName
         }
+        
+        func fetchNoticeStatus() async throws -> Bool {
+            let responseData: [String: Bool] = try await self.service.requestGET(
+                path: .api,
+                addtionalPath: ["v1", "notice", "status", NetworkManager.userKey]
+            )
+            return responseData["read"] ?? false
+        }
+        
+        func updateNoticeStatus() async throws {
+            let _: Data = try await self.service.requestPUT(
+                path: .api,
+                addtionalPath: ["v1", "notice", "status", NetworkManager.userKey],
+                bodyData: Data()
+            )
+        }
     }
 }

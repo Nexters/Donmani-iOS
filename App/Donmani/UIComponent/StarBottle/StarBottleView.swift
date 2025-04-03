@@ -18,7 +18,7 @@ struct StarBottleView: View {
     var height: CGFloat {
         .screenWidth * 0.8 * 4/3
     }
-    
+    @State private var opacity: Double = 0
     @State private var starScene = StarScene(
         size: CGSize(
             width: .screenWidth * 0.8,
@@ -34,6 +34,7 @@ struct StarBottleView: View {
                 .ignoresSiblingOrder
             ]
         )
+        .opacity(opacity)
         .background(Color.clear)
         .onAppear {
             starScene.addGroundNode(
@@ -42,24 +43,28 @@ struct StarBottleView: View {
             )
             
             (0..<records.count).forEach { i in
-                if i == records.count - 1 {
-                    starScene.createNewStarNode(
-                        width: width,
-                        height: height,
-                        record: records[i]
-                    )
-                } else {
-                    starScene.createInitStarNode(
-                        width: width,
-                        height: height,
-                        record: records[i],
-                        index: i
-                    )
-                }
-                
+                starScene.createInitStarNode(
+                    width: width,
+                    height: height,
+                    record: records[i],
+                    index: i
+                )
             }
             MotionManager.startGyros { dx, dy in
                 starScene.setGravity(dx: dx, dy: -dy)
+            }
+            Task(priority: .background) {
+                try? await Task.sleep(nanoseconds: 3_000_000)
+                opacity = 1.0
+            }
+        }
+        .onChange(of: records) { (new, old) in
+            if let record = records.last {
+                starScene.createNewStarNode(
+                    width: width,
+                    height: height,
+                    record: record
+                )
             }
         }
         .onDisappear {

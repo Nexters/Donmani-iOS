@@ -27,10 +27,14 @@ struct NavigationCoordinateView: View {
                 MainView(store: store)
             case .recordEntryPoint(let store):
                 RecordEntryPointView(store: store)
-            case .recordWriting(let store):
-                RecordWritingView(store: store)
             case .recordList(let store):
                 RecordListView(store: store)
+            case .bottleList(let store):
+                BottleListView(store: store)
+            case .monthlyStarBottle(let store):
+                MonthlyStarBottleView(store: store)
+            case .statistics(let store):
+                StatisticsView(store: store)
             case .setting:
                 SettingView()
             }

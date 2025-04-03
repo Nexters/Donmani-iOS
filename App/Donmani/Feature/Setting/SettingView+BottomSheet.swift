@@ -12,9 +12,7 @@ extension SettingView {
     func RecordGuideView() -> some View {
         BottomSheetView(
             isActiveClose: false,
-            closeAction: {
-                
-            }
+            closeAction: { }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
                 Text("별별소 기록 규칙")

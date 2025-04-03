@@ -11,19 +11,46 @@ import DesignSystem
 import DNetwork
 
 struct SettingView: View {
+    enum Menutype {
+        case notification
+        case notice
+        case recordGuide
+        case feedback
+        case privacyPolicy
+        
+        var title: String {
+            switch self {
+            case .notification:
+                return "앱 푸시 알림"
+            case .notice:
+                return "공지사항"
+            case .recordGuide:
+                return "별별소 기록 규칙"
+            case .feedback:
+                return "피드백"
+            case .privacyPolicy:
+                return "개인정보 처리방침"
+            }
+        }
+    }
+    
     @Environment(\.dismiss) private var dismiss
     let width = UIScreen.main.bounds.width
     @State var isPresentingRecordGuideView = false
     @State var isPresentingFeedbackView = false
     @State var isPresentingPrivacyPolicyView = false
+    @State var isPresentingNoticeView = false
     @State var isPresentingEditNameView = false
     @State var isSaveEnabled = true
     @State var userName = DataStorage.getUserName()
     @State var editUserName: String = ""
     @State var isPresentingLengthGuideToastView = false
     @State var isPresentingSymbolGuideToastView = false
+    @State var isNotificationEnabled = false
+    @State var isNoticeNotRead = false
     
     @FocusState var isFocusToTextField: Bool
+    @Environment(\.scenePhase) private var scenePhase
     
     let pattern = "^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9\\s]+$"
     var isSaveEnable: Bool {
@@ -40,7 +67,7 @@ struct SettingView: View {
             VStack(alignment: .center, spacing: .defaultLayoutPadding) {
                 ZStack {
                     HStack {
-                        DBackButton {
+                        DNavigationBarButton(.leftArrow) {
                             dismiss()
                         }
                         Spacer()
@@ -78,15 +105,28 @@ struct SettingView: View {
                 .padding(.bottom, .defaultLayoutPadding)
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    MenuButton(title: "별별소 기록 규칙") {
+                    MenuButton(type: .notification) {
+                        if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                            if UIApplication.shared.canOpenURL(appSettings) {
+                                UIApplication.shared.open(appSettings)
+                            }
+                        }
+                    }
+                    MenuButton(type: .notice) {
+                        Task {
+                            try await NetworkManager.NMUser(service: .shared).updateNoticeStatus()
+                            isPresentingNoticeView.toggle()
+                        }
+                    }
+                    MenuButton(type: .recordGuide) {
                         isPresentingRecordGuideView.toggle()
                     }
                     
-                    MenuButton(title: "피드백") {
+                    MenuButton(type: .feedback) {
                         isPresentingFeedbackView.toggle()
                     }
                     
-                    MenuButton(title: "개인정보 처리방침") {
+                    MenuButton(type: .privacyPolicy) {
                         isPresentingPrivacyPolicyView.toggle()
                     }
                 }
@@ -123,22 +163,64 @@ struct SettingView: View {
             // Feeback WebView
             InnerWebView(urlString: DURLManager.feedback.urlString)
         }
+        .sheet(isPresented: $isPresentingNoticeView) {
+            // Notice WebView
+            InnerWebView(urlString: DURLManager.notice.urlString)
+        }
+        .onChange(of: scenePhase) { oldPhase, newPhase  in
+//            print("OnAppear")
+            if newPhase == .active {
+                let notification = NotificationManager()
+                notification.getNotificationPermissionStatus { status in
+                    if (status == .authorized) {
+                        notification.registerForRemoteNotifications()
+                    } else {
+                        notification.unregisterForRemoteNotifications()
+                    }
+                    isNotificationEnabled = (status == .authorized)
+                }
+            }
+        }
+        .onAppear() {
+            NotificationManager().getNotificationPermissionStatus { status in
+                isNotificationEnabled = (status == .authorized)
+            }
+            Task {
+                isNoticeNotRead = !(try await NetworkManager.NMUser(service: .shared).fetchNoticeStatus())
+            }
+        }
         .navigationBarBackButtonHidden()
     }
     
     private func MenuButton(
-        title: String,
+        type: Menutype,
         action: @escaping () -> Void
     ) -> some View {
         Button {
             action()
         } label: {
-            Text(title)
-                .font(.b1, .bold)
-                .foregroundStyle(.white)
-                .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
-                .padding(.horizontal, .defaultLayoutPadding)
-                .padding(.vertical, 16)
+            HStack(spacing: 4) {
+                Text(type.title)
+                    .font(.b1, .bold)
+                    .foregroundStyle(.white)
+                if type == .notice {
+                    HStack(alignment: .top) {
+                        Circle()
+                            .fill(DColor.noticeColor)
+                            .frame(width: 6, height: 6)
+                            .padding(.bottom, 18)
+                    }
+                }
+                
+                Spacer()
+                
+                if type == .notification {
+                    DToggle(isOn: $isNotificationEnabled)
+                }
+            }
+            .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
+            .padding(.horizontal, .defaultLayoutPadding)
+            .padding(.vertical, 18)
         }
     }
 }

@@ -12,6 +12,7 @@ extension SplashView {
         Task {
             let keychainManager = KeychainManager()
             let (key, _) = keychainManager.generateUUID()
+//            print(key)
             let isFirstUser = keychainManager.getUserName().isEmpty
             NetworkManager.userKey = key
             var userName = try await NetworkManager.NMUser(service: .shared).registerUser()
@@ -43,7 +44,11 @@ extension SplashView {
             }
             
             let appVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "0.0"
-            let storeVerion = try await NetworkManager.Version(service: .shared).requsetAppVersion()
+//            let versionDTO = try await NetworkManager.NMVersion(service: .shared).requsetAppVersionFromServer()
+//            let serverVersion = versionDTO.responseData["latestVersion", default: appVersion]
+//            let isLatestVersion = VersionManager().isLastestVersion(store: , current: appVersion)
+//            self.isLatestVersion = isLatestVersion
+            let storeVerion = try await NetworkManager.NMVersion(service: .shared).requsetAppVersionFromAppStore()
             let isLatestVersion = VersionManager().isLastestVersion(store: storeVerion, current: appVersion)
             self.isLatestVersion = isLatestVersion
             if isLatestVersion {

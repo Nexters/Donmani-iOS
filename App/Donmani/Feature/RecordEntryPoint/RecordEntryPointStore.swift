@@ -34,15 +34,19 @@ struct RecordEntryPointStore {
         var isPresentingDayToggle: Bool
         var title: String
         var guide: String {
-            if remainingTime > 7200 {
-                return "기록하고 별사탕 받자!"
-            } else if remainingTime <= 0 {
-                return "기록을 마무리하면 별사탕을 받을 수 있어요!"
+            if dayType == .yesterday {
+                if remainingTime > 7200 {
+                    return "기록하고 별사탕 받자!"
+                } else if remainingTime <= 0 {
+                    return "기록을 마무리하면 별사탕을 받을 수 있어요!"
+                } else {
+                    let hours = remainingTime / 3600
+                    let minutes = (remainingTime % 3600) / 60
+                    let seconds = remainingTime % 60
+                    return "\(hours)시간 \(minutes)분 \(seconds)초 안에 별사탕 받자!"
+                }
             } else {
-                let hours = remainingTime / 3600
-                let minutes = (remainingTime % 3600) / 60
-                let seconds = remainingTime % 60
-                return "\(hours)시간 \(minutes)분 \(seconds)초 안에 별사탕 받자!"
+                return "기록하고 별사탕 받자!"
             }
         }
         var remainingTime: Int
@@ -53,6 +57,8 @@ struct RecordEntryPointStore {
         var isFullWriting: Bool = false
         var isLoading: Bool = false
         var isFromMain: Bool = true
+        
+        var recordWritingState: RecordWritingStore.State = RecordWritingStore.State(type: .good)
         
         init() {
             self.isCompleteToday = false
@@ -93,8 +99,6 @@ struct RecordEntryPointStore {
         case cancelRecording
         
         case dismissRecordGuideBottomSheet
-//        case touchYesterdayToggleButton
-//        case touchTodayToggleButton
         
         case touchDayTypeToggleButton
         case toggleDayType
@@ -113,18 +117,24 @@ struct RecordEntryPointStore {
         case checkRemainingTime
         case updateTime(Int)
         
+        // Record Writing
+        case recordWritingAction(RecordWritingStore.Action)
+        case pushRecordWritingView(RecordContentType)
+        case pushRecordWritingViewWith(RecordContent)
+        
         case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate: Equatable {
-            case pushRecordWritingView(RecordContentType)
-            case pushRecordWritingViewWith(RecordContent)
-            case popToMainView
-            case popToMainViewWith(Record)
+            case popToMainView(Record?)
         }
     }
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
+        Scope(state: \.recordWritingState, action: \.recordWritingAction) {
+            RecordWritingStore()
+        }
+        
         BindingReducer()
         Reduce { state, action in
             switch action {
@@ -143,7 +153,7 @@ struct RecordEntryPointStore {
                     }
                 } else {
                     return .run { send in
-                        await send(.delegate(.popToMainView))
+                        await send(.delegate(.popToMainView(nil)))
                     }
                 }
             case .dismissRecordGuideBottomSheet:
@@ -217,21 +227,21 @@ struct RecordEntryPointStore {
             case .save:
                 state.isLoading = true
                 var buffer: [RecordContent]? = nil
-                if (state.badRecord != nil && state.goodRecord != nil) {
-                    buffer = [state.goodRecord!, state.badRecord!]
+                if (state.badRecord != nil || state.goodRecord != nil) {
+                    buffer = [state.goodRecord, state.badRecord].compactMap{$0}
                 }
                 let records = buffer
                 let date = state.dateString
-//                let stateManager = HistoryStateManager.shared
-//                stateManager.addRecord(for: state.dayType)ZXscdvfbgnhj,kjghnbfvdcsxzaZASDXCFVGBHN
+                let stateManager = HistoryStateManager.shared
+                stateManager.addRecord(for: state.dayType)
                 return .run { send in
                     let networkManager = NetworkManager.NMRecord(service: .shared)
-//                    guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
-//                        await send(.errorSave)
-//                        return
-//                    }
+                    guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
+                        await send(.errorSave)
+                        return
+                    }
                     let record = Record(date: date, contents: records)
-                    await send(.delegate(.popToMainViewWith(record)))
+                    await send(.delegate(.popToMainView(record)))
                 }
             case .errorSave:
                 state.isLoading = false
@@ -256,6 +266,29 @@ struct RecordEntryPointStore {
             case .checkRemainingTime:
                 let remainingTime = TimeManager.getRemainingTime()
                 return .send(.updateTime(remainingTime))
+                
+            case .pushRecordWritingViewWith(let content):
+                state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
+                state.isPresentingRecordWritingView = true
+                return .none
+                
+            case .pushRecordWritingView(let type):
+                state.recordWritingState = RecordWritingStore.State(type: type)
+                state.isPresentingRecordWritingView = true
+                return .none
+                
+            case .recordWritingAction(.delegate(.popToRecordEntrypointViewWith(let content))):
+                switch content.flag {
+                case .good:
+                    state.goodRecord = content
+                case .bad:
+                    state.badRecord = content
+                }
+                state.isSaveEnabled = !(state.badRecord == nil && state.goodRecord == nil)
+                state.isPresentingRecordWritingView = false
+                return .none
+            case .recordWritingAction:
+                return .none
                 
             case .binding:
                 return .none

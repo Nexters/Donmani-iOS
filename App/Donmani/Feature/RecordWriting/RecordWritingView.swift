@@ -10,6 +10,7 @@ import ComposableArchitecture
 import DesignSystem
 
 struct RecordWritingView: View {
+    @Environment(\.dismiss) var dismiss
     @Bindable var store: StoreOf<RecordWritingStore>
     @FocusState var isFocusToTextField: Bool
     @State var editingText: String = ""
@@ -24,8 +25,13 @@ struct RecordWritingView: View {
                 // Navigation Bar
                 ZStack {
                     HStack {
-                        DBackButton {
-                            store.send(.delegate(.popToRecordEntrypointView))
+                        DNavigationBarButton(.leftArrow) {
+                            if (editingText.count > 0) {
+                                isFocusToTextField = false
+                                store.send(.showCancelRecordBottomSheet)
+                            } else {
+                                dismiss()
+                            }
                         }
                         Spacer()
                     }
@@ -128,6 +134,9 @@ struct RecordWritingView: View {
             
             if store.isPresentingSelectCategory {
                 SelectCategoryView()
+            }
+            if store.isPresentingCancel {
+                CancelRecordConfirmView()
             }
         }
         .navigationBarBackButtonHidden()
