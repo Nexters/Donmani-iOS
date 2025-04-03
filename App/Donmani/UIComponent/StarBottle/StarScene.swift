@@ -34,7 +34,7 @@ final class StarScene: SKScene {
     }
     
     deinit {
-        print("Deinitialize Star Bottle Scene")
+//        print("Deinitialize Star Bottle Scene")
     }
 }
 

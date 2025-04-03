@@ -117,24 +117,19 @@ struct RecordEntryPointStore {
         case checkRemainingTime
         case updateTime(Int)
         
-        // Record Writing
-        case recordWritingAction(RecordWritingStore.Action)
-        case pushRecordWritingView(RecordContentType)
-        case pushRecordWritingViewWith(RecordContent)
         
         case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate: Equatable {
+            // Record Writing
+            case pushRecordWritingView(RecordContentType)
+            case pushRecordWritingViewWith(RecordContent)
             case popToMainView(Record?)
         }
     }
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
-        Scope(state: \.recordWritingState, action: \.recordWritingAction) {
-            RecordWritingStore()
-        }
-        
         BindingReducer()
         Reduce { state, action in
             switch action {
@@ -144,6 +139,7 @@ struct RecordEntryPointStore {
             case .dismissCancelRecordBottomSheet:
                 state.isPresentingCancel = false
                 state.isChangingDayType = false
+                UINavigationController.blockSwipe = false
                 return .none
             case .cancelRecording:
                 state.isPresentingCancel = false
@@ -152,6 +148,8 @@ struct RecordEntryPointStore {
                         await send(.toggleDayType)
                     }
                 } else {
+                    UINavigationController.swipeNavigationPopIsEnabled = true
+                    UINavigationController.blockSwipe = false
                     return .run { send in
                         await send(.delegate(.popToMainView(nil)))
                     }
@@ -185,6 +183,7 @@ struct RecordEntryPointStore {
                 state.isCheckedEmptyRecord = false
                 state.goodRecord = nil
                 state.badRecord = nil
+                UINavigationController.swipeNavigationPopIsEnabled = true
                 return .none
             case .touchEmptyRecordButton:
                 state.isPresentingPopover = false
@@ -193,6 +192,7 @@ struct RecordEntryPointStore {
                     state.isSaveEnabled = false
                 } else {
                     state.isPresentingRecordEmpty = true
+                    UINavigationController.blockSwipe = true
                 }
                 return .none
             case .closePopover:
@@ -201,6 +201,7 @@ struct RecordEntryPointStore {
                 return .none
             case .dismissEmtpyRecordBottomSheet:
                 state.isPresentingRecordEmpty = false
+                UINavigationController.blockSwipe = false
                 return .none
                 
             case .recordEmpty:
@@ -209,6 +210,8 @@ struct RecordEntryPointStore {
                 state.isPresentingRecordEmpty = false
                 state.goodRecord = nil
                 state.badRecord = nil
+                UINavigationController.blockSwipe = false
+                UINavigationController.swipeNavigationPopIsEnabled = false
                 return .none
                 
             case .readyToSave:
@@ -266,29 +269,6 @@ struct RecordEntryPointStore {
             case .checkRemainingTime:
                 let remainingTime = TimeManager.getRemainingTime()
                 return .send(.updateTime(remainingTime))
-                
-            case .pushRecordWritingViewWith(let content):
-                state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
-                state.isPresentingRecordWritingView = true
-                return .none
-                
-            case .pushRecordWritingView(let type):
-                state.recordWritingState = RecordWritingStore.State(type: type)
-                state.isPresentingRecordWritingView = true
-                return .none
-                
-            case .recordWritingAction(.delegate(.popToRecordEntrypointViewWith(let content))):
-                switch content.flag {
-                case .good:
-                    state.goodRecord = content
-                case .bad:
-                    state.badRecord = content
-                }
-                state.isSaveEnabled = !(state.badRecord == nil && state.goodRecord == nil)
-                state.isPresentingRecordWritingView = false
-                return .none
-            case .recordWritingAction:
-                return .none
                 
             case .binding:
                 return .none

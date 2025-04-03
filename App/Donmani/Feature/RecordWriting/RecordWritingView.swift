@@ -94,6 +94,7 @@ struct RecordWritingView: View {
                                     animation: .linear(duration: 0.5)
                                 )
                             }
+                            UINavigationController.swipeNavigationPopIsEnabled = (editingText == store.text)
                         }
                         .bind($store.isFocusToTextField, to: $isFocusToTextField)
                         
@@ -138,6 +139,9 @@ struct RecordWritingView: View {
             if store.isPresentingCancel {
                 CancelRecordConfirmView()
             }
+        }
+        .onDisappear {
+            store.send(.delegate(.checkSwipeValidation))
         }
         .navigationBarBackButtonHidden()
     }
