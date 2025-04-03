@@ -23,6 +23,7 @@ struct NavigationStore {
 //        var childMainState: MainStore.State
         var onboardingState: OnboardingStore.State
         var recordEntryPointState: RecordEntryPointStore.State
+        var recordWritingState: RecordWritingStore.State
         var recordListState: RecordListStore.State
         var bottleListState: BottleListStore.State
         var monthlyStarBottleState: MonthlyStarBottleStore.State
@@ -40,6 +41,7 @@ struct NavigationStore {
             self.recordEntryPointState = RecordEntryPointStore.State()
             let yearMonth = (Int(today[0])!, Int(today[1])!)
             self.recordListState = RecordListStore.State(year: yearMonth.0, month: yearMonth.1, isShowNavigationButton: true)
+            self.recordWritingState = RecordWritingStore.State(type: .good)
             self.bottleListState = BottleListStore.State(starCount: [:])
             self.monthlyStarBottleState = MonthlyStarBottleStore.State(year: 0, month: 0)
             self.statisticsState = StatisticsStore.State(year: 0, month: 0)
@@ -56,6 +58,7 @@ struct NavigationStore {
     enum Path {
         case main(MainStore)
         case recordEntryPoint(RecordEntryPointStore)
+        case recordWriting(RecordWritingStore)
         case recordList(RecordListStore)
         case bottleList(BottleListStore)
         case monthlyStarBottle(MonthlyStarBottleStore)
@@ -68,6 +71,7 @@ struct NavigationStore {
         case onboardingAction(OnboardingStore.Action)
         case addNewRecord(Record)
         case path(StackActionOf<Path>)
+        case blockPopGesture
     }
     
     var body: some ReducerOf<Self> {
@@ -110,7 +114,6 @@ struct NavigationStore {
                 
                 // Main Action
             case .mainAction(.delegate(.pushRecordListView)):
-                UINavigationController.swipeNavigationPopIsEnabled = true
                 state.path.append(.recordList(state.recordListState))
                 return .none
             case .mainAction(.delegate(.pushRecordEntryPointView)):
@@ -122,7 +125,6 @@ struct NavigationStore {
                 state.path.append(.recordEntryPoint(state.recordEntryPointState))
                 return .none
             case .mainAction(.delegate(.pushSettingView)):
-                UINavigationController.swipeNavigationPopIsEnabled = true
                 state.path.append(.setting)
                 return .none
             case .mainAction(.delegate(.pushBottleListView)):
@@ -147,6 +149,18 @@ struct NavigationStore {
                 // Path Action
             case .path(let element):
                 return path(state: &state, pathElement: element)
+                
+            case .blockPopGesture:
+                if let lastViewID = state.path.ids.last {
+                    if case .recordEntryPoint(var recordEntryPointState) = state.path[id: lastViewID] {
+                        recordEntryPointState.isPresentingCancel = true
+                        state.path[id: lastViewID] = .recordEntryPoint(recordEntryPointState)
+                    } else if case .recordWriting(var recordWritingState) = state.path[id: lastViewID] {
+                        recordWritingState.isPresentingCancel = true
+                        state.path[id: lastViewID] = .recordWriting(recordWritingState)
+                    }
+                }
+                return .none
             }
         }
         .forEach(\.path, action: \.path)

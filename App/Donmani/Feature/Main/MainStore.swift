@@ -111,7 +111,6 @@ struct MainStore {
                 let stateManager = historyManager.getState()
                 if stateManager[.today, default: false] && !stateManager[.yesterday, default: false] {
                     if let dateString = historyManager.getLastYesterdayToopTipDay() {
-                        print(#function, dateString)
                         let lastDay = Day(yyyymmdd: dateString)
                         let todayDateString = DateManager.shared.getFormattedDate(for: .today)
                         let today = Day(yyyymmdd: todayDateString)

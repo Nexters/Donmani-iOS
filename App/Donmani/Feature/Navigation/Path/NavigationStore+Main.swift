@@ -15,7 +15,6 @@ extension NavigationStore {
     ) -> Effect<NavigationStore.Action> {
         switch action {
         case .pushRecordListView:
-            UINavigationController.swipeNavigationPopIsEnabled = true
             state.path.append(.recordList(state.recordListState))
             return .none
             
@@ -29,12 +28,10 @@ extension NavigationStore {
             return .none
             
         case .pushSettingView:
-            UINavigationController.swipeNavigationPopIsEnabled = true
             state.path.append(.setting)
             return .none
             
         case .pushBottleListView(let result):
-            UINavigationController.swipeNavigationPopIsEnabled = true
             state.bottleListState = BottleListStore.State(starCount: result)
             state.path.append(.bottleList(state.bottleListState))
             return .none

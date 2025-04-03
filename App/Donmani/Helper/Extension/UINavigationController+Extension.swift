@@ -6,10 +6,17 @@
 //
 
 import UIKit
+import ComposableArchitecture
 
 extension UINavigationController: @retroactive ObservableObject, @retroactive UIGestureRecognizerDelegate {
+    public enum TopViewType {
+        case others
+        case recordEntryPoint
+        case recordWriting
+    }
     static var swipeNavigationPopIsEnabled: Bool = true
-    static var validHandler: (() -> Bool)? = nil
+    static var rootType: RootType = .main
+    static var store: StoreOf<NavigationStore>?
     
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -19,16 +26,17 @@ extension UINavigationController: @retroactive ObservableObject, @retroactive UI
 
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         print(#function)
-        if let handler = UINavigationController.validHandler {
-            return handler()
-        }
         return true
     }
     
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        // TODO - Static 클로저로 해결?
-        print(#function)
+        if (UINavigationController.rootType == .onboarding && viewControllers.count == 2) {
+            return false
+        }
         if !UINavigationController.swipeNavigationPopIsEnabled {
+            if let store = UINavigationController.store {
+                store.send(.blockPopGesture)
+            }
             return false
         }
         return viewControllers.count > 1

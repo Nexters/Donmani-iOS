@@ -29,7 +29,6 @@ struct RecordListStore {
         ) {
             self.yearMonth = (year % 100, month)
             let key = "\(year)-\(String(format: "%02d", month))"
-            print(key)
             self.record = (DataStorage.getRecord(yearMonth: key) ?? []).sorted {
                 $0.date > $1.date
             }
