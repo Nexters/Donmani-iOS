@@ -12,7 +12,9 @@ extension SettingView {
     func RecordGuideView() -> some View {
         BottomSheetView(
             isActiveClose: false,
-            closeAction: { }
+            closeAction: {
+                
+            }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
                 Text("별별소 기록 규칙")
@@ -29,6 +31,7 @@ extension SettingView {
                 
                 Button {
                     dismissSheet {
+                        UINavigationController.blockSwipe = false
                         isPresentingRecordGuideView.toggle()
                     }
                 } label: {
@@ -53,6 +56,7 @@ extension SettingView {
         BottomSheetView(
             closeAction: {
                 isPresentingEditNameView = false
+                UINavigationController.blockSwipe = false
             }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s5) {
@@ -124,10 +128,12 @@ extension SettingView {
                             userName = try await NetworkManager.NMUser(service: .shared).updateUser(name: editUserName)
                             DataStorage.setUserName(userName)
                             isPresentingEditNameView = false
+                            UINavigationController.blockSwipe = false
                         }
                     }
                     .frame(alignment: .trailing)
                 }
+                .padding(.bottom, 20)
             }
         }
         

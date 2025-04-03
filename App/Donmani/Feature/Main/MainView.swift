@@ -110,7 +110,6 @@ struct MainView: View {
             }
         }
         .onAppear {
-            UINavigationController.swipeNavigationPopIsEnabled = false
             store.send(.fetchUserName)
             store.send(.checkPopover)
             Task(priority: .background) {

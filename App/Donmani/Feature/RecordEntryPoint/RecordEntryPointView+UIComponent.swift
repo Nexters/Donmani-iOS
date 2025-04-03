@@ -41,8 +41,7 @@ extension RecordEntryPointView {
         type: RecordContentType
     ) -> some View {
         Button {
-//            store.send(.delegate(.pushRecordWritingView(type)))
-            store.send(.pushRecordWritingView(type))
+            store.send(.delegate(.pushRecordWritingView(type)))
         } label: {
             ZStack {
                 RoundedRectangle(
@@ -174,19 +173,19 @@ extension RecordEntryPointView {
                         goodRecord: goodRecord,
                         badRecord: badRecord,
                         goodAction: {
-//                            store.send(.delegate(.pushRecordWritingViewWith(goodRecord)))
-                            store.send(.pushRecordWritingViewWith(goodRecord))
+                            store.send(.delegate(.pushRecordWritingViewWith(goodRecord)))
+//                            store.send(.pushRecordWritingViewWith(goodRecord))
                         },
                         badAction: {
-//                            store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
-                            store.send(.pushRecordWritingViewWith(badRecord))
+                            store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
+//                            store.send(.pushRecordWritingViewWith(badRecord))
                         }
                     )
                 } else {
                     if let goodRecord = store.goodRecord {
                         Button {
-//                            store.send(.delegate(.pushRecordWritingViewWith(goodRecord)))
-                            store.send(.pushRecordWritingViewWith(goodRecord))
+                            store.send(.delegate(.pushRecordWritingViewWith(goodRecord)))
+//                            store.send(.pushRecordWritingViewWith(goodRecord))
                         } label: {
                             RecordView(record: goodRecord, isEditable: true)
                         }
@@ -197,8 +196,8 @@ extension RecordEntryPointView {
                     }
                     if let badRecord = store.badRecord {
                         Button {
-//                            store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
-                            store.send(.pushRecordWritingViewWith(badRecord))
+                            store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
+//                            store.send(.pushRecordWritingViewWith(badRecord))
                         } label: {
                             RecordView(record: badRecord, isEditable: true)
                         }

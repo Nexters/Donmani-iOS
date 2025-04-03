@@ -22,6 +22,8 @@ extension NavigationStore {
                 return bottleListDelegateAction(id: id, state: &state, action: bottleListAction)
             case .recordList(.delegate(let recordListAction)):
                 return recordListDelegateAction(id: id, state: &state, action: recordListAction)
+            case .recordWriting(.delegate(let recordWritingAction)):
+                return recordWritingDelegateAction(id: id, state: &state, action: recordWritingAction)
             case .recordEntryPoint(.delegate(let recordEntryPointAction)):
                 return recordEntryPointDelegateAction(id: id, state: &state, action: recordEntryPointAction)
             case .monthlyStarBottle(.delegate(let monthlyStarBottleAction)):
@@ -64,5 +66,3 @@ extension NavigationStore {
         }
     }
 }
-
-

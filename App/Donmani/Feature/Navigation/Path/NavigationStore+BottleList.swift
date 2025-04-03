@@ -20,7 +20,6 @@ extension NavigationStore {
             return .none
             
         case .pushMonthlyBottleView(let year, let month):
-            UINavigationController.swipeNavigationPopIsEnabled = true
             state.monthlyStarBottleState = MonthlyStarBottleStore.State(year: year, month: month)
             state.path.append(.monthlyStarBottle(state.monthlyStarBottleState))
             return .none

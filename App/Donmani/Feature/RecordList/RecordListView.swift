@@ -46,7 +46,14 @@ struct RecordListView: View {
                 .padding(.horizontal, .defaultLayoutPadding)
                 
                 if store.record.isEmpty {
-                    EmptyGuideView()
+                    ZStack {
+                        VStack {
+                            SimpleStatisticsView()
+                                .padding(.top, .s5)
+                            Spacer()
+                        }
+                        EmptyGuideView()
+                    }
                 } else {
                     RecordScrollView()
                 }

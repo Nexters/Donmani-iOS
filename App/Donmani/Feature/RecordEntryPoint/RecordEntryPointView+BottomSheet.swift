@@ -129,7 +129,9 @@ extension RecordEntryPointView {
     func RecordGuideView() -> some View {
         BottomSheetView(
             isActiveClose: false,
-            closeAction: { }
+            closeAction: {
+                UINavigationController.blockSwipe = false
+            }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
                 Text("별별소 기록 규칙")
@@ -146,6 +148,7 @@ extension RecordEntryPointView {
                 
                 Button {
                     dismissSheet {
+                        UINavigationController.blockSwipe = false
                         store.send(.dismissRecordGuideBottomSheet)
                     }
                 } label: {

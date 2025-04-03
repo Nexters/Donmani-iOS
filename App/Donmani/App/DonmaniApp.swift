@@ -12,23 +12,23 @@ import ComposableArchitecture
 struct DonmaniApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State var isPresentingSplash: Bool = true
-    @State var rootType: RootType = HistoryStateManager.shared.getOnboardingState() ? .onboarding : .main
+    @State var rootType: RootType = .main
     
     var body: some Scene {
         WindowGroup {
             if isPresentingSplash {
                 SplashView(isPresentingSplash: $isPresentingSplash)
+                    .onAppear {
+                        let rootType: RootType = HistoryStateManager.shared.getOnboardingState() ? .onboarding : .main
+                        self.rootType = rootType
+                        UINavigationController.rootType = rootType
+                    }
             } else {
                 NavigationCoordinateView(
                     store: Store(initialState: NavigationStore.State(rootType)) {
                             NavigationStore()
                         }
                 )
-                .onAppear {
-                    if let token = HistoryStateManager.shared.getFirebaseToken() {
-                        print(token)
-                    }
-                }
             }
         }
     }
