@@ -15,6 +15,27 @@ extension NavigationStore {
         action: RecordWritingStore.Action.Delegate
     ) -> Effect<NavigationStore.Action> {
         switch action {
+        case .checkSwipeValidation:
+            var recordEntrypointViewID: StackElementID?
+            for (id, element) in zip(state.path.ids, state.path) {
+                switch element {
+                case .recordEntryPoint:
+                    recordEntrypointViewID = id
+                default:
+                    break
+                }
+            }
+            if let recordEntrypointViewID = recordEntrypointViewID {
+                if case .recordEntryPoint(let recordEntryPointState) = state.path[id: recordEntrypointViewID] {
+                    if (recordEntryPointState.badRecord != nil || recordEntryPointState.goodRecord != nil) {
+                        UINavigationController.swipeNavigationPopIsEnabled = false
+                    } else {
+                        UINavigationController.swipeNavigationPopIsEnabled = true
+                    }
+                }
+            }
+            return .none
+            
         case .popToRecordEntrypointView:
             state.path.removeLast()
             return .none

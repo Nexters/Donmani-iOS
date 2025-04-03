@@ -17,11 +17,13 @@ extension NavigationStore {
         switch action {
         case .pushRecordWritingViewWith(let content):
             state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
+            UINavigationController.swipeNavigationPopIsEnabled = true
             state.path.append(.recordWriting(state.recordWritingState))
             return .none
             
         case .pushRecordWritingView(let type):
             state.recordWritingState = RecordWritingStore.State(type: type)
+            UINavigationController.swipeNavigationPopIsEnabled = true
             state.path.append(.recordWriting(state.recordWritingState))
             return .none
             

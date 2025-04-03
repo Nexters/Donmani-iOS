@@ -13,7 +13,9 @@ extension MainView {
     func AppStoreView() -> some View {
         BottomSheetView(
             isActiveClose: false,
-            closeAction: { }
+            closeAction: {
+                UINavigationController.swipeNavigationPopIsEnabled = true
+            }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
                 Text("최신 버전으로 업데이트 부탁드려요!")
