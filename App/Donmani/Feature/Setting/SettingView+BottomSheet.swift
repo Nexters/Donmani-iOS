@@ -110,7 +110,8 @@ extension SettingView {
                             .foregroundStyle(DColor(.deepBlue80).color)
                     }
                 }
-                .padding(8)
+                .padding(.bottom, 8)
+                .padding(.horizontal, 8)
                 
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 8) {
@@ -133,7 +134,7 @@ extension SettingView {
                     }
                     .frame(alignment: .trailing)
                 }
-                .padding(.bottom, 20)
+                .padding(.bottom, .s3)
             }
         }
         
