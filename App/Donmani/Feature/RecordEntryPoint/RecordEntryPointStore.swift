@@ -184,15 +184,17 @@ struct RecordEntryPointStore {
                 state.goodRecord = nil
                 state.badRecord = nil
                 UINavigationController.swipeNavigationPopIsEnabled = true
+                UINavigationController.blockSwipe = false
                 return .none
             case .touchEmptyRecordButton:
                 state.isPresentingPopover = false
                 if state.isCheckedEmptyRecord {
                     state.isCheckedEmptyRecord = false
                     state.isSaveEnabled = false
+                    UINavigationController.swipeNavigationPopIsEnabled = true
                 } else {
                     state.isPresentingRecordEmpty = true
-                    UINavigationController.blockSwipe = true
+//                    UINavigationController.blockSwipe = true
                 }
                 return .none
             case .closePopover:

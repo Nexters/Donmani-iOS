@@ -26,7 +26,6 @@ extension MonthlyStarBottleView {
             }
             .padding(.s5)
         }
-        .padding(.horizontal, .defaultLayoutPadding)
         .padding(.top, .s5)
     }
 }

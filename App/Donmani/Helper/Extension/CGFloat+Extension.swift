@@ -8,6 +8,6 @@
 import UIKit
 
 extension CGFloat {
-    public static let screenHegiht = UIScreen.main.bounds.height
+    public static var screenHegiht: CGFloat { UIScreen.main.bounds.height }
     public static let screenWidth = UIScreen.main.bounds.width
 }

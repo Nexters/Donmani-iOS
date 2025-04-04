@@ -110,7 +110,7 @@ final class HistoryStateManager {
     }
     
     func getEmptyRecordGuideKey() -> Bool {
-        return userDefaults.string(forKey: emptyRecordGuideKey) != nil
+        return userDefaults.string(forKey: emptyRecordGuideKey) == nil
     }
     
     func setEmptyRecordGuideKey() {
