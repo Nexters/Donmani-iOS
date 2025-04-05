@@ -76,6 +76,7 @@ struct RecordContentView: View {
                         .foregroundStyle(DColor(.gray95).color)
                         .lineLimit(10)
                         .multilineTextAlignment(.leading)
+                        .padding(.top, 3)
                     Spacer(minLength: 0)
                 }
             }
@@ -89,7 +90,7 @@ struct RecordContentView: View {
         record: RecordContent(
             flag: .bad,
             category: RecordCategory(BadCategory.greed),
-            memo: "망했어요"
+            memo: "하하 망했어요"
         )
     )
 }
