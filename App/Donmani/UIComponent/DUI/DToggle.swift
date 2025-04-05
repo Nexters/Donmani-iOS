@@ -31,7 +31,3 @@ struct DToggle: View {
             }
     }
 }
-
-#Preview {
-    DToggle(isOn: .constant(true))
-}

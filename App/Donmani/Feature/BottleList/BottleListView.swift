@@ -22,9 +22,10 @@ struct BottleListView: View {
                 ZStack {
                     HStack {
                         Spacer()
-                        Text("별통이 모아보기")
-                            .font(.b1, .semibold)
-                            .foregroundStyle(.white)
+                        DText(
+                            "별통이 모아보기",
+                            .b1, .semibold, .white
+                        )
                         Spacer()
                     }
                     HStack {

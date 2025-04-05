@@ -37,7 +37,3 @@ struct DCompleteButton: View {
         .padding(.bottom, 12)
     }
 }
-
-#Preview {
-    DCompleteButton(isActive: true) {  }
-}
