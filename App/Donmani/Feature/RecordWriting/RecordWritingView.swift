@@ -55,8 +55,13 @@ struct RecordWritingView: View {
                                         HStack(spacing: 0) {
                                             Spacer()
                                             DImage(.editCategory).image
-                                            .frame(width: 40, height: 40)
-                                            .offset(x: 20, y: 0)
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(
+                                                    width: .screenWidth * (40.0/375.0),
+                                                    height: .screenWidth * (40.0/375.0)
+                                                )
+                                                .offset(x: .screenWidth * (40.0/375.0) / 2.0, y: 0)
                                         }
                                         Spacer()
                                     }

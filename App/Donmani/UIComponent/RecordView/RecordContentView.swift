@@ -70,12 +70,14 @@ struct RecordContentView: View {
                     .frame(width: 78)
                     Spacer()
                 }
-                
-                Text(record.memo)
-                    .font(DFont.font(.b1, weight: .medium))
-                    .foregroundStyle(DColor(.gray95).color)
-                    .lineLimit(10)
-                    .multilineTextAlignment(.leading)
+                VStack(spacing: 0) {
+                    Text(record.memo)
+                        .font(DFont.font(.b1, weight: .medium))
+                        .foregroundStyle(DColor(.gray95).color)
+                        .lineLimit(10)
+                        .multilineTextAlignment(.leading)
+                    Spacer(minLength: 0)
+                }
             }
         }
         .padding(.defaultLayoutPadding)

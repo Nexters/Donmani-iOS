@@ -55,6 +55,9 @@ extension SettingView {
     func EditNameView() -> some View {
         BottomSheetView(
             closeAction: {
+                DispatchQueue.main.async {
+                    isFocusToTextField = false
+                }
                 isPresentingEditNameView = false
                 UINavigationController.blockSwipe = false
             }
@@ -110,7 +113,8 @@ extension SettingView {
                             .foregroundStyle(DColor(.deepBlue80).color)
                     }
                 }
-                .padding(8)
+                .padding(.bottom, 8)
+                .padding(.horizontal, 8)
                 
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 8) {
@@ -124,6 +128,7 @@ extension SettingView {
                     DCompleteButton(
                         isActive: isSaveEnable
                     ) {
+                        isFocusToTextField = false
                         Task {
                             userName = try await NetworkManager.NMUser(service: .shared).updateUser(name: editUserName)
                             DataStorage.setUserName(userName)
@@ -133,7 +138,6 @@ extension SettingView {
                     }
                     .frame(alignment: .trailing)
                 }
-                .padding(.bottom, 20)
             }
         }
         
