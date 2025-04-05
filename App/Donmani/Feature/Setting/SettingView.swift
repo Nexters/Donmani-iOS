@@ -34,7 +34,9 @@ struct SettingView: View {
         }
     }
     
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dismiss) private var dismiss
+    @StateObject var keyboard = KeyboardResponder()
     let width = UIScreen.main.bounds.width
     @State var isPresentingRecordGuideView = false
     @State var isPresentingFeedbackView = false
@@ -50,7 +52,7 @@ struct SettingView: View {
     @State var isNoticeNotRead = false
     
     @FocusState var isFocusToTextField: Bool
-    @Environment(\.scenePhase) private var scenePhase
+    
     
     let pattern = "^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9\\s]+$"
     var isSaveEnable: Bool {
@@ -140,6 +142,10 @@ struct SettingView: View {
             
             if isPresentingEditNameView {
                 EditNameView()
+                    .padding(.bottom, keyboard.currentHeight)
+                    .animation(.easeOut(duration: 0.3), value: keyboard.currentHeight)
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
+                    .ignoresSafeArea(.all, edges: .bottom)
             }
             
             VStack {

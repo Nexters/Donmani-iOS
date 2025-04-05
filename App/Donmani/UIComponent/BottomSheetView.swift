@@ -37,7 +37,7 @@ struct BottomSheetView<Content: View>: View {
                 .ignoresSafeArea()
             if isPresented {
                 VStack {
-                    Spacer()
+                    Spacer(minLength: 10)
                     VStack(alignment: .leading) {
                         HStack {
                             Spacer()
@@ -69,7 +69,6 @@ struct BottomSheetView<Content: View>: View {
                                     style: .continuous
                                 )
                             )
-                            .ignoresSafeArea(.all, edges: .bottom)
                     }
                 }
                 .transition(.move(edge: .bottom))
@@ -85,6 +84,7 @@ struct BottomSheetView<Content: View>: View {
     }
     
     private func dismiss(_ action: (() -> Void)?) {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         withAnimation {
             isPresented.toggle()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
