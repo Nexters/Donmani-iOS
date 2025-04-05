@@ -17,17 +17,17 @@ extension SettingView {
             }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
-                Text("별별소 기록 규칙")
-                    .font(DFont.font(.h2, weight: .bold))
-                    .foregroundStyle(DColor(.gray95).color)
-                
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("• 매일 행복, 후회 소비를 각각 한 개씩 기록해요")
-                    Text("• 기록을 저장한 후에는 수정할 수 없어요")
-                    Text("• 어제, 오늘의 소비만 기록할 수 있어요")
-                }
-                .font(DFont.font(.b1, weight: .regular))
-                .foregroundStyle(DColor(.gray95).color)
+                DText("별별소 기록 규칙")
+                    .style(.h2, .bold, .gray95)
+                DText(
+                    """
+                    • 매일 행복, 후회 소비를 각각 한 개씩 기록해요
+                    • 기록을 저장한 후에는 수정할 수 없어요
+                    • 어제, 오늘의 소비만 기록할 수 있어요
+                    """
+                )
+                .style(.b1, .regular, .gray95)
+                .lineSpacing(16)
                 
                 Button {
                     dismissSheet {
@@ -42,9 +42,8 @@ extension SettingView {
                         )
                         .fill(DColor(.gray95).color)
                         .frame(height: 58)
-                        Text("이해완료!")
-                            .font(DFont.font(.h3, weight: .bold))
-                            .foregroundStyle(DColor(.deepBlue20).color)
+                        DText("이해완료!")
+                            .style(.h3, .bold, .deepBlue20)
                     }
                 }
                 .padding(.vertical, 8)
@@ -108,21 +107,18 @@ extension SettingView {
                         }
                     HStack {
                         Spacer()
-                        Text("\(editUserName.count)/12")
-                            .font(DFont.font(.b2, weight: .regular))
-                            .foregroundStyle(DColor(.deepBlue80).color)
+                        DText("\(editUserName.count)/12")
+                            .style(.b2, .regular, .deepBlue80)
                     }
                 }
                 .padding(.bottom, 8)
                 .padding(.horizontal, 8)
                 
                 HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("최소 2자 이상, 최대 12자 이하")
-                        Text("한글, 영문, 숫자, 띄어쓰기 가능해요")
-                    }
-                    .font(DFont.font(.b2, weight: .regular))
-                    .foregroundStyle(DColor(.deepBlue80).color)
+                    DText("최소 2자 이상, 최대 12자 이하\n한글, 영문, 숫자, 띄어쓰기 가능해요")
+                        .style(.b2, .regular, .deepBlue80)
+                        .lineSpacing(8)
+                        .multilineTextAlignment(.leading)
                     
                     Spacer()
                     DCompleteButton(

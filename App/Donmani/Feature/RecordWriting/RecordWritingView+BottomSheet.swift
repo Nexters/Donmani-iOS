@@ -13,9 +13,8 @@ extension RecordWritingView {
         BottomSheetView(
             closeAction: { store.send(.closeCategory) }
         ) { dismissSheet in
-            Text("소비가 \(store.type.selectTitle)던 이유는?")
-                .font(DFont.font(.h2, weight: .bold))
-                .foregroundStyle(.white)
+            DText("소비가 \(store.type.selectTitle)던 이유는?")
+                .style(.h2, .bold, .white)
             Grid(alignment: .center, horizontalSpacing: 0, verticalSpacing: .s3) {
                 ForEach(0..<3, id: \.self) { row in
                     GridRow {
@@ -54,13 +53,11 @@ extension RecordWritingView {
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("다음에 기록할까요?")
-                        .font(DFont.font(.h2, weight: .bold))
-                        .foregroundStyle(DColor(.gray99).color)
+                    DText("다음에 기록할까요?")
+                        .style(.h2, .bold, .gray99)
                     
-                    Text("지금까지 기록한 내용은 저장되지 않아요")
-                        .font(DFont.font(.b2, weight: .regular))
-                        .foregroundStyle(DColor(.deepBlue90).color)
+                    DText("지금까지 기록한 내용은 저장되지 않아요")
+                        .style(.b2, .regular, .deepBlue90)
                 }
                 
                 HStack(spacing: 10) {
@@ -76,9 +73,8 @@ extension RecordWritingView {
                             )
                             .fill(DColor(.deepBlue50).color)
                             .frame(height: 58)
-                            Text("계속하기")
-                                .font(DFont.font(.h3, weight: .bold))
-                                .foregroundStyle(.white)
+                            DText("계속하기")
+                                .style(.h3, .bold, .white)
                         }
                     }
                     
@@ -93,9 +89,8 @@ extension RecordWritingView {
                             )
                             .fill(DColor(.gray95).color)
                             .frame(height: 58)
-                            Text("다음에 하기")
-                                .font(DFont.font(.h3, weight: .bold))
-                                .foregroundStyle(DColor(.deepBlue20).color)
+                            DText("다음에 하기")
+                                .style(.h3, .bold, .deepBlue20)
                         }
                     }
                 }

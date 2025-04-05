@@ -75,9 +75,8 @@ struct SettingView: View {
                         Spacer()
                     }
                     .padding(.horizontal, .defaultLayoutPadding)
-                    Text("설정")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white)
+                    DText("설정")
+                        .style(.b1, .semibold, .white)
                 }
                 .padding(.vertical, 14)
                 
@@ -92,9 +91,8 @@ struct SettingView: View {
                             isFocusToTextField = true
                             isPresentingEditNameView = true
                         } label: {
-                            Text(userName)
-                                .font(.b1, .semibold)
-                                .foregroundStyle(.white)
+                            DText(userName)
+                                .style(.b1, .semibold, .white)
                             
                             DImage(.edit).image
                                 .resizable()
@@ -207,9 +205,8 @@ struct SettingView: View {
             action()
         } label: {
             HStack(spacing: 4) {
-                Text(type.title)
-                    .font(.b1, .bold)
-                    .foregroundStyle(.white)
+                DText(type.title)
+                    .style(.b1, .bold, .white)
                 if type == .notice {
                     HStack(alignment: .top) {
                         Circle()

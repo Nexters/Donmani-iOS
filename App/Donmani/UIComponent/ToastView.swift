@@ -16,9 +16,8 @@ struct ToastView: View {
             DImage(.warning).image
                 .resizable()
                 .frame(width: .s3, height: .s3)
-            Text(title)
-                .font(DFont.font(.b2, weight: .bold))
-                .foregroundStyle(.white)
+            DText(title)
+                .style(.b2, .bold, .white)
         }
         .padding(.s5)
         .background {

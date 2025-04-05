@@ -21,9 +21,8 @@ struct RecordListView: View {
                 ZStack {
                     HStack {
                         Spacer()
-                        Text("\(store.yearMonth.year)년 \(store.yearMonth.month)월 기록")
-                            .font(.b1, .semibold)
-                            .foregroundStyle(.white)
+                        DText("\(store.yearMonth.year)년 \(store.yearMonth.month)월 기록")
+                            .style(.b1, .semibold, .white)
                         Spacer()
                     }
                     HStack {
