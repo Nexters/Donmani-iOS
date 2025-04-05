@@ -45,9 +45,8 @@ extension MainView {
             HStack {
                 Spacer()
                 HStack {
-                    Text("어제 소비도 정리해 보아요")
-                        .font(DFont.font(.b3, weight: .medium))
-                        .foregroundStyle(.white)
+                    DText("어제 소비도 정리해 보아요")
+                        .style(.b3, .medium, .white)
                     Button {
                         store.send(.closePopover)
                     } label: {

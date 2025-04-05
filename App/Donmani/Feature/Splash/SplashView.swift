@@ -32,12 +32,10 @@ struct SplashView: View {
                 VStack {
                     HStack {
                         VStack(alignment: .leading) {
-                            Text("나에게 의미있는\n소비를 발견하는")
-                                .font(DFont.font(.t0, weight: .regular))
-                                .foregroundStyle(.white)
-                            Text("별별소")
-                                .font(DFont.font(.t0, weight: .bold))
-                                .foregroundStyle(.white)
+                            DText("나에게 의미있는\n소비를 발견하는")
+                                .style(.t0, .regular, .white)
+                            DText("별별소")
+                                .style(.t0, .bold, .white)
                         }
                         .padding(.horizontal, .defaultLayoutPadding)
                         Spacer()

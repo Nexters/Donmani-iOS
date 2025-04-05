@@ -100,8 +100,7 @@ struct BottomSheetView<Content: View>: View {
 
 #Preview {
     BottomSheetView(closeAction: { }) { _ in
-        Text("Bottom Sheet")
-            .font(DFont.font(.h1, weight: .bold))
-            .foregroundStyle(.white)
+        DText("Bottom Sheet")
+            .style(.h1, .bold, .white)
     }
 }

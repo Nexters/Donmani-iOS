@@ -33,9 +33,8 @@ struct MainView: View {
                     }
                     HStack {
                         Spacer()
-                        Text(store.name)
-                            .font(.h1, .bold)
-                            .foregroundStyle(DColor(.gray95).color)
+                        DText(store.name)
+                            .style(.h1, .bold, .gray95)
                         Spacer()
                     }
                 }
@@ -76,9 +75,8 @@ struct MainView: View {
                             .aspectRatio(contentMode: .fit)
                             .foregroundStyle(DColor(.pupleBlue90).color)
                             .frame(width: 22)
-                        Text("오늘 남길 수 있는 기록은 모두 작성했어요!")
-                            .font(DFont.font(.b2, weight: .semibold))
-                            .foregroundStyle(DColor(.pupleBlue90).color)
+                        DText("오늘 남길 수 있는 기록은 모두 작성했어요!")
+                            .style(.b2, .semibold, .pupleBlue90)
                     }
                 }
             }

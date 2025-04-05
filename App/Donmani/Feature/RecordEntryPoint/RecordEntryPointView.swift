@@ -50,9 +50,8 @@ struct RecordEntryPointView: View {
                 .opacity(store.isReadyToSave ? 0 : 1)
                 
                 ScrollView {
-                    Text(store.isReadyToSave ? "저장하면 수정할 수 없어요!" : store.title)
-                        .font(DFont.font(.h1, weight: .bold))
-                        .foregroundStyle(.white)
+                    DText(store.isReadyToSave ? "저장하면 수정할 수 없어요!" : store.title)
+                        .style(.h1, .bold, .white)
                         .padding(.bottom, 40)
                     
                     // 기록 버튼

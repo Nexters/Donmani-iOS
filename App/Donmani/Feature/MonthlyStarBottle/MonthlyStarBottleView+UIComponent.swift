@@ -19,9 +19,8 @@ extension MonthlyStarBottleView {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: .s3, height: .s3)
-                Text("매 월 1일에 새로운 별통이가 열려요")
-                    .font(DFont.font(.b1, weight: .regular))
-                    .foregroundStyle(DColor(.gray95).color)
+                DText("매 월 1일에 새로운 별통이가 열려요")
+                    .style(.b1, .regular, .gray95)
                 Spacer()
             }
             .padding(.s5)
