@@ -41,12 +41,9 @@ extension NavigationStore {
                 state.mainState.isRequestNotificationPermission = true
             }
             NotificationManager().checkNotificationPermission()
-            if let record = record {
-                return .run { send in
-                    await send(.addNewRecord(record))
-                }
-            } else {
-                return .none
+            return .run { send in
+                try await Task.sleep(nanoseconds: 700_000_000)
+                await send(.addNewRecord(record))
             }
         }
     }

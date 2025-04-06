@@ -32,6 +32,8 @@ struct MainStore {
         var isRequestNotificationPermission: Bool = false
         var isLoading: Bool = false
         
+        
+        var opacity: CGFloat = 0.0
         var month = 0
         var day = 0
         
