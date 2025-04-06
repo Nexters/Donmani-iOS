@@ -50,6 +50,7 @@ struct NavigationStore {
             } else {
                 self.mainState = MainStore.State(today: today)
                 self.mainState.isRequestNotificationPermission = true
+                self.mainState.opacity = 1.0
             }
         }
     }
@@ -69,7 +70,7 @@ struct NavigationStore {
     enum Action {
         case mainAction(MainStore.Action)
         case onboardingAction(OnboardingStore.Action)
-        case addNewRecord(Record)
+        case addNewRecord(Record?)
         case path(StackActionOf<Path>)
         case blockPopGesture
     }
@@ -92,9 +93,13 @@ struct NavigationStore {
                 let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
                 var mainState: MainStore.State = MainStore.State(today: today)
                 mainState.isPresentingAlreadyWrite = isAlreadyWrite
-                mainState.isRequestNotificationPermission = true
+//                mainState.isRequestNotificationPermission = true
                 state.path.append(.main(mainState))
-                return .none
+                return .run { send in
+                    try await Task.sleep(nanoseconds: 700_000_000)
+                    await send(.addNewRecord(nil))
+                    NotificationManager().checkNotificationPermission()
+                }
                 
             case .onboardingAction(.delegate(.pushRecordEntryPointView)):
                 let stateManager = HistoryStateManager.shared.getState()

@@ -42,8 +42,12 @@ extension NavigationStore {
     
     func addNewRecord(
         mainState: inout MainStore.State,
-        record: Record
+        record: Record?
     ) {
+        mainState.opacity = 1.0
+        guard let record = record else {
+            return
+        }
         let stateManager = HistoryStateManager.shared.getState()
         mainState.recordEntryPointState = RecordEntryPointStore.State(
             isCompleteToday: stateManager[.today, default: false],

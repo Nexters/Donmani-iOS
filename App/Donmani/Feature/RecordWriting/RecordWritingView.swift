@@ -36,7 +36,7 @@ struct RecordWritingView: View {
                         Spacer()
                     }
                     DText("\(store.type.title) 소비")
-                        .style(.b1, .bold, .white))
+                        .style(.b1, .bold, .white)
                 }
                 .padding(.vertical, 14)
                 

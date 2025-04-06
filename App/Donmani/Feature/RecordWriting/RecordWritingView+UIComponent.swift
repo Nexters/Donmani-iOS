@@ -28,7 +28,7 @@ extension RecordWritingView {
                     )
                     .offset(x: 0, y: -200)
                     .blur(radius: 70.0)
-                    .padding(.horizontal, -.defaultLayoutPadding * 3)
+                    .padding(.horizontal, -.defaultLayoutPadding * 5)
                 Spacer()
             }
         }

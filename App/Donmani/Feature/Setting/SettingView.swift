@@ -204,28 +204,32 @@ struct SettingView: View {
         Button {
             action()
         } label: {
-            HStack(spacing: 4) {
-                DText(type.title)
-                    .style(.b1, .bold, .white)
-                if type == .notice {
-                    HStack(alignment: .top) {
-                        Circle()
-                            .fill(DColor.noticeColor)
-                            .frame(width: 6, height: 6)
-                            .padding(.bottom, 18)
+            ZStack {
+                HStack(spacing: 4) {
+                    DText(type.title)
+                        .style(.b1, .bold, .white)
+                    if type == .notice {
+                        HStack(alignment: .top) {
+                            Circle()
+                                .fill(DColor.noticeColor)
+                                .frame(width: 6, height: 6)
+                                .padding(.bottom, 18)
+                        }
+                        .opacity(isNoticeNotRead ? 1 : 0)
                     }
-                    .opacity(isNoticeNotRead ? 1 : 0)
+                    Spacer()
                 }
-                
-                Spacer()
-                
-                if type == .notification {
-                    DToggle(isOn: $isNotificationEnabled)
+                .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
+                .padding(.horizontal, .defaultLayoutPadding)
+                .padding(.vertical, 18)
+                HStack {
+                    Spacer()
+                    
+                    if type == .notification {
+                        DToggle(isOn: $isNotificationEnabled)
+                    }
                 }
             }
-            .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
-            .padding(.horizontal, .defaultLayoutPadding)
-            .padding(.vertical, 18)
         }
     }
 }

@@ -18,13 +18,17 @@ struct StarBottleView: View {
     var height: CGFloat {
         .screenWidth * 0.8 * 4/3
     }
-    @State private var opacity: Double = 0
-    @State private var starScene = StarScene(
-        size: CGSize(
-            width: .screenWidth * 0.8,
-            height: .screenWidth * 0.8 * 4/3
+    @State private var starScene: StarScene
+    
+    init(records: [Record]) {
+        self.records = records
+        self.starScene = StarScene(
+            size: CGSize(
+                width: .screenWidth * 0.8,
+                height: .screenWidth * 0.8 * 4/3
+            )
         )
-    )
+    }
     
     var body: some View {
         SpriteView(
@@ -34,14 +38,15 @@ struct StarBottleView: View {
                 .ignoresSiblingOrder
             ]
         )
-        .opacity(opacity)
         .background(Color.clear)
         .onAppear {
+            MotionManager.startGyros { dx, dy in
+                starScene.setGravity(dx: dx, dy: -dy)
+            }
             starScene.addGroundNode(
                 width: width,
                 height: height
             )
-            
             (0..<records.count).forEach { i in
                 starScene.createInitStarNode(
                     width: width,
@@ -50,13 +55,10 @@ struct StarBottleView: View {
                     index: i
                 )
             }
-            MotionManager.startGyros { dx, dy in
-                starScene.setGravity(dx: dx, dy: -dy)
-            }
-            Task(priority: .background) {
-                try? await Task.sleep(nanoseconds: 3_000_000)
-                opacity = 1.0
-            }
+            starScene.backgroundColor = .clear.withAlphaComponent(0.0)
+            starScene.scene?.backgroundColor = .clear.withAlphaComponent(0.0)
+            starScene.scene?.view?.backgroundColor = .clear.withAlphaComponent(0.0)
+            starScene.view?.backgroundColor = .clear.withAlphaComponent(0.0)
         }
         .onChange(of: records) { (new, old) in
             if let record = records.last {
