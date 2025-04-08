@@ -9,9 +9,9 @@ import FirebaseAnalytics
 
 extension GA {
     struct Click: GAProtocol {
-        enum Event: String {
+        enum Event {
             // Onboarding
-            case onboardingStarButton
+            case onboardingStartButton
             case onboardingRecordButton
             case onboardingHomeButton
             
@@ -54,12 +54,10 @@ extension GA {
             case settingRules
         }
         
-        var event: Event
-        
         var eventName: String {
             switch event {
-            case .onboardingStarButton:
-                return "onboarding_star_button"
+            case .onboardingStartButton:
+                return "onboarding_start_button"
             case .onboardingRecordButton:
                 return "onboarding_record_button"
             case .onboardingHomeButton:
@@ -118,7 +116,8 @@ extension GA {
                 return "setting_rules"
             }
         }
-        
+
+        var event: Event
         init(event: Event) {
             self.event = event
         }

@@ -10,7 +10,7 @@ import FirebaseAnalytics
 protocol GAProtocol {
     var eventName: String { get }
     func send()
-    func send(parameters: [String: String]?)
+    func send(parameters: [String: Any]?)
 }
 
 extension GAProtocol {
@@ -18,10 +18,11 @@ extension GAProtocol {
         Analytics.logEvent(eventName, parameters: nil)
     }
     
-    func send(parameters: [String: String]?) {
+    func send(parameters: [String: Any]?) {
         Analytics.logEvent(
             eventName,
             parameters: parameters
         )
     }
 }
+
