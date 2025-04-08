@@ -10,9 +10,48 @@ import FirebaseAnalytics
 extension GA {
     struct Click: GAProtocol {
         enum Event: String {
+            // Onboarding
             case onboardingStarButton
             case onboardingRecordButton
             case onboardingHomeButton
+            
+            // Main
+            case mainRecordButton
+            case mainRecordArchiveButton
+            case mainSettingButton
+            
+            // RecordList
+            case recordhistoryRecordButton
+            case listButton
+            case list별통이Button
+            case insightButton
+            
+            // RecordEntry
+            case recordmainYesterdayButton
+            case recordmainTodayButton
+            case recordmainGoodButton
+            case recordmainBadButton
+            case recordmainEmptyButton
+            case recordmainSubmitButton
+            case recordmainEmptyYesButton
+            case recordmainEmptyNoButton
+            case recordmainBackButton
+            
+            // RecordWriting
+            case recordBackButton
+            case recordContinueButton
+            case recordNexttimeButton
+            case recordCloseButton
+            
+            // RecordEntry - Save Confirm
+            case confirmBackButton
+            case confirmSubmitButton
+            
+            // Setting
+            case settingNickname
+            case settingApppush
+            case settingNotice
+            case settingRules
         }
         
         var event: Event
@@ -25,6 +64,58 @@ extension GA {
                 return "onboarding_record_button"
             case .onboardingHomeButton:
                 return "onboarding_home_button"
+            case .mainRecordButton:
+                return "mainR_record_button"
+            case .mainRecordArchiveButton:
+                return "main_record_archive_button"
+            case .mainSettingButton:
+                return "main_setting_button"
+            case .recordhistoryRecordButton:
+                return "recordhistory_record_button"
+            case .listButton:
+                return "list_button"
+            case .list별통이Button:
+                return "list_별통이_button"
+            case .insightButton:
+                return "insight_button"
+            case .recordmainYesterdayButton:
+                return "recordmain_yesterday_button"
+            case .recordmainTodayButton:
+                return "recordmain_today_button"
+            case .recordmainGoodButton:
+                return "recordmain_good_button"
+            case .recordmainBadButton:
+                return "recordmain_bad_button"
+            case .recordmainEmptyButton:
+                return "recordmain_empty_button"
+            case .recordmainSubmitButton:
+                return "recordmain_submit_button"
+            case .recordmainEmptyYesButton:
+                return "recordmain_empty_yes_button"
+            case .recordmainEmptyNoButton:
+                return "recordmain_empty_no_button"
+            case .recordmainBackButton:
+                return "recordmain_back_button"
+            case .recordBackButton:
+                return "record_back_button"
+            case .recordContinueButton:
+                return "record_continue_button"
+            case .recordNexttimeButton:
+                return "record_nexttime_button"
+            case .recordCloseButton:
+                return "record_close_button"
+            case .confirmBackButton:
+                return "confirm_back_button"
+            case .confirmSubmitButton:
+                return "confirm_submit_button"
+            case .settingNickname:
+                return "setting_nickname"
+            case .settingApppush:
+                return "setting_apppush"
+            case .settingNotice:
+                return "setting_notice"
+            case .settingRules:
+                return "setting_rules"
             }
         }
         
@@ -33,12 +124,3 @@ extension GA {
         }
     }
 }
-
-//| 트리거 | 의미 | 예시 |  |
-//| --- | --- | --- | --- |
-//| open | 앱 또는 UI 요소가 열린 시점 | 앱 실행, 알림 바텀시트 열림 | 앱 세션 시작, 진입 시점 측정 |
-//| click | 유저가 버튼, 카드 등 클릭/탭한 시점 | 기록하기 버튼 클릭, 알림 클릭 | 행동 유도 요소의 반응 측정 |
-//| view | 전체 화면 또는 모달 등을 본 시점 | 기록화면 진입, 온보딩 진입 | 화면 진입 분석, 퍼널 시작 지점 |
-//| impression | 콘텐츠가 화면에 노출된 시점 | 홈 배너 노출, 인사이트 카드 보임 | 콘텐츠 노출률, 반응률 분석 |
-//| submit | 내용을 입력하고 저장/제출한 시점 | 기록 저장 완료 | 최종 행동 완료 측정 |
-//| receive | 푸시 알림이 기기에 도달한 시점 | 알림 수신 | 알림 발송 성공률 측정 |
