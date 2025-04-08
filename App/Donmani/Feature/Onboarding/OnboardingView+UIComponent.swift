@@ -53,6 +53,7 @@ extension OnboardingView {
                 }
             }
         }
+        .padding(.bottom, .s5 / 2)
         .padding(.top, 80)
         .padding(.horizontal, .defaultLayoutPadding)
     }

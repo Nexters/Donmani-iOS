@@ -108,7 +108,6 @@ struct MainView: View {
         .onAppear {
             store.send(.fetchUserName)
             store.send(.checkPopover)
-            store.send(.checkNotificationPermission)
         }
         .navigationBarBackButtonHidden()
     }

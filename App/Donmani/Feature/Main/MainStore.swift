@@ -103,7 +103,10 @@ struct MainStore {
                 return .none
             case .fetchUserName:
                 state.name = DataStorage.getUserName()
-                return .none
+                return .run { send in
+                    try await Task.sleep(nanoseconds: 700_000_000)
+                    await send(.checkNotificationPermission)
+                }
             case .closePopover:
                 state.isPresentingRecordYesterdayToopTip = false
                 HistoryStateManager.shared.setLastYesterdayToopTipDay()
