@@ -99,10 +99,6 @@ struct RecordEntryPointView: View {
                 CancelRecordConfirmView()
             }
             
-            if store.isPresentingRecordGuideView {
-                RecordGuideView()
-            }
-            
             if store.isLoading {
                 Color.black.opacity(0.1)
             }
@@ -110,10 +106,6 @@ struct RecordEntryPointView: View {
         .onAppear {
             store.send(.startTimer)
         }
-//        .navigationDestination(isPresented: $store.isPresentingRecordWritingView) {
-//            let recordWritingStore = store.scope(state: \.recordWritingState, action: \.recordWritingAction)
-//            RecordWritingView(store: recordWritingStore)
-//        }
         .navigationBarBackButtonHidden()
     }
 }

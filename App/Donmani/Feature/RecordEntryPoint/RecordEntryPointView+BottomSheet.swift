@@ -114,47 +114,4 @@ extension RecordEntryPointView {
             }
         }
     }
-    
-    
-    func RecordGuideView() -> some View {
-        BottomSheetView(
-            isActiveClose: false,
-            closeAction: {
-                UINavigationController.blockSwipe = false
-            }
-        ) { dismissSheet in
-            VStack(alignment: .leading, spacing: .s3) {
-                DText("별별소 기록 규칙")
-                    .style(.h2, .bold, .gray95)
-                DText(
-                    """
-                    • 매일 행복, 후회 소비를 각각 한 개씩 기록해요
-                    • 기록을 저장한 후에는 수정할 수 없어요
-                    • 어제, 오늘의 소비만 기록할 수 있어요
-                    """
-                )
-                .style(.b1, .regular, .gray95)
-                .lineSpacing(16)
-                
-                Button {
-                    dismissSheet {
-                        UINavigationController.blockSwipe = false
-                        store.send(.dismissRecordGuideBottomSheet)
-                    }
-                } label: {
-                    ZStack {
-                        RoundedRectangle(
-                            cornerRadius: 16.0,
-                            style: .continuous
-                        )
-                        .fill(DColor(.gray95).color)
-                        .frame(height: 58)
-                        DText("이해완료!")
-                            .style(.h3, .bold, .deepBlue20)
-                    }
-                }
-                .padding(.vertical, 8)
-            }
-        }
-    }
 }

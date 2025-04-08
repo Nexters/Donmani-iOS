@@ -224,11 +224,11 @@ struct SettingView: View {
                 .padding(.vertical, 18)
                 HStack {
                     Spacer()
-                    
                     if type == .notification {
                         DToggle(isOn: $isNotificationEnabled)
                     }
                 }
+                .padding(.horizontal, .defaultLayoutPadding)
             }
         }
     }
