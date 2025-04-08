@@ -26,6 +26,7 @@ struct MainView: View {
                 VStack(spacing: .s3) {
                     HStack {
                         AccessoryButton(asset: .setting) {
+                            GA.Click(event: .mainSettingButton).send()
                             store.send(.delegate(.pushSettingView))
                         }
                         Spacer()
@@ -57,6 +58,7 @@ struct MainView: View {
                             .aspectRatio(0.75, contentMode: .fit)
                     }
                     .onTapGesture {
+                        GA.Click(event: .mainRecordArchiveButton).send()
                         store.send(.delegate(.pushRecordListView))
                     }
                 }

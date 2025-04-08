@@ -50,6 +50,7 @@ extension RecordListView {
                 DText("아직 기록이 없어요")
                     .style(.h2, .semibold, .gray95)
                 DButton(title: "기록하기", isEnabled: true) {
+                    GA.Click(event: .recordhistoryRecordButton).send()
                     store.send(.delegate(.pushRecordEntryPointView))
                 }
                 .frame(width: 100)

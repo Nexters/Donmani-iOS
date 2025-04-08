@@ -87,13 +87,13 @@ struct SettingView: View {
                         .frame(width: 100, height: 100)
                     HStack(spacing: 6) {
                         Button {
+                            GA.Click(event: .settingNickname).send()
                             editUserName = userName
                             isFocusToTextField = true
                             isPresentingEditNameView = true
                         } label: {
                             DText(userName)
                                 .style(.b1, .semibold, .white)
-                            
                             DImage(.edit).image
                                 .resizable()
                                 .aspectRatio(1, contentMode: .fit)
@@ -106,6 +106,7 @@ struct SettingView: View {
                 
                 VStack(alignment: .leading, spacing: 0) {
                     MenuButton(type: .notification) {
+                        GA.Click(event: .settingNotice).send()
                         if let appSettings = URL(string: UIApplication.openSettingsURLString) {
                             if UIApplication.shared.canOpenURL(appSettings) {
                                 UIApplication.shared.open(appSettings)
@@ -113,6 +114,7 @@ struct SettingView: View {
                         }
                     }
                     MenuButton(type: .notice) {
+                        GA.Click(event: .settingNotice).send()
                         Task {
                             try await NetworkManager.NMUser(service: .shared).updateNoticeStatus()
                             isNoticeNotRead = false
@@ -120,6 +122,7 @@ struct SettingView: View {
                         }
                     }
                     MenuButton(type: .recordGuide) {
+                        GA.Click(event: .settingRules).send()
                         isPresentingRecordGuideView.toggle()
                     }
                     

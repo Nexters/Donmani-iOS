@@ -26,6 +26,7 @@ extension MainView {
     
     func RecordButton() -> some View {
         Button {
+            GA.Click(event: .mainRecordButton).send()
             store.send(.delegate(.pushRecordEntryPointView))
         } label: {
             ZStack {

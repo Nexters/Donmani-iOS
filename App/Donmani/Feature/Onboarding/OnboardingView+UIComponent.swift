@@ -49,6 +49,7 @@ extension OnboardingView {
                     .offset(x: 0.0, y: 0.0)
                 
                 DButton(title: "별별소 알아보기") {
+                    GA.Click(event: .onboardingStartButton).send()
                     store.send(.touchStartOnboarding)
                 }
             }
@@ -86,6 +87,7 @@ extension OnboardingView {
                     } else {
                         HStack {
                             Button {
+                                GA.Click(event: .onboardingHomeButton).send()
                                 store.send(.touchHomeButton)
                             } label: {
                                 ZStack {
@@ -100,6 +102,7 @@ extension OnboardingView {
                                 }
                             }
                             DButton(title: "기록해 보기") {
+                                GA.Click(event: .onboardingRecordButton).send()
                                 store.send(.touchRecordButton)
                             }
                         }
