@@ -15,14 +15,14 @@ protocol GAProtocol {
 
 extension GAProtocol {
     func send() {
-        Analytics.logEvent(eventName, parameters: nil)
+//        Analytics.logEvent(eventName, parameters: nil)
     }
     
     func send(parameters: [String: Any]?) {
-        Analytics.logEvent(
-            eventName,
-            parameters: parameters
-        )
+//        Analytics.logEvent(
+//            eventName,
+//            parameters: parameters
+//        )
     }
 }
 

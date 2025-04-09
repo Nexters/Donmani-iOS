@@ -60,7 +60,7 @@ struct StarBottleView: View {
             starScene.scene?.view?.backgroundColor = .clear.withAlphaComponent(0.0)
             starScene.view?.backgroundColor = .clear.withAlphaComponent(0.0)
         }
-        .onChange(of: records) { (new, old) in
+        .onChange(of: records) { (old, new) in
             if let record = records.last {
                 starScene.createNewStarNode(
                     width: width,
