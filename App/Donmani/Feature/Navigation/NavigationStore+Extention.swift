@@ -58,6 +58,7 @@ extension NavigationStore {
         mainState.isPresentingRecordEntryButton = !(stateManager[.today, default: false] && stateManager[.yesterday, default: false])
         DataStorage.setRecord(record)
         mainState.monthlyRecords.append(record)
+        mainState.isNewStar += 1
         Task {
             let isFirstRecord = HistoryStateManager.shared.getIsFirstRecord()
             if isFirstRecord == nil {
