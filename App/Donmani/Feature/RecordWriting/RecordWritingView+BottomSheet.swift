@@ -49,7 +49,7 @@ extension RecordWritingView {
     
     func CancelRecordConfirmView() -> some View {
         BottomSheetView(
-            closeAction: { store.send(.dismissCancelRecordBottomSheet) }
+            closeAction: { store.send(.dismissCancelRecordBottomSheet(false)) }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
                 VStack(alignment: .leading, spacing: 8) {
@@ -63,7 +63,7 @@ extension RecordWritingView {
                 HStack(spacing: 10) {
                     Button {
                         dismissSheet {
-                            store.send(.dismissCancelRecordBottomSheet)
+                            store.send(.dismissCancelRecordBottomSheet(true))
                         }
                     } label: {
                         ZStack {
@@ -79,8 +79,8 @@ extension RecordWritingView {
                     }
                     
                     Button {
+                        store.send(.touchWriteNextTime)
                         dismiss()
-//                        store.send(.delegate(.popToRecordEntrypointView))
                     } label: {
                         ZStack {
                             RoundedRectangle(

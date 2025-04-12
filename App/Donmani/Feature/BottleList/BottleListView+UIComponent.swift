@@ -51,7 +51,7 @@ extension BottleListView {
                         count: month.1
                     )
                     .onTapGesture {
-                        GA.Click(event: .list별통이Button).send(parameters: ["별통이_id": 2500 + month.0])
+                        GA.Click(event: .list별통이Button).send(parameters: [.별통이ID: 2500 + month.0])
                         if (month.1 == 0) {
                             store.send(.showEmptyBottleToast)
                         } else {//if month.1 != -1 {

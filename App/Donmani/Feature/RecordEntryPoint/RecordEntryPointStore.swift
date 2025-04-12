@@ -33,6 +33,7 @@ struct RecordEntryPointStore {
         
         var isPresentingDayToggle: Bool
         var title: String
+        let dayTitle: String
         var guide: String {
             if dayType == .yesterday {
                 if remainingTime > 7200 {
@@ -66,6 +67,7 @@ struct RecordEntryPointStore {
             self.dateString = DateManager.shared.getFormattedDate(for: .today)
             self.isPresentingDayToggle = true
             self.title = "하루 소비 정리해 볼까요?"
+            self.dayTitle = "하루"
             self.remainingTime = TimeManager.getRemainingTime()
             self.isPresentingPopover = true
         }
@@ -77,15 +79,14 @@ struct RecordEntryPointStore {
             self.isCompleteToday = isCompleteToday
             self.isCompleteYesterday = isCompleteYesterday
             self.dayType = isCompleteToday ? .yesterday : .today
-            var title = "소비 정리해 볼까요?"
             if !(isCompleteToday || isCompleteYesterday) {
-                title = "하루 " + title
+                self.dayTitle = "하루"
             } else if isCompleteToday {
-                title = "어제 " + title
+                self.dayTitle = "어제"
             } else {
-                title = "오늘 " + title
+                self.dayTitle = "오늘"
             }
-            self.title = title
+            self.title = "\(self.dayTitle) 소비 정리해 볼까요?"
             self.dateString = DateManager.shared.getFormattedDate(for: isCompleteToday ? .yesterday : .today)
             self.isPresentingDayToggle = !(isCompleteToday || isCompleteYesterday)
             self.remainingTime = TimeManager.getRemainingTime()
@@ -174,9 +175,11 @@ struct RecordEntryPointStore {
                 state.isChangingDayType = false
                 switch state.dayType {
                 case .today:
+                    GA.Click(event: .recordmainYesterdayButton).send(parameters: [.screenType: "하루"])
                     state.dayType = .yesterday
                     state.dateString = DateManager.shared.getFormattedDate(for: .yesterday)
                 case .yesterday:
+                    GA.Click(event: .recordmainTodayButton).send(parameters: [.screenType: "하루"])
                     state.dayType = .today
                     state.dateString = DateManager.shared.getFormattedDate(for: .today)
                 }
@@ -193,6 +196,7 @@ struct RecordEntryPointStore {
                     state.isSaveEnabled = false
                     UINavigationController.swipeNavigationPopIsEnabled = true
                 } else {
+                    GA.Click(event: .recordmainEmptyButton).send(parameters: [.screenType: state.dayType])
                     state.isPresentingRecordEmpty = true
 //                    UINavigationController.blockSwipe = true
                 }
@@ -202,11 +206,13 @@ struct RecordEntryPointStore {
                 HistoryStateManager.shared.setEmptyRecordGuideKey()
                 return .none
             case .dismissEmtpyRecordBottomSheet:
+                GA.Click(event: .recordmainEmptyNoButton).send(parameters: [.screenType: state.dayTitle])
                 state.isPresentingRecordEmpty = false
                 UINavigationController.blockSwipe = false
                 return .none
                 
             case .recordEmpty:
+                GA.Click(event: .recordmainEmptyYesButton).send(parameters: [.screenType: state.dayTitle])
                 state.isCheckedEmptyRecord = true
                 state.isSaveEnabled = true
                 state.isPresentingRecordEmpty = false
@@ -217,6 +223,7 @@ struct RecordEntryPointStore {
                 return .none
                 
             case .readyToSave:
+                GA.Click(event: .recordmainSubmitButton).send(parameters: [.screenType: state.dayTitle])
                 state.isReadyToSave = true
                 state.isFullWriting = true
                 if !state.isCheckedEmptyRecord {
@@ -228,6 +235,17 @@ struct RecordEntryPointStore {
                 return .none
             case .cancelSave:
                 state.isReadyToSave = false
+                var gaParameter:[GA.Parameter:Any] = [.screenType:state.dayType]
+                if let good = state.goodRecord {
+                    gaParameter = [.good: good.category.title]
+                }
+                if let bad = state.badRecord {
+                    gaParameter = [.bad: bad.category.title]
+                }
+                if state.isCheckedEmptyRecord {
+                    gaParameter = [.empty: true]
+                }
+                GA.Click(event: .confirmBackButton).send(parameters: gaParameter)
                 return .none
             case .save:
                 state.isLoading = true
@@ -239,6 +257,19 @@ struct RecordEntryPointStore {
                 let date = state.dateString
                 let stateManager = HistoryStateManager.shared
                 stateManager.addRecord(for: state.dayType)
+                
+                var gaParameter:[GA.Parameter:Any] = [.screenType:state.dayType]
+                if let good = state.goodRecord {
+                    gaParameter = [.good: good.category]
+                }
+                if let bad = state.badRecord {
+                    gaParameter = [.bad: bad.category]
+                }
+                if state.isCheckedEmptyRecord {
+                    gaParameter = [.empty: true]
+                }
+                GA.Click(event: .confirmSubmitButton).send(parameters: gaParameter)
+                
                 return .run { send in
                     let networkManager = NetworkManager.NMRecord(service: .shared)
                     guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
@@ -273,6 +304,15 @@ struct RecordEntryPointStore {
                 return .send(.updateTime(remainingTime))
                 
             case .binding:
+                return .none
+                
+            case .delegate(.pushRecordWritingView(let type)):
+                switch type {
+                case .good:
+                    GA.Click(event: .recordmainGoodButton).send(parameters: [.screenType: state.dayTitle])
+                case .bad:
+                    GA.Click(event: .recordmainBadButton).send(parameters: [.screenType: state.dayTitle])
+                }
                 return .none
             case .delegate:
                 return .none
