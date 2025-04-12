@@ -32,6 +32,8 @@ struct RecordWritingStore {
         var isPresendTextGuide: Bool = false
         var isFocusToTextField: Bool = false
         
+        let dayTitle: String
+        
         init(
             type: RecordContentType,
             content: RecordContent? = nil
@@ -43,6 +45,17 @@ struct RecordWritingStore {
                 tempCategory = GoodCategory.allCases.map { RecordCategory($0) }
             case .bad:
                 tempCategory = BadCategory.allCases.map { RecordCategory($0) }
+            }
+            
+            let stateManager = HistoryStateManager.shared.getState()
+            let isCompleteToday = stateManager[.today, default: false]
+            let isCompleteYesterday = stateManager[.yesterday, default: false]
+            if !(isCompleteToday || isCompleteYesterday) {
+                self.dayTitle = "하루"
+            } else if isCompleteToday {
+                self.dayTitle = "어제"
+            } else {
+                self.dayTitle = "오늘"
             }
             
             _ = tempCategory.popLast()
@@ -72,7 +85,8 @@ struct RecordWritingStore {
         case hideTextLengthGuide
         case save(String)
         case showCancelRecordBottomSheet
-        case dismissCancelRecordBottomSheet
+        case dismissCancelRecordBottomSheet(Bool)
+        case touchWriteNextTime
 
         case binding(BindingAction<State>)
         case delegate(Delegate)
@@ -153,12 +167,35 @@ struct RecordWritingStore {
                 state.isPresentingCancel = true
                 return .none
                 
-            case .dismissCancelRecordBottomSheet:
+            case .dismissCancelRecordBottomSheet(let isContinue):
+                var gaParameter: [GA.Parameter: Any] = [.screenType: state.dayTitle]
+                if let savedCategory = state.savedCategory {
+                    switch state.type {
+                    case .good:
+                        gaParameter[.good] = (savedCategory.getInstance() as GoodCategory?)?.title ?? "Good"
+                    case .bad:
+                        gaParameter[.bad] = (savedCategory.getInstance() as BadCategory?)?.title ?? "Bad"
+                    }
+                }
+                if isContinue {
+                    GA.Click(event: .recordContinueButton).send(parameters: gaParameter)
+                } else {
+                    GA.Click(event: .recordBackButton).send(parameters: gaParameter)
+                }
                 state.isFocusToTextField = true
                 state.isPresentingCancel = false
                 UINavigationController.blockSwipe = false
                 return .none
-                
+            case .touchWriteNextTime:
+                var parameters: [GA.Parameter: Any] = [.screenType: state.dayTitle]
+                switch state.type {
+                case .good:
+                    parameters[.good] = (state.savedCategory?.getInstance() as GoodCategory?)?.title ?? "Good"
+                case .bad:
+                    parameters[.bad] = (state.savedCategory?.getInstance() as BadCategory?)?.title ?? "Bad"
+                }
+                GA.Click(event: .recordNexttimeButton).send(parameters: parameters)
+                return .none
             case .binding:
                 return .none
             case .delegate:

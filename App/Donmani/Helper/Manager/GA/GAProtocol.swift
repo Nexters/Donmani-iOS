@@ -10,7 +10,7 @@ import FirebaseAnalytics
 protocol GAProtocol {
     var eventName: String { get }
     func send()
-    func send(parameters: [String: Any]?)
+    func send(parameters: [GA.Parameter: Any])
 }
 
 extension GAProtocol {
@@ -18,10 +18,14 @@ extension GAProtocol {
 //        Analytics.logEvent(eventName, parameters: nil)
     }
     
-    func send(parameters: [String: Any]?) {
+    func send(parameters: [GA.Parameter: Any]) {
+//        var convertKeyValue: [String: Any] = [:]
+//        parameters.forEach {
+//            convertKeyValue[$0.key.value] = $0.value
+//        }
 //        Analytics.logEvent(
 //            eventName,
-//            parameters: parameters
+//            parameters: convertKeyValue
 //        )
     }
 }
