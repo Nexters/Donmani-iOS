@@ -31,6 +31,7 @@ extension NavigationStore {
             
         case  .pushStatisticsView(let year, let month):
             state.statisticsState = StatisticsStore.State(year: year, month: month)
+            GA.View(event: .insight).send()
             state.path.append(.statistics(state.statisticsState))
             return .none
         }

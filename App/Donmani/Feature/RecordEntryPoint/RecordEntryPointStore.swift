@@ -98,6 +98,7 @@ struct RecordEntryPointStore {
         case showCancelRecordBottomSheet
         case dismissCancelRecordBottomSheet
         case cancelRecording
+        case sendCancelGAEvent
         
         case dismissRecordGuideBottomSheet
         
@@ -117,7 +118,6 @@ struct RecordEntryPointStore {
         case startTimer
         case checkRemainingTime
         case updateTime(Int)
-        
         
         case binding(BindingAction<State>)
         case delegate(Delegate)
@@ -155,6 +155,17 @@ struct RecordEntryPointStore {
                         await send(.delegate(.popToMainView(nil)))
                     }
                 }
+                
+            case .sendCancelGAEvent:
+                var parameters: [GA.Parameter: Any] = [.referrer: "기록"]
+                if let good = state.goodRecord {
+                    parameters = [.good: good.category.title]
+                }
+                if let bad = state.badRecord {
+                    parameters = [.bad: bad.category.title]
+                }
+                GA.View(event: .recordmainBackBottomsheet).send(parameters: parameters)
+                return .none
             case .dismissRecordGuideBottomSheet:
                 state.isPresentingRecordGuideView = false
                 HistoryStateManager.shared.setGuideState()

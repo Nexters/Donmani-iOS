@@ -9,6 +9,7 @@ import FirebaseAnalytics
 
 protocol GAProtocol {
     var eventName: String { get }
+    var screen: GA.Screen? { get }
     func send()
     func send(parameters: [GA.Parameter: Any])
 }
@@ -22,6 +23,9 @@ extension GAProtocol {
 //        var convertKeyValue: [String: Any] = [:]
 //        parameters.forEach {
 //            convertKeyValue[$0.key.value] = $0.value
+//        }
+//        if let screen {
+//            convertKeyValue["screen_name"] = screen.rawValue
 //        }
 //        Analytics.logEvent(
 //            eventName,

@@ -25,23 +25,43 @@ extension GA {
         }
         
         var eventName: String {
+            var value = "[V]"
             switch event {
             case .main:
-                return "main"
+                value += "main"
             case .recordmain:
-                return "recordmain"
+                value += "recordmain"
             case .recordmainBackBottomsheet:
-                return "recordmain_back_bottomsheet"
+                value += "recordmain_back_bottomsheet"
             case .confirm:
-                return "confirm"
+                value += "confirm"
             case .recordhistory:
-                return "recordhistory"
+                value += "recordhistory"
             case .insight:
-                return "insight"
+                value += "insight"
+            }
+            return value
+        }
+        
+        var screen: GA.Screen? {
+            switch event {
+            case .main:
+                return .main
+            case .recordmain:
+                return .recordmain
+            case .recordmainBackBottomsheet:
+                return .recordmain
+            case .confirm:
+                return .confirm
+            case .recordhistory:
+                return .recordhistory
+            case .insight:
+                return .insight
             }
         }
         
         var event: Event
+        
         init(event: Event) {
             self.event = event
         }

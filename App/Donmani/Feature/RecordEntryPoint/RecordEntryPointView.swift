@@ -97,6 +97,9 @@ struct RecordEntryPointView: View {
             
             if store.isPresentingCancel {
                 CancelRecordConfirmView()
+                    .onAppear {
+                        store.send(.sendCancelGAEvent)
+                    }
             }
             
             if store.isLoading {

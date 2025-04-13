@@ -94,6 +94,7 @@ struct NavigationStore {
                 var mainState: MainStore.State = MainStore.State(today: today)
                 mainState.isPresentingAlreadyWrite = isAlreadyWrite
 //                mainState.isRequestNotificationPermission = true
+                GA.View(event: .main).send(parameters: [.referrer: "onboarding"])
                 state.path.append(.main(mainState))
                 return .run { send in
                     try await Task.sleep(nanoseconds: 700_000_000)
@@ -122,6 +123,7 @@ struct NavigationStore {
                 let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
                 let yearMonth = (Int(today[0])!, Int(today[1])!)
                 state.recordListState = RecordListStore.State(year: yearMonth.0, month: yearMonth.1, isShowNavigationButton: true)
+                GA.View(event: .recordhistory).send(parameters: [.referrer: "메인"])
                 state.path.append(.recordList(state.recordListState))
                 return .none
             case .mainAction(.delegate(.pushRecordEntryPointView)):

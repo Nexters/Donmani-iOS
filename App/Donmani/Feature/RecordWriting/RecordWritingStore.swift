@@ -86,6 +86,7 @@ struct RecordWritingStore {
         case save(String)
         case showCancelRecordBottomSheet
         case dismissCancelRecordBottomSheet(Bool)
+        case sendCancelGAEvent
         case touchWriteNextTime
 
         case binding(BindingAction<State>)
@@ -185,6 +186,18 @@ struct RecordWritingStore {
                 state.isFocusToTextField = true
                 state.isPresentingCancel = false
                 UINavigationController.blockSwipe = false
+                return .none
+            case .sendCancelGAEvent:
+                var parameters: [GA.Parameter: Any] = [.referrer: "기록작성"]
+                if let savedCategory = state.savedCategory {
+                    switch state.type {
+                    case .good:
+                        parameters[.good] = (savedCategory.getInstance() as GoodCategory?)?.title ?? "Good"
+                    case .bad:
+                        parameters[.bad] = (savedCategory.getInstance() as BadCategory?)?.title ?? "Bad"
+                    }
+                }
+                GA.View(event: .recordmainBackBottomsheet).send(parameters: parameters)
                 return .none
             case .touchWriteNextTime:
                 var parameters: [GA.Parameter: Any] = [.screenType: state.dayTitle]
