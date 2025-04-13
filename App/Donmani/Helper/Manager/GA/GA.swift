@@ -15,6 +15,17 @@ class GA {
     static func debugEventLog() {
         Analytics.logEvent("DebugEvent_mjs", parameters: nil)
     }
+    
+    enum Screen: String {
+        case onboarding
+        case main
+        case recordhistory
+        case recordmain
+        case record
+        case confirm
+        case insight
+        case setting
+    }
 }
 
 //| open | 앱 또는 UI 요소가 열린 시점 | 앱 실행, 알림 바텀시트 열림 | 앱 세션 시작, 진입 시점 측정 |

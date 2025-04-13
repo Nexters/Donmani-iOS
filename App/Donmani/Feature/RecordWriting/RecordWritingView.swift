@@ -139,6 +139,9 @@ struct RecordWritingView: View {
             }
             if store.isPresentingCancel {
                 CancelRecordConfirmView()
+                    .onAppear {
+                        store.send(.sendCancelGAEvent)
+                    }
             }
         }
         .onDisappear {

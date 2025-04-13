@@ -55,68 +55,117 @@ extension GA {
         }
         
         var eventName: String {
+            var value = "[C]"
             switch event {
             case .onboardingStartButton:
-                return "onboarding_start_button"
+                value += "onboarding_start_button"
             case .onboardingRecordButton:
-                return "onboarding_record_button"
+                value += "onboarding_record_button"
             case .onboardingHomeButton:
-                return "onboarding_home_button"
+                value += "onboarding_home_button"
             case .mainRecordButton:
-                return "mainR_record_button"
+                value += "mainR_record_button"
             case .mainRecordArchiveButton:
-                return "main_record_archive_button"
+                value += "main_record_archive_button"
             case .mainSettingButton:
-                return "main_setting_button"
+                value += "main_setting_button"
             case .recordhistoryRecordButton:
-                return "recordhistory_record_button"
+                value += "recordhistory_record_button"
             case .listButton:
-                return "list_button"
+                value += "list_button"
             case .list별통이Button:
-                return "list_별통이_button"
+                value += "list_별통이_button"
             case .insightButton:
-                return "insight_button"
+                value += "insight_button"
             case .recordmainYesterdayButton:
-                return "recordmain_yesterday_button"
+                value += "recordmain_yesterday_button"
             case .recordmainTodayButton:
-                return "recordmain_today_button"
+                value += "recordmain_today_button"
             case .recordmainGoodButton:
-                return "recordmain_good_button"
+                value += "recordmain_good_button"
             case .recordmainBadButton:
-                return "recordmain_bad_button"
+                value += "recordmain_bad_button"
             case .recordmainEmptyButton:
-                return "recordmain_empty_button"
+                value += "recordmain_empty_button"
             case .recordmainSubmitButton:
-                return "recordmain_submit_button"
+                value += "recordmain_submit_button"
             case .recordmainEmptyYesButton:
-                return "recordmain_empty_yes_button"
+                value += "recordmain_empty_yes_button"
             case .recordmainEmptyNoButton:
-                return "recordmain_empty_no_button"
+                value += "recordmain_empty_no_button"
             case .recordmainBackButton:
-                return "recordmain_back_button"
+                value += "recordmain_back_button"
             case .recordBackButton:
-                return "record_back_button"
+                value += "record_back_button"
             case .recordContinueButton:
-                return "record_continue_button"
+                value += "record_continue_button"
             case .recordNexttimeButton:
-                return "record_nexttime_button"
+                value += "record_nexttime_button"
             case .recordCloseButton:
-                return "record_close_button"
+                value += "record_close_button"
             case .confirmBackButton:
-                return "confirm_back_button"
+                value += "confirm_back_button"
             case .confirmSubmitButton:
-                return "confirm_submit_button"
+                value += "confirm_submit_button"
             case .settingNickname:
-                return "setting_nickname"
+                value += "setting_nickname"
             case .settingApppush:
-                return "setting_apppush"
+                value += "setting_apppush"
             case .settingNotice:
-                return "setting_notice"
+                value += "setting_notice"
             case .settingRules:
-                return "setting_rules"
+                value += "setting_rules"
+            }
+            return value
+        }
+        
+        var screen: GA.Screen? {
+            switch event {
+            case .onboardingStartButton,
+                    .onboardingRecordButton,
+                    .onboardingHomeButton:
+                return .onboarding
+                
+            case .mainRecordButton,
+                    .mainRecordArchiveButton,
+                    .mainSettingButton:
+                return .main
+                
+            case .recordhistoryRecordButton,
+                    .listButton,
+                    .list별통이Button,
+                    .insightButton:
+                return .recordhistory
+                
+            case .recordmainYesterdayButton,
+                    .recordmainTodayButton,
+                    .recordmainGoodButton,
+                    .recordmainBadButton,
+                    .recordmainEmptyButton,
+                    .recordmainSubmitButton,
+                    .recordmainEmptyYesButton,
+                    .recordmainEmptyNoButton,
+                    .recordmainBackButton:
+                return .recordmain
+                
+            case .recordBackButton,
+                    .recordContinueButton,
+                    .recordNexttimeButton,
+                    .recordCloseButton:
+                return .record
+                
+            case .confirmBackButton,
+                    .confirmSubmitButton:
+                return .confirm
+                
+            case .settingNickname,
+                    .settingApppush,
+                    .settingNotice,
+                    .settingRules:
+                return .setting
             }
         }
-
+        
         var event: Event
         init(event: Event) {
             self.event = event
