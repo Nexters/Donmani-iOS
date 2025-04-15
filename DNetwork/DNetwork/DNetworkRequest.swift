@@ -7,8 +7,8 @@
 
 import Foundation
 
-public final class DNetworkService {
-    public static let shared = DNetworkService()
+public final class DNetworkRequest {
+    public static let shared = DNetworkRequest()
     
     private let baseURL = DURLManager.api.urlString
     

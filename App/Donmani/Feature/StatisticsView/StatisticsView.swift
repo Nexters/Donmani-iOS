@@ -40,7 +40,13 @@ struct StatisticsView: View {
                     VStack(spacing: .s3) {
                         TopBannerView()
                         CategoryStatisticsView(flag: .good)
+                            .onAppear {
+                                GA.Impression(event: .insight).send(parameters: [.good: "Good"])
+                            }
                         CategoryStatisticsView(flag: .bad)
+                            .onAppear {
+                                GA.Impression(event: .insight).send(parameters: [.bad: "Bad"])
+                            }
                     }
                 }
             }
