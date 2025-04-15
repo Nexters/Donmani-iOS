@@ -108,7 +108,7 @@ struct MainStore {
             case .fetchUserName:
                 state.name = DataStorage.getUserName()
                 return .run { send in
-                    try await Task.sleep(nanoseconds: 700_000_000)
+                    try await Task.sleep(nanoseconds: 300_000_000)
                     await send(.checkNotificationPermission)
                 }
             case .closePopover:
