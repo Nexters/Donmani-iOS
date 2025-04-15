@@ -75,9 +75,8 @@ struct SettingView: View {
                         Spacer()
                     }
                     .padding(.horizontal, .defaultLayoutPadding)
-                    Text("설정")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white)
+                    DText("설정")
+                        .style(.b1, .semibold, .white)
                 }
                 .padding(.vertical, 14)
                 
@@ -88,14 +87,13 @@ struct SettingView: View {
                         .frame(width: 100, height: 100)
                     HStack(spacing: 6) {
                         Button {
+                            GA.Click(event: .settingNickname).send()
                             editUserName = userName
                             isFocusToTextField = true
                             isPresentingEditNameView = true
                         } label: {
-                            Text(userName)
-                                .font(.b1, .semibold)
-                                .foregroundStyle(.white)
-                            
+                            DText(userName)
+                                .style(.b1, .semibold, .white)
                             DImage(.edit).image
                                 .resizable()
                                 .aspectRatio(1, contentMode: .fit)
@@ -108,6 +106,7 @@ struct SettingView: View {
                 
                 VStack(alignment: .leading, spacing: 0) {
                     MenuButton(type: .notification) {
+                        GA.Click(event: .settingNotice).send()
                         if let appSettings = URL(string: UIApplication.openSettingsURLString) {
                             if UIApplication.shared.canOpenURL(appSettings) {
                                 UIApplication.shared.open(appSettings)
@@ -115,13 +114,15 @@ struct SettingView: View {
                         }
                     }
                     MenuButton(type: .notice) {
+                        GA.Click(event: .settingNotice).send()
                         Task {
-                            try await NetworkManager.NMUser(service: .shared).updateNoticeStatus()
+                            try await NetworkService.User().updateNoticeStatus()
                             isNoticeNotRead = false
                             isPresentingNoticeView.toggle()
                         }
                     }
                     MenuButton(type: .recordGuide) {
+                        GA.Click(event: .settingRules).send()
                         isPresentingRecordGuideView.toggle()
                     }
                     
@@ -164,15 +165,15 @@ struct SettingView: View {
         }
         .sheet(isPresented: $isPresentingPrivacyPolicyView) {
             // Privacy Policy WebView
-            InnerWebView(urlString: DURLManager.privacyPolicy.urlString)
+            InnerWebView(urlString: DURL.privacyPolicy.urlString)
         }
         .sheet(isPresented: $isPresentingFeedbackView) {
             // Feeback WebView
-            InnerWebView(urlString: DURLManager.feedback.urlString)
+            InnerWebView(urlString: DURL.feedback.urlString)
         }
         .sheet(isPresented: $isPresentingNoticeView) {
             // Notice WebView
-            InnerWebView(urlString: DURLManager.notice.urlString)
+            InnerWebView(urlString: DURL.notice.urlString)
         }
         .onChange(of: scenePhase) { oldPhase, newPhase  in
 //            print("OnAppear")
@@ -193,7 +194,7 @@ struct SettingView: View {
                 isNotificationEnabled = (status == .authorized)
             }
             Task {
-                isNoticeNotRead = !(try await NetworkManager.NMUser(service: .shared).fetchNoticeStatus())
+                isNoticeNotRead = !(try await NetworkService.User().fetchNoticeStatus())
             }
         }
         .navigationBarBackButtonHidden()
@@ -206,29 +207,32 @@ struct SettingView: View {
         Button {
             action()
         } label: {
-            HStack(spacing: 4) {
-                Text(type.title)
-                    .font(.b1, .bold)
-                    .foregroundStyle(.white)
-                if type == .notice {
-                    HStack(alignment: .top) {
-                        Circle()
-                            .fill(DColor.noticeColor)
-                            .frame(width: 6, height: 6)
-                            .padding(.bottom, 18)
+            ZStack {
+                HStack(spacing: 4) {
+                    DText(type.title)
+                        .style(.b1, .bold, .white)
+                    if type == .notice {
+                        HStack(alignment: .top) {
+                            Circle()
+                                .fill(DColor.noticeColor)
+                                .frame(width: 6, height: 6)
+                                .padding(.bottom, 18)
+                        }
+                        .opacity(isNoticeNotRead ? 1 : 0)
                     }
-                    .opacity(isNoticeNotRead ? 1 : 0)
+                    Spacer()
                 }
-                
-                Spacer()
-                
-                if type == .notification {
-                    DToggle(isOn: $isNotificationEnabled)
+                .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
+                .padding(.horizontal, .defaultLayoutPadding)
+                .padding(.vertical, 18)
+                HStack {
+                    Spacer()
+                    if type == .notification {
+                        DToggle(isOn: $isNotificationEnabled)
+                    }
                 }
+                .padding(.horizontal, .defaultLayoutPadding)
             }
-            .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
-            .padding(.horizontal, .defaultLayoutPadding)
-            .padding(.vertical, 18)
         }
     }
 }

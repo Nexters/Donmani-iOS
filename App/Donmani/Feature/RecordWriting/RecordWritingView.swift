@@ -35,9 +35,8 @@ struct RecordWritingView: View {
                         }
                         Spacer()
                     }
-                    Text("\(store.type.title) 소비")
-                        .font(DFont.font(.b1, weight: .bold))
-                        .foregroundStyle(.white)
+                    DText("\(store.type.title) 소비")
+                        .style(.b1, .bold, .white)
                 }
                 .padding(.vertical, 14)
                 
@@ -68,9 +67,8 @@ struct RecordWritingView: View {
                                 }
                         }
                     }
-                    Text(store.savedCategory?.title ?? " ")
-                        .font(DFont.font(.h3, weight: .bold))
-                        .foregroundStyle(.white)
+                    DText(store.savedCategory?.title ?? " ")
+                        .style(.h3, .bold, .white)
                         .opacity((store.savedCategory == nil) ? 0 : 1)
                     
                     VStack(spacing: 4) {
@@ -78,9 +76,8 @@ struct RecordWritingView: View {
                             text: $editingText,
                             axis: .vertical
                         ) {
-                            Text("소비가 \(store.type.selectTitle)던 이유는?")
-                                .font(DFont.font(.b1, weight: .medium))
-                                .foregroundStyle(DColor(.deepBlue80).color)
+                            DText("소비가 \(store.type.selectTitle)던 이유는?")
+                                .style(.b1, .medium, .deepBlue80)
                         }
                         .focused($isFocusToTextField)
                         .font(DFont.font(.b1, weight: .medium))
@@ -105,9 +102,8 @@ struct RecordWritingView: View {
                         
                         HStack {
                             Spacer()
-                            Text("\(editingText.count)/100")
-                                .font(DFont.font(.b2))
-                                .foregroundStyle(DColor(.deepBlue80).color)
+                            DText("\(editingText.count)/100")
+                                .style(.b2, .regular, .deepBlue80)
                         }
                     }
                     .padding(8)
@@ -143,6 +139,9 @@ struct RecordWritingView: View {
             }
             if store.isPresentingCancel {
                 CancelRecordConfirmView()
+                    .onAppear {
+                        store.send(.sendCancelGAEvent)
+                    }
             }
         }
         .onDisappear {

@@ -15,22 +15,19 @@ extension RecordEntryPointView {
             Button {
                 store.send(.touchDayTypeToggleButton)
             } label: {
-                Text("어제")
-                    .font(DFont.font(.b2, weight: .semibold))
-                    .foregroundStyle(store.dayType == .today ? DColor(.deepBlue80).color : DColor.accessoryButton)
+                DText("어제")
+                    .style(.b2, .semibold, store.dayType == .today ? DColor(.deepBlue80).color : DColor.accessoryButton)
             }
             .padding(12)
             
-            Text("|")
-                .font(DFont.font(.b2, weight: .regular))
-                .foregroundStyle(DColor(.deepBlue80).color)
+            DText("|")
+                .style(.b2, .regular, .deepBlue80)
             
             Button {
                 store.send(.touchDayTypeToggleButton)
             } label: {
-                Text("오늘")
-                    .font(DFont.font(.b2, weight: .semibold))
-                    .foregroundStyle(store.dayType == .today ? DColor.accessoryButton : DColor(.deepBlue80).color)
+                DText("오늘")
+                    .style(.b2, .semibold, store.dayType == .today ? DColor.accessoryButton : DColor(.deepBlue80).color)
             }
             .padding(12)
         }
@@ -50,9 +47,8 @@ extension RecordEntryPointView {
                 )
                 .fill(.white.opacity(0.1))
                 HStack {
-                    Text(type.title)
-                        .font(DFont.font(.h3, weight: .bold))
-                        .foregroundStyle(.white)
+                    DText(type.title)
+                        .style(.h3, .bold, .white)
                     Spacer()
                     DImage(.addLog).image
                         .resizable()
@@ -72,9 +68,8 @@ extension RecordEntryPointView {
                     .aspectRatio(contentMode: .fit)
                     .foregroundStyle(DColor(.pupleBlue90).color)
                     .frame(width: 22)
-                Text(store.guide)
-                    .font(DFont.font(.b2, weight: .semibold))
-                    .foregroundStyle(DColor(.pupleBlue90).color)
+                DText(store.guide)
+                    .style(.b2, .semibold, .pupleBlue90)
                     .padding(8)
             }
     }
@@ -88,12 +83,10 @@ extension RecordEntryPointView {
                     .frame(width: .s3, height: .s3)
             }
             VStack(spacing: 4) {
-                Text("\(store.goodRecord == nil ? "행복" : "후회") 소비를 작성하지 않았어요!")
-                    .font(DFont.font(.b1, weight: .semibold))
-                    .foregroundStyle(DColor(.gray99).color)
-                Text("돌아가기를 누르면 기록할 수 있어요")
-                    .font(DFont.font(.b2, weight: .regular))
-                    .foregroundStyle(DColor(.gray99).color)
+                DText("\(store.goodRecord == nil ? "행복" : "후회") 소비를 작성하지 않았어요!")
+                    .style(.b1, .semibold, .gray99)
+                DText("돌아가기를 누르면 기록할 수 있어요")
+                    .style(.b2, .regular, .gray99)
                 
             }
             Spacer()
@@ -120,9 +113,8 @@ extension RecordEntryPointView {
                     }
                     HStack {
                         HStack {
-                            Text("선택하면 무소비 날도 기록할 수 있어요!")
-                                .font(DFont.font(.b3, weight: .medium))
-                                .foregroundStyle(.white)
+                            DText("선택하면 무소비 날도 기록할 수 있어요!")
+                                .style(.b3, .medium, .white)
                             Button {
                                 store.send(.closePopover)
                             } label: {
@@ -154,9 +146,8 @@ extension RecordEntryPointView {
                 DImage(isChecked ? .check : .uncheck).image
                     .resizable()
                     .frame(width: .s4, height: .s4)
-                Text("무소비 했어요")
-                    .font(DFont.font(.b2, weight: .semibold))
-                    .foregroundStyle((isChecked ? DColor(.gray95) : DColor(.deepBlue80)).color)
+                DText("무소비 했어요")
+                    .style(.b2, .semibold, isChecked ? .gray95 : .deepBlue80)
             }
         }
         .padding(.horizontal, 8)
@@ -174,18 +165,15 @@ extension RecordEntryPointView {
                         badRecord: badRecord,
                         goodAction: {
                             store.send(.delegate(.pushRecordWritingViewWith(goodRecord)))
-//                            store.send(.pushRecordWritingViewWith(goodRecord))
                         },
                         badAction: {
                             store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
-//                            store.send(.pushRecordWritingViewWith(badRecord))
                         }
                     )
                 } else {
                     if let goodRecord = store.goodRecord {
                         Button {
                             store.send(.delegate(.pushRecordWritingViewWith(goodRecord)))
-//                            store.send(.pushRecordWritingViewWith(goodRecord))
                         } label: {
                             RecordView(record: goodRecord, isEditable: true)
                         }
@@ -197,7 +185,6 @@ extension RecordEntryPointView {
                     if let badRecord = store.badRecord {
                         Button {
                             store.send(.delegate(.pushRecordWritingViewWith(badRecord)))
-//                            store.send(.pushRecordWritingViewWith(badRecord))
                         } label: {
                             RecordView(record: badRecord, isEditable: true)
                         }
@@ -223,9 +210,8 @@ extension RecordEntryPointView {
                     )
                     .fill(DColor(.deepBlue50).color)
                     .frame(height: 58)
-                    Text("돌아가기")
-                        .font(DFont.font(.h3, weight: .bold))
-                        .foregroundStyle(.white)
+                    DText("돌아가기")
+                        .style(.h3, .bold, .white)
                 }
             }
             
@@ -239,9 +225,8 @@ extension RecordEntryPointView {
                     )
                     .fill(DColor(.gray95).color)
                     .frame(height: 58)
-                    Text("확인 했어요")
-                        .font(DFont.font(.h3, weight: .bold))
-                        .foregroundStyle(DColor(.deepBlue20).color)
+                    DText("확인 했어요")
+                        .style(.h3, .bold, .deepBlue20)
                 }
             }
         }

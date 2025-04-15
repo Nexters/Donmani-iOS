@@ -22,9 +22,8 @@ struct StatisticsView: View {
                 ZStack {
                     HStack {
                         Spacer()
-                        Text("\(store.yearMonth.year)년 \(store.yearMonth.month)월 기록 통계")
-                            .font(.b1, .semibold)
-                            .foregroundStyle(.white)
+                        DText("\(store.yearMonth.year)년 \(store.yearMonth.month)월 기록 통계")
+                            .style(.b1, .semibold, .white)
                         Spacer()
                     }
                     HStack {
@@ -41,14 +40,20 @@ struct StatisticsView: View {
                     VStack(spacing: .s3) {
                         TopBannerView()
                         CategoryStatisticsView(flag: .good)
+                            .onAppear {
+                                GA.Impression(event: .insight).send(parameters: [.good: "Good"])
+                            }
                         CategoryStatisticsView(flag: .bad)
+                            .onAppear {
+                                GA.Impression(event: .insight).send(parameters: [.bad: "Bad"])
+                            }
                     }
                 }
             }
         }
         .sheet(isPresented: $store.isPresentingProposeFunctionView) {
             // Propose Function WebView
-            InnerWebView(urlString: DURLManager.proposeFunction.urlString)
+            InnerWebView(urlString: DURL.proposeFunction.urlString)
         }
         .navigationBarBackButtonHidden()
     }

@@ -12,9 +12,8 @@ extension OnboardingView {
     var coverStepView: some View {
         VStack(alignment: .center) {
             VStack(spacing: 20) {
-                Text("안녕! 별별소에 온 걸 환영해")
-                    .font(DFont.font(.h1, weight: .bold))
-                    .foregroundStyle(.white)
+                DText("안녕! 별별소에 온 걸 환영해")
+                    .style(.h1, .bold, .white)
                     .multilineTextAlignment(.center)
                 ZStack {
                     Circle()
@@ -35,9 +34,8 @@ extension OnboardingView {
                         .frame(width: .s4 * 3, height: .s4 * 3)
                 }
                 
-                Text("금액이 아닌 의미를 고민하며\n너의 소비가 남긴 감정을 돌아보러 가볼까?")
-                    .font(DFont.font(.h3, weight: .regular))
-                    .foregroundStyle(DColor(.gray60).color)
+                DText("금액이 아닌 의미를 고민하며\n너의 소비가 남긴 감정을 돌아보러 가볼까?")
+                    .style(.h3, .regular, .gray60)
                     .multilineTextAlignment(.center)
                     .lineSpacing(6)
             }
@@ -51,10 +49,12 @@ extension OnboardingView {
                     .offset(x: 0.0, y: 0.0)
                 
                 DButton(title: "별별소 알아보기") {
+                    GA.Click(event: .onboardingStartButton).send()
                     store.send(.touchStartOnboarding)
                 }
             }
         }
+        .padding(.bottom, .s5 / 2)
         .padding(.top, 80)
         .padding(.horizontal, .defaultLayoutPadding)
     }
@@ -87,6 +87,7 @@ extension OnboardingView {
                     } else {
                         HStack {
                             Button {
+                                GA.Click(event: .onboardingHomeButton).send()
                                 store.send(.touchHomeButton)
                             } label: {
                                 ZStack {
@@ -96,12 +97,12 @@ extension OnboardingView {
                                     )
                                     .fill(DColor(.deepBlue50).color)
                                     .frame(height: 58)
-                                    Text("홈으로")
-                                        .font(DFont.font(.h3, weight: .bold))
-                                        .foregroundStyle(.white)
+                                    DText("홈으로")
+                                        .style(.h3, .bold, .white)
                                 }
                             }
                             DButton(title: "기록해 보기") {
+                                GA.Click(event: .onboardingRecordButton).send()
                                 store.send(.touchRecordButton)
                             }
                         }
@@ -136,14 +137,12 @@ extension OnboardingView {
         content: String
     ) -> some View {
         VStack(spacing: .s3) {
-            Text(title)
-                .font(DFont.font(.h1, weight: .bold))
-                .foregroundStyle(.white)
+            DText(title)
+                .style(.h1, .bold, .white)
                 .multilineTextAlignment(.center)
                 .lineSpacing(3)
-            Text(content)
-                .font(DFont.font(.h3, weight: .regular))
-                .foregroundStyle(DColor(.gray60).color)
+            DText(content)
+                .style(.h3, .regular, .gray60)
                 .multilineTextAlignment(.center)
                 .lineSpacing(3)
         }

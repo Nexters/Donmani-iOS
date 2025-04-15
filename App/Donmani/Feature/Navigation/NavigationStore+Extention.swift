@@ -42,8 +42,12 @@ extension NavigationStore {
     
     func addNewRecord(
         mainState: inout MainStore.State,
-        record: Record
+        record: Record?
     ) {
+        mainState.opacity = 1.0
+        guard let record = record else {
+            return
+        }
         let stateManager = HistoryStateManager.shared.getState()
         mainState.recordEntryPointState = RecordEntryPointStore.State(
             isCompleteToday: stateManager[.today, default: false],
@@ -54,6 +58,7 @@ extension NavigationStore {
         mainState.isPresentingRecordEntryButton = !(stateManager[.today, default: false] && stateManager[.yesterday, default: false])
         DataStorage.setRecord(record)
         mainState.monthlyRecords.append(record)
+        mainState.isNewStar += 1
         Task {
             let isFirstRecord = HistoryStateManager.shared.getIsFirstRecord()
             if isFirstRecord == nil {

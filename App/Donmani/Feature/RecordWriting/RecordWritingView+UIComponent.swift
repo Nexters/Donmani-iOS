@@ -28,7 +28,7 @@ extension RecordWritingView {
                     )
                     .offset(x: 0, y: -200)
                     .blur(radius: 70.0)
-                    .padding(.horizontal, -.defaultLayoutPadding * 3)
+                    .padding(.horizontal, -.defaultLayoutPadding * 5)
                 Spacer()
             }
         }
@@ -53,11 +53,8 @@ extension RecordWritingView {
 //                            .stroke(DColor(.deepBlue99).color, lineWidth: (isSelected && !initState) ? 2 : 0)
 //                    )
 
-                Text(category.title)
-                    .font(DFont.font(.b2, weight: .semibold))
-                    .foregroundStyle(
-                        (isSelected ? DColor(.deepBlue99) : DColor(.deepBlue90)).color
-                    )
+                DText(category.title)
+                    .style(.b2, .semibold, isSelected ? .deepBlue99 : .deepBlue90)
             }
         }
         .padding(.horizontal, .s5)
@@ -68,9 +65,8 @@ extension RecordWritingView {
             DImage(.warning).image
                 .resizable()
                 .frame(width: .s3, height: .s3)
-            Text("최대로 작성했어요")
-                .font(DFont.font(.b2, weight: .bold))
-                .foregroundStyle(.white)
+            DText("최대로 작성했어요")
+                .style(.b2, .bold, .white)
         }
         .padding(.s5)
         .background {

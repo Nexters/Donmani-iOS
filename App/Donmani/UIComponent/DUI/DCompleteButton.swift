@@ -26,18 +26,13 @@ struct DCompleteButton: View {
         } label: {
             ZStack {
                 Capsule(style: .circular)
-                    .fill((isActive ? DColor(.gray95) : DColor(.deepBlue20)).color)
-                Text("완료")
-                    .font(DFont.font(.b1, weight: .bold))
-                    .foregroundStyle((isActive ? DColor(.deepBlue20) : DColor(.deepBlue70)).color)
+                    .fill(DColor(isActive ? .gray95 : .deepBlue20).color)
+                DText("완료")
+                    .style(.b1, .bold, isActive ? .deepBlue20 : .deepBlue70)
             }
         }
         .allowsHitTesting(isActive)
         .frame(width: 60, height: 40)
         .padding(.bottom, 12)
     }
-}
-
-#Preview {
-    DCompleteButton(isActive: true) {  }
 }

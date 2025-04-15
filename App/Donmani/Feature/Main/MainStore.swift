@@ -32,6 +32,11 @@ struct MainStore {
         var isRequestNotificationPermission: Bool = false
         var isLoading: Bool = false
         
+        var yOffset: CGFloat = 0
+        var shakeCount = 0
+        var isNewStar = 0
+        
+        var opacity: CGFloat = 0.0
         var month = 0
         var day = 0
         
@@ -77,6 +82,7 @@ struct MainStore {
         case checkNotificationPermission
         case dismissNewStarBottleView
         case dismissAlreadyWrite
+        case shakeTwice
 
         case delegate(Delegate)
         enum Delegate {
@@ -101,7 +107,10 @@ struct MainStore {
                 return .none
             case .fetchUserName:
                 state.name = DataStorage.getUserName()
-                return .none
+                return .run { send in
+                    try await Task.sleep(nanoseconds: 300_000_000)
+                    await send(.checkNotificationPermission)
+                }
             case .closePopover:
                 state.isPresentingRecordYesterdayToopTip = false
                 HistoryStateManager.shared.setLastYesterdayToopTipDay()
@@ -134,6 +143,20 @@ struct MainStore {
             case .dismissAlreadyWrite:
                 state.isPresentingAlreadyWrite = false
                 return .none
+            
+            case .shakeTwice:
+                if state.shakeCount >= 6 {
+                    state.shakeCount = 0
+                    return .none
+                }
+                state.shakeCount += 1
+                state.yOffset = state.shakeCount % 2 == 0 ? 10 : 0
+                return .run { send in
+                    try await Task.sleep(nanoseconds: 500_000_000)
+                    await send(.shakeTwice, animation: .linear(duration: 0.5))
+                }
+            
+                
             case .delegate:
                 return .none
             }

@@ -19,20 +19,17 @@ extension StatisticsView {
             }
             VStack(alignment: .leading, spacing: 8) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("요약 페이지가 곧 업데이트 될거예요")
-                        .font(DFont.font(.b1, weight: .semibold))
-                        .foregroundStyle(DColor(.gray95).color)
-                    Text("기록을 모아 분석해 드릴게요!")
-                        .font(DFont.font(.b2, weight: .regular))
-                        .foregroundStyle(DColor(.deepBlue95).color)
+                    DText("요약 페이지가 곧 업데이트 될거예요")
+                        .style(.b1, .semibold, .gray95)
+                    DText("기록을 모아 분석해 드릴게요!")
+                        .style(.b2, .regular, .deepBlue95)
                 }
                 Button {
                     store.send(.touchProposeFunction)
                 } label: {
                     HStack(spacing: 4) {
-                        Text("기능 요청하기")
-                            .font(DFont.font(.b2, weight: .medium))
-                            .foregroundStyle(DColor(.deepBlue99).color)
+                        DText("기능 요청하기")
+                            .style(.b2, .medium, .deepBlue99)
                         
                         DImage(.rightArrow).image
                             .renderingMode(.template)
@@ -55,9 +52,8 @@ extension StatisticsView {
     
     func CategoryStatisticsView(flag: RecordContentType) -> some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("\(flag.title) 소비 \(flag == .good ? store.goodTotalCount : store.badTotalCount)")
-                .font(DFont.font(.b1, weight: .bold))
-                .foregroundStyle(DColor(.gray99).color)
+            DText("\(flag.title) 소비 \(flag == .good ? store.goodTotalCount : store.badTotalCount)")
+                .style(.b1, .bold, .gray99)
             if flag == .good {
                 ForEach(store.sortedGoodRecordIndex, id: \.self) { i in
                     CategoryRatioView(
@@ -95,9 +91,8 @@ extension StatisticsView {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: .s1, height: .s1)
-                Text(category.title)
-                    .font(DFont.font(.b2, weight: .medium))
-                    .foregroundStyle(DColor(.gray95).color)
+                DText(category.title)
+                    .style(.b2, .medium, .gray95)
             }
             
             Spacer()
@@ -121,9 +116,8 @@ extension StatisticsView {
                 )
                 .frame(width: .screenWidth / 3, height: 6)
             VStack(alignment: .trailing) {
-                Text("\(String(format: "%.f", ratio * 100))%")
-                    .font(DFont.font(.b2, weight: .semibold))
-                    .foregroundStyle(DColor(.gray95).color)
+                DText("\(String(format: "%.f", ratio * 100))%")
+                    .style(.b2, .semibold, .gray95)
                     .frame(width: 40)
                     .multilineTextAlignment(.trailing)
             }

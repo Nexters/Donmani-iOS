@@ -6,7 +6,8 @@
 //
 
 public enum DPath: String {
-    case users
+    case user
     case expenses
-    case api
+    case notice
+    case appVersion
 }
