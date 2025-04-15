@@ -282,8 +282,8 @@ struct RecordEntryPointStore {
                 GA.Click(event: .confirmSubmitButton).send(parameters: gaParameter)
                 
                 return .run { send in
-                    let networkManager = NetworkManager.NMRecord(service: .shared)
-                    guard let _ = try? await networkManager.uploadRecord(date: date, recordContent: records) else {
+                    let recordDao = NetworkService.DRecord()
+                    guard let _ = try? await recordDao.insert(date: date, recordContent: records) else {
                         await send(.errorSave)
                         return
                     }

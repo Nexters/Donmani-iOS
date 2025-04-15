@@ -74,8 +74,8 @@ extension MainView {
                     dismissSheet {
                         Task {
                             store.send(.dismissNewStarBottleView)
-                            let recordDAO = NetworkManager.NMRecord(service: .shared)
-                            let result = try await recordDAO.fetchMonthlyRecord(year: 2025).monthlyRecords
+                            let recordDAO = NetworkService.DRecord()
+                            let result = try await recordDAO.fetchMonthlyRecordCount(year: 2025).monthlyRecords
                             UINavigationController.blockSwipe = false
                             store.send(.delegate(.pushBottleListView(result)))
                         }

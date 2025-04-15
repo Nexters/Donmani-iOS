@@ -116,7 +116,7 @@ struct SettingView: View {
                     MenuButton(type: .notice) {
                         GA.Click(event: .settingNotice).send()
                         Task {
-                            try await NetworkManager.NMUser(service: .shared).updateNoticeStatus()
+                            try await NetworkService.User().updateNoticeStatus()
                             isNoticeNotRead = false
                             isPresentingNoticeView.toggle()
                         }
@@ -194,7 +194,7 @@ struct SettingView: View {
                 isNotificationEnabled = (status == .authorized)
             }
             Task {
-                isNoticeNotRead = !(try await NetworkManager.NMUser(service: .shared).fetchNoticeStatus())
+                isNoticeNotRead = !(try await NetworkService.User().fetchNoticeStatus())
             }
         }
         .navigationBarBackButtonHidden()
