@@ -31,9 +31,3 @@ struct DNavigationBarButton: View {
         }
     }
 }
-
-#Preview {
-    DNavigationBarButton(.calendar) {
-        
-    }
-}

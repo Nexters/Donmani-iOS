@@ -6,16 +6,7 @@
 //
 
 struct VersionDTO: Codable {
-    let statusCode: Int
-    let responseMessage: String
-    let responseData: [String: String]
-//    {
-//      "statusCode": 1073741824,
-//      "responseMessage": "string",
-//      "responseData": {
-//        "platformType": "Android",
-//        "latestVersion": "string",
-//        "forcedUpdateYn": "string"
-//      }
-//    }
+    let platformType: String
+    let latestVersion: String
+    let forcedUpdateYn: String
 }

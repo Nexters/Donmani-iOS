@@ -7,6 +7,7 @@
 
 public enum NetworkError: Error {
     case invalidURL
+    case requestFailed
     case noData
     case decodingFailed
     case encodingFailed
@@ -16,6 +17,8 @@ public enum NetworkError: Error {
         switch self {
         case .invalidURL:
             return "Invalid URL"
+        case .requestFailed:
+            return "Request failed"
         case .noData:
             return "No data returned"
         case .decodingFailed:

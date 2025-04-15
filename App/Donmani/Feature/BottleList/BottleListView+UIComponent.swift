@@ -19,9 +19,8 @@ extension BottleListView {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: .s3, height: .s3)
-                Text("매 월 1일에 새로운 별통이가 열려요")
-                    .font(DFont.font(.b1, weight: .regular))
-                    .foregroundStyle(DColor(.gray95).color)
+                DText("매 월 1일에 새로운 별통이가 열려요")
+                    .style(.b1, .regular, .gray95)
                 Spacer()
                 
                 Button {
@@ -52,6 +51,7 @@ extension BottleListView {
                         count: month.1
                     )
                     .onTapGesture {
+                        GA.Click(event: .list별통이Button).send(parameters: [.별통이ID: 2500 + month.0])
                         if (month.1 == 0) {
                             store.send(.showEmptyBottleToast)
                         } else {//if month.1 != -1 {
@@ -85,12 +85,10 @@ extension BottleListView {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: .s4, height: .s4)
                         HStack(alignment: .bottom,spacing: 0) {
-                            Text("\(count)")
-                                .font(DFont.font(.b2, weight: .semibold))
-                                .foregroundStyle(DColor(.gray80).color)
-                            Text("/\(store.endOfDay[month, default: 0])")
-                                .font(DFont.font(.b3, weight: .semibold))
-                                .foregroundStyle(DColor(.deepBlue80).color)
+                            DText("\(count)")
+                                .style(.b2, .semibold, .gray80)
+                            DText("/\(store.endOfDay[month, default: 0])")
+                                .style(.b3, .semibold, .deepBlue80)
                         }
                     }
                     .padding(.top, 6)
@@ -98,11 +96,8 @@ extension BottleListView {
                 .frame(height: 116)
             }
             
-            Text("\(month)월")
-                .font(DFont.font(.b2, weight: .semibold))
-                .foregroundStyle(DColor(
-                    (count > -1) ? .gray99 : .deepBlue80
-                ).color)
+            DText("\(month)월")
+                .style(.b2, .semibold, (count > -1) ? .gray99 : .deepBlue80)
         }
     }
     
@@ -111,9 +106,8 @@ extension BottleListView {
             DImage(.warning).image
                 .resizable()
                 .frame(width: .s3, height: .s3)
-            Text("앗! 이달은 기록이 없어요")
-                .font(DFont.font(.b2, weight: .bold))
-                .foregroundStyle(.white)
+            DText("앗! 이달은 기록이 없어요")
+                .style(.b2, .bold, .white)
         }
         .padding(.s5)
         .background {

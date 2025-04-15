@@ -29,9 +29,8 @@ struct MonthlyStarBottleView: View {
                 ZStack {
                     HStack {
                         Spacer()
-                        Text("\(store.year % 100)년 \(store.month)월")
-                            .font(.b1, .semibold)
-                            .foregroundStyle(.white)
+                        DText("\(store.year % 100)년 \(store.month)월")
+                            .style(.b1, .semibold, .white)
                         Spacer()
                     }
                     HStack {

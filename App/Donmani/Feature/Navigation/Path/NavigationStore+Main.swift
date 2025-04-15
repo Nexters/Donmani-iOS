@@ -18,6 +18,7 @@ extension NavigationStore {
             let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
             let yearMonth = (Int(today[0])!, Int(today[1])!)
             state.recordListState = RecordListStore.State(year: yearMonth.0, month: yearMonth.1, isShowNavigationButton: true)
+            GA.View(event: .recordhistory).send(parameters: [.referrer: "메인"])
             state.path.append(.recordList(state.recordListState))
             return .none
             

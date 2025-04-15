@@ -14,7 +14,7 @@ extension AppDelegate: MessagingDelegate {
         if let fcmToken {
             HistoryStateManager.shared.setFirebaseToken(token: fcmToken)
             Task {
-                try await NetworkManager.NMFcm(service: .shared).registerToken(token: fcmToken)
+                try await NetworkService.FCM().register(token: fcmToken)
             }
             print("FCM Token:", fcmToken)
         }

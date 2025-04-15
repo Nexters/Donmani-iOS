@@ -29,9 +29,8 @@ struct RecordContentView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text(record.category.title)
-                    .font(DFont.font(.h3, weight: .bold))
-                    .foregroundStyle(.white)
+                DText(record.category.title)
+                    .style(.h3, .bold, .white)
                 Spacer()
                 if isEditable {
                     DImage(.edit).image
@@ -71,11 +70,11 @@ struct RecordContentView: View {
                     Spacer()
                 }
                 VStack(spacing: 0) {
-                    Text(record.memo)
-                        .font(DFont.font(.b1, weight: .medium))
-                        .foregroundStyle(DColor(.gray95).color)
+                    DText(record.memo)
+                        .style(.b1, .medium, .gray95)
                         .lineLimit(10)
                         .multilineTextAlignment(.leading)
+                        .padding(.top, 3)
                     Spacer(minLength: 0)
                 }
             }
@@ -89,7 +88,7 @@ struct RecordContentView: View {
         record: RecordContent(
             flag: .bad,
             category: RecordCategory(BadCategory.greed),
-            memo: "망했어요"
+            memo: "하하 망했어요"
         )
     )
 }

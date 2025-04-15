@@ -14,10 +14,15 @@ final class StarScene: SKScene {
     var nodeSet: Set<String> = []
     var ground: SKSpriteNode?
     
+    
     override func sceneDidLoad() {
         super.sceneDidLoad()
         self.scaleMode = .aspectFit
-        self.backgroundColor = .clear
+        self.backgroundColor = .clear.withAlphaComponent(0.0)
+        self.scene?.backgroundColor = .clear.withAlphaComponent(0.0)
+        self.scene?.view?.backgroundColor = .clear.withAlphaComponent(0.0)
+        self.view?.backgroundColor = .clear.withAlphaComponent(0.0)
+        self.inputView?.backgroundColor = .clear.withAlphaComponent(0.0)
         self.physicsWorld.gravity = CGVector(dx: 0.0, dy: 0.0)
     }
     

@@ -48,16 +48,13 @@ struct DButton: View {
                     ? DColor(.gray95).color
                     : DColor(.deepBlue20).color
                 )
-                Text(title)
-                    .font(DFont.font(.h3, weight: .bold))
-                    .foregroundStyle(
-                        isEnabled
-                        ? DColor(.deepBlue20).color
-                        : DColor(.deepBlue70).color
-                    )
+                DText(title)
+                    .style(.h3, .bold, isEnabled ? .deepBlue20 : .deepBlue70)
             }
         }
         .frame(height: 58)
         .allowsHitTesting(isEnabled)
     }
 }
+
+

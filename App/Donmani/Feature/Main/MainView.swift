@@ -11,7 +11,6 @@ import DesignSystem
 
 struct MainView: View {
     @Bindable var store: StoreOf<MainStore>
-    @State private var opacity: CGFloat = 0.0
     
     var body: some View {
         ZStack {
@@ -27,15 +26,15 @@ struct MainView: View {
                 VStack(spacing: .s3) {
                     HStack {
                         AccessoryButton(asset: .setting) {
+                            GA.Click(event: .mainSettingButton).send()
                             store.send(.delegate(.pushSettingView))
                         }
                         Spacer()
                     }
                     HStack {
                         Spacer()
-                        Text(store.name)
-                            .font(.h1, .bold)
-                            .foregroundStyle(DColor(.gray95).color)
+                        DText(store.name)
+                            .style(.h1, .bold, .gray95)
                         Spacer()
                     }
                 }
@@ -52,16 +51,20 @@ struct MainView: View {
                         StarBottleView(records: store.monthlyRecords)
                             .frame(width: .screenWidth * 0.8)
                             .aspectRatio(0.75, contentMode: .fit)
-                            .opacity(opacity)
+                            .opacity(store.opacity)
                         DImage(.starBottle).image
                             .resizable()
                             .frame(width: .screenWidth * 0.8)
                             .aspectRatio(0.75, contentMode: .fit)
-                            .opacity(1)
                     }
                     .onTapGesture {
+                        GA.Click(event: .mainRecordArchiveButton).send()
                         store.send(.delegate(.pushRecordListView))
                     }
+                }
+                .offset(y: store.yOffset)
+                .onChange(of: store.isNewStar) { _, _ in
+                    store.send(.shakeTwice)
                 }
                 
                 Spacer()
@@ -76,9 +79,8 @@ struct MainView: View {
                             .aspectRatio(contentMode: .fit)
                             .foregroundStyle(DColor(.pupleBlue90).color)
                             .frame(width: 22)
-                        Text("오늘 남길 수 있는 기록은 모두 작성했어요!")
-                            .font(DFont.font(.b2, weight: .semibold))
-                            .foregroundStyle(DColor(.pupleBlue90).color)
+                        DText("오늘 남길 수 있는 기록은 모두 작성했어요!")
+                            .style(.b2, .semibold, .pupleBlue90)
                     }
                 }
             }
@@ -94,7 +96,8 @@ struct MainView: View {
                         
                         Spacer()
                     }
-                }.padding(.vertical, 16 + 70)
+                }
+                .padding(.vertical, 16 + 70)
             }
             if store.isPresentingNewStarBottle {
                 NewStarBottleView()
@@ -112,14 +115,30 @@ struct MainView: View {
         .onAppear {
             store.send(.fetchUserName)
             store.send(.checkPopover)
-            Task(priority: .background) {
-                try? await Task.sleep(nanoseconds: 2_000_000)
-                store.send(.checkNotificationPermission)
-                opacity = 1.0
-            }
         }
         .navigationBarBackButtonHidden()
     }
+    
+//    private func shakeTwice() {
+//        store.shakeCount = 0
+//         performShake()
+//     }
+//
+//     private func performShake() {
+//         guard shakeCount < 4 else {
+//             yOffset = 0 // 마지막에 위치 초기화
+//             return
+//         }
+//
+//         withAnimation(.easeInOut(duration: 0.1)) {
+//             yOffset = shakeCount % 2 == 0 ? -10 : 10
+//         }
+//
+//         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//             shakeCount += 1
+//             performShake()
+//         }
+//     }
 }
 
 #Preview {

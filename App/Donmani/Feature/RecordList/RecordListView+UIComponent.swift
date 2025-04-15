@@ -22,9 +22,8 @@ extension RecordListView {
             HStack {
                 Spacer()
                 HStack {
-                    Text("별통이만 모아볼 수 있어요!")
-                        .font(DFont.font(.b3, weight: .semibold))
-                        .foregroundStyle(.white)
+                    DText("별통이만 모아볼 수 있어요!")
+                        .style(.b3, .semibold, .white)
                     Button {
                         store.send(.closeBottleListToopTip)
                     } label: {
@@ -48,10 +47,10 @@ extension RecordListView {
         ZStack {
             VStack(spacing: .s5) {
                 Spacer()
-                Text("아직 기록이 없어요")
-                    .font(DFont.font(.h2, weight: .semibold))
-                    .foregroundStyle(DColor(.gray95).color)
+                DText("아직 기록이 없어요")
+                    .style(.h2, .semibold, .gray95)
                 DButton(title: "기록하기", isEnabled: true) {
+                    GA.Click(event: .recordhistoryRecordButton).send()
                     store.send(.delegate(.pushRecordEntryPointView))
                 }
                 .frame(width: 100)
@@ -70,9 +69,8 @@ extension RecordListView {
                 ForEach(store.record, id: \.date) { record in
                     VStack {
                         HStack {
-                            Text(convertDateTitle(record.date) ?? "")
-                                .font(DFont.font(.b2, weight: .medium))
-                                .foregroundStyle(DColor(.gray95).color)
+                            DText(convertDateTitle(record.date) ?? "")
+                                .style(.b2, .medium, .gray95)
                             Spacer()
                         }
                         if let contents = record.contents {
@@ -108,9 +106,8 @@ extension RecordListView {
             .overlay {
                 VStack(alignment: .leading, spacing: .s5)  {
                     HStack {
-                        Text("\(store.yearMonth.month)월 기록 통계")
-                            .font(DFont.font(.b1, weight: .semibold))
-                            .foregroundStyle(DColor(.gray99).color)
+                        DText("\(store.yearMonth.month)월 기록 통계")
+                            .style(.b1, .semibold, .gray99)
                         DImage(.rightArrow).image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -143,17 +140,15 @@ extension RecordListView {
                             Circle()
                                 .fill(DColor(.pupleBlue70).color)
                                 .frame(width: 6, height: 6)
-                            Text("행복 \(store.goodCount)개")
-                                .font(DFont.font(.b2, weight: .medium))
-                                .foregroundStyle(DColor(.deepBlue99).color)
+                            DText("행복 \(store.goodCount)개")
+                                .style(.b2, .medium, .deepBlue99)
                         }
                         HStack(spacing: 8) {
                             Circle()
                                 .fill(DColor(.pupleBlue99).color)
                                 .frame(width: 6, height: 6)
-                            Text("후회 \(store.badCount)개")
-                                .font(DFont.font(.b2, weight: .medium))
-                                .foregroundStyle(DColor(.deepBlue99).color)
+                            DText("후회 \(store.badCount)개")
+                                .style(.b2, .medium, .deepBlue99)
                         }
                     }
                     .padding(.horizontal, 4)
