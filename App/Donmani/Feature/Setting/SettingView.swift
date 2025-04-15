@@ -165,15 +165,15 @@ struct SettingView: View {
         }
         .sheet(isPresented: $isPresentingPrivacyPolicyView) {
             // Privacy Policy WebView
-            InnerWebView(urlString: DURLManager.privacyPolicy.urlString)
+            InnerWebView(urlString: DURL.privacyPolicy.urlString)
         }
         .sheet(isPresented: $isPresentingFeedbackView) {
             // Feeback WebView
-            InnerWebView(urlString: DURLManager.feedback.urlString)
+            InnerWebView(urlString: DURL.feedback.urlString)
         }
         .sheet(isPresented: $isPresentingNoticeView) {
             // Notice WebView
-            InnerWebView(urlString: DURLManager.notice.urlString)
+            InnerWebView(urlString: DURL.notice.urlString)
         }
         .onChange(of: scenePhase) { oldPhase, newPhase  in
 //            print("OnAppear")

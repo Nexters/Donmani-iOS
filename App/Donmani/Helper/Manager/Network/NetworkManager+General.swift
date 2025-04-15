@@ -10,10 +10,10 @@ import DNetwork
 
 extension NetworkManager {
     struct NMVersion {
-        let service: DNetworkService
+        let service: DNetworkRequest
         
         init (
-            service: DNetworkService
+            service: DNetworkRequest
         ) {
             self.service = service
         }

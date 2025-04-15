@@ -10,6 +10,7 @@ struct UserDTO: Codable {
     var userName: String? = nil
     var updatedUserName: String? = nil
     var newUserName: String? = nil
+    var new: Bool = false
     
     init(userKey: String) {
         self.userKey = userKey
