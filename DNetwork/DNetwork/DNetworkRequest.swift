@@ -29,22 +29,22 @@ public struct DNetworkRequest {
         return url
     }
     
-    public func requestAppVersion<T: Codable>() async throws -> T  {
-        guard let url = URL(string: DURL.appInfo.urlString) else {
-            throw NetworkError.invalidURL
-        }
-        let request = createURLReqeust(method: .GET, url: url)
-        let (data, response) = try await URLSession.shared.data(for: request)
-        let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500
-        if stateCode >= 400 {
-            throw NetworkError.serverError(statusCode: stateCode)
-        }
-        
-        guard let returnData = try? JSONDecoder().decode(T.self, from: data) else {
-            throw NetworkError.decodingFailed
-        }
-        return returnData
-    }
+//    public func requestAppVersion<T: Codable>() async throws -> T  {
+//        guard let url = URL(string: DURL.appInfo.urlString) else {
+//            throw NetworkError.invalidURL
+//        }
+//        let request = createURLReqeust(method: .GET, url: url)
+//        let (data, response) = try await URLSession.shared.data(for: request)
+//        let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500
+//        if stateCode >= 400 {
+//            throw NetworkError.serverError(statusCode: stateCode)
+//        }
+//        
+//        guard let returnData = try? JSONDecoder().decode(T.self, from: data) else {
+//            throw NetworkError.decodingFailed
+//        }
+//        return returnData
+//    }
     
     private func run<R: Codable>(request: URLRequest) async throws -> R {
         guard let (data, response) = try? await URLSession.shared.data(for: request) else {

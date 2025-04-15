@@ -83,8 +83,7 @@ struct BottleListStore {
                 return .run { send in
                     let key = "2025-\(String(format: "%02d", month))"
                     if DataStorage.getRecord(yearMonth: key) == nil {
-                        let result = try await NetworkManager.NMRecord(service: .shared)
-                            .fetchRecordForList(year: year, month: month)
+                        let result = try await NetworkService.DRecord().fetchRecordList(year: year, month: month)
                         DataStorage.setMonthRecords(year: year, month: month, result)
                     }
                     await send(.delegate(.pushMonthlyBottleView(year, month)))

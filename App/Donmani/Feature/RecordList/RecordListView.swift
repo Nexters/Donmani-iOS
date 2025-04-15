@@ -34,8 +34,8 @@ struct RecordListView: View {
                             DNavigationBarButton(.bottleIcon) {
                                 GA.Click(event: .listButton).send()
                                 Task {
-                                    let recordDAO = NetworkManager.NMRecord(service: .shared)
-                                    let result = try await recordDAO.fetchMonthlyRecord(year: 2025).monthlyRecords
+                                    let recordDAO = NetworkService.DRecord()
+                                    let result = try await recordDAO.fetchMonthlyRecordCount(year: 2025).monthlyRecords
                                     store.send(.delegate(.pushBottleListView(result)))
                                 }
                             }
