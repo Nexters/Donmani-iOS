@@ -1,11 +1,11 @@
 //
-//  DURLManager.swift
+//  DURL.swift
 //  DNetwork
 //
 //  Created by 문종식 on 3/9/25.
 //
 
-public enum DURLManager {
+public enum DURL {
     case privacyPolicy
     case feedback
     case api
@@ -21,7 +21,7 @@ public enum DURLManager {
         case .feedback:
             return "https://forms.gle/G32u2RTKjHM8Fwef7"
         case .api:
-            return "http://211.188.60.38:8080"
+            return "http://211.188.60.38:8080/api/v1" // "https://www.donmani.kr"
         case .appInfo:
             return "https://itunes.apple.com/lookup?bundleId=com.nexters.Donmani"
         case .appStore:

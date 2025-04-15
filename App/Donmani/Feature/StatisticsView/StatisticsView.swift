@@ -53,7 +53,7 @@ struct StatisticsView: View {
         }
         .sheet(isPresented: $store.isPresentingProposeFunctionView) {
             // Propose Function WebView
-            InnerWebView(urlString: DURLManager.proposeFunction.urlString)
+            InnerWebView(urlString: DURL.proposeFunction.urlString)
         }
         .navigationBarBackButtonHidden()
     }

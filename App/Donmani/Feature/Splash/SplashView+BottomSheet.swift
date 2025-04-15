@@ -22,7 +22,7 @@ extension SplashView {
                 DText("더 나은 서비스 사용 환경을 위해 최신 버전의 앱으로 업데이트를 부탁드립니다.")
                     .style(.b1, .regular, .gray95)
                 
-                if let url = URL(string: DURLManager.appStore.urlString) {
+                if let url = URL(string: DURL.appStore.urlString) {
                     Link(destination: url) {
                         ZStack {
                             RoundedRectangle(
