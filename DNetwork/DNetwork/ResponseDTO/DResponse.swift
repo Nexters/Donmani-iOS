@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct DResponse<D: Codable>: Codable {
+public struct DResponse<D: Decodable>: Decodable {
     public let statusCode: Int
     public let responseMessage: String
     public let responseData: D?
