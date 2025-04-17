@@ -8,7 +8,7 @@
 import SwiftUI
 import DesignSystem
 
-struct RecordCategory: Equatable {
+struct RecordCategory: Hashable {
     
     private let _isEqual: (Any) -> Bool
     private let _hashValue: () -> Int
