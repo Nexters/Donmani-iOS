@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import DNetwork
 import FirebaseMessaging
 
 extension AppDelegate: MessagingDelegate {

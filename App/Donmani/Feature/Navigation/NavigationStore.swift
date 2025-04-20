@@ -110,6 +110,8 @@ struct NavigationStore {
                 )
                 let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
                 let mainState: MainStore.State = MainStore.State(today: today)
+                let screenType = state.recordEntryPointState.dayTitle
+                GA.View(event: .recordmain).send(parameters: [.referrer: "onboarding", .screenType: screenType])
                 state.path.append(contentsOf: [
                     .main(mainState),
                     .recordEntryPoint(state.recordEntryPointState)
@@ -132,6 +134,7 @@ struct NavigationStore {
                     isCompleteToday: stateManager[.today, default: false],
                     isCompleteYesterday: stateManager[.yesterday, default: false]
                 )
+                let screenType = state.recordEntryPointState.dayTitle
                 state.path.append(.recordEntryPoint(state.recordEntryPointState))
                 return .none
             case .mainAction(.delegate(.pushSettingView)):

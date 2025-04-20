@@ -71,7 +71,7 @@ struct RecordListStore {
         case closeBottleListToopTip
         case delegate(Delegate)
         enum Delegate {
-            case pushBottleListView([String: SummaryMonthly])
+            case pushBottleListView(RecordCountSummary)
             case pushRecordEntryPointView
             case pushStatisticsView(Int, Int)
         }

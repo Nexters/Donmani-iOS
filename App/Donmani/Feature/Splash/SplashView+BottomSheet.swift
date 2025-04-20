@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import DesignSystem
 import DNetwork
+import DesignSystem
 
 extension SplashView {
     func AppStoreView() -> some View {

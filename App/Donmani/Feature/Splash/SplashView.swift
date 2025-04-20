@@ -7,7 +7,6 @@
 
 import SwiftUI
 import DesignSystem
-import DNetwork
 import ComposableArchitecture
 
 struct SplashView: View {

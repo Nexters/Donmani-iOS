@@ -5,12 +5,12 @@
 //  Created by 문종식 on 2/16/25.
 //
 
-extension DNetworkService {
-    public struct User {
+public extension DNetworkService {
+    struct User {
         let request: DNetworkRequest
         let userKey: String
         
-        init() {
+        public init() {
             self.request = DNetworkRequest()
             self.userKey = DNetworkService.userKey
         }
@@ -28,7 +28,7 @@ extension DNetworkService {
             return data
         }
         
-        public func updateName(name: String) async throws -> String {
+        public func update(name: String) async throws -> String {
             let bodyData = UserRequestDTO(userKey: userKey, newUserName: name)
             let response: DResponse<UserUpdateDTO> = try await self.request.post(
                 path: .user,

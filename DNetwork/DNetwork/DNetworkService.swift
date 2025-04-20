@@ -7,7 +7,10 @@
 
 public struct DNetworkService {
     static var userKey: String = ""
-    public static func getUserKey(_ key: String) {
+    public static func setUserKey(_ key: String) {
         Self.userKey = key
+    }
+    public static func getUserKey(_ key: String) -> String {
+        return Self.userKey
     }
 }
