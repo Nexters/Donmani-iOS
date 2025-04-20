@@ -14,7 +14,7 @@ extension GA {
         
         let event: Event
         var eventName: String {
-            var value = "[I]"
+            var value = "I_"
             switch event {
             case .recordhistory:
                 value += "recordhistory"

@@ -55,7 +55,7 @@ extension GA {
         }
         
         var eventName: String {
-            var value = "[C]"
+            var value = "C_"
             switch event {
             case .onboardingStartButton:
                 value += "onboarding_start_button"

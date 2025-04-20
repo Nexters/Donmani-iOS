@@ -7,7 +7,7 @@
 
 import DNetwork
 
-typealias NetworkService = DNetworkService
+public typealias NetworkService = DNetworkService
 
 //struct NetworkService {
 //    static public var userKey: String = ""

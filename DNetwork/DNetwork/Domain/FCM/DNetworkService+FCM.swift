@@ -5,12 +5,12 @@
 //  Created by 문종식 on 2/16/25.
 //
 
-extension DNetworkService {
-    public struct FCM {
+public extension DNetworkService {
+    struct FCM {
         let request: DNetworkRequest
         let userKey: String
         
-        init() {
+        public init() {
             self.request = DNetworkRequest()
             self.userKey = DNetworkService.userKey
         }

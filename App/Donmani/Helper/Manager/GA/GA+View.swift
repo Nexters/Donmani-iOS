@@ -25,7 +25,7 @@ extension GA {
         }
         
         var eventName: String {
-            var value = "[V]"
+            var value = "V_"
             switch event {
             case .main:
                 value += "main"

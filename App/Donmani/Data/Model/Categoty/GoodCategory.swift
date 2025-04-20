@@ -38,6 +38,11 @@ extension GoodCategory {
         self.rawValue
     }
     
+    var uppercaseValue: String {
+        self.rawValue.uppercased()
+    }
+    
     static let set = Set(allCases.map{$0.rawValue.uppercased()})
+    
 }
 

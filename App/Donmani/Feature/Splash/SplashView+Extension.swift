@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DNetwork
 
 extension SplashView {
     func loadData() {
@@ -14,12 +15,12 @@ extension SplashView {
             let (key, _) = keychainManager.generateUUID()
 //            print(key)
             let isFirstUser = keychainManager.getUserName().isEmpty
-            NetworkService.userKey = key
+            NetworkService.setUserKey(key)
             var userName = try await NetworkService.User().register()
             if isFirstUser {
                 userName += "님의 별통이"
             }
-            userName = try await NetworkService.User().updateName(name: userName)
+            userName = try await NetworkService.User().update(name: userName)
             keychainManager.setUserName(name: userName)
             DataStorage.setUserName(userName)
             let dateManager = DateManager.shared
@@ -29,9 +30,13 @@ extension SplashView {
             let today = dateManager.getFormattedDate(for: .today).components(separatedBy: "-").compactMap(Int.init)
             if (today[2] == 1) {
                 let yesterday = dateManager.getFormattedDate(for: .yesterday).components(separatedBy: "-").compactMap(Int.init)
-                records.append(contentsOf: try await recordDAO.fetchRecordCalendar(year: yesterday[0], month: yesterday[1]))
+                let response = try await recordDAO.fetchRecordCalendar(year: yesterday[0], month: yesterday[1])
+                let result = NetworkDTOMapper.mapper(dto: response)
+                records.append(contentsOf: result)
             }
-            records.append(contentsOf: try await recordDAO.fetchRecordCalendar(year: today[0], month: today[1]))
+            let response = try await recordDAO.fetchRecordCalendar(year: today[0], month: today[1])
+            let result = NetworkDTOMapper.mapper(dto: response)
+            records.append(contentsOf: result)
             
             records.forEach { record in
                 if (record.date == dateManager.getFormattedDate(for: .today)) {

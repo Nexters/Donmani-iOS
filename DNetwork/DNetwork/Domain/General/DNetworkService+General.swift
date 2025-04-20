@@ -5,11 +5,11 @@
 //  Created by 문종식 on 2/19/25.
 //
 
-extension DNetworkService {
-    public struct Version {
+public extension DNetworkService {
+    struct Version {
         let request: DNetworkRequest
         
-        init() {
+        public init() {
             self.request = DNetworkRequest()
         }
         
