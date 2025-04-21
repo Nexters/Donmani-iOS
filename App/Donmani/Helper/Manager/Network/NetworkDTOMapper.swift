@@ -69,7 +69,7 @@ extension NetworkDTOMapper {
     
     static func mapper(dto: RecordResponseDTO.RecordContentDTO) -> RecordContent {
         let flag = mapper(flag: dto.flag)
-        let category = mapper(type: flag, rawValue: dto.category)
+        let category = mapper(type: flag, rawValue: dto.category.lowercased())
         let recordContent = RecordContent(
             flag: flag,
             category: category,
@@ -97,8 +97,8 @@ extension NetworkDTOMapper {
                 category = goodCategory
             }
         case .bad:
-            if let goodCategory = GoodCategory(rawValue: rawValue) {
-                category = goodCategory
+            if let badCategory = BadCategory(rawValue: rawValue) {
+                category = badCategory
             }
         }
         let recordCategory = RecordCategory(category)

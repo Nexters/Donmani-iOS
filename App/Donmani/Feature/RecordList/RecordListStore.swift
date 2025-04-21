@@ -21,6 +21,7 @@ struct RecordListStore {
         let badCount: Int
         let progressPoint: CGFloat
         var isPresentingBottleListToopTipView: Bool = false
+        var dateSet: Set<String>
         
         init(
             year: Int,
@@ -62,13 +63,16 @@ struct RecordListStore {
                 self.progressPoint = -1
             }
             self.isPresentingBottleListToopTipView = (HistoryStateManager.shared.getIsShownBottleListToopTip() == nil)
-            
+            self.dateSet = []
         }
     }
     
     // MARK: - Action
     enum Action {
         case closeBottleListToopTip
+        case touchStatisticsView(Bool)
+        case addAppearCardView(String)
+        case generateGAEvent
         case delegate(Delegate)
         enum Delegate {
             case pushBottleListView(RecordCountSummary)
@@ -84,6 +88,18 @@ struct RecordListStore {
             case .closeBottleListToopTip:
                 state.isPresentingBottleListToopTipView = false
                 HistoryStateManager.shared.setIsShownBottleListToopTip()
+                return .none
+            case .touchStatisticsView(let isEmpty):
+                let value = isEmpty ? "no_record" : "has_record"
+                GA.Click(event: .insightButton).send(parameters: [.recordStatus: value])
+                return .none
+            case .addAppearCardView(let date):
+                state.dateSet.insert(date)
+                return .none
+            case .generateGAEvent:
+                if state.record.count > 0 {
+                    GA.Impression(event: .recordhistory).send(parameters: [.recordID: state.dateSet.count - 1])
+                }
                 return .none
             case .delegate(.pushBottleListView(_)):
                 state.isPresentingBottleListToopTipView = false

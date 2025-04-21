@@ -36,7 +36,7 @@ struct RecordListView: View {
                                 Task {
                                     let response = try await NetworkService.DRecord().fetchMonthlyRecordCount(year: 2025)
                                     let result = NetworkDTOMapper.mapper(dto: response)
-                                    store.send(.delegate(.pushBottleListView(result.monthlyRecords)))
+                                    store.send(.delegate(.pushBottleListView(result)))
                                 }
                             }
                         }
@@ -50,6 +50,9 @@ struct RecordListView: View {
                         VStack {
                             SimpleStatisticsView()
                                 .padding(.top, .s5)
+                                .onTapGesture {
+                                    store.send(.touchStatisticsView(false))
+                                }
                             Spacer()
                         }
                         EmptyGuideView()
@@ -65,6 +68,9 @@ struct RecordListView: View {
             
         }
         .navigationBarBackButtonHidden()
+        .onDisappear {
+            store.send(.generateGAEvent)
+        }
     }
     
     func convertDateTitle(_ dateString: String) -> String? {

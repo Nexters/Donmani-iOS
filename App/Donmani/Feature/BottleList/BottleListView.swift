@@ -59,7 +59,7 @@ struct BottleListView: View {
 #Preview {
     BottleListView(
         store: Store(
-            initialState: BottleListStore.State(starCount: [:])
+            initialState: BottleListStore.State(recordCountSummary: RecordCountSummary(year: 2025, monthlyRecords: [:]))
         ) {
             BottleListStore()
         }

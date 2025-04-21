@@ -32,6 +32,7 @@ extension GA {
             case recordmainGoodButton
             case recordmainBadButton
             case recordmainEmptyButton
+            case recordmainEmptyButtonUncheck
             case recordmainSubmitButton
             case recordmainEmptyYesButton
             case recordmainEmptyNoButton
@@ -86,6 +87,8 @@ extension GA {
             case .recordmainBadButton:
                 value += "recordmain_bad_button"
             case .recordmainEmptyButton:
+                value += "recordmain_empty_button"
+            case .recordmainEmptyButtonUncheck:
                 value += "recordmain_empty_button"
             case .recordmainSubmitButton:
                 value += "recordmain_submit_button"
@@ -142,6 +145,7 @@ extension GA {
                     .recordmainGoodButton,
                     .recordmainBadButton,
                     .recordmainEmptyButton,
+                    .recordmainEmptyButtonUncheck,
                     .recordmainSubmitButton,
                     .recordmainEmptyYesButton,
                     .recordmainEmptyNoButton,

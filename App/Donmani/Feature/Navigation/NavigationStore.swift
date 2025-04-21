@@ -42,7 +42,7 @@ struct NavigationStore {
             let yearMonth = (Int(today[0])!, Int(today[1])!)
             self.recordListState = RecordListStore.State(year: yearMonth.0, month: yearMonth.1, isShowNavigationButton: true)
             self.recordWritingState = RecordWritingStore.State(type: .good)
-            self.bottleListState = BottleListStore.State(starCount: [:])
+            self.bottleListState = BottleListStore.State(recordCountSummary: RecordCountSummary(year: 2025, monthlyRecords: [:]))
             self.monthlyStarBottleState = MonthlyStarBottleStore.State(year: 0, month: 0)
             self.statisticsState = StatisticsStore.State(year: 0, month: 0)
             if rootType == .onboarding {
@@ -135,6 +135,7 @@ struct NavigationStore {
                     isCompleteYesterday: stateManager[.yesterday, default: false]
                 )
                 let screenType = state.recordEntryPointState.dayTitle
+                GA.View(event: .recordmain).send(parameters: [.screenType: screenType])
                 state.path.append(.recordEntryPoint(state.recordEntryPointState))
                 return .none
             case .mainAction(.delegate(.pushSettingView)):
