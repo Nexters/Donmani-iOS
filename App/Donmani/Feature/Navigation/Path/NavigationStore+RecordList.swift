@@ -25,7 +25,7 @@ extension NavigationStore {
             return .none
             
         case  .pushBottleListView(let result):
-            state.bottleListState = BottleListStore.State(starCount: result)
+            state.bottleListState = BottleListStore.State(recordCountSummary: result)
             state.path.append(.bottleList(state.bottleListState))
             return .none
             

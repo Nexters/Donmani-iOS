@@ -205,11 +205,11 @@ struct RecordEntryPointStore {
                 if state.isCheckedEmptyRecord {
                     state.isCheckedEmptyRecord = false
                     state.isSaveEnabled = false
+                    GA.Click(event: .recordmainEmptyButtonUncheck).send(parameters: [.screenType: state.dayType])
                     UINavigationController.swipeNavigationPopIsEnabled = true
                 } else {
                     GA.Click(event: .recordmainEmptyButton).send(parameters: [.screenType: state.dayType])
                     state.isPresentingRecordEmpty = true
-//                    UINavigationController.blockSwipe = true
                 }
                 return .none
             case .closePopover:
@@ -235,6 +235,8 @@ struct RecordEntryPointStore {
                 
             case .readyToSave:
                 GA.Click(event: .recordmainSubmitButton).send(parameters: [.screenType: state.dayTitle])
+                GA.View(event: .confirm).send(parameters: [.referrer: true])
+                
                 state.isReadyToSave = true
                 state.isFullWriting = true
                 if !state.isCheckedEmptyRecord {
@@ -270,17 +272,39 @@ struct RecordEntryPointStore {
                 stateManager.addRecord(for: state.dayType)
                 
                 var gaParameter:[GA.Parameter:Any] = [.screenType:state.dayType]
+                var recordValue: String = ""
                 if let good = state.goodRecord {
                     gaParameter = [.good: good.category]
+                    recordValue += "GOOD_" + good.memo
                 }
                 if let bad = state.badRecord {
                     gaParameter = [.bad: bad.category]
+                    recordValue += "BAD_" + bad.memo
                 }
                 if state.isCheckedEmptyRecord {
                     gaParameter = [.empty: true]
                 }
+                if !recordValue.isEmpty {
+                    gaParameter = [.record: recordValue]
+                }
                 GA.Click(event: .confirmSubmitButton).send(parameters: gaParameter)
                 
+                let yesterday = DateManager.shared.getFormattedDate(for: .yesterday, .yearMonthDay)
+                let lastDate = HistoryStateManager.shared.getLastWriteRecordDateKey()
+                if (yesterday == lastDate) {
+                    let streakCount = HistoryStateManager.shared.getStreakSubmitCountKey()
+                    gaParameter = [.screenType: state.dayType]
+                    if let good = state.goodRecord {
+                        gaParameter = [.good: good.category]
+                    }
+                    if let bad = state.badRecord {
+                        gaParameter = [.bad: bad.category]
+                    }
+                    gaParameter[.streakCount] = streakCount + 1
+                    HistoryStateManager.shared.setStreakSubmitCountKey(count: streakCount + 1)
+                    HistoryStateManager.shared.setLastWriteRecordDateKey()
+                    GA.Submit(event: .streakSubmit).send(parameters: gaParameter)
+                }
                 return .run { send in
                     let requestDTO = NetworkRequestDTOMapper.mapper(data: records)
                     guard let _ = try? await NetworkService.DRecord().insert(date: date, recordContent: requestDTO) else {
