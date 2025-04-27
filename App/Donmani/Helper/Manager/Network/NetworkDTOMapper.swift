@@ -44,7 +44,7 @@ extension NetworkDTOMapper {
 extension NetworkDTOMapper {
     static func mapper(dto: RecordResponseDTO) -> [Record] {
         var result: [Record] = []
-        for responseRecord in dto.records {
+        for responseRecord in (dto.records ?? []) {
             let record = mapper(dto: responseRecord)
             result.append(record)
         }

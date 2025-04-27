@@ -72,7 +72,6 @@ struct RecordListStore {
         case closeBottleListToopTip
         case touchStatisticsView(Bool)
         case addAppearCardView(String)
-        case generateGAEvent
         case delegate(Delegate)
         enum Delegate {
             case pushBottleListView(RecordCountSummary)
@@ -95,11 +94,6 @@ struct RecordListStore {
                 return .none
             case .addAppearCardView(let date):
                 state.dateSet.insert(date)
-                return .none
-            case .generateGAEvent:
-                if state.record.count > 0 {
-                    GA.Impression(event: .recordhistory).send(parameters: [.recordID: state.dateSet.count - 1])
-                }
                 return .none
             case .delegate(.pushBottleListView(_)):
                 state.isPresentingBottleListToopTipView = false
