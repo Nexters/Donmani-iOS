@@ -15,17 +15,14 @@ protocol GAProtocol {
 
 extension GAProtocol {
     func send(parameters: [GA.Parameter: Any]? = nil) {
-        var convertKeyValue: [String: Any]? = [:]
+        var convertKeyValue: [String: Any] = ["event_name":eventName]
         if let screen {
-            convertKeyValue?["screen_name"] = screen.rawValue
+            convertKeyValue["screen_name"] = screen.rawValue
+            convertKeyValue[AnalyticsParameterScreenName] = screen.rawValue
         }
         
         parameters?.forEach {
-            convertKeyValue?[$0.key.value] = $0.value
-        }
-        
-        if convertKeyValue?.isEmpty ?? true {
-            convertKeyValue = nil
+            convertKeyValue[$0.key.value] = $0.value
         }
         
         Analytics.logEvent(

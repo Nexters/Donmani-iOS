@@ -69,7 +69,12 @@ struct RecordListView: View {
         }
         .navigationBarBackButtonHidden()
         .onDisappear {
-            store.send(.generateGAEvent)
+            if store.record.count > 0 {
+                let id = store.dateSet.count - 1
+                DispatchQueue.global().async {
+                    GA.Impression(event: .recordhistory).send(parameters: [.recordID: id])
+                }
+            }
         }
     }
     

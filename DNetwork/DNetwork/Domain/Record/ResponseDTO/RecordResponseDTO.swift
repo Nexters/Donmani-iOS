@@ -7,7 +7,7 @@
 
 public struct RecordResponseDTO: Decodable {
     public let userKey: String
-    public let records: [RecordResponseDTO.RecordDTO]
+    public let records: [RecordResponseDTO.RecordDTO]?
     
     public struct RecordDTO: Decodable {
         public let date: String
