@@ -73,6 +73,7 @@ struct NavigationStore {
         case addNewRecord(Record?)
         case path(StackActionOf<Path>)
         case blockPopGesture
+        case getNotification(String)
     }
     
     var body: some ReducerOf<Self> {
@@ -175,6 +176,28 @@ struct NavigationStore {
                         state.path[id: lastViewID] = .recordWriting(recordWritingState)
                     }
                 }
+                return .none
+                
+            case .getNotification(let destination):
+                switch state.rootType {
+                case .onboarding:
+                    if let mainViewID = state.path.ids.first {
+                        if case .main(var mainState) = state.path[id: mainViewID] {
+                            mainState.isRequestNotificationPermission = true
+                            state.path[id: mainViewID] = .main(mainState)
+                            state.path.pop(to: mainViewID)
+                        }
+                    }
+                case .main:
+                    state.path.removeAll()
+                    state.mainState.isRequestNotificationPermission = true
+                }
+                let stateManager = HistoryStateManager.shared.getState()
+                state.recordEntryPointState = RecordEntryPointStore.State(
+                    isCompleteToday: stateManager[.today, default: false],
+                    isCompleteYesterday: stateManager[.yesterday, default: false]
+                )
+                state.path.append(.recordEntryPoint(state.recordEntryPointState))
                 return .none
             }
         }
