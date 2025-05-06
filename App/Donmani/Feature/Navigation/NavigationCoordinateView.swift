@@ -44,6 +44,15 @@ struct NavigationCoordinateView: View {
         .onAppear {
             UINavigationController.store = store
         }
+        .onReceive(
+            NotificationCenter
+                .default
+                .publisher(for: .didReceivePushNavigation)
+        ) { notification in
+            if let destination = notification.userInfo?["destination"] as? String {
+                store.send(.getNotification(destination))
+            }
+        }
     }
 }
 
