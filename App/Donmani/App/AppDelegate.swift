@@ -45,6 +45,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        let title = notification.request.content.title
+        var value = DayType.today.title
+        if title.contains(DayType.yesterday.title) {
+            value = DayType.yesterday.title
+        }
+        GA.Receive(event: .notificationReceive).send(parameters: [.notificationType: value])
         return [.badge, .sound, .banner]
     }
     
@@ -55,6 +61,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         if title.contains(DayType.yesterday.title) {
             value = DayType.yesterday.title
         }
+        GA.Open(event: .notificationOpen).send(parameters: [.notificationType: value])
         NotificationCenter.default.post(
             name: .didReceivePushNavigation,
             object: nil,
