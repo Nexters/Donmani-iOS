@@ -19,7 +19,8 @@ struct NavigationCoordinateView: View {
             case .main:
                 MainView(store: store.scope(state: \.mainState, action: \.mainAction))
             case .onboarding:
-                OnboardingView(store: store.scope(state: \.onboardingState, action: \.onboardingAction))
+                OnboardingView(completeHandler: { _ in })
+//                OnboardingView(store: store.scope(state: \.onboardingState, action: \.onboardingAction))
             }
         } destination: { store in
             switch store.case {

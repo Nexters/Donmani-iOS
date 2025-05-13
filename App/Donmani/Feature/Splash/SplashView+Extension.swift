@@ -61,9 +61,10 @@ extension SplashView {
             let isLatestVersion = VersionManager().isLastestVersion(store: storeVerion, current: appVersion)
             self.isLatestVersion = isLatestVersion
             if isLatestVersion {
-                withAnimation(.smooth) {
-                    isPresentingSplash = false
-                }
+                completeHandler?()
+//                withAnimation(.smooth) {
+//                    isPresentingSplash = false
+//                }
             }
         }
     }

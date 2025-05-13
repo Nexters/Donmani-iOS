@@ -11,6 +11,16 @@ import DesignSystem
 
 struct OnboardingView: View {
     @Bindable var store: StoreOf<OnboardingStore>
+    let completeHandler: ((RootStore.MainRoute) -> Void)?
+    
+    init(completeHandler: @escaping (RootStore.MainRoute) -> Void) {
+        self.store = Store(
+            initialState: OnboardingStore.State()
+        ) {
+            OnboardingStore()
+        }
+        self.completeHandler = completeHandler
+    }
     
     var body: some View {
         ZStack {
@@ -26,12 +36,8 @@ struct OnboardingView: View {
     }
 }
 
+
+
 #Preview {
-    OnboardingView(
-        store: Store(
-            initialState: OnboardingStore.State()
-        ) {
-            OnboardingStore()
-        }
-    )
+    OnboardingView() { _ in }
 }
