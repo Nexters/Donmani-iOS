@@ -7,6 +7,8 @@
 
 import DNetwork
 
-struct NetworkService {
-    static public var userKey: String = ""
-}
+public typealias NetworkService = DNetworkService
+
+//struct NetworkService {
+//    static public var userKey: String = ""
+//}

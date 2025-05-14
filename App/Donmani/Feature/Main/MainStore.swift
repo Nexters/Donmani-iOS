@@ -89,7 +89,7 @@ struct MainStore {
             case pushSettingView
             case pushRecordEntryPointView
             case pushRecordListView
-            case pushBottleListView([String: SummaryMonthly])
+            case pushBottleListView(RecordCountSummary)
         }
     }
     

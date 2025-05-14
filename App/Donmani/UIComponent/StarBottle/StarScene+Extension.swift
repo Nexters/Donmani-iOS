@@ -13,24 +13,38 @@ extension StarScene {
     public static let starShapeTexture = SKTexture(image: DImage(.starShape).uiImage)
     public static let starDoubleHighlighterTexture = SKTexture(image: DImage(.starDoubleHighlighter).uiImage)
     public static let starInnerShadow = SKTexture(image: DImage(.starInnerShadow).uiImage)
+    public static let tempStarBottle = SKTexture(image: DImage(.starBottle01).uiImage)
     
     public func addGroundNode(width: CGFloat, height: CGFloat) {
         self.backgroundColor = .clear
-        let nodeSize = CGSize(width: size.width, height: size.width * 1.15)
-        let nodeRect = CGRect(origin: .zero, size: nodeSize)
-        let nodePath = UIBezierPath(roundedRect: nodeRect, cornerRadius: 65).cgPath
-        let roundRectNode = SKShapeNode(path: nodePath)
-        roundRectNode.fillColor = .clear
-        roundRectNode.strokeColor = .clear
-        roundRectNode.lineWidth = 1
-        roundRectNode.zPosition = 1
-        roundRectNode.position = .zero
         
-        roundRectNode.physicsBody = SKPhysicsBody(edgeLoopFrom: nodePath)
-        roundRectNode.physicsBody?.isDynamic = false
-        
-        addChild(roundRectNode)
+        let nodeSize = CGSize(width: size.width, height: size.height)
+        let node = SKSpriteNode(texture: Self.tempStarBottle)
+        node.size = nodeSize
+        node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.size)
+        node.physicsBody?.isDynamic = false
+        node.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        node.alpha = 0.0
+        addChild(node)
     }
+    
+//    public func addGroundNode(width: CGFloat, height: CGFloat) {
+//        self.backgroundColor = .clear
+//        let nodeSize = CGSize(width: size.width, height: size.width * 1.15)
+//        let nodeRect = CGRect(origin: .zero, size: nodeSize)
+//        let nodePath = UIBezierPath(roundedRect: nodeRect, cornerRadius: 65).cgPath
+//        let roundRectNode = SKShapeNode(path: nodePath)
+//        roundRectNode.fillColor = .clear
+//        roundRectNode.strokeColor = .clear
+//        roundRectNode.lineWidth = 1
+//        roundRectNode.zPosition = 1
+//        roundRectNode.position = .zero
+//        
+//        roundRectNode.physicsBody = SKPhysicsBody(edgeLoopFrom: nodePath)
+//        roundRectNode.physicsBody?.isDynamic = false
+//        
+//        addChild(roundRectNode)
+//    }
     
     public func createNewStarNode(
         width: CGFloat,
@@ -56,8 +70,8 @@ extension StarScene {
         index: Int
     ) {
         // Test Code
-//        var record = record
-//        record.date = "Test\(index)"
+        var record = record
+        record.date = "Test\(index)"
         
         let starCountInLine: Int = 5
         let starSize = width / CGFloat(starCountInLine)

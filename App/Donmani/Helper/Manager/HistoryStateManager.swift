@@ -32,7 +32,31 @@ final class HistoryStateManager {
     //
     private let isShownBottleListToopTip = "IS_SHOWN_BOTTLE_LIST_TOOP_TIP"
     
+    // streak_submit
+    private let streakSubmitCountKey = "STREAK_SUBMIT_COUNT"
+    private let lastWriteRecordDateKey = "LAST_WRITE_RECORD_DATE"
+    
     private init() {}
+    
+    func getLastWriteRecordDateKey() -> String {
+        if let value = userDefaults.string(forKey: lastWriteRecordDateKey) {
+            return value
+        }
+        return DateManager.shared.getFormattedDate(for: .yesterday)
+    }
+    
+    func setLastWriteRecordDateKey() {
+        let dateString = DateManager.shared.getFormattedDate(for: .today)
+        userDefaults.set(dateString, forKey: lastWriteRecordDateKey)
+    }
+    
+    func getStreakSubmitCountKey() -> Int {
+        userDefaults.integer(forKey: streakSubmitCountKey)
+    }
+    
+    func setStreakSubmitCountKey(count: Int) {
+        userDefaults.set(count, forKey: streakSubmitCountKey)
+    }
 
     func getLastYesterdayToopTipDay() -> String? {
         userDefaults.string(forKey: lastYesterdayToopTipDay)

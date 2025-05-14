@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import DesignSystem
 import DNetwork
+import DesignSystem
 
 extension MainView {
     func AppStoreView() -> some View {
@@ -74,8 +74,8 @@ extension MainView {
                     dismissSheet {
                         Task {
                             store.send(.dismissNewStarBottleView)
-                            let recordDAO = NetworkService.DRecord()
-                            let result = try await recordDAO.fetchMonthlyRecordCount(year: 2025).monthlyRecords
+                            let response = try await NetworkService.DRecord().fetchMonthlyRecordCount(year: 2025)
+                            let result = NetworkDTOMapper.mapper(dto: response)
                             UINavigationController.blockSwipe = false
                             store.send(.delegate(.pushBottleListView(result)))
                         }

@@ -8,7 +8,7 @@
 import SwiftUI
 import DesignSystem
 
-struct RecordCategory: Equatable {
+struct RecordCategory: Hashable {
     
     private let _isEqual: (Any) -> Bool
     private let _hashValue: () -> Int
@@ -17,6 +17,7 @@ struct RecordCategory: Equatable {
     private let _color: Color
     private let _image: Image
     private let _miniImage: Image
+    private let _uppercaseValue: String
 
     var title: String {
         _title
@@ -34,6 +35,10 @@ struct RecordCategory: Equatable {
         _miniImage
     }
     
+    var uppercaseTitle: String {
+        _uppercaseValue
+    }
+    
     init<T: CategoryProtocol>(_ instance: T) {
         _title = instance.title
         _isEqual = { ($0 as? T) == instance }
@@ -42,6 +47,7 @@ struct RecordCategory: Equatable {
         _color = instance.color
         _image = instance.sticker
         _miniImage = instance.miniSticker
+        _uppercaseValue = instance.uppercaseValue
     }
     
     func getInstance<T: CategoryProtocol>() -> T? {

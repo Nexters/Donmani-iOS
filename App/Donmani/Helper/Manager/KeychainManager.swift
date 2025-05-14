@@ -47,7 +47,8 @@ final class KeychainManager {
     }
     
     /// Keychain에 UUID 저장
-    private func saveToKeychain(to type: DataType, value: String) {
+//    private
+    func saveToKeychain(to type: DataType, value: String) {
         let data = Data(value.utf8)
         
         let query: [String: Any] = [

@@ -88,9 +88,10 @@ struct MonthlyStarBottleView: View {
 }
 
 #Preview {
-    MonthlyStarBottleView(
-        store: Store(initialState: MonthlyStarBottleStore.State(year: 2025, month: 1)) {
-            MonthlyStarBottleStore()
-        }
-    )
+    {
+        let context = MonthlyStarBottleStore.Context(year: 2025, month: 1)
+        let state = MainStateFactory().makeMonthlyStarBottleState(context: context)
+        let store = MainStoreFactory().makeMonthlyStarBottleStore(state: state)
+        return MonthlyStarBottleView(store: store)
+    }()
 }

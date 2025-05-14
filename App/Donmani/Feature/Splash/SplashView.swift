@@ -7,13 +7,15 @@
 
 import SwiftUI
 import DesignSystem
-import DNetwork
 import ComposableArchitecture
 
 struct SplashView: View {
-    @State var navigationPath = NavigationPath()
     @State var isLatestVersion: Bool = true
-    @Binding var isPresentingSplash: Bool
+    let completeHandler: (() -> Void)?
+    
+    init(completeHandler: @escaping () -> Void) {
+        self.completeHandler = completeHandler
+    }
     
     var body: some View {
             ZStack {
@@ -55,5 +57,5 @@ struct SplashView: View {
 }
 
 #Preview {
-    SplashView(isPresentingSplash: .constant(true))
+    SplashView() { }
 }

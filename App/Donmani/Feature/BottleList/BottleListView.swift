@@ -13,6 +13,13 @@ struct BottleListView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<BottleListStore>
     
+//    init(context: RecordCountSummary) {
+//        self.store = Store(
+//            initialState: BottleListStore.State(context: context)
+//        ) {
+//            BottleListStore()
+//        }
+//    }
     
     var body: some View {
         ZStack {
@@ -57,11 +64,10 @@ struct BottleListView: View {
 }
 
 #Preview {
-    BottleListView(
-        store: Store(
-            initialState: BottleListStore.State(starCount: [:])
-        ) {
-            BottleListStore()
-        }
-    )
+    {
+        let context = RecordCountSummary(year: 2025, monthlyRecords: [:])
+        let state = MainStateFactory().makeBottleCalendarState(context: context)
+        let store = MainStoreFactory().makeBottleCalendarStore(state: state)
+        return BottleListView(store: store)
+    }()
 }

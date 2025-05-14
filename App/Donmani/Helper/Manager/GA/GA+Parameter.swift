@@ -15,6 +15,7 @@ extension GA {
         case category
         case record
         case streakCount
+        case recordStatus
         case notificationType
         case recordID
         case 별통이ID
@@ -37,6 +38,8 @@ extension GA {
                 return "record"
             case .streakCount:
                 return "streak_count"
+            case .recordStatus:
+                return "record_status"
             case .notificationType:
                 return "notificationtype"
             case .recordID:

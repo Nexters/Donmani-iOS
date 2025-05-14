@@ -10,6 +10,15 @@ import ComposableArchitecture
 
 @Reducer
 struct StatisticsStore {
+
+    struct Context {
+        let year: Int
+        let month: Int
+        init(year: Int, month: Int) {
+            self.year = year
+            self.month = month
+        }
+    }
     
     // MARK: - State
     @ObservableState
@@ -51,7 +60,9 @@ struct StatisticsStore {
             }
         }
         
-        init(year: Int, month: Int) {
+        init(context: Context) {
+            let year = context.year
+            let month = context.month
             self.yearMonth = (year % 100, month)
             let key = "\(year + 2000)-\(String(format: "%02d", month))"
             self.records = (DataStorage.getRecord(yearMonth: key) ?? [])

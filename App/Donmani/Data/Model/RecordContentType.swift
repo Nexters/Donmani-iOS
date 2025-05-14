@@ -5,7 +5,7 @@
 //  Created by 문종식 on 2/8/25.
 //
 
-enum RecordContentType: String, Equatable, Codable {
+enum RecordContentType: String, Equatable {
     case good = "GOOD"
     case bad = "BAD"
     

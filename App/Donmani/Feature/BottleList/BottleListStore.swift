@@ -15,20 +15,20 @@ struct BottleListStore {
     struct State {
         var isPresentingTopBanner: Bool
         var isPresendTextGuide: Bool = false
-        var rowIndex: Int = 0
+//        var rowIndex: Int = 0
         
         var starCount: [Int:Int] = [:]
         var starCountSort: [(Int,Int)] = []
         var endOfDay: [Int: Int] = [:]
         
-        init(starCount: [String: SummaryMonthly]) {
+        init(context: RecordCountSummary) {
             self.isPresentingTopBanner = HistoryStateManager.shared.getMonthlyBottleGuide()
-            self.rowIndex = (starCount.count / 3) + 1
+//            self.rowIndex = (starCount.count / 3) + 1
             let dateManager = DateManager.shared
             let todayMonth = dateManager.getFormattedDate(for: .today, .yearMonth).components(separatedBy: "-").last ?? "0"
             
             for month in (3...12) {
-                self.starCount[month] = starCount["\(month)"]?.recordCount ?? -1
+                self.starCount[month] = context.monthlyRecords[month]?.recordCount ?? -1
                 if self.starCount[month, default: -1] == -1 {
                     if month <= Int(todayMonth) ?? 1 {
                         self.starCount[month] = 0
@@ -48,7 +48,6 @@ struct BottleListStore {
         case fetchMonthlyRecord(Int, Int)
         case delegate(Delegate)
         enum Delegate {
-            case popToPreviousView
             case pushMonthlyBottleView(Int, Int)
         }
     }
@@ -83,7 +82,8 @@ struct BottleListStore {
                 return .run { send in
                     let key = "2025-\(String(format: "%02d", month))"
                     if DataStorage.getRecord(yearMonth: key) == nil {
-                        let result = try await NetworkService.DRecord().fetchRecordList(year: year, month: month)
+                        let response = try await NetworkService.DRecord().fetchRecordList(year: year, month: month)
+                        let result = NetworkDTOMapper.mapper(dto: response)
                         DataStorage.setMonthRecords(year: year, month: month, result)
                     }
                     await send(.delegate(.pushMonthlyBottleView(year, month)))

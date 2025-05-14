@@ -39,6 +39,11 @@ public enum DImageAsset: String {
     case miniLockedBottle = "MiniLockedBottle"
     case miniOpenedBottle = "MiniOpenedBottle"
     
+    // StarBottle
+    case starBottle01 = "StarBottle_01"
+    case starBottle02 = "StarBottle_02"
+    case starBottle03 = "StarBottle_03"
+    
     // Onboaring
     case onboardingCover = "OnboardingCover"
     case onboardingPage0 = "OnboardingPage0"

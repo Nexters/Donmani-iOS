@@ -15,7 +15,7 @@ protocol CategoryProtocol: Hashable, Equatable {
     var color: Color { get }
     var sticker: Image { get }
     var miniSticker: Image { get }
-    var dtoValue: String { get }
+    var uppercaseValue: String { get }
 }
 
 extension CategoryProtocol {

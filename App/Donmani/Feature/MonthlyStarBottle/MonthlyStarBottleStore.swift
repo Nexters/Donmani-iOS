@@ -9,6 +9,14 @@ import ComposableArchitecture
 
 @Reducer
 struct MonthlyStarBottleStore {
+    struct Context {
+        let year: Int
+        let month: Int
+        init(year: Int, month: Int) {
+            self.year = year
+            self.month = month
+        }
+    }
     
     // MARK: - State
     @ObservableState
@@ -17,9 +25,9 @@ struct MonthlyStarBottleStore {
         let year: Int
         let month: Int
         
-        init(year: Int, month: Int) {
-            self.year = year
-            self.month = month
+        init(context: Context) {
+            self.year = context.year
+            self.month = context.month
             let key = "\(year)-\(String(format: "%02d", month))"
             self.record = (DataStorage.getRecord(yearMonth: key) ?? []).sorted {
                 $0.date > $1.date
@@ -31,7 +39,6 @@ struct MonthlyStarBottleStore {
     enum Action {
         case delegate(Delegate)
         enum Delegate {
-            // Scope 처리
             case pushRecordListView(Int, Int)
         }
     }
