@@ -21,14 +21,14 @@ struct BottleListStore {
         var starCountSort: [(Int,Int)] = []
         var endOfDay: [Int: Int] = [:]
         
-        init(recordCountSummary: RecordCountSummary) {
+        init(context: RecordCountSummary) {
             self.isPresentingTopBanner = HistoryStateManager.shared.getMonthlyBottleGuide()
 //            self.rowIndex = (starCount.count / 3) + 1
             let dateManager = DateManager.shared
             let todayMonth = dateManager.getFormattedDate(for: .today, .yearMonth).components(separatedBy: "-").last ?? "0"
             
             for month in (3...12) {
-                self.starCount[month] = recordCountSummary.monthlyRecords[month]?.recordCount ?? -1
+                self.starCount[month] = context.monthlyRecords[month]?.recordCount ?? -1
                 if self.starCount[month, default: -1] == -1 {
                     if month <= Int(todayMonth) ?? 1 {
                         self.starCount[month] = 0
@@ -48,7 +48,6 @@ struct BottleListStore {
         case fetchMonthlyRecord(Int, Int)
         case delegate(Delegate)
         enum Delegate {
-            case popToPreviousView
             case pushMonthlyBottleView(Int, Int)
         }
     }

@@ -32,12 +32,7 @@ struct RecordListView: View {
                         Spacer()
                         if store.isShowNavigationButton {
                             DNavigationBarButton(.bottleIcon) {
-                                GA.Click(event: .listButton).send()
-                                Task {
-                                    let response = try await NetworkService.DRecord().fetchMonthlyRecordCount(year: 2025)
-                                    let result = NetworkDTOMapper.mapper(dto: response)
-                                    store.send(.delegate(.pushBottleListView(result)))
-                                }
+                                store.send(.pushBottleCalendarView)
                             }
                         }
                     }
@@ -51,7 +46,7 @@ struct RecordListView: View {
                             SimpleStatisticsView()
                                 .padding(.top, .s5)
                                 .onTapGesture {
-                                    store.send(.touchStatisticsView(false))
+                                    store.send(.touchStatisticsView(true))
                                 }
                             Spacer()
                         }
@@ -97,11 +92,11 @@ struct RecordListView: View {
 }
 
 #Preview {
-    RecordListView(
-        store: Store(
-            initialState: RecordListStore.State(year: 2025, month: 3, isShowNavigationButton: false)
-        ) {
-            RecordListStore()
-        }
-    )
+    {
+        let context = RecordListStore.Context(year: 2025, month: 4, false)
+        let state = MainStateFactory().makeMonthlyRecordListState(context: context)
+        let store = MainStoreFactory().makeMonthlyRecordListStore(state: state)
+        return RecordListView(store: store)
+    }()
+    
 }

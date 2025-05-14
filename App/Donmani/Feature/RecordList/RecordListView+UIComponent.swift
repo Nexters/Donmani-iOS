@@ -63,8 +63,7 @@ extension RecordListView {
         ScrollView {
             SimpleStatisticsView()
                 .onTapGesture {
-                    store.send(.touchStatisticsView(true))
-                    store.send(.delegate(.pushStatisticsView(store.yearMonth.year, store.yearMonth.month)))
+                    store.send(.touchStatisticsView(false))
                 }
             LazyVStack {
                 ForEach(store.record, id: \.date) { record in

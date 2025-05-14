@@ -9,6 +9,8 @@ import ComposableArchitecture
 
 @Reducer
 struct RootStore {
+    @Dependency(\.mainStoreFactory) var storeFactory
+    @Dependency(\.mainStateFactory) var stateFactory
     
     enum MainRoute {
         case main
@@ -18,7 +20,7 @@ struct RootStore {
     enum AppRoute: Equatable {
         case splash
         case onboarding
-        case main(StoreOf<MainStore>)
+        case main(StoreOf<MainNavigationStore>)
     }
     
     @ObservableState
@@ -39,8 +41,9 @@ struct RootStore {
                 state.route = .onboarding
                 
             case .onboardingCompleted(let mainRoute):
-                let mainStore = Store(initialState: MainStore.State()) { MainStore() }
-                state.route = .main(mainStore)
+                let mainNavigationState = stateFactory.makeMainNavigationState()
+                let mainNavigationStore = storeFactory.makeMainNavigationStore(state: mainNavigationState)
+                state.route = .main(mainNavigationStore)
             }
             
             return .none
