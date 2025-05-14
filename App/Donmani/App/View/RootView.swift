@@ -28,14 +28,16 @@ struct RootView: View {
                 }
                 .transition(.opacity)
                 .id("splash")
+                
             case .onboarding:
                 OnboardingView { confirmType in
                     store.send(.onboardingCompleted(confirmType))
                 }
                 .transition(.opacity)
                 .id("onboarding")
-            case .main(let mainStore):
-                MainView(store: mainStore)
+                
+            case .main(let store):
+                MainNavigationView(store: store)
                     .transition(.move(edge: .trailing))
                     .id("main")
             }

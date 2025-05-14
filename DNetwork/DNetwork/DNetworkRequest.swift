@@ -135,7 +135,7 @@ extension DNetworkRequest {
     ) async throws -> R {
         var url = try createURL(baseURL: urlString)
         url.add(paths: addtionalPath)
-        return try await post(url: url, bodyData: bodyData)
+        return try await put(url: url, bodyData: bodyData)
     }
     
     func put<T: Encodable, R: Decodable>(
@@ -160,6 +160,6 @@ extension DNetworkRequest {
         var url = try createURL(baseURL: DURL.api.urlString)
         url.add(paths: [path.rawValue])
         url.add(paths: addtionalPath)
-        return try await post(url: url, bodyData: bodyData)
+        return try await put(url: url, bodyData: bodyData)
     }
 }
