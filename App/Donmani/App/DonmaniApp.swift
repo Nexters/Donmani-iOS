@@ -11,25 +11,27 @@ import ComposableArchitecture
 @main
 struct DonmaniApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @State var isPresentingSplash: Bool = true
-    @State var rootType: RootType = .main
+//    @State var isPresentingSplash: Bool = true
+//    @State var rootType: RootType = .main
     
     var body: some Scene {
         WindowGroup {
-            if isPresentingSplash {
-                SplashView(isPresentingSplash: $isPresentingSplash)
-                    .onAppear {
-                        let rootType: RootType = HistoryStateManager.shared.getOnboardingState() ? .onboarding : .main
-                        self.rootType = rootType
-                        UINavigationController.rootType = rootType
-                    }
-            } else {
-                NavigationCoordinateView(
-                    store: Store(initialState: NavigationStore.State(rootType)) {
-                            NavigationStore()
-                        }
-                )
-            }
+            RootView()
+//            if isPresentingSplash {
+//                SplashView(isPresentingSplash: $isPresentingSplash)
+//                    .onAppear {
+//                        let rootType: RootType = HistoryStateManager.shared.getOnboardingState() ? .onboarding : .main
+//                        let rootType: RootType = .onboarding
+//                        self.rootType = rootType
+//                        UINavigationController.rootType = rootType
+//                    }
+//            } else {
+//                NavigationCoordinateView(
+//                    store: Store(initialState: NavigationStore.State(rootType)) {
+//                            NavigationStore()
+//                        }
+//                )
+//            }
         }
     }
 }

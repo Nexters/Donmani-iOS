@@ -1,25 +1,23 @@
 //
-//  NetworkService+User.swift
+//  DNetworkService+User.swift
 //  Donmani
 //
 //  Created by 문종식 on 2/16/25.
 //
 
-import DNetwork
-
-extension NetworkService {
+public extension DNetworkService {
     struct User {
         let request: DNetworkRequest
         let userKey: String
         
-        init() {
+        public init() {
             self.request = DNetworkRequest()
-            self.userKey = NetworkService.userKey
+            self.userKey = DNetworkService.userKey
         }
         
-        func register() async throws -> String {
-            let bodyData = UserDTO(userKey: userKey)
-            let response: DResponse<UserDTO> = try await self.request.post(
+        public func register() async throws -> String {
+            let bodyData = UserRequestDTO(userKey: userKey)
+            let response: DResponse<UserResigterDTO> = try await self.request.post(
                 path: .user,
                 addtionalPath: ["register"],
                 bodyData: bodyData
@@ -30,9 +28,9 @@ extension NetworkService {
             return data
         }
         
-        func updateName(name: String) async throws -> String {
-            let bodyData = UserDTO(userKey: userKey)
-            let response: DResponse<UserDTO> = try await self.request.post(
+        public func update(name: String) async throws -> String {
+            let bodyData = UserRequestDTO(userKey: userKey, newUserName: name)
+            let response: DResponse<UserUpdateDTO> = try await self.request.post(
                 path: .user,
                 addtionalPath: ["update"],
                 bodyData: bodyData
@@ -43,8 +41,7 @@ extension NetworkService {
             return data
         }
         
-        func fetchNoticeStatus() async throws -> Bool {
-            let bodyData = UserDTO(userKey: userKey)
+        public func fetchNoticeStatus() async throws -> Bool {
             let response: DResponse<[String:Bool]> = try await self.request.get(
                 path: .notice,
                 addtionalPath: ["status", userKey]
@@ -55,8 +52,7 @@ extension NetworkService {
             return data
         }
         
-        func updateNoticeStatus() async throws {
-            let bodyData = UserDTO(userKey: userKey)
+        public func updateNoticeStatus() async throws {
             let response: DResponse<Data> = try await self.request.put(
                 path: .notice,
                 addtionalPath: ["status", userKey],

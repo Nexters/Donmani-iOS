@@ -45,15 +45,34 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
-        return [.badge, .sound]
+        let title = notification.request.content.title
+        var value = DayType.today.title
+        if title.contains(DayType.yesterday.title) {
+            value = DayType.yesterday.title
+        }
+        GA.Receive(event: .notificationReceive).send(parameters: [.notificationType: value])
+        return [.badge, .sound, .banner]
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-//        print(response.notification.request.content.title)
-//        print(response.notification.request.content.body)
-//        print(response.notification.request.content.subtitle)
-//        print(response.notification.request.content.badge)
+        let title = response.notification.request.content.title
+        let key = "destination"
+        var value = DayType.today.title
+        if title.contains(DayType.yesterday.title) {
+            value = DayType.yesterday.title
+        }
+        GA.Open(event: .notificationOpen).send(parameters: [.notificationType: value])
+        NotificationCenter.default.post(
+            name: .didReceivePushNavigation,
+            object: nil,
+            userInfo: [key: value]
+        )
         center.setBadgeCount(0, withCompletionHandler: nil)
         
     }
+    
+}
+
+extension Notification.Name {
+    static let didReceivePushNavigation = Notification.Name("didReceivePushNavigation")
 }

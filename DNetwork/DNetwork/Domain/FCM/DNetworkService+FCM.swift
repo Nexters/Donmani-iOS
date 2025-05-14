@@ -1,23 +1,21 @@
 //
-//  NetworkService+User.swift
+//  DNetworkService+User.swift
 //  Donmani
 //
 //  Created by 문종식 on 2/16/25.
 //
 
-import DNetwork
-
-extension NetworkService {
+public extension DNetworkService {
     struct FCM {
         let request: DNetworkRequest
         let userKey: String
         
-        init() {
+        public init() {
             self.request = DNetworkRequest()
-            self.userKey = NetworkService.userKey
+            self.userKey = DNetworkService.userKey
         }
         
-        func register(token: String) async throws -> String {
+        public func register(token: String) async throws -> String {
             let response: String = try await request.post(
                 urlString: DURL.api.urlString,
                 addtionalPath: [userKey, "token"],

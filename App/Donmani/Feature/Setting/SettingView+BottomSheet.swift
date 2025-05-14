@@ -126,7 +126,8 @@ extension SettingView {
                     ) {
                         isFocusToTextField = false
                         Task {
-                            userName = try await NetworkService.User().updateName(name: editUserName)
+                            let response = try await NetworkService.User().update(name: editUserName)
+                            userName = response
                             DataStorage.setUserName(userName)
                             isPresentingEditNameView = false
                             UINavigationController.blockSwipe = false

@@ -10,6 +10,16 @@ import ComposableArchitecture
 
 @Reducer
 struct RecordListStore {
+    struct Context {
+        let year: Int
+        let month: Int
+        let isShowNavigationButton: Bool
+        init(year: Int, month: Int, _ isShowNavigationButton: Bool = true) {
+            self.year = year
+            self.month = month
+            self.isShowNavigationButton = isShowNavigationButton
+        }
+    }
     
     // MARK: - State
     @ObservableState
@@ -21,14 +31,13 @@ struct RecordListStore {
         let badCount: Int
         let progressPoint: CGFloat
         var isPresentingBottleListToopTipView: Bool = false
+        var dateSet: Set<String>
         
         init(
-            year: Int,
-            month: Int,
-            isShowNavigationButton: Bool
+            context: Context
         ) {
-            self.yearMonth = (year % 100, month)
-            let key = "\(year)-\(String(format: "%02d", month))"
+            self.yearMonth = (context.year % 100, context.month)
+            let key = "\(context.year)-\(String(format: "%02d", context.month))"
             self.record = (DataStorage.getRecord(yearMonth: key) ?? []).sorted {
                 $0.date > $1.date
             }
@@ -55,23 +64,28 @@ struct RecordListStore {
             }
             self.goodCount = count.0
             self.badCount = count.1
-            self.isShowNavigationButton = isShowNavigationButton
+            self.isShowNavigationButton = context.isShowNavigationButton
             if (count.0 + count.1) > 0 {
                 self.progressPoint = CGFloat(count.0) / CGFloat(count.0 + count.1)
             } else {
                 self.progressPoint = -1
             }
             self.isPresentingBottleListToopTipView = (HistoryStateManager.shared.getIsShownBottleListToopTip() == nil)
-            
+            self.dateSet = []
         }
     }
     
     // MARK: - Action
     enum Action {
         case closeBottleListToopTip
+        case touchStatisticsView(Bool)
+        case pushStatisticsView
+        case pushBottleCalendarView
+        case addAppearCardView(String)
+        
         case delegate(Delegate)
         enum Delegate {
-            case pushBottleListView([String: SummaryMonthly])
+            case pushBottleListView(RecordCountSummary)
             case pushRecordEntryPointView
             case pushStatisticsView(Int, Int)
         }
@@ -84,14 +98,39 @@ struct RecordListStore {
             case .closeBottleListToopTip:
                 state.isPresentingBottleListToopTipView = false
                 HistoryStateManager.shared.setIsShownBottleListToopTip()
-                return .none
+            case .touchStatisticsView(let isEmpty):
+                let value = isEmpty ? "no_record" : "has_record"
+                GA.Click(event: .insightButton).send(parameters: [.recordStatus: value])
+                if !isEmpty {
+                    return .run { send in
+                        await send(.pushStatisticsView)
+                    }
+                }
+            case .pushStatisticsView:
+                let year = state.yearMonth.year
+                let month = state.yearMonth.month
+                return .run { send in
+                    await send(.delegate(.pushStatisticsView(year, month)))
+                }
+            
+            case .pushBottleCalendarView:
+                GA.Click(event: .listButton).send()
+                return .run { send in
+                    let response = try await NetworkService.DRecord().fetchMonthlyRecordCount(year: 2025)
+                    let result = NetworkDTOMapper.mapper(dto: response)
+                    await send(.delegate(.pushBottleListView(result)))
+                }
+                
+            case .addAppearCardView(let date):
+                state.dateSet.insert(date)
+
             case .delegate(.pushBottleListView(_)):
                 state.isPresentingBottleListToopTipView = false
                 HistoryStateManager.shared.setIsShownBottleListToopTip()
-                return .none
             case .delegate:
-                return .none
+                break
             }
+            return .none
         }
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct DNetworkRequest {
+struct DNetworkRequest {
     private var apiBaseURL: String = DURL.api.urlString
     
     public init() {
@@ -23,30 +23,13 @@ public struct DNetworkRequest {
     }
     
     private func createURL(baseURL: String) throws -> URL {
-        guard var url = URL(string: baseURL) else {
+        guard let url = URL(string: baseURL) else {
             throw NetworkError.invalidURL
         }
         return url
     }
     
-//    public func requestAppVersion<T: Codable>() async throws -> T  {
-//        guard let url = URL(string: DURL.appInfo.urlString) else {
-//            throw NetworkError.invalidURL
-//        }
-//        let request = createURLReqeust(method: .GET, url: url)
-//        let (data, response) = try await URLSession.shared.data(for: request)
-//        let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500
-//        if stateCode >= 400 {
-//            throw NetworkError.serverError(statusCode: stateCode)
-//        }
-//        
-//        guard let returnData = try? JSONDecoder().decode(T.self, from: data) else {
-//            throw NetworkError.decodingFailed
-//        }
-//        return returnData
-//    }
-    
-    private func run<R: Codable>(request: URLRequest) async throws -> R {
+    private func run<R: Decodable>(request: URLRequest) async throws -> R {
         guard let (data, response) = try? await URLSession.shared.data(for: request) else {
             throw NetworkError.requestFailed
         }
@@ -68,7 +51,7 @@ public struct DNetworkRequest {
 
 // Get Request
 extension DNetworkRequest {
-    public func get<R: Codable>(
+    public func get<R: Decodable>(
         urlString: String,
         addtionalPath: [String] = [],
         parameters: [String: Any]? = nil
@@ -81,14 +64,14 @@ extension DNetworkRequest {
         return try await get(url: url)
     }
     
-    func get<R: Codable>(
+    func get<R: Decodable>(
         url: URL
     ) async throws -> R {
         let request = createURLReqeust(method: .GET, url: url)
         return try await run(request: request)
     }
     
-    public func get<R: Codable>(
+    public func get<R: Decodable>(
         path: DPath,
         addtionalPath: [String] = [],
         parameters: [String: Any]? = nil
@@ -106,7 +89,7 @@ extension DNetworkRequest {
 
 // Post Request
 extension DNetworkRequest {
-    public func post<T: Codable, R: Codable>(
+    public func post<T: Encodable, R: Decodable>(
         urlString: String,
         addtionalPath: [String] = [],
         bodyData: T?
@@ -116,7 +99,7 @@ extension DNetworkRequest {
         return try await post(url: url, bodyData: bodyData)
     }
     
-    func post<T: Codable, R: Codable>(
+    func post<T: Encodable, R: Decodable>(
         url: URL,
         bodyData: T?
     ) async throws -> R {
@@ -130,7 +113,7 @@ extension DNetworkRequest {
         return try await run(request: request)
     }
     
-    public func post<T: Codable, R: Codable>(
+    public func post<T: Encodable, R: Decodable>(
         path: DPath,
         addtionalPath: [String] = [],
         bodyData: T?
@@ -145,17 +128,17 @@ extension DNetworkRequest {
 
 // Put Request
 extension DNetworkRequest {
-    public func put<T: Codable, R: Codable>(
+    public func put<T: Encodable, R: Decodable>(
         urlString: String,
         addtionalPath: [String] = [],
         bodyData: T?
     ) async throws -> R {
         var url = try createURL(baseURL: urlString)
         url.add(paths: addtionalPath)
-        return try await post(url: url, bodyData: bodyData)
+        return try await put(url: url, bodyData: bodyData)
     }
     
-    func put<T: Codable, R: Codable>(
+    func put<T: Encodable, R: Decodable>(
         url: URL,
         bodyData: T?
     ) async throws -> R {
@@ -169,7 +152,7 @@ extension DNetworkRequest {
         return try await run(request: request)
     }
     
-    public func put<T: Codable, R: Codable>(
+    public func put<T: Encodable, R: Decodable>(
         path: DPath,
         addtionalPath: [String] = [],
         bodyData: T?
@@ -177,6 +160,6 @@ extension DNetworkRequest {
         var url = try createURL(baseURL: DURL.api.urlString)
         url.add(paths: [path.rawValue])
         url.add(paths: addtionalPath)
-        return try await post(url: url, bodyData: bodyData)
+        return try await put(url: url, bodyData: bodyData)
     }
 }

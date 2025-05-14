@@ -32,12 +32,7 @@ struct RecordListView: View {
                         Spacer()
                         if store.isShowNavigationButton {
                             DNavigationBarButton(.bottleIcon) {
-                                GA.Click(event: .listButton).send()
-                                Task {
-                                    let recordDAO = NetworkService.DRecord()
-                                    let result = try await recordDAO.fetchMonthlyRecordCount(year: 2025).monthlyRecords
-                                    store.send(.delegate(.pushBottleListView(result)))
-                                }
+                                store.send(.pushBottleCalendarView)
                             }
                         }
                     }
@@ -50,6 +45,9 @@ struct RecordListView: View {
                         VStack {
                             SimpleStatisticsView()
                                 .padding(.top, .s5)
+                                .onTapGesture {
+                                    store.send(.touchStatisticsView(true))
+                                }
                             Spacer()
                         }
                         EmptyGuideView()
@@ -65,6 +63,14 @@ struct RecordListView: View {
             
         }
         .navigationBarBackButtonHidden()
+        .onDisappear {
+            if store.record.count > 0 {
+                let id = store.dateSet.count - 1
+                DispatchQueue.global().async {
+                    GA.Impression(event: .recordhistory).send(parameters: [.recordID: id])
+                }
+            }
+        }
     }
     
     func convertDateTitle(_ dateString: String) -> String? {
@@ -86,11 +92,11 @@ struct RecordListView: View {
 }
 
 #Preview {
-    RecordListView(
-        store: Store(
-            initialState: RecordListStore.State(year: 2025, month: 3, isShowNavigationButton: false)
-        ) {
-            RecordListStore()
-        }
-    )
+    {
+        let context = RecordListStore.Context(year: 2025, month: 4, false)
+        let state = MainStateFactory().makeMonthlyRecordListState(context: context)
+        let store = MainStoreFactory().makeMonthlyRecordListStore(state: state)
+        return RecordListView(store: store)
+    }()
+    
 }

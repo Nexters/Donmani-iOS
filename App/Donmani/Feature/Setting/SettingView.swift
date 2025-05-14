@@ -6,9 +6,9 @@
 //
 
 import SwiftUI
+import DNetwork
 import ComposableArchitecture
 import DesignSystem
-import DNetwork
 
 struct SettingView: View {
     enum Menutype {

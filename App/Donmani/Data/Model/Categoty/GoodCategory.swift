@@ -38,28 +38,11 @@ extension GoodCategory {
         self.rawValue
     }
     
-    var dtoValue: String {
+    var uppercaseValue: String {
         self.rawValue.uppercased()
     }
-}
-
-extension GoodCategory: Codable {
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        let rawValue = try container.decode(String.self)
-        
-        guard let value = GoodCategory(rawValue: rawValue.lowercased()) else {
-            throw DecodingError.dataCorruptedError(
-                in: container,
-                debugDescription: "Invalid value: \(rawValue)"
-            )
-        }
-        self = value
-    }
     
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(self.rawValue.uppercased())
-    }
+    static let set = Set(allCases.map{$0.rawValue.uppercased()})
+    
 }
 
