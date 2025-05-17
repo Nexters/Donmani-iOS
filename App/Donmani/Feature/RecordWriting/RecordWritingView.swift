@@ -14,11 +14,11 @@ struct RecordWritingView: View {
     @Bindable var store: StoreOf<RecordWritingStore>
     @FocusState var isFocusToTextField: Bool
     @State var editingText: String = ""
-    let completeHandler: ((RecordContent?) -> Void)?
+    let completeHandler: ((RecordContent) -> Void)?
     
     init(
         store: StoreOf<RecordWritingStore>,
-        completeHandler: @escaping (RecordContent?) -> Void
+        completeHandler: @escaping (RecordContent) -> Void
     ) {
         self.store = store
         self.completeHandler = completeHandler
@@ -125,7 +125,10 @@ struct RecordWritingView: View {
                     DCompleteButton(
                         isActive: store.isSaveEnabled
                     ) {
-                        store.send(.save(editingText))
+                        store.send(.completeWrite(editingText))
+                        if let recordContent = store.recordContent {
+                            completeHandler?(recordContent)
+                        }
                     }
                 }
             }
@@ -155,7 +158,6 @@ struct RecordWritingView: View {
         }
         .navigationBarBackButtonHidden()
     }
-    
 }
 
 #Preview {

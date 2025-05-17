@@ -23,6 +23,7 @@ struct OnboardingStore {
         var step: Step = .cover
         var pageIndex = 0
         var isPresentingEndOnboardingView = false
+        var startViewtype: RootStore.MainRoute = .main
         
         let guidePageCount = 5
         
@@ -43,8 +44,10 @@ struct OnboardingStore {
         ]
         
         let guideImageAssets: [DImageAsset] = [
-            .onboardingPage0, .onboardingPage1,
-            .onboardingPage2, .onboardingPage3,
+            .onboardingPage0,
+            .onboardingPage1,
+            .onboardingPage2,
+            .onboardingPage3,
             .onboardingPage4,
         ]
         
@@ -61,8 +64,7 @@ struct OnboardingStore {
         case touchNextPage
         case touchEndOnboarding
         
-//        case touchHomeButton
-//        case touchRecordButton
+        case touchFinalButton(RootStore.MainRoute)
         
         case binding(BindingAction<State>)
         case delegate(Delegate)
@@ -82,43 +84,25 @@ struct OnboardingStore {
             switch action {
             case .touchStartOnboarding:
                 state.step = .page
-                return .none
+                
             case .touchNextPage:
                 state.pageIndex += 1
                 state.step = state.pageIndex < 4 ? .page : .final
-                return .none
                 
-//            case .touchHomeButton:
-//                state.nextStep = .main
-//                state.isPresentingEndOnboardingView = true
-//                return .none
-//            case .touchRecordButton:
-//                state.nextStep = .record
-//                state.isPresentingEndOnboardingView = true
-//                return .none
-            
+            case .touchFinalButton(let type):
+                state.startViewtype = type
+                state.isPresentingEndOnboardingView = true
+                
             case .touchEndOnboarding:
                 HistoryStateManager.shared.setOnboardingState()
-//                switch state.nextStep {
-//                case .main:
-//                    return .send(.delegate(.pushMainView(false)))
-//                case .record:
-//                    let state = HistoryStateManager.shared.getState()
-//                    if state[.today, default: false] && state[.yesterday, default: false] {
-//                        return .send(.delegate(.pushMainView(true)))
-//                    }
-//                    return .send(.delegate(.pushRecordEntryPointView))
-//                }
-                return .none
+                
             case .binding(\.pageIndex):
                 state.step = state.pageIndex < 4 ? .page : .final
-                return .none
                 
-            case .binding:
-                return .none
-            case .delegate:
-                return .none
+            default:
+                break
             }
+            return .none
         }
     }
 }

@@ -89,18 +89,13 @@ struct RecordWritingStore {
         case textChanged(Int)
         case showTextLengthGuide
         case hideTextLengthGuide
-        case save(String)
+        case completeWrite(String)
         case showCancelRecordBottomSheet
         case dismissCancelRecordBottomSheet(Bool)
         case sendCancelGAEvent
         case touchWriteNextTime
         
         case binding(BindingAction<State>)
-        case delegate(Delegate)
-        enum Delegate {
-            case popToRecordEntrypointView
-            case popToRecordEntrypointViewWith(RecordContent)
-        }
     }
     
     // MARK: - Reducer
@@ -112,11 +107,9 @@ struct RecordWritingStore {
                 UIApplication.shared.endEditing()
                 state.isPresentingSelectCategory = true
                 state.selectedCategory = state.savedCategory
-                return .none
                 
             case .selectCategory(let category):
                 state.selectedCategory = category
-                return .none
                 
             case .saveCategory(let category):
                 state.savedCategory = category
@@ -136,42 +129,39 @@ struct RecordWritingStore {
                 state.isFocusToTextField = true
                 state.isPresentingSelectCategory = false
                 UINavigationController.blockSwipe = false
-                return .none
                 
             case .textChanged(let textCount):
                 HapticManager.shared.playHapticTransient()
                 state.textCount = textCount
                 state.isSaveEnabled = (textCount > 0 && state.savedCategory != nil)
-                return .none
                 
             case .showTextLengthGuide:
-                if (state.isPresendTextGuide) {
-                    return .none
-                }
-                state.isPresendTextGuide = true
-                return .run { send in
-                    try await Task.sleep(nanoseconds: 3_000_000_000)
-                    await send(
-                        .hideTextLengthGuide,
-                        animation: .linear(duration: 0.5)
-                    )
-                }
-            case .hideTextLengthGuide:
-                state.isPresendTextGuide = false
-                return .none
-            case .save(let text):
-                UIApplication.shared.endEditing()
-                if let savedCategory = state.savedCategory {
-                    let recordContent = RecordContent(flag: state.type, category: savedCategory, memo: text)
+                if (!state.isPresendTextGuide) {
+                    state.isPresendTextGuide = true
                     return .run { send in
-                        await send(.delegate(.popToRecordEntrypointViewWith(recordContent)))
+                        try await Task.sleep(nanoseconds: 3_000_000_000)
+                        await send(
+                            .hideTextLengthGuide,
+                            animation: .linear(duration: 0.5)
+                        )
                     }
                 }
-                return .none
+                
+            case .hideTextLengthGuide:
+                state.isPresendTextGuide = false
+                
+            case .completeWrite(let text):
+                UIApplication.shared.endEditing()
+                if let savedCategory = state.savedCategory {
+                    state.recordContent =  RecordContent(
+                        flag: state.type,
+                        category: savedCategory,
+                        memo: text
+                    )
+                }
                 
             case .showCancelRecordBottomSheet:
                 state.isPresentingCancel = true
-                return .none
                 
             case .dismissCancelRecordBottomSheet(let isContinue):
                 var gaParameter: [GA.Parameter: Any] = [.screenType: state.dayTitle]
@@ -183,15 +173,13 @@ struct RecordWritingStore {
                         gaParameter[.bad] = (savedCategory.getInstance() as BadCategory?)?.title ?? "Bad"
                     }
                 }
-                if isContinue {
-                    GA.Click(event: .recordContinueButton).send(parameters: gaParameter)
-                } else {
-                    GA.Click(event: .recordBackButton).send(parameters: gaParameter)
-                }
+                let gaEvent: GA.Click.Event = isContinue ? .recordContinueButton : .recordBackButton
+                GA.Click(event: gaEvent).send(parameters: gaParameter)
+            
                 state.isFocusToTextField = true
                 state.isPresentingCancel = false
                 UINavigationController.blockSwipe = false
-                return .none
+                
             case .sendCancelGAEvent:
                 var parameters: [GA.Parameter: Any] = [.referrer: "기록작성"]
                 if let savedCategory = state.savedCategory {
@@ -203,7 +191,7 @@ struct RecordWritingStore {
                     }
                 }
                 GA.View(event: .recordmainBackBottomsheet).send(parameters: parameters)
-                return .none
+                
             case .touchWriteNextTime:
                 var parameters: [GA.Parameter: Any] = [.screenType: state.dayTitle]
                 switch state.type {
@@ -213,12 +201,10 @@ struct RecordWritingStore {
                     parameters[.bad] = (state.savedCategory?.getInstance() as BadCategory?)?.title ?? "Bad"
                 }
                 GA.Click(event: .recordNexttimeButton).send(parameters: parameters)
-                return .none
             case .binding:
-                return .none
-            case .delegate:
-                return .none
+                break
             }
+            return .none
         }
     }
 }

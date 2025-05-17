@@ -61,8 +61,6 @@ struct SettingView: View {
         return isValidCount && isValidCharacter
     }
     
-    // TODO: - Add Store
-    
     var body: some View {
         ZStack {
             BackgroundView()
@@ -91,6 +89,7 @@ struct SettingView: View {
                             editUserName = userName
                             isFocusToTextField = true
                             isPresentingEditNameView = true
+                            UINavigationController.blockSwipe = true
                         } label: {
                             DText(userName)
                                 .style(.b1, .semibold, .white)
@@ -123,6 +122,7 @@ struct SettingView: View {
                     }
                     MenuButton(type: .recordGuide) {
                         GA.Click(event: .settingRules).send()
+                        UINavigationController.blockSwipe = true
                         isPresentingRecordGuideView.toggle()
                     }
                     
@@ -139,6 +139,9 @@ struct SettingView: View {
             
             if isPresentingRecordGuideView {
                 RecordGuideView()
+                    .onDisappear {
+                        UINavigationController.blockSwipe = false
+                    }
             }
             
             if isPresentingEditNameView {
@@ -147,6 +150,9 @@ struct SettingView: View {
                     .animation(.easeOut(duration: 0.3), value: keyboard.currentHeight)
                     .ignoresSafeArea(.keyboard, edges: .bottom)
                     .ignoresSafeArea(.all, edges: .bottom)
+                    .onDisappear {
+                        UINavigationController.blockSwipe = false
+                    }
             }
             
             VStack {
