@@ -89,7 +89,7 @@ struct SettingView: View {
                             editUserName = userName
                             isFocusToTextField = true
                             isPresentingEditNameView = true
-                            UINavigationController.blockSwipe = true
+                            UINavigationController.isBlockSwipe = true
                         } label: {
                             DText(userName)
                                 .style(.b1, .semibold, .white)
@@ -122,7 +122,7 @@ struct SettingView: View {
                     }
                     MenuButton(type: .recordGuide) {
                         GA.Click(event: .settingRules).send()
-                        UINavigationController.blockSwipe = true
+                        UINavigationController.isBlockSwipe = true
                         isPresentingRecordGuideView.toggle()
                     }
                     
@@ -140,7 +140,7 @@ struct SettingView: View {
             if isPresentingRecordGuideView {
                 RecordGuideView()
                     .onDisappear {
-                        UINavigationController.blockSwipe = false
+                        UINavigationController.isBlockSwipe = false
                     }
             }
             
@@ -151,7 +151,7 @@ struct SettingView: View {
                     .ignoresSafeArea(.keyboard, edges: .bottom)
                     .ignoresSafeArea(.all, edges: .bottom)
                     .onDisappear {
-                        UINavigationController.blockSwipe = false
+                        UINavigationController.isBlockSwipe = false
                     }
             }
             

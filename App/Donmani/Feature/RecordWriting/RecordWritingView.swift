@@ -105,9 +105,10 @@ struct RecordWritingView: View {
                                     animation: .linear(duration: 0.5)
                                 )
                             }
-                            UINavigationController.swipeNavigationPopIsEnabled = (editingText == store.text)
+//                            UINavigationController.swipeNavigationPopIsEnabled = (editingText == store.text)
                         }
                         .bind($store.isFocusToTextField, to: $isFocusToTextField)
+                        .bind($store.text, to: $editingText)
                         
                         HStack {
                             Spacer()
