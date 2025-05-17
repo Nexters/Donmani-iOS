@@ -21,10 +21,18 @@ struct MainNavigationView: View {
             ))
         } destination: { store in
             switch store.case {
+            case .record(let store):
+                RecordEntryPointView(store: store) { record in
+                    print(record)
+                }
+            case .recordWriting(let store):
+                RecordWritingView(store: store) { recordContent in
+                    
+                }
             case .monthlyRecordList(let store):
                 RecordListView(store: store)
             case .bottleCalendar(let store):
-                BottleListView(store: store)
+                BottleCalendarView(store: store)
             case .statistics(let store):
                 StatisticsView(store: store)
             case .monthlyStarBottle(let store):

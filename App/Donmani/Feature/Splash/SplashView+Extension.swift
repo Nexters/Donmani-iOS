@@ -62,9 +62,6 @@ extension SplashView {
             self.isLatestVersion = isLatestVersion
             if isLatestVersion {
                 completeHandler?()
-//                withAnimation(.smooth) {
-//                    isPresentingSplash = false
-//                }
             }
         }
     }

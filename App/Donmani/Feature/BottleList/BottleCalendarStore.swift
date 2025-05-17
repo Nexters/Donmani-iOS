@@ -1,5 +1,5 @@
 //
-//  BottleListStore.swift
+//  BottleCalendarStore.swift
 //  Donmani
 //
 //  Created by 문종식 on 3/26/25.
@@ -8,7 +8,7 @@
 import ComposableArchitecture
 
 @Reducer
-struct BottleListStore {
+struct BottleCalendarStore {
     
     // MARK: - State
     @ObservableState

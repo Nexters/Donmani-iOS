@@ -11,7 +11,7 @@ import UIKit
 extension MainNavigationStore {
     func bottleCalendarDelegateAction(
         state: inout MainNavigationStore.State,
-        action: BottleListStore.Action.Delegate
+        action: BottleCalendarStore.Action.Delegate
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
         case .pushMonthlyBottleView(let year, let month):

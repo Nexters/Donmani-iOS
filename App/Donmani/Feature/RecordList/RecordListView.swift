@@ -57,8 +57,8 @@ struct RecordListView: View {
                 }
             }
             
-            if store.isPresentingBottleListToopTipView {
-                BottleListToopTipView()
+            if store.isPresentingBottleCalendarToopTipView {
+                BottleCalendarToopTipView()
             }
             
         }

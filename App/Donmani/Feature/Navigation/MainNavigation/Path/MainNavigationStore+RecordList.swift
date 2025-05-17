@@ -22,9 +22,9 @@ extension MainNavigationStore {
 //            )
 //            state.path.append(.recordEntryPoint(state.recordEntryPointState))
 //            return .none
-//
+
         
-        case .pushBottleListView(let result):
+        case .pushBottleCalendarView(let result):
             return .run { send in
                 await send(.push(.bottleCalendar(result)))
             }

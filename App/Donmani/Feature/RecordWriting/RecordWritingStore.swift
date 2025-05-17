@@ -12,6 +12,15 @@ import DesignSystem
 @Reducer
 struct RecordWritingStore {
     
+    struct Context {
+        let type: RecordContentType
+        let content: RecordContent?
+        init(type: RecordContentType, content: RecordContent? = nil) {
+            self.type = type
+            self.content = content
+        }
+    }
+    
     // MARK: - State
     @ObservableState
     struct State: Equatable {
@@ -33,14 +42,11 @@ struct RecordWritingStore {
         var isFocusToTextField: Bool = false
         
         let dayTitle: String
-        
-        init(
-            type: RecordContentType,
-            content: RecordContent? = nil
-        ) {
-            self.type = type
+
+        init(context: Context) {
+            self.type = context.type
             var tempCategory: [RecordCategory]
-            switch type {
+            switch context.type {
             case .good:
                 tempCategory = GoodCategory.allCases.map { RecordCategory($0) }
             case .bad:
@@ -60,16 +66,16 @@ struct RecordWritingStore {
             
             _ = tempCategory.popLast()
             self.category = tempCategory
-            self.recordContent = content
-            self.selectedCategory = content?.category
-            self.savedCategory = content?.category
-            if let content = content {
+            self.recordContent = context.content
+            self.selectedCategory = context.content?.category
+            self.savedCategory = context.content?.category
+            if let content = context.content {
                 self.sticker = content.category.image
                 self.textCount = content.memo.count
                 self.text = content.memo
                 self.isSaveEnabled = true
             } else {
-                self.sticker = (type == .good ? DImage(.defaultGoodSticker) : DImage(.defaultBadSticker)).image
+                self.sticker = (context.type == .good ? DImage(.defaultGoodSticker) : DImage(.defaultBadSticker)).image
             }
         }
     }
@@ -88,11 +94,10 @@ struct RecordWritingStore {
         case dismissCancelRecordBottomSheet(Bool)
         case sendCancelGAEvent
         case touchWriteNextTime
-
+        
         case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate {
-            case checkSwipeValidation
             case popToRecordEntrypointView
             case popToRecordEntrypointViewWith(RecordContent)
         }

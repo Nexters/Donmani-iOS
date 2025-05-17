@@ -118,33 +118,12 @@ struct MainView: View {
         }
         .navigationBarBackButtonHidden()
     }
-    
-//    private func shakeTwice() {
-//        store.shakeCount = 0
-//         performShake()
-//     }
-//
-//     private func performShake() {
-//         guard shakeCount < 4 else {
-//             yOffset = 0 // 마지막에 위치 초기화
-//             return
-//         }
-//
-//         withAnimation(.easeInOut(duration: 0.1)) {
-//             yOffset = shakeCount % 2 == 0 ? -10 : 10
-//         }
-//
-//         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-//             shakeCount += 1
-//             performShake()
-//         }
-//     }
 }
 
 #Preview {
-    MainView(
-        store: Store(initialState: MainStore.State()) {
-            MainStore()
-        }
-    )
+    {
+        let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+        let state = MainStore.State(today: today)
+        return MainView(store: Store(initialState: state) { MainStore() } )
+    }()
 }

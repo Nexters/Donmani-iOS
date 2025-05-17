@@ -15,7 +15,7 @@ extension StarScene {
     public static let starInnerShadow = SKTexture(image: DImage(.starInnerShadow).uiImage)
     public static let tempStarBottle = SKTexture(image: DImage(.starBottle01).uiImage)
     
-    public func addGroundNode(width: CGFloat, height: CGFloat) {
+    public func addGroundNodeWithStarBottleShape(width: CGFloat, height: CGFloat) {
         self.backgroundColor = .clear
         
         let nodeSize = CGSize(width: size.width, height: size.height)
@@ -28,23 +28,23 @@ extension StarScene {
         addChild(node)
     }
     
-//    public func addGroundNode(width: CGFloat, height: CGFloat) {
-//        self.backgroundColor = .clear
-//        let nodeSize = CGSize(width: size.width, height: size.width * 1.15)
-//        let nodeRect = CGRect(origin: .zero, size: nodeSize)
-//        let nodePath = UIBezierPath(roundedRect: nodeRect, cornerRadius: 65).cgPath
-//        let roundRectNode = SKShapeNode(path: nodePath)
-//        roundRectNode.fillColor = .clear
-//        roundRectNode.strokeColor = .clear
-//        roundRectNode.lineWidth = 1
-//        roundRectNode.zPosition = 1
-//        roundRectNode.position = .zero
-//        
-//        roundRectNode.physicsBody = SKPhysicsBody(edgeLoopFrom: nodePath)
-//        roundRectNode.physicsBody?.isDynamic = false
-//        
-//        addChild(roundRectNode)
-//    }
+    public func addGroundNode(width: CGFloat, height: CGFloat) {
+        self.backgroundColor = .clear
+        let nodeSize = CGSize(width: size.width, height: size.width * 1.15)
+        let nodeRect = CGRect(origin: .zero, size: nodeSize)
+        let nodePath = UIBezierPath(roundedRect: nodeRect, cornerRadius: 65).cgPath
+        let roundRectNode = SKShapeNode(path: nodePath)
+        roundRectNode.fillColor = .clear
+        roundRectNode.strokeColor = .clear
+        roundRectNode.lineWidth = 1
+        roundRectNode.zPosition = 1
+        roundRectNode.position = .zero
+        
+        roundRectNode.physicsBody = SKPhysicsBody(edgeLoopFrom: nodePath)
+        roundRectNode.physicsBody?.isDynamic = false
+        
+        addChild(roundRectNode)
+    }
     
     public func createNewStarNode(
         width: CGFloat,

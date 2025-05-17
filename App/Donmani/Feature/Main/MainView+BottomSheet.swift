@@ -77,7 +77,7 @@ extension MainView {
                             let response = try await NetworkService.DRecord().fetchMonthlyRecordCount(year: 2025)
                             let result = NetworkDTOMapper.mapper(dto: response)
                             UINavigationController.blockSwipe = false
-                            store.send(.delegate(.pushBottleListView(result)))
+                            store.send(.delegate(.pushBottleCalendarView(result)))
                         }
                     }
                 } label: {

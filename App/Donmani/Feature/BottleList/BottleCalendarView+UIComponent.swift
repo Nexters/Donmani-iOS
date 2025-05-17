@@ -1,5 +1,5 @@
 //
-//  BottleListView+UIComponent.swift
+//  BottleCalendarView+UIComponent.swift
 //  Donmani
 //
 //  Created by 문종식 on 3/26/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import DesignSystem
 
-extension BottleListView {
+extension BottleCalendarView {
     func TopBannerView() -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: .s5, style: .circular)

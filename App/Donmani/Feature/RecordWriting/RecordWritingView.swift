@@ -14,6 +14,15 @@ struct RecordWritingView: View {
     @Bindable var store: StoreOf<RecordWritingStore>
     @FocusState var isFocusToTextField: Bool
     @State var editingText: String = ""
+    let completeHandler: ((RecordContent?) -> Void)?
+    
+    init(
+        store: StoreOf<RecordWritingStore>,
+        completeHandler: @escaping (RecordContent?) -> Void
+    ) {
+        self.store = store
+        self.completeHandler = completeHandler
+    }
     
     var body: some View {
         ZStack {
@@ -144,29 +153,27 @@ struct RecordWritingView: View {
                     }
             }
         }
-        .onDisappear {
-            store.send(.delegate(.checkSwipeValidation))
-        }
         .navigationBarBackButtonHidden()
     }
     
 }
 
 #Preview {
-    RecordWritingView(
-        store: Store(initialState: RecordWritingStore.State(type: .good)
-        ) {
-            RecordWritingStore()
-        }
-    )
+    {
+        let context = RecordWritingStore.Context(type: .good)
+        let state = MainStateFactory().makeRecordWritingState(context: context)
+        let store = MainStoreFactory().makeRecordWritingStore(state: state)
+        return RecordWritingView(store: store) { _ in }
+    }()
 }
 
 #Preview {
-    RecordWritingView(
-        store: Store(initialState: RecordWritingStore.State(type: .good)
-        ) {
-            RecordWritingStore()
-        }
-    )
-    .SelectCategoryView()
+    {
+        let context = RecordWritingStore.Context(type: .bad)
+        let state = MainStateFactory().makeRecordWritingState(context: context)
+        let store = MainStoreFactory().makeRecordWritingStore(state: state)
+        return RecordWritingView(store: store) { _ in }
+            .SelectCategoryView()
+    }()
+    
 }

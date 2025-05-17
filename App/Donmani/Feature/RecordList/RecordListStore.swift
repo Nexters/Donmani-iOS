@@ -30,12 +30,10 @@ struct RecordListStore {
         let goodCount: Int
         let badCount: Int
         let progressPoint: CGFloat
-        var isPresentingBottleListToopTipView: Bool = false
+        var isPresentingBottleCalendarToopTipView: Bool = false
         var dateSet: Set<String>
         
-        init(
-            context: Context
-        ) {
+        init(context: Context) {
             self.yearMonth = (context.year % 100, context.month)
             let key = "\(context.year)-\(String(format: "%02d", context.month))"
             self.record = (DataStorage.getRecord(yearMonth: key) ?? []).sorted {
@@ -70,14 +68,14 @@ struct RecordListStore {
             } else {
                 self.progressPoint = -1
             }
-            self.isPresentingBottleListToopTipView = (HistoryStateManager.shared.getIsShownBottleListToopTip() == nil)
+            self.isPresentingBottleCalendarToopTipView = (HistoryStateManager.shared.getIsShownBottleCalendarToopTip() == nil)
             self.dateSet = []
         }
     }
     
     // MARK: - Action
     enum Action {
-        case closeBottleListToopTip
+        case closeBottleCalendarToopTip
         case touchStatisticsView(Bool)
         case pushStatisticsView
         case pushBottleCalendarView
@@ -85,7 +83,7 @@ struct RecordListStore {
         
         case delegate(Delegate)
         enum Delegate {
-            case pushBottleListView(RecordCountSummary)
+            case pushBottleCalendarView(RecordCountSummary)
             case pushRecordEntryPointView
             case pushStatisticsView(Int, Int)
         }
@@ -95,9 +93,9 @@ struct RecordListStore {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .closeBottleListToopTip:
-                state.isPresentingBottleListToopTipView = false
-                HistoryStateManager.shared.setIsShownBottleListToopTip()
+            case .closeBottleCalendarToopTip:
+                state.isPresentingBottleCalendarToopTipView = false
+                HistoryStateManager.shared.setIsShownBottleCalendarToopTip()
             case .touchStatisticsView(let isEmpty):
                 let value = isEmpty ? "no_record" : "has_record"
                 GA.Click(event: .insightButton).send(parameters: [.recordStatus: value])
@@ -118,15 +116,15 @@ struct RecordListStore {
                 return .run { send in
                     let response = try await NetworkService.DRecord().fetchMonthlyRecordCount(year: 2025)
                     let result = NetworkDTOMapper.mapper(dto: response)
-                    await send(.delegate(.pushBottleListView(result)))
+                    await send(.delegate(.pushBottleCalendarView(result)))
                 }
                 
             case .addAppearCardView(let date):
                 state.dateSet.insert(date)
 
-            case .delegate(.pushBottleListView(_)):
-                state.isPresentingBottleListToopTipView = false
-                HistoryStateManager.shared.setIsShownBottleListToopTip()
+            case .delegate(.pushBottleCalendarView(_)):
+                state.isPresentingBottleCalendarToopTipView = false
+                HistoryStateManager.shared.setIsShownBottleCalendarToopTip()
             case .delegate:
                 break
             }
