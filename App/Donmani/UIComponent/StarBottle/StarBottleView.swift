@@ -43,7 +43,7 @@ struct StarBottleView: View {
             MotionManager.startGyros { dx, dy in
                 starScene.setGravity(dx: dx, dy: -dy)
             }
-            starScene.addGroundNode(
+            starScene.addGroundNodeWithStarBottleShape(
                 width: width,
                 height: height
             )

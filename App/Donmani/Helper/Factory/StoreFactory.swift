@@ -9,10 +9,14 @@ import ComposableArchitecture
 
 protocol StoreFactory {
     func makeMainNavigationStore(state: MainNavigationStore.State) -> StoreOf<MainNavigationStore>
-    func makeBottleCalendarStore(state: BottleListStore.State) -> StoreOf<BottleListStore>
+    func makeRecordNavigationStore(state: RecordNavigationStore.State) -> StoreOf<RecordNavigationStore>
+    
+    func makeBottleCalendarStore(state: BottleCalendarStore.State) -> StoreOf<BottleCalendarStore>
     func makeMonthlyRecordListStore(state: RecordListStore.State) -> StoreOf<RecordListStore>
     func makeStatisticsStore(state: StatisticsStore.State) -> StoreOf<StatisticsStore>
     func makeMonthlyStarBottleStore(state: MonthlyStarBottleStore.State) -> StoreOf<MonthlyStarBottleStore>
+    func makeRecordEntryPointStore(state: RecordEntryPointStore.State) -> StoreOf<RecordEntryPointStore>
+    func makeRecordWritingStore(state: RecordWritingStore.State) -> StoreOf<RecordWritingStore>
 }
 
 struct MainStoreFactory: StoreFactory {
@@ -21,8 +25,13 @@ struct MainStoreFactory: StoreFactory {
         return store
     }
     
-    func makeBottleCalendarStore(state: BottleListStore.State) -> StoreOf<BottleListStore> {
-        let store = Store(initialState: state) { BottleListStore() }
+    func makeRecordNavigationStore(state: RecordNavigationStore.State) -> StoreOf<RecordNavigationStore> {
+        let store = Store(initialState: state) { RecordNavigationStore() }
+        return store
+    }
+    
+    func makeBottleCalendarStore(state: BottleCalendarStore.State) -> StoreOf<BottleCalendarStore> {
+        let store = Store(initialState: state) { BottleCalendarStore() }
         return store
     }
     
@@ -40,6 +49,17 @@ struct MainStoreFactory: StoreFactory {
         let store = Store(initialState: state) { MonthlyStarBottleStore() }
         return store
     }
+    
+    func makeRecordEntryPointStore(state: RecordEntryPointStore.State) -> StoreOf<RecordEntryPointStore> {
+        let store = Store(initialState: state) { RecordEntryPointStore() }
+        return store
+    }
+    
+    func makeRecordWritingStore(state: RecordWritingStore.State) -> StoreOf<RecordWritingStore> {
+        let store = Store(initialState: state) { RecordWritingStore() }
+        return store
+    }
+    
 }
 
 struct MainStoreFactoryDependencyKey: DependencyKey {

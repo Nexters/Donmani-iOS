@@ -12,6 +12,16 @@ import DNetwork
 @Reducer
 struct RecordEntryPointStore {
     let scheduler = DispatchQueue.main.eraseToAnyScheduler()
+    
+    struct Context {
+        let isCompleteToday: Bool
+        let isCompleteYesterday: Bool
+        init(today isCompleteToday: Bool, yesterday isCompleteYesterday: Bool) {
+            self.isCompleteToday = isCompleteToday
+            self.isCompleteYesterday = isCompleteYesterday
+        }
+    }
+    
     // MARK: - State
     @ObservableState
     struct State: Equatable {
@@ -57,9 +67,8 @@ struct RecordEntryPointStore {
         var isReadyToSave: Bool = false
         var isFullWriting: Bool = false
         var isLoading: Bool = false
-        var isFromMain: Bool = true
         
-        var recordWritingState: RecordWritingStore.State = RecordWritingStore.State(type: .good)
+//        var recordWritingState: RecordWritingStore.State = RecordWritingStore.State(type: .good)
         
         init() {
             self.isCompleteToday = false
@@ -72,23 +81,22 @@ struct RecordEntryPointStore {
             self.isPresentingPopover = true
         }
         
-        init(isCompleteToday: Bool, isCompleteYesterday: Bool, isFromMain: Bool = true) {
-            self.isFromMain = isFromMain
+        init(context: Context) {
             self.isPresentingRecordGuideView = (HistoryStateManager.shared.getGuideState() == nil)
             self.isPresentingPopover = HistoryStateManager.shared.getEmptyRecordGuideKey()
-            self.isCompleteToday = isCompleteToday
-            self.isCompleteYesterday = isCompleteYesterday
-            self.dayType = isCompleteToday ? .yesterday : .today
-            if !(isCompleteToday || isCompleteYesterday) {
+            self.isCompleteToday = context.isCompleteToday
+            self.isCompleteYesterday = context.isCompleteYesterday
+            self.dayType = context.isCompleteToday ? .yesterday : .today
+            if !(context.isCompleteToday || context.isCompleteYesterday) {
                 self.dayTitle = "하루"
-            } else if isCompleteToday {
+            } else if context.isCompleteToday {
                 self.dayTitle = "어제"
             } else {
                 self.dayTitle = "오늘"
             }
             self.title = "\(self.dayTitle) 소비 정리해 볼까요?"
-            self.dateString = DateManager.shared.getFormattedDate(for: isCompleteToday ? .yesterday : .today)
-            self.isPresentingDayToggle = !(isCompleteToday || isCompleteYesterday)
+            self.dateString = DateManager.shared.getFormattedDate(for: context.isCompleteToday ? .yesterday : .today)
+            self.isPresentingDayToggle = !(context.isCompleteToday || context.isCompleteYesterday)
             self.remainingTime = TimeManager.getRemainingTime()
         }
     }

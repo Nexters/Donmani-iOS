@@ -10,8 +10,16 @@ import ComposableArchitecture
 import DesignSystem
 
 struct RecordEntryPointView: View {
-//    @Environment(\.dismiss) var dismiss
     @Bindable var store: StoreOf<RecordEntryPointStore>
+    let completeHandler: ((Record) -> Void)?
+    
+    init(
+        store: StoreOf<RecordEntryPointStore>,
+        completeHandler: @escaping (Record) -> Void
+    ) {
+        self.store = store
+        self.completeHandler = completeHandler
+    }
     
     var body: some View {
         
@@ -115,14 +123,10 @@ struct RecordEntryPointView: View {
 
 
 #Preview {
-    RecordEntryPointView(
-        store: Store(
-            initialState: RecordEntryPointStore.State(
-                isCompleteToday: false,
-                isCompleteYesterday: false
-            )
-        ) {
-            RecordEntryPointStore()
-        }
-    )
+    {
+        let context = RecordEntryPointStore.Context(today: false, yesterday: true)
+        let state = MainStateFactory().makeRecordEntryPointState(context: context)
+        let store = MainStoreFactory().makeRecordEntryPointStore(state: state)
+        return RecordEntryPointView(store: store) { _ in }
+    }()
 }

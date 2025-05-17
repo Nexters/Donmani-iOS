@@ -10,7 +10,7 @@ import SwiftUI
 import DesignSystem
 
 extension RecordListView {
-    func BottleListToopTipView() -> some View {
+    func BottleCalendarToopTipView() -> some View {
         VStack(spacing: 0) {
             HStack {
                 Spacer()
@@ -25,7 +25,7 @@ extension RecordListView {
                     DText("별통이만 모아볼 수 있어요!")
                         .style(.b3, .semibold, .white)
                     Button {
-                        store.send(.closeBottleListToopTip)
+                        store.send(.closeBottleCalendarToopTip)
                     } label: {
                         DImage(.close).image
                             .resizable()

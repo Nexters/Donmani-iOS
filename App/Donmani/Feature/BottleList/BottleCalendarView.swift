@@ -1,5 +1,5 @@
 //
-//  BottleListView.swift
+//  BottleCalendarView.swift
 //  Donmani
 //
 //  Created by 문종식 on 3/26/25.
@@ -9,17 +9,9 @@ import SwiftUI
 import ComposableArchitecture
 import DesignSystem
 
-struct BottleListView: View {
+struct BottleCalendarView: View {
     @Environment(\.dismiss) private var dismiss
-    @Bindable var store: StoreOf<BottleListStore>
-    
-//    init(context: RecordCountSummary) {
-//        self.store = Store(
-//            initialState: BottleListStore.State(context: context)
-//        ) {
-//            BottleListStore()
-//        }
-//    }
+    @Bindable var store: StoreOf<BottleCalendarStore>
     
     var body: some View {
         ZStack {
@@ -68,6 +60,6 @@ struct BottleListView: View {
         let context = RecordCountSummary(year: 2025, monthlyRecords: [:])
         let state = MainStateFactory().makeBottleCalendarState(context: context)
         let store = MainStoreFactory().makeBottleCalendarStore(state: state)
-        return BottleListView(store: store)
+        return BottleCalendarView(store: store)
     }()
 }

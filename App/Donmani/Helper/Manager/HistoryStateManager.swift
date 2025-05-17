@@ -30,7 +30,7 @@ final class HistoryStateManager {
     private let requestNotificationPermission = "REQUSET_NOTIFICATION_PERMISSION"
     
     //
-    private let isShownBottleListToopTip = "IS_SHOWN_BOTTLE_LIST_TOOP_TIP"
+    private let isShownBottleCalendarToopTip = "IS_SHOWN_BOTTLE_LIST_TOOP_TIP"
     
     // streak_submit
     private let streakSubmitCountKey = "STREAK_SUBMIT_COUNT"
@@ -69,11 +69,11 @@ final class HistoryStateManager {
         )
     }
     
-    func getIsShownBottleListToopTip() -> String? {
-        userDefaults.string(forKey: isShownBottleListToopTip)
+    func getIsShownBottleCalendarToopTip() -> String? {
+        userDefaults.string(forKey: isShownBottleCalendarToopTip)
     }
-    func setIsShownBottleListToopTip() {
-        userDefaults.set(isShownBottleListToopTip, forKey: isShownBottleListToopTip)
+    func setIsShownBottleCalendarToopTip() {
+        userDefaults.set(isShownBottleCalendarToopTip, forKey: isShownBottleCalendarToopTip)
     }
     
     func getRequestNotificationPermission() -> String? {

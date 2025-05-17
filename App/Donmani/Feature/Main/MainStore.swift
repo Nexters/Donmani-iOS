@@ -25,7 +25,7 @@ struct MainStore {
         var isCompleteYesterday: Bool
         var monthlyRecords: [Record]
         var isPresentingRecordEntryButton: Bool = true
-        var recordEntryPointState = RecordEntryPointStore.State(isCompleteToday: true, isCompleteYesterday: true)
+//        var recordEntryPointState = RecordEntryPointStore.State(isCompleteToday: true, isCompleteYesterday: true)
         var isPresentingRecordYesterdayToopTip: Bool = false
         var isPresentingAlreadyWrite: Bool = false
         var isPresentingNewStarBottle: Bool = false
@@ -36,18 +36,15 @@ struct MainStore {
         var shakeCount = 0
         var isNewStar = 0
         
-        var opacity: CGFloat = 0.0
+        var opacity: CGFloat = 1.0
         var month = 0
         var day = 0
         
         init(today: [String]) {
             self.month = Int(today[1]) ?? 1
-            self.monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
+            let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
+            self.monthlyRecords = monthlyRecords
             let state = HistoryStateManager.shared.getState()
-            self.recordEntryPointState = RecordEntryPointStore.State(
-                isCompleteToday: state[.today, default: false],
-                isCompleteYesterday: state[.yesterday, default: false]
-            )
             self.isCompleteToday = state[.today, default: false]
             self.isCompleteYesterday = state[.yesterday, default: false]
             self.isPresentingRecordEntryButton = !(self.isCompleteToday && self.isCompleteYesterday)
@@ -62,12 +59,6 @@ struct MainStore {
             } else {
                 HistoryStateManager.shared.removeIsFirstDayOfMonth()
             }
-        }
-        
-        init() {
-            isCompleteToday = true
-            isCompleteYesterday = true
-            monthlyRecords = []
         }
     }
     
@@ -89,7 +80,7 @@ struct MainStore {
             case pushSettingView
             case pushRecordEntryPointView
             case pushRecordListView
-            case pushBottleListView(RecordCountSummary)
+            case pushBottleCalendarView(RecordCountSummary)
         }
     }
     

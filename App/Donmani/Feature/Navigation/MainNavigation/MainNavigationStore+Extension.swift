@@ -9,25 +9,22 @@ import ComposableArchitecture
 
 extension MainNavigationStore {
     func path(
-        element: StackActionOf<MainNavigationStore.Path>,
+        id: StackElementID,
+        action: MainNavigationStore.Path.Action,
         _ state: inout MainNavigationStore.State
     ) -> Effect<MainNavigationStore.Action> {
-        switch element {
-        case .element(id: _, action: let action):
-            switch action {
-            case .monthlyRecordList(.delegate(let childAction)):
-                return recordListDelegateAction(state: &state, action: childAction)
-            case .bottleCalendar(.delegate(let childAction)):
-                return bottleCalendarDelegateAction(state: &state, action: childAction)
-            case .monthlyStarBottle(.delegate(let childAction)):
-                return monthlyStarBottleDelegateAction(state: &state, action: childAction)
-            default:
-                break
-            }
+        switch action {
+        case .record(.delegate(let childAction)):
+            return recordEntryPointDelegateAction(state: &state, action: childAction)
+        case .monthlyRecordList(.delegate(let childAction)):
+            return recordListDelegateAction(state: &state, action: childAction)
+        case .bottleCalendar(.delegate(let childAction)):
+            return bottleCalendarDelegateAction(state: &state, action: childAction)
+        case .monthlyStarBottle(.delegate(let childAction)):
+            return monthlyStarBottleDelegateAction(state: &state, action: childAction)
         default:
-            break
+            return .none
         }
-        return .none
     }
     
     func push(
@@ -35,6 +32,19 @@ extension MainNavigationStore {
         _ state: inout MainNavigationStore.State
     ) -> Effect<MainNavigationStore.Action> {
         switch destination {
+        case .record:
+            let isComplete = HistoryStateManager.shared.getState()
+            let today = isComplete[.today, default: false]
+            let yesterday = isComplete[.yesterday, default: false]
+            let context = RecordEntryPointStore.Context(today: today, yesterday: yesterday)
+            let initialState = stateFactory.makeRecordEntryPointState(context: context)
+            state.path.append(.record(initialState))
+            
+        case .recordWriting(let type, let content):
+            let context = RecordWritingStore.Context(type: type, content: content)
+            let initialState = stateFactory.makeRecordWritingState(context: context)
+            state.path.append(.recordWriting(initialState))
+            
         case .monthlyRecordList(let year, let month, let isShowNavigationButton):
             let context = RecordListStore.Context(year: year, month: month, isShowNavigationButton)
             let initialState = stateFactory.makeMonthlyRecordListState(context: context)
@@ -55,30 +65,6 @@ extension MainNavigationStore {
             state.path.append(.monthlyStarBottle(initialState))
         }
         
-        return .none
-    }
-    
-    func runMainAction(
-        _ action: MainStore.Action.Delegate,
-        _ state: inout MainNavigationStore.State
-    ) -> Effect<MainNavigationStore.Action> {
-        switch action {
-        case .pushSettingView:
-            state.path.append(.setting)
-        case .pushRecordEntryPointView:
-            break
-        case .pushRecordListView:
-            return .run { send in
-                let dateManager = DateManager.shared
-                let dayString = dateManager.getFormattedDate(for: .today)
-                let day = Day(yyyymmdd: dayString)
-                await send(.push(.monthlyRecordList(day.year, day.month, true)))
-            }
-        case .pushBottleListView(let recordCountSummary):
-            return .run { send in
-                await send(.push(.bottleCalendar(recordCountSummary)))
-            }
-        }
         return .none
     }
 }
