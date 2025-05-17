@@ -28,7 +28,6 @@ struct MainStore {
         var shakeCount = 0
         var isNewStar = 0
         
-        var opacity: CGFloat = 1.0
         var month = 0
         var day = 0
         

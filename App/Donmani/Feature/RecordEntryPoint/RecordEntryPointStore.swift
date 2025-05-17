@@ -320,6 +320,8 @@ struct RecordEntryPointStore {
                 state.isError = true
                 
             case .startTimer:
+                let isBlockSwipe = !(state.goodRecord == nil && state.badRecord == nil)
+                UINavigationController.isBlockSwipe = isBlockSwipe
                 return .run { send in
                     while true {
                         let remainingTime = TimeManager.getRemainingTime()

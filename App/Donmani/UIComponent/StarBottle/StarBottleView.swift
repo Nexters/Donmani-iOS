@@ -19,6 +19,7 @@ struct StarBottleView: View {
         .screenWidth * 0.8 * 4/3
     }
     @State private var starScene: StarScene
+    @State var opacity: CGFloat = 0.0
     
     init(records: [Record]) {
         self.records = records
@@ -28,6 +29,22 @@ struct StarBottleView: View {
                 height: .screenWidth * 0.8 * 4/3
             )
         )
+        starScene.addGroundNodeWithStarBottleShape(
+            width: width,
+            height: height
+        )
+        (0..<records.count).forEach { i in
+            starScene.createInitStarNode(
+                width: width,
+                height: height,
+                record: records[i],
+                index: i
+            )
+        }
+        starScene.backgroundColor = .clear.withAlphaComponent(0.0)
+        starScene.scene?.backgroundColor = .clear.withAlphaComponent(0.0)
+        starScene.scene?.view?.backgroundColor = .clear.withAlphaComponent(0.0)
+        starScene.view?.backgroundColor = .clear.withAlphaComponent(0.0)
     }
     
     var body: some View {
@@ -38,27 +55,20 @@ struct StarBottleView: View {
                 .ignoresSiblingOrder
             ]
         )
-        .background(Color.clear)
+        .opacity(opacity)
+        .background {
+            Color.clear
+                .onAppear {
+                    Task {
+                        try await Task.sleep(nanoseconds: 1_200_000_000)
+                        opacity = 1.0
+                    }
+                }
+        }
         .onAppear {
             MotionManager.startGyros { dx, dy in
                 starScene.setGravity(dx: dx, dy: -dy)
             }
-            starScene.addGroundNodeWithStarBottleShape(
-                width: width,
-                height: height
-            )
-            (0..<records.count).forEach { i in
-                starScene.createInitStarNode(
-                    width: width,
-                    height: height,
-                    record: records[i],
-                    index: i
-                )
-            }
-            starScene.backgroundColor = .clear.withAlphaComponent(0.0)
-            starScene.scene?.backgroundColor = .clear.withAlphaComponent(0.0)
-            starScene.scene?.view?.backgroundColor = .clear.withAlphaComponent(0.0)
-            starScene.view?.backgroundColor = .clear.withAlphaComponent(0.0)
         }
         .onChange(of: records) { (old, new) in
             if let record = records.last {

@@ -10,6 +10,7 @@ import ComposableArchitecture
 
 extension UINavigationController: @retroactive ObservableObject, @retroactive UIGestureRecognizerDelegate {
     static var isBlockSwipe: Bool = false
+    static var store: StoreOf<MainNavigationStore>?
     
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +24,8 @@ extension UINavigationController: @retroactive ObservableObject, @retroactive UI
     
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if UINavigationController.isBlockSwipe {
+            UIApplication.shared.endEditing()
+            Self.store?.send(.presentCancelBottom)
             return false
         }
         return viewControllers.count > 1

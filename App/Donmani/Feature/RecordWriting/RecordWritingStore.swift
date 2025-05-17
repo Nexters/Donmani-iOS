@@ -185,11 +185,10 @@ struct RecordWritingStore {
                 }
                 let gaEvent: GA.Click.Event = isContinue ? .recordContinueButton : .recordBackButton
                 GA.Click(event: gaEvent).send(parameters: gaParameter)
-            
                 state.isFocusToTextField = true
                 state.isPresentingCancel = false
-                UINavigationController.isBlockSwipe = false
-                
+                UINavigationController.isBlockSwipe = state.isBlockSwipe()
+
             case .sendCancelGAEvent:
                 var parameters: [GA.Parameter: Any] = [.referrer: "기록작성"]
                 if let savedCategory = state.savedCategory {
