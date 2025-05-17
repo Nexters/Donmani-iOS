@@ -25,6 +25,9 @@ struct MainNavigationStore {
         case mainAction(MainStore.Action)
         case path(StackActionOf<MainNavigationStore.Path>)
         
+        case completeWriteRecordContent(RecordContent)
+        case completeWriteRecord(Record)
+        
         case push(Destination)
         enum Destination {
             case record
@@ -76,8 +79,25 @@ struct MainNavigationStore {
             case .push(let destination):
                 return push(to: destination, &state)
                 
+            case .completeWriteRecordContent(let recordContent):
+                if let recordWritingID = state.path.ids.last {
+                    state.path.pop(from: recordWritingID)
+                }
+                if let recordID = state.path.ids.last {
+                    if case var .record(recordState) = state.path[id: recordID] {
+                        recordState.updateRecordContent(content: recordContent)
+                        state.path[id: recordID] = .record(recordState)
+                    }
+                }
+                
+            case .completeWriteRecord(let record):
+                if let recordID = state.path.ids.last {
+                    state.path.pop(from: recordID)
+                }
+                state.mainState.appendNewRecord(record: record)
+                
             default:
-                break;
+                break
             }
             return .none
         }

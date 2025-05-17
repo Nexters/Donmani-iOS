@@ -9,7 +9,6 @@ import ComposableArchitecture
 
 protocol StoreFactory {
     func makeMainNavigationStore(state: MainNavigationStore.State) -> StoreOf<MainNavigationStore>
-    func makeRecordNavigationStore(state: RecordNavigationStore.State) -> StoreOf<RecordNavigationStore>
     
     func makeBottleCalendarStore(state: BottleCalendarStore.State) -> StoreOf<BottleCalendarStore>
     func makeMonthlyRecordListStore(state: RecordListStore.State) -> StoreOf<RecordListStore>
@@ -22,11 +21,6 @@ protocol StoreFactory {
 struct MainStoreFactory: StoreFactory {
     func makeMainNavigationStore(state: MainNavigationStore.State) -> StoreOf<MainNavigationStore> {
         let store = Store(initialState: state) { MainNavigationStore() }
-        return store
-    }
-    
-    func makeRecordNavigationStore(state: RecordNavigationStore.State) -> StoreOf<RecordNavigationStore> {
-        let store = Store(initialState: state) { RecordNavigationStore() }
         return store
     }
     

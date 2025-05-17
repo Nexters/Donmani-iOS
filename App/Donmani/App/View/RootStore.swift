@@ -28,20 +28,35 @@ struct RootStore {
         var route: AppRoute = .splash
     }
     
-    
     enum Action {
-        case presentOnboarding
-        case onboardingCompleted(MainRoute)
+        case completeSplash
+        case completeOnboarding(MainRoute)
     }
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .presentOnboarding:
-                state.route = .onboarding
+            case .completeSplash:
+                if HistoryStateManager.shared.getOnboardingState() {
+                    state.route = .onboarding
+                } else {
+                    return .run { send in
+                        await send(.completeOnboarding(.main))
+                    }
+                }
                 
-            case .onboardingCompleted(let mainRoute):
-                let mainNavigationState = stateFactory.makeMainNavigationState()
+            case .completeOnboarding(let mainRoute):
+                var mainNavigationState = stateFactory.makeMainNavigationState()
+                if mainRoute == .record {
+                    let isComplete = HistoryStateManager.shared.getState()
+                    let today = isComplete[.today, default: false]
+                    let yesterday = isComplete[.yesterday, default: false]
+                    if (!today || !yesterday) {
+                        let context = RecordEntryPointStore.Context(today: today, yesterday: yesterday)
+                        let state = stateFactory.makeRecordEntryPointState(context: context)
+                        mainNavigationState.path.append(.record(state))
+                    }
+                }
                 let mainNavigationStore = storeFactory.makeMainNavigationStore(state: mainNavigationState)
                 state.route = .main(mainNavigationStore)
             }

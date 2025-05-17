@@ -9,13 +9,17 @@ import SwiftUI
 import ComposableArchitecture
 
 struct MainNavigationView: View {
-    @Bindable var store: StoreOf<MainNavigationStore>
+    @Bindable var navigationStore: StoreOf<MainNavigationStore>
+    
+    init(store: StoreOf<MainNavigationStore>) {
+        self.navigationStore = store
+    }
     
     var body: some View {
         NavigationStack(
-            path: $store.scope(state: \.path, action: \.path)
+            path: $navigationStore.scope(state: \.path, action: \.path)
         ) {
-            MainView(store: store.scope(
+            MainView(store: navigationStore.scope(
                 state: \.mainState,
                 action: \.mainAction
             ))
@@ -23,11 +27,11 @@ struct MainNavigationView: View {
             switch store.case {
             case .record(let store):
                 RecordEntryPointView(store: store) { record in
-                    print(record)
+                    navigationStore.send(.completeWriteRecord(record))
                 }
             case .recordWriting(let store):
                 RecordWritingView(store: store) { recordContent in
-                    
+                    navigationStore.send(.completeWriteRecordContent(recordContent))
                 }
             case .monthlyRecordList(let store):
                 RecordListView(store: store)

@@ -24,16 +24,15 @@ struct RootView: View {
             switch store.route {
             case .splash:
                 SplashView {
-                    store.send(.presentOnboarding)
+                    store.send(.completeSplash)
                 }
                 .transition(.opacity)
                 .id("splash")
                 
             case .onboarding:
                 OnboardingView { confirmType in
-                    store.send(.onboardingCompleted(confirmType))
+                    store.send(.completeOnboarding(confirmType))
                 }
-                .transition(.opacity)
                 .id("onboarding")
                 
             case .main(let store):

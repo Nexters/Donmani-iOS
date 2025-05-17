@@ -15,17 +15,9 @@ struct MainStore {
     // MARK: - State
     @ObservableState
     struct State: Equatable {
-        enum DayType {
-            case today
-            case yesterday
-        }
-        
         var name: String = DataStorage.getUserName()
-        var isCompleteToday: Bool
-        var isCompleteYesterday: Bool
         var monthlyRecords: [Record]
         var isPresentingRecordEntryButton: Bool = true
-//        var recordEntryPointState = RecordEntryPointStore.State(isCompleteToday: true, isCompleteYesterday: true)
         var isPresentingRecordYesterdayToopTip: Bool = false
         var isPresentingAlreadyWrite: Bool = false
         var isPresentingNewStarBottle: Bool = false
@@ -45,11 +37,10 @@ struct MainStore {
             let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
             self.monthlyRecords = monthlyRecords
             let state = HistoryStateManager.shared.getState()
-            self.isCompleteToday = state[.today, default: false]
-            self.isCompleteYesterday = state[.yesterday, default: false]
-            self.isPresentingRecordEntryButton = !(self.isCompleteToday && self.isCompleteYesterday)
+            let isCompleteToday = state[.today, default: false]
+            let isCompleteYesterday = state[.yesterday, default: false]
+            self.isPresentingRecordEntryButton = !(isCompleteToday && isCompleteYesterday)
             
-//            isNewStarBottle = true
             self.day = Int(today[2]) ?? 1
             if (day == 1) {
                 if HistoryStateManager.shared.getIsFirstDayOfMonth() {
@@ -60,16 +51,24 @@ struct MainStore {
                 HistoryStateManager.shared.removeIsFirstDayOfMonth()
             }
         }
+        
+        mutating func appendNewRecord(record: Record) {
+            monthlyRecords.append(record)
+            let historyStateManager = HistoryStateManager.shared
+            let state = historyStateManager.getState()
+            let isCompleteToday = state[.today, default: false]
+            let isCompleteYesterday = state[.yesterday, default: false]
+            self.isPresentingRecordEntryButton = !(isCompleteToday && isCompleteYesterday)
+        }
     }
     
     // MARK: - Action
     enum Action: BindableAction {
-        case checkEnableRecord
-        case fetchUserName
         case binding(BindingAction<State>)
+        
+        case fetchUserName
         case closePopover
         case checkPopover
-        case showReciveStar
         case checkNotificationPermission
         case dismissNewStarBottleView
         case dismissAlreadyWrite
@@ -91,21 +90,17 @@ struct MainStore {
         BindingReducer()
         Reduce { state, action in
             switch action {
-            case .binding:
-                return .none
-            case .checkEnableRecord:
-                state.isPresentingRecordEntryButton = (state.isCompleteToday || state.isCompleteYesterday)
-                return .none
             case .fetchUserName:
                 state.name = DataStorage.getUserName()
                 return .run { send in
                     try await Task.sleep(nanoseconds: 300_000_000)
                     await send(.checkNotificationPermission)
                 }
+                
             case .closePopover:
                 state.isPresentingRecordYesterdayToopTip = false
                 HistoryStateManager.shared.setLastYesterdayToopTipDay()
-                return .none
+                
             case .checkPopover:
                 let historyManager = HistoryStateManager.shared
                 let stateManager = historyManager.getState()
@@ -119,21 +114,18 @@ struct MainStore {
                         state.isPresentingRecordYesterdayToopTip = true
                     }
                 }
-                return .none
-            case .showReciveStar:
-                return .none
+                
             case .checkNotificationPermission:
                 if state.isRequestNotificationPermission {
                     NotificationManager().checkNotificationPermission()
                     state.isRequestNotificationPermission = false
                 }
-                return .none
+                
             case .dismissNewStarBottleView:
                 state.isPresentingNewStarBottle = false
-                return .none
+
             case .dismissAlreadyWrite:
                 state.isPresentingAlreadyWrite = false
-                return .none
             
             case .shakeTwice:
                 if state.shakeCount >= 6 {
@@ -147,10 +139,10 @@ struct MainStore {
                     await send(.shakeTwice, animation: .linear(duration: 0.5))
                 }
             
-                
-            case .delegate:
-                return .none
+            default:
+                break
             }
+            return .none
         }
     }
 }

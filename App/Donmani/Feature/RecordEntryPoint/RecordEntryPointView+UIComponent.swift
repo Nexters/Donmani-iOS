@@ -216,7 +216,12 @@ extension RecordEntryPointView {
             }
             
             Button {
-                store.send(.save)
+                Task {
+                    await store.send(.completeWrite).finish()
+                    if !store.isError, let record = store.record {
+                        completeHandler?(record)
+                    }
+                }
             } label: {
                 ZStack {
                     RoundedRectangle(

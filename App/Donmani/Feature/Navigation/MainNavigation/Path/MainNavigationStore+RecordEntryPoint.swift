@@ -18,19 +18,11 @@ extension MainNavigationStore {
             return .run { send in
                 await send(.push(.recordWriting(content.flag, content)))
             }
-//            state.recordWritingState = RecordWritingStore.State(type: content.flag, content: content)
-//            UINavigationController.swipeNavigationPopIsEnabled = true
-//            state.path.append(.recordWriting(state.recordWritingState))
-            
         case .pushRecordWritingView(let type):
             return .run { send in
                 await send(.push(.recordWriting(type, nil)))
             }
-//            state.recordWritingState = RecordWritingStore.State(type: type)
-//            UINavigationController.swipeNavigationPopIsEnabled = true
-//            state.path.append(.recordWriting(state.recordWritingState))
-            
-        case .popToMainView(let record):
+//        case .popToMainView(let record):
 //            if state.rootType == .onboarding {
 //                if let mainViewID = state.path.ids.first {
 //                    if case .main(var mainState) = state.path[id: mainViewID] {
@@ -48,8 +40,7 @@ extension MainNavigationStore {
 //                try await Task.sleep(nanoseconds: 700_000_000)
 //                await send(.addNewRecord(record))
 //            }
-            break
+//            break
         }
-        return .none
     }
 }

@@ -88,8 +88,7 @@ extension OnboardingView {
                         HStack {
                             Button {
                                 GA.Click(event: .onboardingHomeButton).send()
-                                completeHandler?(.main)
-//                                store.send(.touchHomeButton)
+                                store.send(.touchFinalButton(.main))
                             } label: {
                                 ZStack {
                                     RoundedRectangle(
@@ -104,8 +103,7 @@ extension OnboardingView {
                             }
                             DButton(title: "기록해 보기") {
                                 GA.Click(event: .onboardingRecordButton).send()
-                                completeHandler?(.record)
-//                                store.send(.touchRecordButton)
+                                store.send(.touchFinalButton(.record))
                             }
                         }
                     }

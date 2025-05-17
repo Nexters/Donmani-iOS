@@ -28,6 +28,7 @@ struct RecordEntryPointStore {
         var isCompleteToday: Bool
         var isCompleteYesterday: Bool
         
+        var record: Record?
         var goodRecord: RecordContent?
         var badRecord: RecordContent?
         var isCheckedEmptyRecord: Bool = false
@@ -67,19 +68,7 @@ struct RecordEntryPointStore {
         var isReadyToSave: Bool = false
         var isFullWriting: Bool = false
         var isLoading: Bool = false
-        
-//        var recordWritingState: RecordWritingStore.State = RecordWritingStore.State(type: .good)
-        
-        init() {
-            self.isCompleteToday = false
-            self.isCompleteYesterday = false
-            self.dateString = DateManager.shared.getFormattedDate(for: .today)
-            self.isPresentingDayToggle = true
-            self.title = "하루 소비 정리해 볼까요?"
-            self.dayTitle = "하루"
-            self.remainingTime = TimeManager.getRemainingTime()
-            self.isPresentingPopover = true
-        }
+        var isError: Bool = false
         
         init(context: Context) {
             self.isPresentingRecordGuideView = (HistoryStateManager.shared.getGuideState() == nil)
@@ -98,6 +87,16 @@ struct RecordEntryPointStore {
             self.dateString = DateManager.shared.getFormattedDate(for: context.isCompleteToday ? .yesterday : .today)
             self.isPresentingDayToggle = !(context.isCompleteToday || context.isCompleteYesterday)
             self.remainingTime = TimeManager.getRemainingTime()
+        }
+        
+        mutating func updateRecordContent(content: RecordContent) {
+            switch content.flag {
+            case .good:
+                self.goodRecord = content
+            case .bad:
+                self.badRecord = content
+            }
+            self.isSaveEnabled = true
         }
     }
     
@@ -121,7 +120,7 @@ struct RecordEntryPointStore {
         case readyToSave
         case cancelSave
         case errorSave
-        case save
+        case completeWrite
         
         case startTimer
         case checkRemainingTime
@@ -133,7 +132,7 @@ struct RecordEntryPointStore {
             // Record Writing
             case pushRecordWritingView(RecordContentType)
             case pushRecordWritingViewWith(RecordContent)
-            case popToMainView(Record?)
+//            case popToMainView(Record?)
         }
     }
     
@@ -144,12 +143,12 @@ struct RecordEntryPointStore {
             switch action {
             case .showCancelRecordBottomSheet:
                 state.isPresentingCancel = true
-                return .none
+                
             case .dismissCancelRecordBottomSheet:
                 state.isPresentingCancel = false
                 state.isChangingDayType = false
                 UINavigationController.blockSwipe = false
-                return .none
+
             case .cancelRecording:
                 state.isPresentingCancel = false
                 if state.isChangingDayType {
@@ -159,9 +158,9 @@ struct RecordEntryPointStore {
                 } else {
                     UINavigationController.swipeNavigationPopIsEnabled = true
                     UINavigationController.blockSwipe = false
-                    return .run { send in
-                        await send(.delegate(.popToMainView(nil)))
-                    }
+//                    return .run { send in
+//                        await send(.delegate(.popToMainView(nil)))
+//                    }
                 }
                 
             case .sendCancelGAEvent:
@@ -173,17 +172,15 @@ struct RecordEntryPointStore {
                     parameters = [.bad: bad.category.title]
                 }
                 GA.View(event: .recordmainBackBottomsheet).send(parameters: parameters)
-                return .none
+                
             case .dismissRecordGuideBottomSheet:
                 state.isPresentingRecordGuideView = false
                 HistoryStateManager.shared.setGuideState()
-                return .none
                 
             case .touchDayTypeToggleButton:
                 if (state.isCheckedEmptyRecord || state.goodRecord != nil || state.badRecord != nil) {
                     state.isChangingDayType = true
                     state.isPresentingCancel = true
-                    return .none
                 } else {
                     return .run { send in
                         await send(.toggleDayType)
@@ -205,9 +202,10 @@ struct RecordEntryPointStore {
                 state.isCheckedEmptyRecord = false
                 state.goodRecord = nil
                 state.badRecord = nil
+                state.isSaveEnabled = false
                 UINavigationController.swipeNavigationPopIsEnabled = true
                 UINavigationController.blockSwipe = false
-                return .none
+
             case .touchEmptyRecordButton:
                 state.isPresentingPopover = false
                 if state.isCheckedEmptyRecord {
@@ -219,16 +217,15 @@ struct RecordEntryPointStore {
                     GA.Click(event: .recordmainEmptyButton).send(parameters: [.screenType: state.dayType])
                     state.isPresentingRecordEmpty = true
                 }
-                return .none
+
             case .closePopover:
                 state.isPresentingPopover = false
                 HistoryStateManager.shared.setEmptyRecordGuideKey()
-                return .none
+                
             case .dismissEmtpyRecordBottomSheet:
                 GA.Click(event: .recordmainEmptyNoButton).send(parameters: [.screenType: state.dayTitle])
                 state.isPresentingRecordEmpty = false
                 UINavigationController.blockSwipe = false
-                return .none
                 
             case .recordEmpty:
                 GA.Click(event: .recordmainEmptyYesButton).send(parameters: [.screenType: state.dayTitle])
@@ -239,7 +236,6 @@ struct RecordEntryPointStore {
                 state.badRecord = nil
                 UINavigationController.blockSwipe = false
                 UINavigationController.swipeNavigationPopIsEnabled = false
-                return .none
                 
             case .readyToSave:
                 GA.Click(event: .recordmainSubmitButton).send(parameters: [.screenType: state.dayTitle])
@@ -253,7 +249,7 @@ struct RecordEntryPointStore {
                     }
                 }
                 UINavigationController.swipeNavigationPopIsEnabled = false
-                return .none
+
             case .cancelSave:
                 state.isReadyToSave = false
                 var gaParameter:[GA.Parameter:Any] = [.screenType:state.dayType]
@@ -267,8 +263,8 @@ struct RecordEntryPointStore {
                     gaParameter = [.empty: true]
                 }
                 GA.Click(event: .confirmBackButton).send(parameters: gaParameter)
-                return .none
-            case .save:
+
+            case .completeWrite:
                 state.isLoading = true
                 var buffer: [RecordContent]? = nil
                 if (state.badRecord != nil || state.goodRecord != nil) {
@@ -313,18 +309,20 @@ struct RecordEntryPointStore {
                     HistoryStateManager.shared.setLastWriteRecordDateKey()
                     GA.Submit(event: .streakSubmit).send(parameters: gaParameter)
                 }
+                state.record = Record(date: date, contents: records)
+                state.isError = false
                 return .run { send in
-                    let requestDTO = NetworkRequestDTOMapper.mapper(data: records)
-                    guard let _ = try? await NetworkService.DRecord().insert(date: date, recordContent: requestDTO) else {
-                        await send(.errorSave)
-                        return
-                    }
-                    let record = Record(date: date, contents: records)
-                    await send(.delegate(.popToMainView(record)))
+                    // TODO: - remove comment
+//                    let requestDTO = NetworkRequestDTOMapper.mapper(data: records)
+//                    guard let _ = try? await NetworkService.DRecord().insert(date: date, recordContent: requestDTO) else {
+//                        await send(.errorSave)
+//                        return
+//                    }
                 }
             case .errorSave:
                 state.isLoading = false
-                return .none
+                state.isError = true
+                
             case .startTimer:
                 return .run { send in
                     while true {
@@ -340,14 +338,10 @@ struct RecordEntryPointStore {
                 if seconds == 0 {
                     return .cancel(id: "Timer")
                 }
-                return .none
                 
             case .checkRemainingTime:
                 let remainingTime = TimeManager.getRemainingTime()
                 return .send(.updateTime(remainingTime))
-                
-            case .binding:
-                return .none
                 
             case .delegate(.pushRecordWritingView(let type)):
                 switch type {
@@ -356,10 +350,12 @@ struct RecordEntryPointStore {
                 case .bad:
                     GA.Click(event: .recordmainBadButton).send(parameters: [.screenType: state.dayTitle])
                 }
-                return .none
-            case .delegate:
-                return .none
+
+            default:
+                break
             }
+            
+            return .none
         }
     }
     
