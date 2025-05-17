@@ -80,7 +80,7 @@ struct BottomSheetView<Content: View>: View {
             withAnimation {
                 isPresented.toggle()
             }
-            UINavigationController.blockSwipe = true
+            UINavigationController.isBlockSwipe = true
         }
     }
     

@@ -13,4 +13,8 @@ extension String {
         string.removeFirst()
         return (self.first?.uppercased() ?? "") + string
     }
+    
+    var isNotEmpty: Bool {
+        !isEmpty
+    }
 }

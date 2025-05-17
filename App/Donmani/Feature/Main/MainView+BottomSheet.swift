@@ -13,9 +13,7 @@ extension MainView {
     func AppStoreView() -> some View {
         BottomSheetView(
             isActiveClose: false,
-            closeAction: {
-                UINavigationController.swipeNavigationPopIsEnabled = true
-            }
+            closeAction: { }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
                 DText("최신 버전으로 업데이트 부탁드려요!")
@@ -46,7 +44,7 @@ extension MainView {
         BottomSheetView(
             isActiveClose: false,
             closeAction: {
-                UINavigationController.blockSwipe = false
+                UINavigationController.isBlockSwipe = false
             }
         ) { dismissSheet in
             VStack(alignment: .center, spacing: .s3) {
@@ -76,7 +74,7 @@ extension MainView {
                             store.send(.dismissNewStarBottleView)
                             let response = try await NetworkService.DRecord().fetchMonthlyRecordCount(year: 2025)
                             let result = NetworkDTOMapper.mapper(dto: response)
-                            UINavigationController.blockSwipe = false
+                            UINavigationController.isBlockSwipe = false
                             store.send(.delegate(.pushBottleCalendarView(result)))
                         }
                     }
@@ -96,7 +94,7 @@ extension MainView {
                 
                 DButton(title: "확인했어요") {
                     dismissSheet {
-                        UINavigationController.blockSwipe = false
+                        UINavigationController.isBlockSwipe = false
                         store.send(.dismissNewStarBottleView)
                     }
                 }
@@ -108,7 +106,7 @@ extension MainView {
         BottomSheetView(
             isActiveClose: false,
             closeAction: {
-                UINavigationController.blockSwipe = false
+                UINavigationController.isBlockSwipe = false
             }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
@@ -120,7 +118,7 @@ extension MainView {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                     DButton(title: "확인했어요") {
-                        UINavigationController.blockSwipe = false
+                        UINavigationController.isBlockSwipe = false
                         store.send(.dismissAlreadyWrite)
                     }
                 }

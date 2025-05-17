@@ -77,6 +77,17 @@ struct RecordWritingStore {
             } else {
                 self.sticker = (context.type == .good ? DImage(.defaultGoodSticker) : DImage(.defaultBadSticker)).image
             }
+            UINavigationController.isBlockSwipe = false
+        }
+        
+        func isBlockSwipe() -> Bool {
+            guard let previous = recordContent else {
+                return savedCategory != nil || text.isNotEmpty
+            }
+            
+            let isCategoryChanged = previous.category != savedCategory
+            let isMemoChanged = previous.memo != text
+            return isCategoryChanged || isMemoChanged
         }
     }
     
@@ -118,9 +129,7 @@ struct RecordWritingStore {
                 if (state.textCount > 0) {
                     state.isSaveEnabled = true
                 }
-                if let originCategory = state.recordContent?.category {
-                    UINavigationController.swipeNavigationPopIsEnabled = (originCategory == category)
-                }
+                UINavigationController.isBlockSwipe = state.isBlockSwipe()
                 return .run { send in
                     await send(.closeCategory)
                 }
@@ -128,12 +137,13 @@ struct RecordWritingStore {
             case .closeCategory:
                 state.isFocusToTextField = true
                 state.isPresentingSelectCategory = false
-                UINavigationController.blockSwipe = false
+                UINavigationController.isBlockSwipe = state.isBlockSwipe()
                 
             case .textChanged(let textCount):
                 HapticManager.shared.playHapticTransient()
                 state.textCount = textCount
                 state.isSaveEnabled = (textCount > 0 && state.savedCategory != nil)
+                UINavigationController.isBlockSwipe = state.isBlockSwipe()
                 
             case .showTextLengthGuide:
                 if (!state.isPresendTextGuide) {
@@ -178,7 +188,7 @@ struct RecordWritingStore {
             
                 state.isFocusToTextField = true
                 state.isPresentingCancel = false
-                UINavigationController.blockSwipe = false
+                UINavigationController.isBlockSwipe = false
                 
             case .sendCancelGAEvent:
                 var parameters: [GA.Parameter: Any] = [.referrer: "기록작성"]
@@ -207,6 +217,8 @@ struct RecordWritingStore {
             return .none
         }
     }
+    
+    
 }
 
 

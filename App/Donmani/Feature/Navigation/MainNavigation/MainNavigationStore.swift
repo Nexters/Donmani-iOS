@@ -5,6 +5,7 @@
 //  Created by 문종식 on 5/13/25.
 //
 
+import UIKit
 import ComposableArchitecture
 
 @Reducer
@@ -80,6 +81,7 @@ struct MainNavigationStore {
                 return push(to: destination, &state)
                 
             case .completeWriteRecordContent(let recordContent):
+                UINavigationController.isBlockSwipe = true
                 if let recordWritingID = state.path.ids.last {
                     state.path.pop(from: recordWritingID)
                 }
@@ -91,6 +93,7 @@ struct MainNavigationStore {
                 }
                 
             case .completeWriteRecord(let record):
+                UINavigationController.isBlockSwipe = false
                 if let recordID = state.path.ids.last {
                     state.path.pop(from: recordID)
                 }

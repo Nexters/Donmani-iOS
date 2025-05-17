@@ -31,7 +31,7 @@ extension SettingView {
                 
                 Button {
                     dismissSheet {
-                        UINavigationController.blockSwipe = false
+                        UINavigationController.isBlockSwipe = false
                         isPresentingRecordGuideView.toggle()
                     }
                 } label: {
@@ -58,7 +58,7 @@ extension SettingView {
                     isFocusToTextField = false
                 }
                 isPresentingEditNameView = false
-                UINavigationController.blockSwipe = false
+                UINavigationController.isBlockSwipe = false
             }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s5) {
@@ -130,7 +130,7 @@ extension SettingView {
                             userName = response
                             DataStorage.setUserName(userName)
                             isPresentingEditNameView = false
-                            UINavigationController.blockSwipe = false
+                            UINavigationController.isBlockSwipe = false
                         }
                     }
                     .frame(alignment: .trailing)

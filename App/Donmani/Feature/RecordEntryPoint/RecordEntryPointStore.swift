@@ -147,7 +147,7 @@ struct RecordEntryPointStore {
             case .dismissCancelRecordBottomSheet:
                 state.isPresentingCancel = false
                 state.isChangingDayType = false
-                UINavigationController.blockSwipe = false
+                UINavigationController.isBlockSwipe = false
 
             case .cancelRecording:
                 state.isPresentingCancel = false
@@ -156,11 +156,7 @@ struct RecordEntryPointStore {
                         await send(.toggleDayType)
                     }
                 } else {
-                    UINavigationController.swipeNavigationPopIsEnabled = true
-                    UINavigationController.blockSwipe = false
-//                    return .run { send in
-//                        await send(.delegate(.popToMainView(nil)))
-//                    }
+                    UINavigationController.isBlockSwipe = false
                 }
                 
             case .sendCancelGAEvent:
@@ -203,8 +199,7 @@ struct RecordEntryPointStore {
                 state.goodRecord = nil
                 state.badRecord = nil
                 state.isSaveEnabled = false
-                UINavigationController.swipeNavigationPopIsEnabled = true
-                UINavigationController.blockSwipe = false
+                UINavigationController.isBlockSwipe = false
 
             case .touchEmptyRecordButton:
                 state.isPresentingPopover = false
@@ -212,7 +207,7 @@ struct RecordEntryPointStore {
                     state.isCheckedEmptyRecord = false
                     state.isSaveEnabled = false
                     GA.Click(event: .recordmainEmptyButtonUncheck).send(parameters: [.screenType: state.dayType])
-                    UINavigationController.swipeNavigationPopIsEnabled = true
+                    UINavigationController.isBlockSwipe = false
                 } else {
                     GA.Click(event: .recordmainEmptyButton).send(parameters: [.screenType: state.dayType])
                     state.isPresentingRecordEmpty = true
@@ -225,7 +220,7 @@ struct RecordEntryPointStore {
             case .dismissEmtpyRecordBottomSheet:
                 GA.Click(event: .recordmainEmptyNoButton).send(parameters: [.screenType: state.dayTitle])
                 state.isPresentingRecordEmpty = false
-                UINavigationController.blockSwipe = false
+                UINavigationController.isBlockSwipe = false
                 
             case .recordEmpty:
                 GA.Click(event: .recordmainEmptyYesButton).send(parameters: [.screenType: state.dayTitle])
@@ -234,8 +229,7 @@ struct RecordEntryPointStore {
                 state.isPresentingRecordEmpty = false
                 state.goodRecord = nil
                 state.badRecord = nil
-                UINavigationController.blockSwipe = false
-                UINavigationController.swipeNavigationPopIsEnabled = false
+                UINavigationController.isBlockSwipe = true
                 
             case .readyToSave:
                 GA.Click(event: .recordmainSubmitButton).send(parameters: [.screenType: state.dayTitle])
@@ -248,7 +242,6 @@ struct RecordEntryPointStore {
                         state.isFullWriting = false
                     }
                 }
-                UINavigationController.swipeNavigationPopIsEnabled = false
 
             case .cancelSave:
                 state.isReadyToSave = false
@@ -313,11 +306,14 @@ struct RecordEntryPointStore {
                 state.isError = false
                 return .run { send in
                     // TODO: - remove comment
-//                    let requestDTO = NetworkRequestDTOMapper.mapper(data: records)
-//                    guard let _ = try? await NetworkService.DRecord().insert(date: date, recordContent: requestDTO) else {
-//                        await send(.errorSave)
-//                        return
-//                    }
+#if DEBUG
+                    return
+#endif
+                    let requestDTO = NetworkRequestDTOMapper.mapper(data: records)
+                    guard let _ = try? await NetworkService.DRecord().insert(date: date, recordContent: requestDTO) else {
+                        await send(.errorSave)
+                        return
+                    }
                 }
             case .errorSave:
                 state.isLoading = false
