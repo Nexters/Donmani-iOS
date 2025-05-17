@@ -29,6 +29,8 @@ struct MainNavigationStore {
         case completeWriteRecordContent(RecordContent)
         case completeWriteRecord(Record)
         
+        case presentCancelBottom
+        
         case push(Destination)
         enum Destination {
             case record
@@ -98,6 +100,23 @@ struct MainNavigationStore {
                     state.path.pop(from: recordID)
                 }
                 state.mainState.appendNewRecord(record: record)
+                
+            case .presentCancelBottom:
+                if let lastElementID = state.path.ids.last {
+                    if let pathCase = state.path[id: lastElementID] {
+                        switch pathCase {
+                        case .record(var childState):
+                            childState.isPresentingCancel = true
+                            state.path[id: lastElementID] = .record(childState)
+                            
+                        case .recordWriting(var childState):
+                            childState.isPresentingCancel = true
+                            state.path[id: lastElementID] = .recordWriting(childState)
+                        default:
+                            break
+                        }
+                    }
+                }
                 
             default:
                 break

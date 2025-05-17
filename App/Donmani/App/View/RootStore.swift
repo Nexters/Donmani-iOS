@@ -37,13 +37,14 @@ struct RootStore {
         Reduce { state, action in
             switch action {
             case .completeSplash:
-                if HistoryStateManager.shared.getOnboardingState() {
-                    state.route = .onboarding
-                } else {
-                    return .run { send in
-                        await send(.completeOnboarding(.main))
-                    }
-                }
+                state.route = .onboarding
+//                if HistoryStateManager.shared.getOnboardingState() {
+//                    state.route = .onboarding
+//                } else {
+//                    return .run { send in
+//                        await send(.completeOnboarding(.main))
+//                    }
+//                }
                 
             case .completeOnboarding(let mainRoute):
                 var mainNavigationState = stateFactory.makeMainNavigationState()

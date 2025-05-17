@@ -13,6 +13,7 @@ struct MainNavigationView: View {
     
     init(store: StoreOf<MainNavigationStore>) {
         self.navigationStore = store
+        UINavigationController.store = self.navigationStore
     }
     
     var body: some View {
