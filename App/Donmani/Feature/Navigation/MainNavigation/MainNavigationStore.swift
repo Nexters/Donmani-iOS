@@ -29,7 +29,11 @@ struct MainNavigationStore {
         case completeWriteRecordContent(RecordContent)
         case completeWriteRecord(Record)
         
+        case requestAppStoreReview
+        case requestNotificationPermission
         case presentCancelBottom
+        
+        case changeStarBottleOpacity
         
         case push(Destination)
         enum Destination {
@@ -95,11 +99,25 @@ struct MainNavigationStore {
                 }
                 
             case .completeWriteRecord(let record):
+                if HistoryStateManager.shared.getRequestAppReviewState() == nil {
+                    HistoryStateManager.shared.setReadyToRequestAppReview()
+                }
                 UINavigationController.isBlockSwipe = false
                 if let recordID = state.path.ids.last {
                     state.path.pop(from: recordID)
                 }
                 state.mainState.appendNewRecord(record: record)
+                
+            case .requestAppStoreReview:
+                return .run { _ in
+                    await requestAppStoreReview()
+                }
+                
+            case .requestNotificationPermission:
+                return .run { send in
+                    await NotificationManager().checkNotificationPermission()
+                    await send(.changeStarBottleOpacity)
+                }
                 
             case .presentCancelBottom:
                 if let lastElementID = state.path.ids.last {
@@ -117,6 +135,9 @@ struct MainNavigationStore {
                         }
                     }
                 }
+                
+            case .changeStarBottleOpacity:
+                state.mainState.starBottleOpacity = 1.0
                 
             default:
                 break

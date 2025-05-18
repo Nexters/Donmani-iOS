@@ -196,6 +196,7 @@ struct RecordEntryPointStore {
                     state.dateString = DateManager.shared.getFormattedDate(for: .today)
                 }
                 state.isCheckedEmptyRecord = false
+                
                 state.goodRecord = nil
                 state.badRecord = nil
                 state.isSaveEnabled = false
@@ -302,13 +303,11 @@ struct RecordEntryPointStore {
                     HistoryStateManager.shared.setLastWriteRecordDateKey()
                     GA.Submit(event: .streakSubmit).send(parameters: gaParameter)
                 }
-                state.record = Record(date: date, contents: records)
+                let record = Record(date: date, contents: records)
+                state.record = record
+                DataStorage.setRecord(record)
                 state.isError = false
                 return .run { send in
-                    // TODO: - remove comment
-#if DEBUG
-                    return
-#endif
                     let requestDTO = NetworkRequestDTOMapper.mapper(data: records)
                     guard let _ = try? await NetworkService.DRecord().insert(date: date, recordContent: requestDTO) else {
                         await send(.errorSave)
@@ -326,7 +325,7 @@ struct RecordEntryPointStore {
                     while true {
                         let remainingTime = TimeManager.getRemainingTime()
                         await send(.updateTime(remainingTime))
-                        try await Task.sleep(nanoseconds: 1_000_000_000)
+                        try await Task.sleep(nanoseconds: .nanosecondsPerSecond)
                     }
                 }
                 .cancellable(id: "Timer", cancelInFlight: true)

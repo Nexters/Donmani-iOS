@@ -12,7 +12,11 @@ final class HistoryStateManager {
     
     private let userDefaults = UserDefaults.standard
     private let isShownOnboarding = "IS_SHOWN_ONBOARDING"
-    private let isFirstRecordKey = "IS_FIRST_RECORD"
+    
+    private let requestAppReviewStateKey = "REQUEST_APP_STORE_REVIEW_STATE"
+    private let readyToRequestAppStoreReviewKey = "READY_TO_REQUEST_APP_STORE_REVIEW"
+    private let completeRequestAppReviewKey = "COMPLETE_REQUEST_APP_STORE_REVIEW"
+    
     private let guideShownKey = "GUIDE_SHOWN"
     private let lastRecordKey = "LAST_RECORD"
     private let secondToLastRecordKey = "SECOND_TO_LAST_RECORD"
@@ -141,12 +145,23 @@ final class HistoryStateManager {
         userDefaults.set(emptyRecordGuideKey, forKey: emptyRecordGuideKey)
     }
     
-    func getIsFirstRecord() -> String? {
-        userDefaults.string(forKey: isFirstRecordKey)
+    func getRequestAppReviewState() -> String? {
+        userDefaults.string(forKey: requestAppReviewStateKey)
     }
     
-    func setIsFirstRecord() {
-        userDefaults.set(isFirstRecordKey, forKey: isFirstRecordKey)
+    func setReadyToRequestAppReview() {
+        userDefaults.set(readyToRequestAppStoreReviewKey, forKey: requestAppReviewStateKey)
+    }
+    
+    func setCompleteRequestAppReview() {
+        userDefaults.set(completeRequestAppReviewKey, forKey: requestAppReviewStateKey)
+    }
+    
+    func isReadyToRequestAppReview() -> Bool {
+        guard let state = getRequestAppReviewState() else {
+            return false
+        }
+        return state == readyToRequestAppStoreReviewKey
     }
     
     func addRecord(for type: DayType) {

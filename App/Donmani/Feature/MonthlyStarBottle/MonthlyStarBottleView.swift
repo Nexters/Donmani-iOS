@@ -72,7 +72,6 @@ struct MonthlyStarBottleView: View {
                                     .resizable()
                                     .frame(width: .screenWidth * 0.8)
                                     .aspectRatio(0.75, contentMode: .fit)
-                                    .opacity(1)
                             }
                             .onTapGesture {
                                 store.send(.delegate(.pushRecordListView(store.year, store.month)))

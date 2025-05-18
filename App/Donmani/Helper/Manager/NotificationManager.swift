@@ -8,20 +8,23 @@
 import UIKit
 
 class NotificationManager {
-    public func checkNotificationPermission() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            if settings.authorizationStatus == .notDetermined {
+    public func checkNotificationPermission() async {
+        let isNotDetermined = await withCheckedContinuation { continuation in
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
+                let isNotDetermined = settings.authorizationStatus == .notDetermined
+                continuation.resume(returning: isNotDetermined)
+            }
+        }
+        do {
+            if isNotDetermined {
                 let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-                UNUserNotificationCenter.current().requestAuthorization(
-                    options: authOptions
-                ) { granted, _ in
-                    if granted {
-                        DispatchQueue.main.async {
-                            UIApplication.shared.registerForRemoteNotifications()
-                        }
-                    }
+                let isGranted = try await UNUserNotificationCenter.current().requestAuthorization(options: authOptions)
+                if isGranted {
+                    await UIApplication.shared.registerForRemoteNotifications()
                 }
             }
+        } catch(let e) {
+            print(e.localizedDescription)
         }
     }
     

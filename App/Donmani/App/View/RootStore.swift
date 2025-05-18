@@ -5,6 +5,7 @@
 //  Created by 문종식 on 5/13/25.
 //
 
+import UIKit
 import ComposableArchitecture
 
 @Reducer
@@ -37,16 +38,16 @@ struct RootStore {
         Reduce { state, action in
             switch action {
             case .completeSplash:
-                state.route = .onboarding
-//                if HistoryStateManager.shared.getOnboardingState() {
-//                    state.route = .onboarding
-//                } else {
-//                    return .run { send in
-//                        await send(.completeOnboarding(.main))
-//                    }
-//                }
+                if HistoryStateManager.shared.getOnboardingState() {
+                    state.route = .onboarding
+                } else {
+                    return .run { send in
+                        await send(.completeOnboarding(.main))
+                    }
+                }
                 
             case .completeOnboarding(let mainRoute):
+                var isRequestNotificationPermission = true
                 var mainNavigationState = stateFactory.makeMainNavigationState()
                 if mainRoute == .record {
                     let isComplete = HistoryStateManager.shared.getState()
@@ -56,10 +57,21 @@ struct RootStore {
                         let context = RecordEntryPointStore.Context(today: today, yesterday: yesterday)
                         let state = stateFactory.makeRecordEntryPointState(context: context)
                         mainNavigationState.path.append(.record(state))
+                        isRequestNotificationPermission = false
+                        mainNavigationState.mainState.starBottleOpacity = 0.0
+                    } else {
+                        mainNavigationState.mainState.isPresentingAlreadyWrite = true
                     }
                 }
                 let mainNavigationStore = storeFactory.makeMainNavigationStore(state: mainNavigationState)
+                UINavigationController.isBlockSwipe = false
                 state.route = .main(mainNavigationStore)
+                if isRequestNotificationPermission {
+                    return .run { _ in
+                        try await Task.sleep(nanoseconds: .nanosecondsPerSecond)
+                        await NotificationManager().checkNotificationPermission()
+                    }
+                }
             }
             
             return .none

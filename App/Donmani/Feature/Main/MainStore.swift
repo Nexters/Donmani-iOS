@@ -8,7 +8,6 @@
 import UIKit
 import ComposableArchitecture
 
-
 @Reducer
 struct MainStore {
     
@@ -21,9 +20,10 @@ struct MainStore {
         var isPresentingRecordYesterdayToopTip: Bool = false
         var isPresentingAlreadyWrite: Bool = false
         var isPresentingNewStarBottle: Bool = false
-        var isRequestNotificationPermission: Bool = false
+        var isRequestNotificationPermission: Bool = true
         var isLoading: Bool = false
         
+        var starBottleOpacity = 1.0
         var yOffset: CGFloat = 0
         var shakeCount = 0
         var isNewStar = 0
@@ -57,7 +57,8 @@ struct MainStore {
             let state = historyStateManager.getState()
             let isCompleteToday = state[.today, default: false]
             let isCompleteYesterday = state[.yesterday, default: false]
-            self.isPresentingRecordEntryButton = !(isCompleteToday && isCompleteYesterday)
+            isPresentingRecordEntryButton = !(isCompleteToday && isCompleteYesterday)
+            isNewStar += 1
         }
     }
     
@@ -68,7 +69,6 @@ struct MainStore {
         case fetchUserName
         case closePopover
         case checkPopover
-        case checkNotificationPermission
         case dismissNewStarBottleView
         case dismissAlreadyWrite
         case shakeTwice
@@ -91,10 +91,6 @@ struct MainStore {
             switch action {
             case .fetchUserName:
                 state.name = DataStorage.getUserName()
-                return .run { send in
-                    try await Task.sleep(nanoseconds: 300_000_000)
-                    await send(.checkNotificationPermission)
-                }
                 
             case .closePopover:
                 state.isPresentingRecordYesterdayToopTip = false
@@ -112,12 +108,6 @@ struct MainStore {
                     } else {
                         state.isPresentingRecordYesterdayToopTip = true
                     }
-                }
-                
-            case .checkNotificationPermission:
-                if state.isRequestNotificationPermission {
-                    NotificationManager().checkNotificationPermission()
-                    state.isRequestNotificationPermission = false
                 }
                 
             case .dismissNewStarBottleView:
