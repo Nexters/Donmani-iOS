@@ -1,0 +1,23 @@
+//
+//  MainNavigationStore+Decoration.swift
+//  Donmani
+//
+//  Created by 문종식 on 5/19/25.
+//
+
+import ComposableArchitecture
+import UIKit
+
+extension MainNavigationStore {
+    func decorationDelegateAction(
+        state: inout MainNavigationStore.State,
+        action: DecorationStore.Action.Delegate
+    ) -> Effect<MainNavigationStore.Action> {
+        switch action {
+        case  .popToRoot:
+            return .run { send in
+                await send(.popToRoot)
+            }
+        }
+    }
+}

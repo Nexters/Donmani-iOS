@@ -79,6 +79,7 @@ struct MainStore {
             case pushRecordEntryPointView
             case pushRecordListView
             case pushBottleCalendarView(RecordCountSummary)
+            case pushRewardStartView
         }
     }
     

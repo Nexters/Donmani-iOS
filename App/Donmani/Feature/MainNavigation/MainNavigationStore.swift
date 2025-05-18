@@ -35,15 +35,25 @@ struct MainNavigationStore {
         
         case changeStarBottleOpacity
         
+        case popToRoot
         case push(Destination)
         enum Destination {
+            // case setting
+            
+            // Record
             case record
             case recordWriting(RecordContentType, RecordContent?)
+            
+            // List
             case monthlyRecordList(Int, Int, Bool)
             case bottleCalendar(RecordCountSummary)
             case statistics(Int, Int)
             case monthlyStarBottle(Int, Int)
-            // case setting
+            
+            // Reward
+            case rewardStart
+            case rewardReceive
+            case decoration
         }
     }
     
@@ -63,10 +73,12 @@ struct MainNavigationStore {
                 switch mainAction {
                 case .pushSettingView:
                     state.path.append(.setting)
+                    
                 case .pushRecordEntryPointView:
                     return .run { send in
                         await send(.push(.record))
                     }
+                    
                 case .pushRecordListView:
                     return .run { send in
                         let dateManager = DateManager.shared
@@ -74,15 +86,23 @@ struct MainNavigationStore {
                         let day = Day(yyyymmdd: dayString)
                         await send(.push(.monthlyRecordList(day.year, day.month, true)))
                     }
+                    
                 case .pushBottleCalendarView(let recordCountSummary):
                     return .run { send in
                         await send(.push(.bottleCalendar(recordCountSummary)))
+                    }
+                    
+                case .pushRewardStartView:
+                    return .run { send in
+                        await send(.push(.rewardStart))
                     }
                 }
                 
             case .path(.element(let id, let action)):
                 return path(id: id, action: action, &state)
                 
+            case .popToRoot:
+                break
             case .push(let destination):
                 return push(to: destination, &state)
                 
@@ -151,12 +171,21 @@ struct MainNavigationStore {
 extension MainNavigationStore {
     @Reducer
     enum Path {
+        // Record
         case record(RecordEntryPointStore)
         case recordWriting(RecordWritingStore)
+        
+        // List
         case monthlyRecordList(RecordListStore)
         case bottleCalendar(BottleCalendarStore)
         case statistics(StatisticsStore)
         case monthlyStarBottle(MonthlyStarBottleStore)
+        
+        // Reward
+        case rewardStart(RewardStartStore)
+        case rewardReceive(RewardReceiveStore)
+        case decoration(DecorationStore)
+        
         case setting
     }
 }

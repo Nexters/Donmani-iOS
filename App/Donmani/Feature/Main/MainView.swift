@@ -30,6 +30,9 @@ struct MainView: View {
                             store.send(.delegate(.pushSettingView))
                         }
                         Spacer()
+                        AccessoryButton(asset: .reward) {
+                            store.send(.delegate(.pushRewardStartView))
+                        }
                     }
                     HStack {
                         Spacer()
