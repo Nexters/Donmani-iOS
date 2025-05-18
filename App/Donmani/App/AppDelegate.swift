@@ -71,7 +71,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             userInfo: [key: value]
         )
         center.setBadgeCount(0, withCompletionHandler: nil)
-        
     }
     
 }
