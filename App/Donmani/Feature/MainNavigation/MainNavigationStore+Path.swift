@@ -14,14 +14,25 @@ extension MainNavigationStore {
         _ state: inout MainNavigationStore.State
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
+            // Record
         case .record(.delegate(let childAction)):
             return recordEntryPointDelegateAction(state: &state, action: childAction)
+            
+            // List
         case .monthlyRecordList(.delegate(let childAction)):
             return recordListDelegateAction(state: &state, action: childAction)
         case .bottleCalendar(.delegate(let childAction)):
             return bottleCalendarDelegateAction(state: &state, action: childAction)
         case .monthlyStarBottle(.delegate(let childAction)):
             return monthlyStarBottleDelegateAction(state: &state, action: childAction)
+            
+            // Reward
+        case .rewardStart(.delegate(let childAction)):
+            return rewardStartDelegateAction(state: &state, action: childAction)
+        case .rewardReceive(.delegate(let childAction)):
+            return rewardReceiveDelegateAction(state: &state, action: childAction)
+        case .decoration(.delegate(let childAction)):
+            return decorationDelegateAction(state: &state, action: childAction)
         default:
             return .none
         }
@@ -32,6 +43,7 @@ extension MainNavigationStore {
         _ state: inout MainNavigationStore.State
     ) -> Effect<MainNavigationStore.Action> {
         switch destination {
+            // Record
         case .record:
             let isComplete = HistoryStateManager.shared.getState()
             let today = isComplete[.today, default: false]
@@ -45,6 +57,7 @@ extension MainNavigationStore {
             let initialState = stateFactory.makeRecordWritingState(context: context)
             state.path.append(.recordWriting(initialState))
             
+            // List
         case .monthlyRecordList(let year, let month, let isShowNavigationButton):
             let context = RecordListStore.Context(year: year, month: month, isShowNavigationButton)
             let initialState = stateFactory.makeMonthlyRecordListState(context: context)
@@ -63,6 +76,22 @@ extension MainNavigationStore {
             let context = MonthlyStarBottleStore.Context(year: year, month: month)
             let initialState = stateFactory.makeMonthlyStarBottleState(context: context)
             state.path.append(.monthlyStarBottle(initialState))
+            
+            // Reward
+        case .rewardStart:
+            let context = RewardStartStore.Context(recordCount: 5, rewardCount: 5)
+            let initialState = stateFactory.makeRewardStartState(context: context)
+            state.path.append(.rewardStart(initialState))
+            
+        case .rewardReceive:
+            let context = RewardReceiveStore.Context(rewardCount: 3)
+            let initialState = stateFactory.makeRewardReceiveState(context: context)
+            state.path.append(.rewardReceive(initialState))
+            
+        case .decoration:
+            let context = DecorationStore.Context()
+            let initialState = stateFactory.makeDecorationState(context: context)
+            state.path.append(.decoration(initialState))
         }
         
         return .none

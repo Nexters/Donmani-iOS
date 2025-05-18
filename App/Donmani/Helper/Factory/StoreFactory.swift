@@ -10,12 +10,20 @@ import ComposableArchitecture
 protocol StoreFactory {
     func makeMainNavigationStore(state: MainNavigationStore.State) -> StoreOf<MainNavigationStore>
     
+    // Record
+    func makeRecordEntryPointStore(state: RecordEntryPointStore.State) -> StoreOf<RecordEntryPointStore>
+    func makeRecordWritingStore(state: RecordWritingStore.State) -> StoreOf<RecordWritingStore>
+    
+    // List
     func makeBottleCalendarStore(state: BottleCalendarStore.State) -> StoreOf<BottleCalendarStore>
     func makeMonthlyRecordListStore(state: RecordListStore.State) -> StoreOf<RecordListStore>
     func makeStatisticsStore(state: StatisticsStore.State) -> StoreOf<StatisticsStore>
     func makeMonthlyStarBottleStore(state: MonthlyStarBottleStore.State) -> StoreOf<MonthlyStarBottleStore>
-    func makeRecordEntryPointStore(state: RecordEntryPointStore.State) -> StoreOf<RecordEntryPointStore>
-    func makeRecordWritingStore(state: RecordWritingStore.State) -> StoreOf<RecordWritingStore>
+    
+    // Reward
+    func makeRewardStartStore(state: RewardStartStore.State) -> StoreOf<RewardStartStore>
+    func makeRewardReceiveStore(state: RewardReceiveStore.State) -> StoreOf<RewardReceiveStore>
+    func makeDecorationStore(state: DecorationStore.State) -> StoreOf<DecorationStore>
 }
 
 struct MainStoreFactory: StoreFactory {
@@ -24,6 +32,18 @@ struct MainStoreFactory: StoreFactory {
         return store
     }
     
+    // Record
+    func makeRecordEntryPointStore(state: RecordEntryPointStore.State) -> StoreOf<RecordEntryPointStore> {
+        let store = Store(initialState: state) { RecordEntryPointStore() }
+        return store
+    }
+    
+    func makeRecordWritingStore(state: RecordWritingStore.State) -> StoreOf<RecordWritingStore> {
+        let store = Store(initialState: state) { RecordWritingStore() }
+        return store
+    }
+    
+    // List
     func makeBottleCalendarStore(state: BottleCalendarStore.State) -> StoreOf<BottleCalendarStore> {
         let store = Store(initialState: state) { BottleCalendarStore() }
         return store
@@ -44,16 +64,21 @@ struct MainStoreFactory: StoreFactory {
         return store
     }
     
-    func makeRecordEntryPointStore(state: RecordEntryPointStore.State) -> StoreOf<RecordEntryPointStore> {
-        let store = Store(initialState: state) { RecordEntryPointStore() }
+    // Reward
+    func makeRewardStartStore(state: RewardStartStore.State) -> StoreOf<RewardStartStore> {
+        let store = Store(initialState: state) { RewardStartStore() }
         return store
     }
     
-    func makeRecordWritingStore(state: RecordWritingStore.State) -> StoreOf<RecordWritingStore> {
-        let store = Store(initialState: state) { RecordWritingStore() }
+    func makeRewardReceiveStore(state: RewardReceiveStore.State) -> StoreOf<RewardReceiveStore> {
+        let store = Store(initialState: state) { RewardReceiveStore() }
         return store
     }
     
+    func makeDecorationStore(state: DecorationStore.State) -> StoreOf<DecorationStore> {
+        let store = Store(initialState: state) { DecorationStore() }
+        return store
+    }
 }
 
 struct MainStoreFactoryDependencyKey: DependencyKey {

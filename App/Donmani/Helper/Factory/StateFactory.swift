@@ -10,12 +10,20 @@ import ComposableArchitecture
 protocol StateFactory {
     func makeMainNavigationState() -> MainNavigationStore.State
     
+    // Record
+    func makeRecordEntryPointState(context: RecordEntryPointStore.Context) -> RecordEntryPointStore.State
+    func makeRecordWritingState(context: RecordWritingStore.Context) -> RecordWritingStore.State
+    
+    // List
     func makeBottleCalendarState(context: RecordCountSummary) -> BottleCalendarStore.State
     func makeMonthlyRecordListState(context:  RecordListStore.Context) -> RecordListStore.State
     func makeStatisticsState(context: StatisticsStore.Context) -> StatisticsStore.State
     func makeMonthlyStarBottleState(context: MonthlyStarBottleStore.Context) -> MonthlyStarBottleStore.State
-    func makeRecordEntryPointState(context: RecordEntryPointStore.Context) -> RecordEntryPointStore.State
-    func makeRecordWritingState(context: RecordWritingStore.Context) -> RecordWritingStore.State
+    
+    // Reward
+    func makeRewardStartState(context: RewardStartStore.Context) -> RewardStartStore.State
+    func makeRewardReceiveState(context: RewardReceiveStore.Context) -> RewardReceiveStore.State
+    func makeDecorationState(context: DecorationStore.Context) -> DecorationStore.State
 }
 
 struct MainStateFactory: StateFactory {
@@ -24,6 +32,18 @@ struct MainStateFactory: StateFactory {
         return state
     }
     
+    // Record
+    func makeRecordEntryPointState(context: RecordEntryPointStore.Context) -> RecordEntryPointStore.State {
+        let state = RecordEntryPointStore.State(context: context)
+        return state
+    }
+    
+    func makeRecordWritingState(context: RecordWritingStore.Context) -> RecordWritingStore.State {
+        let state = RecordWritingStore.State(context: context)
+        return state
+    }
+    
+    // List
     func makeBottleCalendarState(context: RecordCountSummary) -> BottleCalendarStore.State {
         let state = BottleCalendarStore.State(context: context)
         return state
@@ -43,14 +63,20 @@ struct MainStateFactory: StateFactory {
         let state = MonthlyStarBottleStore.State(context: context)
         return state
     }
-    
-    func makeRecordEntryPointState(context: RecordEntryPointStore.Context) -> RecordEntryPointStore.State {
-        let state = RecordEntryPointStore.State(context: context)
+
+    // Reward
+    func makeRewardStartState(context: RewardStartStore.Context) -> RewardStartStore.State {
+        let state = RewardStartStore.State(context: context)
         return state
     }
     
-    func makeRecordWritingState(context: RecordWritingStore.Context) -> RecordWritingStore.State {
-        let state = RecordWritingStore.State(context: context)
+    func makeRewardReceiveState(context: RewardReceiveStore.Context) -> RewardReceiveStore.State {
+        let state = RewardReceiveStore.State(context: context)
+        return state
+    }
+    
+    func makeDecorationState(context: DecorationStore.Context) -> DecorationStore.State {
+        let state = DecorationStore.State(context: context)
         return state
     }
 }

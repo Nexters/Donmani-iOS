@@ -26,6 +26,7 @@ struct MainNavigationView: View {
             ))
         } destination: { store in
             switch store.case {
+                // Record
             case .record(let store):
                 RecordEntryPointView(store: store) { record in
                     navigationStore.send(.completeWriteRecord(record))
@@ -34,6 +35,8 @@ struct MainNavigationView: View {
                 RecordWritingView(store: store) { recordContent in
                     navigationStore.send(.completeWriteRecordContent(recordContent))
                 }
+            
+                // List
             case .monthlyRecordList(let store):
                 RecordListView(store: store)
             case .bottleCalendar(let store):
@@ -42,6 +45,15 @@ struct MainNavigationView: View {
                 StatisticsView(store: store)
             case .monthlyStarBottle(let store):
                 MonthlyStarBottleView(store: store)
+                
+                // Reward
+            case .rewardStart(let store):
+                RewardStartView(store: store)
+            case .rewardReceive(let store):
+                RewardReceiveView(store: store)
+            case .decoration(let store):
+                DecorationView(store: store)
+                
             case .setting:
                 SettingView()
             }

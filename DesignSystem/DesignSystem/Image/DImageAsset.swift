@@ -52,6 +52,12 @@ public enum DImageAsset: String {
     case onboardingPage3 = "OnboardingPage3"
     case onboardingPage4 = "OnboardingPage4"
     case onboardingEnd = "OnboardingEnd"
+    
+    // Reward
+    case rewardBackground = "RewardBackground"
+    case rewardGuideBanner = "RewardGuideBanner"
+    case rewardCharacter = "RewardCharacter"
+    case decorationGuideImage = "DecorationGuideImage"
    
     // Image 16
     case close = "Close"
@@ -66,6 +72,7 @@ public enum DImageAsset: String {
     case rightArrow = "RightArrow"
     case calendar = "Calendar"
     case setting = "Setting"
+    case reward = "Reward"
     case bottleIcon = "BottleIcon"
     case warning = "Warning"
     case notice = "Notice"
