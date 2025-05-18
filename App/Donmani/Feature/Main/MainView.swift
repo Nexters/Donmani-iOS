@@ -51,6 +51,7 @@ struct MainView: View {
                         StarBottleView(records: store.monthlyRecords)
                             .frame(width: .screenWidth * 0.8)
                             .aspectRatio(0.75, contentMode: .fit)
+                            .opacity(store.starBottleOpacity)
                         DImage(.starBottle).image
                             .resizable()
                             .frame(width: .screenWidth * 0.8)

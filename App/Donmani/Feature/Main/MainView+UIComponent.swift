@@ -72,12 +72,4 @@ extension MainView {
             }
         }
     }
-    
-//    func StarEffectView(
-//        record: Record
-//    ) -> some View {
-//        Color.black.opacity(0.9)
-//            
-//    }
-    
 }

@@ -105,9 +105,7 @@ extension MainView {
     func OnboardingEndView() -> some View {
         BottomSheetView(
             isActiveClose: false,
-            closeAction: {
-                UINavigationController.isBlockSwipe = false
-            }
+            closeAction: { }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
                 DText("앗! 어제 오늘 소비 모두 기록 했어요\n내일 또 기록 할 수 있어요!")
@@ -118,8 +116,9 @@ extension MainView {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                     DButton(title: "확인했어요") {
-                        UINavigationController.isBlockSwipe = false
-                        store.send(.dismissAlreadyWrite)
+                        dismissSheet {
+                            store.send(.dismissAlreadyWrite)
+                        }
                     }
                 }
             }

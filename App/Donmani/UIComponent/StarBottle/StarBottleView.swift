@@ -55,16 +55,6 @@ struct StarBottleView: View {
                 .ignoresSiblingOrder
             ]
         )
-        .opacity(opacity)
-        .background {
-            Color.clear
-                .onAppear {
-                    Task {
-                        try await Task.sleep(nanoseconds: 1_200_000_000)
-                        opacity = 1.0
-                    }
-                }
-        }
         .onAppear {
             MotionManager.startGyros { dx, dy in
                 starScene.setGravity(dx: dx, dy: -dy)

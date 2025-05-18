@@ -46,6 +46,14 @@ struct MainNavigationView: View {
                 SettingView()
             }
         }
+        .onChange(of: navigationStore.path.ids) { oldPathIDs, newPathIDs in
+            if newPathIDs.count.isZero {
+                Task {
+                    try await Task.sleep(nanoseconds: .nanosecondsPerSecond / 3)
+                    await navigationStore.send(.requestNotificationPermission).finish()
+                }
+            }
+        }
     }
 }
 

@@ -69,7 +69,7 @@ struct BottleCalendarStore {
                 }
                 state.isPresendTextGuide = true
                 return .run { send in
-                    try await Task.sleep(nanoseconds: 3_000_000_000)
+                    try await Task.sleep(nanoseconds: .nanosecondsPerSecond * 3)
                     await send(.dismissEmptyBottleToast, animation: .linear(duration: 0.5)
                     )
                 }
