@@ -28,10 +28,11 @@ extension NetworkDTOMapper {
         )
     }
     
-    static func mapper(dto: RewardDTO) -> [RewardItem] {
-        return dto.item.map { itemDTO in
+    static func mapper(dto: RewardDTO) -> [RewardItemCategory: [RewardItem]] {
+        var result: [RewardItemCategory: [RewardItem]] = [:]
+        dto.item.forEach { itemDTO in
             let category = mapper(rewardItemCategory: itemDTO.category)
-            return RewardItem(
+            let rewardItem = RewardItem(
                 id: itemDTO.id,
                 name: itemDTO.name,
                 imageUrl: itemDTO.imageUrl,
@@ -39,8 +40,9 @@ extension NetworkDTOMapper {
                 category: category,
                 owned: itemDTO.owned
             )
+            result[category, default: []].append(rewardItem)
         }
-        
+        return result
     }
     
     static func mapper(rewardItemCategory: String) -> RewardItemCategory {

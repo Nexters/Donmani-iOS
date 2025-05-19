@@ -12,6 +12,7 @@ import UIKit
 struct DecorationStore {
     
     struct Context {
+        let decorationItem: [RewardItemCategory : [RewardItem]]
         init() {
             
         }
