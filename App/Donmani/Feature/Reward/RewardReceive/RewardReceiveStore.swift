@@ -40,7 +40,9 @@ struct RewardReceiveStore {
         var rewardIndex = 0
         
         var rewardTitle: String {
-            "\(rewardItems[rewardIndex].name)를/을 받았어요!"
+            let name = rewardItems[rewardIndex].name
+            let particle = name.hasFinalConsonant ? "을" : "를"
+            return "\(name)\(particle) 받았어요!"
         }
         
         let defaultLottieAnimation = LottieAnimation.named(
@@ -76,6 +78,7 @@ struct RewardReceiveStore {
         case delegate(Delegate)
         enum Delegate {
             case pushDecorationView
+            case popToRoot
         }
     }
     

@@ -14,15 +14,10 @@ extension MainNavigationStore {
         action: RecordListStore.Action.Delegate
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
-//        case  .pushRecordEntryPointView:
-//            let stateManager = HistoryStateManager.shared.getState()
-//            state.recordEntryPointState = RecordEntryPointStore.State(
-//                isCompleteToday: stateManager[.today, default: false],
-//                isCompleteYesterday: stateManager[.yesterday, default: false]
-//            )
-//            state.path.append(.recordEntryPoint(state.recordEntryPointState))
-//            return .none
-
+        case  .pushRecordEntryPointView:
+            return .run { send in
+                await send(.push(.record))
+            }
         
         case .pushBottleCalendarView(let result):
             return .run { send in
@@ -32,8 +27,6 @@ extension MainNavigationStore {
             return .run { send in
                 await send(.push(.statistics(year, month)))
             }
-        default: break
         }
-        return .none
     }
 }

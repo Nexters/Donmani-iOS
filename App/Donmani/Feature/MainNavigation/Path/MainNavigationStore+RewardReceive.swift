@@ -18,6 +18,10 @@ extension MainNavigationStore {
             return .run { send in
                 await send(.push(.decoration))
             }
+            
+        case .popToRoot:
+            state.path.removeAll()
+            return .none
         }
     }
 }

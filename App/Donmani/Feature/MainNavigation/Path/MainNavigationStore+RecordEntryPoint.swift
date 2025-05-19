@@ -22,6 +22,9 @@ extension MainNavigationStore {
             return .run { send in
                 await send(.push(.recordWriting(type, nil)))
             }
+        case .popToMainView:
+            state.path.removeAll()
+            return .none
 //        case .popToMainView(let record):
 //            if state.rootType == .onboarding {
 //                if let mainViewID = state.path.ids.first {

@@ -25,17 +25,15 @@ extension DecorationView {
                     """
                 )
                 .style(.h2, .bold, .deepBlue99)
-                .multilineTextAlignment(.center)
                 .lineSpacing(4)
                 .padding(.top, -4)
                 
                 DText("달이 바뀌어 새로 열린 별통이는 언제든 꾸밀 수 있어요")
                     .style(.b2, .regular, .deepBlue90)
-                    .multilineTextAlignment(.center)
-                
                 
                 DImage(.decorationGuideImage).image
                     .resizable()
+                    .scaledToFit()
                 
                 DButton(title: "확인했어요.") {
                     dismissSheet {

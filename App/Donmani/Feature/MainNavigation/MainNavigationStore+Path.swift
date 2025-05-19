@@ -89,7 +89,7 @@ extension MainNavigationStore {
             state.path.append(.rewardReceive(initialState))
             
         case .decoration:
-            let context = DecorationStore.Context()
+            let context = DecorationStore.Context(decorationItem: [:])
             let initialState = stateFactory.makeDecorationState(context: context)
             state.path.append(.decoration(initialState))
         }

@@ -35,7 +35,6 @@ struct MainNavigationStore {
         
         case changeStarBottleOpacity
         
-        case popToRoot
         case push(Destination)
         enum Destination {
             // case setting
@@ -100,9 +99,7 @@ struct MainNavigationStore {
                 
             case .path(.element(let id, let action)):
                 return path(id: id, action: action, &state)
-                
-            case .popToRoot:
-                break
+
             case .push(let destination):
                 return push(to: destination, &state)
                 
@@ -123,9 +120,7 @@ struct MainNavigationStore {
                     HistoryStateManager.shared.setReadyToRequestAppReview()
                 }
                 UINavigationController.isBlockSwipe = false
-                if let recordID = state.path.ids.last {
-                    state.path.pop(from: recordID)
-                }
+                state.path.removeAll()
                 state.mainState.appendNewRecord(record: record)
                 
             case .requestAppStoreReview:

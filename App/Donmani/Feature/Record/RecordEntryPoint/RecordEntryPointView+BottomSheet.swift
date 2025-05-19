@@ -43,7 +43,7 @@ extension RecordEntryPointView {
                     Button {
                         dismissSheet {
                             store.send(.cancelRecording)
-                            dismiss()
+//                            dismiss()
                         }
                     } label: {
                         ZStack {

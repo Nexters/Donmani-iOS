@@ -132,7 +132,7 @@ struct RecordEntryPointStore {
             // Record Writing
             case pushRecordWritingView(RecordContentType)
             case pushRecordWritingViewWith(RecordContent)
-//            case popToMainView(Record?)
+            case popToMainView
         }
     }
     
@@ -157,6 +157,9 @@ struct RecordEntryPointStore {
                     }
                 } else {
                     UINavigationController.isBlockSwipe = false
+                    return .run { send in
+                        await send(.delegate(.popToMainView))
+                    }
                 }
                 
             case .sendCancelGAEvent:
