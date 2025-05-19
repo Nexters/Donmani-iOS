@@ -22,7 +22,7 @@ struct RewardReceiveView: View {
                 ZStack {
                     HStack {
                         DNavigationBarButton(.leftArrow) {
-                            dismiss()
+                            store.send(.delegate(.popToRoot))
                         }
                         .opacity(store.isPresentingBackButton ? 1.0 : 0.0)
                         Spacer()

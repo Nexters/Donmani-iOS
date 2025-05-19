@@ -11,5 +11,20 @@ enum RewardItemCategory: String, CaseIterable {
     case decoration
     case byeoltong
     case sound
+    
+    var title: String {
+        switch self {
+        case .background:
+            return "배경"
+        case .effect:
+            return "효과"
+        case .decoration:
+            return "장식"
+        case .byeoltong:
+            return "별통이"
+        case .sound:
+            return "효과음"
+        }
+    }
 }
 

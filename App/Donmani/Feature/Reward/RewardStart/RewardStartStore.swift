@@ -116,6 +116,7 @@ struct RewardStartStore {
                         await send(.requestFeedbackCard)
                     }
                 } else {
+                    UINavigationController.isBlockSwipe = true
                     return .run { send in
                         await send(.delegate(.pushRewardReceiveView))
                     }

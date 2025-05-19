@@ -15,9 +15,8 @@ extension MainNavigationStore {
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
         case  .popToRoot:
-            return .run { send in
-                await send(.popToRoot)
-            }
+            state.path.removeAll()
+            return .none
         }
     }
 }
