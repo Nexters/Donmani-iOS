@@ -21,7 +21,7 @@ struct RewardStartView: View {
                     .background {
                         RewardBackground()
                     }
-                    .padding(-1)
+                    .padding(-5)
             }
             
             VStack(alignment: .leading, spacing: 0) {
@@ -52,12 +52,16 @@ struct RewardStartView: View {
                 }
                 
                 DButton(
-                    title: store.buttonTitle,
-                    isEnabled: store.isEnabledButton
+                    title: store.buttonTitle
                 ) {
                     store.send(.touchNextButton)
                 }
                 .padding(.defaultLayoutPadding)
+                .opacity(store.isPresentingButton ? 1 : 0)
+                .animation(
+                    .easeInOut(duration: 0.6),
+                    value: store.isPresentingButton
+                )
             }
             
             if store.isPresentingGuideBottomSheet {

@@ -59,7 +59,7 @@ extension RewardReceiveView {
                         LottieView(animation: store.defaultLottieAnimation)
                             .playing(loopMode: .loop)
                             .aspectRatio(1.0, contentMode: .fit)
-                            .padding(.horizontal, .defaultLayoutPadding * 2)
+                            .padding(.horizontal, .defaultLayoutPadding * 3)
                             .scaleEffect(store.isPresentingMainImage ? 1 : 0.01, anchor: .center)
                             .opacity(store.isPresentingMainImage ? 1 : 0)
                             .animation(.easeInOut(duration: 0.3), value: store.isPresentingMainImage)
@@ -85,7 +85,7 @@ extension RewardReceiveView {
                 }
                 .opacity(store.isPresentingRewardTitle ? 1 : 0)
                 .offset(y: store.isPresentingRewardTitle ? -5 : 0)
-                .animation(.easeInOut(duration: 0.3), value: store.isPresentingRewardTitle)
+                .animation(.easeInOut(duration: 0.5), value: store.isPresentingRewardTitle)
                 
                 // Rewards
                 VStack {
@@ -109,7 +109,6 @@ extension RewardReceiveView {
                             store.send(.dismissLottie)
                         }
                         .aspectRatio(1.0, contentMode: .fit)
-                        .padding(.horizontal, .defaultLayoutPadding * 2)
                     Spacer()
                 }
                 .opacity(store.isPlayingLottie ? 1.0 : 0.0)

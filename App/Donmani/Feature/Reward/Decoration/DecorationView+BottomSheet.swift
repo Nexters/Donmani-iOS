@@ -35,7 +35,7 @@ extension DecorationView {
                     .resizable()
                     .scaledToFit()
                 
-                DButton(title: "확인했어요.") {
+                DButton(title: "확인했어요") {
                     dismissSheet {
                         store.send(.touchGuideBottomSheetButton)
                     }

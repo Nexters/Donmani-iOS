@@ -40,7 +40,28 @@ final class HistoryStateManager {
     private let streakSubmitCountKey = "STREAK_SUBMIT_COUNT"
     private let lastWriteRecordDateKey = "LAST_WRITE_RECORD_DATE"
     
-    private init() {}
+    // Reward
+    private let isFirstRewardEnterKey = "FIRST_REWARD_ENTER"
+    private let isFirstDecorationEnterKey = "FIRST_DECORATION_ENTER"
+    
+    
+    private init() { }
+    
+    func setIsFirstDecorationEnter() {
+        userDefaults.set(isFirstDecorationEnterKey, forKey: isFirstDecorationEnterKey)
+    }
+    
+    func getIsFirstDecorationEnter() -> Bool {
+        return userDefaults.string(forKey: isFirstDecorationEnterKey) == nil
+    }
+    
+    func setIsFirstRewardEnter() {
+        userDefaults.set(isFirstRewardEnterKey, forKey: isFirstRewardEnterKey)
+    }
+    
+    func getIsFirstRewardEnter() -> Bool {
+        return userDefaults.string(forKey: isFirstRewardEnterKey) == nil
+    }
     
     func getLastWriteRecordDateKey() -> String {
         if let value = userDefaults.string(forKey: lastWriteRecordDateKey) {

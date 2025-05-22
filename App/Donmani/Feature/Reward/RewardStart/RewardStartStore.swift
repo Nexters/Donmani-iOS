@@ -43,6 +43,7 @@ struct RewardStartStore {
         var isPresentingFeedbackStartView: Bool = true
         var isPresentingFeedbackTitle: Bool = false
         var isPresentingFeedbackCard: Bool = false
+        var isPresentingButton: Bool = true
         
         let lottieAnimation = LottieAnimation.named(
             "RewardStartBottomSheet",
@@ -83,6 +84,7 @@ struct RewardStartStore {
         
         case presentFeedbackTitle
         case presentFeedbackCard
+        case presentNextButton
         
         case delegate(Delegate)
         enum Delegate {
@@ -94,10 +96,14 @@ struct RewardStartStore {
         Reduce { state, action in
             switch action {
             case .toggleGuideBottomSheet:
-                state.isPresentingGuideBottomSheet = !state.isPresentingGuideBottomSheet
-                if !state.isPresentingGuideBottomSheet {
-                    UINavigationController.isBlockSwipe = false
+                if HistoryStateManager.shared.getIsFirstRewardEnter() {
+                    HistoryStateManager.shared.setIsFirstRewardEnter()
+                    state.isPresentingGuideBottomSheet = !state.isPresentingGuideBottomSheet
+                    if !state.isPresentingGuideBottomSheet {
+                        UINavigationController.isBlockSwipe = false
+                    }
                 }
+                
             case .touchGuideBottomSheetButton:
                 if (state.rewardCount > 0) {
                     return .run { send in
@@ -123,7 +129,6 @@ struct RewardStartStore {
                 }
                 
             case .requestFeedbackCard:
-                state.isEnabledButton = false
                 return .run { send in
                     try await Task.sleep(nanoseconds: .nanosecondsPerSecond / 2)
                     //                    let feedbackCardDTO = try? await NetworkService.DFeedback().receiveFeedbackCard()
@@ -137,12 +142,15 @@ struct RewardStartStore {
             case .receivedFeedbackCard(let feedbackCard):
                 state.feedbackCard = feedbackCard
                 state.isPresentingFeedbackStartView = false
+                state.isPresentingButton = false
                 return .run { send in
                     // HStack fade out이 끝난 뒤 애니메이션 시퀀스 시작
                     try await Task.sleep(for: .seconds(0.6))
                     await send(.presentFeedbackTitle)
                     try await Task.sleep(for: .seconds(0.5))
                     await send(.presentFeedbackCard)
+                    try await Task.sleep(for: .seconds(0.5))
+                    await send(.presentNextButton)
                 }
                 
             case .presentFeedbackTitle:
@@ -150,8 +158,10 @@ struct RewardStartStore {
                 
             case .presentFeedbackCard:
                 state.isPresentingFeedbackCard = true
-                state.isEnabledButton = true
                 state.buttonTitle = "다음"
+                
+            case .presentNextButton:
+                state.isPresentingButton = true
                 
             default:
                 break
