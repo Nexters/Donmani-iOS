@@ -48,9 +48,12 @@ struct DecorationStore {
         Reduce { state, action in
             switch action {
             case .toggleGuideBottomSheet:
-                state.isPresentingGuideBottomSheet = !state.isPresentingGuideBottomSheet
-                if !state.isPresentingGuideBottomSheet {
-                    UINavigationController.isBlockSwipe = false
+                if HistoryStateManager.shared.getIsFirstDecorationEnter() {
+                    HistoryStateManager.shared.setIsFirstDecorationEnter()
+                    state.isPresentingGuideBottomSheet = !state.isPresentingGuideBottomSheet
+                    if !state.isPresentingGuideBottomSheet {
+                        UINavigationController.isBlockSwipe = false
+                    }
                 }
                 
             case .touchGuideBottomSheetButton:

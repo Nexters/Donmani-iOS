@@ -25,6 +25,7 @@ struct RewardReceiveView: View {
                             store.send(.delegate(.popToRoot))
                         }
                         .opacity(store.isPresentingBackButton ? 1.0 : 0.0)
+                        .animation(.easeInOut(duration: 0.3), value: store.isPresentingBackButton)
                         Spacer()
                         
                     }
@@ -32,18 +33,20 @@ struct RewardReceiveView: View {
                 .frame(height: .navigationBarHeight)
                 .padding(.horizontal, .defaultLayoutPadding)
                 
+                if store.isPresentingRewardsBox {
+                    ReadyToReceiveReward()
+                }
                 if store.isPresentingRewards {
                     RewardResultView()
-                } else {
-                    ReadyToReceiveReward()
                 }
                 
                 DButton(
-                    title: store.buttonTitle,
-                    isEnabled: store.isEnabledButton
+                    title: store.buttonTitle
                 ) {
                     store.send(.touchNextButton)
                 }
+                .opacity(store.isPresentingBackButton ? 1.0 : 0.0)
+                .animation(.easeInOut(duration: 0.3), value: store.isPresentingBackButton)
                 .padding(.defaultLayoutPadding)
             }
         }

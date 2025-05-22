@@ -58,6 +58,31 @@ public enum DImageAsset: String {
     case rewardGuideBanner = "RewardGuideBanner"
     case rewardCharacter = "RewardCharacter"
     case decorationGuideImage = "DecorationGuideImage"
+    
+    // Reward Item
+    case rewardBgDefault = "reward_bg_default"
+    case rewardBgPurpleAurora = "reward_bg_purple_aurora"
+    case rewardBgSkyPathway = "reward_bg_sky_pathway"
+    case rewardBgStarOcean = "reward_bg_star_ocean"
+
+    case rewardBottleBeads = "reward_bottle_beads"
+    case rewardBottleDefault = "reward_bottle_default"
+    case rewardBottleFuzzy = "reward_bottle_fuzzy"
+
+    case rewardDecorationFloatingBoat = "reward_decoration_floating_boat"
+    case rewardDecorationFuzzyBalloon = "reward_decoration_fuzzy_balloon"
+    case rewardDecorationMoonPillow = "reward_decoration_moon_pillow"
+    case rewardDecorationTobyShip = "reward_decoration_toby_ship"
+    case rewardDecorationSpaceVacance = "reward_decoration_space_vacance"
+
+    case rewardEffectFloatingBubble = "reward_effect_floating_bubble"
+    case rewardEffectHeartRipple = "reward_effect_heart_ripple"
+    case rewardEffectWishingMeteor = "reward_effect_wishing_meteor"
+
+    case rewardSoundStardropDay = "reward_sound_stardrop_day"
+    case rewardSoundWhisperingStarlight = "reward_sound_whispering_starlight"
+    
+    case rewardEmpty = "reward_empty"
    
     // Image 16
     case close = "Close"
@@ -84,3 +109,5 @@ public enum DImageAsset: String {
     // Image 32
     case addLog = "AddLog"
 }
+
+

@@ -24,16 +24,16 @@ struct RewardReceiveStore {
         var title: String = "응원의 선물을 받았어요!"
         let rewardCount: Int
         
-        var isEnabledButton = true
         var isPresentDefaultLottieView = true
         var isPresentMultiRewardGuideText: Bool
         
         var isPresentingMainTitle: Bool = true
         var isPresentingMainImage: Bool = true
-        var isPresentingRewards = false
+        var isPresentingRewardsBox: Bool = true
+        var isPresentingRewards: Bool = false
         var isPresentingRewardTitle: Bool = false
         var isPlayingLottie: Bool = false
-        var isPresentingBackButton = true
+        var isPresentingBackButton: Bool  = true
         
         
         var rewardItems: [RewardItem] = []
@@ -68,10 +68,10 @@ struct RewardReceiveStore {
         
         case dismissMainTitle
         case dismissMainImage
-        case presentRewardImageAndLottie
-        case presentRewardTitle
+        case changeViewContent
+        case presentRewardContent
+        case presentRewardButton
         case dismissLottie
-        
         
         case binding(BindingAction<State>)
         
@@ -89,7 +89,6 @@ struct RewardReceiveStore {
             case .touchNextButton:
 //                let count = state.rewardCount
                 if state.rewardItems.isEmpty {
-                    state.isEnabledButton = false
                     return .run { send in
                         //                        let rewardDTO = try await NetworkService.DReward().reqeustAcquireRewards(count: count)
                         //                        let rewardItems: [RewardItem] = NetworkDTOMapper.mapper(dto: rewardDTO)
@@ -111,10 +110,12 @@ struct RewardReceiveStore {
                     await send(.dismissMainTitle)
                     try await Task.sleep(for: .seconds(0.3))
                     await send(.dismissMainImage)
-                    try await Task.sleep(for: .seconds(0.3 + 0.2)) // 0.3초 후 0.2초 대기
-                    await send(.presentRewardImageAndLottie)
                     try await Task.sleep(for: .seconds(0.3))
-                    await send(.presentRewardTitle)
+                    await send(.changeViewContent)
+                    try await Task.sleep(for: .seconds(0.1))
+                    await send(.presentRewardContent)
+                    try await Task.sleep(for: .seconds(2.0))
+                    await send(.presentRewardButton)
                 }
             case .dismissMainTitle:
                 state.isPresentingMainTitle = false
@@ -122,13 +123,15 @@ struct RewardReceiveStore {
             case .dismissMainImage:
                 state.isPresentingMainImage = false
                 
-            case .presentRewardImageAndLottie:
+            case .changeViewContent:
+                state.isPresentingRewardsBox = false
                 state.isPresentingRewards = true
-                state.isPlayingLottie = true
                 
-            case .presentRewardTitle:
+            case .presentRewardContent:
+                state.isPlayingLottie = true
                 state.isPresentingRewardTitle = true
-                state.isEnabledButton = true
+                
+            case .presentRewardButton:
                 state.isPresentingBackButton = true
                 
             case .dismissLottie:
