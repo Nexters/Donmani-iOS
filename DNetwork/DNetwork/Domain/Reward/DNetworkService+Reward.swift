@@ -24,7 +24,7 @@ public extension DNetworkService {
             return response
         }
         
-        public func fetchRewardsInventory(count: Int) async throws -> RewardInventoryDTO {
+        public func fetchRewardsInventory() async throws -> RewardInventoryDTO {
             let response: RewardInventoryDTO = try await self.request.get(
                 path: .rewards,
                 addtionalPath: ["inventory", userKey]

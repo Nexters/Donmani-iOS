@@ -21,7 +21,7 @@ struct RewardStartView: View {
                     .background {
                         RewardBackground()
                     }
-                    .padding(-5)
+                    .padding(-10)
             }
             
             VStack(alignment: .leading, spacing: 0) {

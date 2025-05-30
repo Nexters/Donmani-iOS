@@ -119,13 +119,38 @@ extension RewardReceiveView {
     func RewardItemListView() -> some View {
         TabView(selection: $store.rewardIndex) {
             ForEach(0..<store.rewardCount, id: \.self) { i in
-                DImage(.defaultGoodSticker).image
-                    .frame(width: .screenWidth * (8/15), height: .screenWidth * (8/15))
+                RewardItemListCardView(item: store.rewardItems[i])
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .always))
-        .frame(minHeight: .screenWidth * (8/15) + 50)
-    
+        .frame(minHeight: .screenWidth * (8/15) + 80)
+    }
+                    
+    func RewardItemListCardView(item: Reward) -> some View {
+        let mapper = RewardResourceMapper(id: item.id, category: item.category)
+        var image = mapper.image().image
+        if item.category == .byeoltong {
+            image = mapper.image(isPreview: true).image
+        }
+        let size = CGFloat.screenWidth * (8/15)
+        return VStack {
+            if (item.category == .background) {
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: size, height: size)
+                    .clipShape(RoundedRectangle(cornerRadius: 60, style: .continuous))
+            } else {
+                RoundedRectangle(cornerRadius: 60, style: .continuous)
+                    .fill(DColor(.deepBlue60).color)
+                    .frame(width: size, height: size)
+                    .overlay {
+                        image
+                            .resizable()
+                            .padding(20)
+                    }
+            }
+        }
     }
 }
 

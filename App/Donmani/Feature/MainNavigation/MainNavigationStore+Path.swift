@@ -84,12 +84,24 @@ extension MainNavigationStore {
             state.path.append(.rewardStart(initialState))
             
         case .rewardReceive:
-            let context = RewardReceiveStore.Context(rewardCount: 3)
+            let previewData = Reward.previewAllData
+            let context = RewardReceiveStore.Context(rewardCount: previewData.count)
             let initialState = stateFactory.makeRewardReceiveState(context: context)
             state.path.append(.rewardReceive(initialState))
             
         case .decoration:
-            let context = DecorationStore.Context(decorationItem: [:])
+            let previewData = Reward.previewAllData
+            var decorationItem: [RewardItemCategory: [Reward]] = [:]
+            RewardItemCategory.allCases.forEach { c in
+                decorationItem[c] = previewData.filter { $0.category == c }.sorted { $0.id < $1.id }
+                if (c != .background && c != .byeoltong) {
+                    if (decorationItem[c, default: []].count > 0) {
+                        let emptyReward = Reward(id: 100, name: "없음", imageUrl: nil, soundUrl: nil, category: c, owned: false)
+                        decorationItem[c]?.insert(emptyReward, at: 0)
+                    }
+                }
+            }
+            let context = DecorationStore.Context(decorationItem: decorationItem)
             let initialState = stateFactory.makeDecorationState(context: context)
             state.path.append(.decoration(initialState))
         }

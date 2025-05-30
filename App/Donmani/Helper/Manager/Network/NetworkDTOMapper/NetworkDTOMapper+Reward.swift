@@ -28,19 +28,48 @@ extension NetworkDTOMapper {
         )
     }
     
-    static func mapper(dto: RewardDTO) -> [RewardItemCategory: [RewardItem]] {
-        var result: [RewardItemCategory: [RewardItem]] = [:]
+    static func mapper(dto: RewardDTO) -> [RewardItemCategory: [Reward]] {
+        var result: [RewardItemCategory: [Reward]] = [:]
         dto.item.forEach { itemDTO in
             let category = mapper(rewardItemCategory: itemDTO.category)
-            let rewardItem = RewardItem(
-                id: itemDTO.id,
-                name: itemDTO.name,
-                imageUrl: itemDTO.imageUrl,
-                soundUrl: itemDTO.soundUrl,
-                category: category,
-                owned: itemDTO.owned
+            let rewardItem = mapper(
+                dto: itemDTO,
+                rewardItemCategory: category
             )
             result[category, default: []].append(rewardItem)
+        }
+        return result
+    }
+    
+    static func mapper(
+        dto: RewardItemDTO,
+        rewardItemCategory: RewardItemCategory
+    ) -> Reward {
+        let rewardItem = Reward(
+            id: dto.id,
+            name: dto.name,
+            imageUrl: dto.imageUrl,
+            soundUrl: dto.soundUrl,
+            category: rewardItemCategory,
+            owned: dto.owned
+        )
+        return rewardItem
+    }
+    
+    static func mapper(dto: RewardInventoryDTO) -> [RewardItemCategory: [Reward]] {
+        var result: [RewardItemCategory: [Reward]] = [:]
+        dto.forEach { rewardDTO in
+            guard let categoryString = rewardDTO.category else {
+                return
+            }
+            let category = mapper(rewardItemCategory: categoryString)
+            rewardDTO.item.forEach { rewardItemDTO in
+                let rewardItem = mapper(
+                    dto: rewardItemDTO,
+                    rewardItemCategory: category
+                )
+                result[category, default: []].append(rewardItem)
+            }
         }
         return result
     }

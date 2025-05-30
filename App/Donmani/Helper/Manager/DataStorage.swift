@@ -8,11 +8,20 @@
 class DataStorage {
     private static let shared = DataStorage()
     
+    var inventory: [RewardItemCategory: [Reward]] = [:]
     var userName = ""
     var recordData: [String: [Record]] = [:]
     
     private init() {
         
+    }
+    
+    static func setInventory(_ item: [RewardItemCategory: [Reward]]) {
+        shared.inventory = item
+    }
+    
+    static func getInventory() -> [RewardItemCategory: [Reward]] {
+        shared.inventory
     }
     
     

@@ -59,18 +59,18 @@ struct MonthlyStarBottleView: View {
                             .padding(.horizontal, .defaultLayoutPadding)
                     } else {
                         ZStack {
-                            DImage(.starBottleBackground).image
+                            DImage(.byeoltongBackground).image
                                 .resizable()
                                 .frame(width: .screenWidth * 0.9)
                                 .aspectRatio(0.75, contentMode: .fit)
                             
                             ZStack {
                                 StarBottleView(records: store.record)
-                                    .frame(width: .screenWidth * 0.8)
+                                    .frame(width: .screenWidth * 0.85)
                                     .aspectRatio(0.75, contentMode: .fit)
-                                DImage(.starBottle).image
+                                DImage(.rewardBottleDefault).image
                                     .resizable()
-                                    .frame(width: .screenWidth * 0.8)
+                                    .frame(width: .screenWidth * 0.85)
                                     .aspectRatio(0.75, contentMode: .fit)
                             }
                             .onTapGesture {
