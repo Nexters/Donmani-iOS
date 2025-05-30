@@ -16,17 +16,25 @@ struct RewardResourceMapper {
         self.category = category
     }
     
-    func image() -> DImage {
+    func image(isPreview: Bool = false) -> DImage {
         var rewardResource: RewardResourceMappable!
         switch category {
         case .background:
-            rewardResource = RewardBackgroundResource(rawValue: id)
+            if isPreview {
+                rewardResource = RewardBackgroundPreviewResource(rawValue: id)
+            } else {
+                rewardResource = RewardBackgroundResource(rawValue: id)
+            }
         case .effect:
             rewardResource = RewardEffectResource(rawValue: id)
         case .decoration:
             rewardResource = RewardDecorationResource(rawValue: id)
         case .byeoltong:
-            rewardResource = RewardBottleResource(rawValue: id)
+            if isPreview {
+                rewardResource = RewardIconBottleResource(rawValue: id)
+            } else {
+                rewardResource = RewardBottleResource(rawValue: id)
+            }
         case .sound:
             rewardResource = RewardSoundResource(rawValue: id)
         }
@@ -38,18 +46,18 @@ private protocol RewardResourceMappable {
     func image() -> DImage
 }
 
-private enum RewardBackgroundResource: Int, RewardResourceMappable {
+private enum RewardBackgroundPreviewResource: Int, RewardResourceMappable {
     func image() -> DImage {
         var imageAsset: DImageAsset!
         switch self {
         case .rewardBgDefault:
-            imageAsset = .rewardBgDefault
+            imageAsset = .rewardPreviewBgDefault
         case .rewardBgPurpleAurora:
-            imageAsset = .rewardBgPurpleAurora
+            imageAsset = .rewardPreviewBgPurpleAurora
         case .rewardBgSkyPathway:
-            imageAsset = .rewardBgSkyPathway
+            imageAsset = .rewardPreviewBgSkyPathway
         case .rewardBgStarOcean:
-            imageAsset = .rewardBgStarOcean
+            imageAsset = .rewardPreviewBgStarOcean
         }
         return DImage(imageAsset)
     }
@@ -58,6 +66,47 @@ private enum RewardBackgroundResource: Int, RewardResourceMappable {
     case rewardBgPurpleAurora = 102
     case rewardBgStarOcean = 103
     case rewardBgSkyPathway = 104
+}
+
+private enum RewardBackgroundResource: Int, RewardResourceMappable {
+    func image() -> DImage {
+        var imageAsset: DImageAsset!
+        switch self {
+        case .rewardBgDefault:
+            imageAsset = .rewardIconBgDefault
+        case .rewardBgPurpleAurora:
+            imageAsset = .rewardIconBgPurpleAurora
+        case .rewardBgSkyPathway:
+            imageAsset = .rewardIconBgSkyPathway
+        case .rewardBgStarOcean:
+            imageAsset = .rewardIconBgStarOcean
+        }
+        return DImage(imageAsset)
+    }
+    
+    case rewardBgDefault = 101
+    case rewardBgPurpleAurora = 102
+    case rewardBgStarOcean = 103
+    case rewardBgSkyPathway = 104
+}
+
+private enum RewardIconBottleResource: Int, RewardResourceMappable {
+    func image() -> DImage {
+        var imageAsset: DImageAsset!
+        switch self {
+        case .rewardBottleBeads:
+            imageAsset = .rewardIconBottleBeads
+        case .rewardBottleDefault:
+            imageAsset = .rewardIconBottleDefault
+        case .rewardBottleFuzzy:
+            imageAsset = .rewardIconBottleFuzzy
+        }
+        return DImage(imageAsset)
+    }
+    
+    case rewardBottleDefault = 101
+    case rewardBottleBeads = 102
+    case rewardBottleFuzzy = 103
 }
 
 private enum RewardBottleResource: Int, RewardResourceMappable {
@@ -84,17 +133,17 @@ private enum RewardDecorationResource: Int, RewardResourceMappable {
         var imageAsset: DImageAsset!
         switch self {
         case .rewardEmpty:
-            imageAsset = .rewardEmpty
+            imageAsset = .rewardIconEmpty
         case .rewardDecorationFloatingBoat:
-            imageAsset = .rewardDecorationFloatingBoat
+            imageAsset = .rewardIconDecorationFloatingBoat
         case .rewardDecorationFuzzyBalloon:
-            imageAsset = .rewardDecorationFuzzyBalloon
+            imageAsset = .rewardIconDecorationFuzzyBalloon
         case .rewardDecorationMoonPillow:
-            imageAsset = .rewardDecorationMoonPillow
+            imageAsset = .rewardIconDecorationMoonPillow
         case .rewardDecorationTobyShip:
-            imageAsset = .rewardDecorationTobyShip
+            imageAsset = .rewardIconDecorationTobyShip
         case .rewardDecorationSpaceVacance:
-            imageAsset = .rewardDecorationSpaceVacance
+            imageAsset = .rewardIconDecorationSpaceVacance
         }
         return DImage(imageAsset)
     }
@@ -112,13 +161,13 @@ private enum RewardEffectResource: Int, RewardResourceMappable {
         var imageAsset: DImageAsset!
         switch self {
         case .rewardEmpty:
-            imageAsset = .rewardEmpty
+            imageAsset = .rewardIconEmpty
         case .rewardEffectFloatingBubble:
-            imageAsset = .rewardEffectFloatingBubble
+            imageAsset = .rewardIconEffectFloatingBubble
         case .rewardEffectHeartRipple:
-            imageAsset = .rewardEffectHeartRipple
+            imageAsset = .rewardIconEffectHeartRipple
         case .rewardEffectWishingMeteor:
-            imageAsset = .rewardEffectWishingMeteor
+            imageAsset = .rewardIconEffectWishingMeteor
         }
         return DImage(imageAsset)
     }
@@ -134,11 +183,11 @@ private enum RewardSoundResource: Int, RewardResourceMappable {
         var imageAsset: DImageAsset!
         switch self {
         case .rewardEmpty:
-            imageAsset = .rewardEmpty
+            imageAsset = .rewardIconEmpty
         case .rewardSoundStardropDay:
-            imageAsset = .rewardSoundStardropDay
+            imageAsset = .rewardIconSoundStardropDay
         case .rewardSoundWhisperingStarlight:
-            imageAsset = .rewardSoundWhisperingStarlight
+            imageAsset = .rewardIconSoundWhisperingStarlight
         }
         return DImage(imageAsset)
     }

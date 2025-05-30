@@ -15,17 +15,15 @@ extension StarScene {
     public static let starInnerShadow = SKTexture(image: DImage(.starInnerShadow).uiImage)
     
     
-    public func addGroundNodeWithStarBottleShape(width: CGFloat, height: CGFloat) {
+    public func addGroundNodeWithStarBottleShape(
+        width: CGFloat,
+        height: CGFloat,
+        shape: DImageAsset
+    ) {
         self.backgroundColor = .clear
-        
-        let tempStarBottle =  [
-            SKTexture(image: DImage(.starBottle01).uiImage),
-            SKTexture(image: DImage(.starBottle02).uiImage),
-            SKTexture(image: DImage(.starBottle03).uiImage),
-        ]
-        
         let nodeSize = CGSize(width: size.width, height: size.height)
-        let node = SKSpriteNode(texture: tempStarBottle[0])
+        let texture = SKTexture(image: DImage(shape).uiImage)
+        let node = SKSpriteNode(texture: texture)
         node.size = nodeSize
         node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.size)
         node.physicsBody?.isDynamic = false
@@ -111,7 +109,7 @@ extension StarScene {
             return
         }
         nodeSet.insert(record.date)
-        let size = CGSize(width: starSize - 1, height: starSize - 1)
+        let size = CGSize(width: starSize - 5, height: starSize - 5)
         let starNode = SKSpriteNode(texture: Self.starShapeTexture)
         starNode.size = size
         starNode.position = position

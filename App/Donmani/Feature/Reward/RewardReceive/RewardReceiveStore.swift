@@ -36,7 +36,7 @@ struct RewardReceiveStore {
         var isPresentingBackButton: Bool  = true
         
         
-        var rewardItems: [RewardItem] = []
+        var rewardItems: [Reward] = []
         var rewardIndex = 0
         
         var rewardTitle: String {
@@ -46,12 +46,12 @@ struct RewardReceiveStore {
         }
         
         let defaultLottieAnimation = LottieAnimation.named(
-            "RewardPresentBox",
+            "lottie_reward_present_box",
             bundle: .designSystem
         )
         
         let confettiLottieAnimation = LottieAnimation.named(
-            "Confetti",
+            "lottie_confetti",
             bundle: .designSystem
         )
         
@@ -64,7 +64,7 @@ struct RewardReceiveStore {
     enum Action: BindableAction {
         case touchNextButton
         
-        case receiveRewardItems([RewardItem])
+        case receiveRewardItems([Reward])
         
         case dismissMainTitle
         case dismissMainImage
@@ -92,7 +92,7 @@ struct RewardReceiveStore {
                     return .run { send in
                         //                        let rewardDTO = try await NetworkService.DReward().reqeustAcquireRewards(count: count)
                         //                        let rewardItems: [RewardItem] = NetworkDTOMapper.mapper(dto: rewardDTO)
-                        let rewardItems = RewardItem.previewData
+                        let rewardItems = Reward.previewAllData
                         await send(.receiveRewardItems(rewardItems))
                     }
                 } else {

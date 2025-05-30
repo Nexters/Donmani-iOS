@@ -45,19 +45,19 @@ struct MainView: View {
                 
                 Spacer(minLength: 86)
                 ZStack {
-                    DImage(.starBottleBackground).image
+                    DImage(.byeoltongBackground).image
                         .resizable()
                         .frame(width: .screenWidth * 0.9)
                         .aspectRatio(0.75, contentMode: .fit)
                     
                     ZStack {
                         StarBottleView(records: store.monthlyRecords)
-                            .frame(width: .screenWidth * 0.8)
+                            .frame(width: .screenWidth * 0.85)
                             .aspectRatio(0.75, contentMode: .fit)
                             .opacity(store.starBottleOpacity)
-                        DImage(.starBottle).image
+                        DImage(.rewardBottleDefault).image
                             .resizable()
-                            .frame(width: .screenWidth * 0.8)
+                            .frame(width: .screenWidth * 0.85)
                             .aspectRatio(0.75, contentMode: .fit)
                     }
                     .onTapGesture {

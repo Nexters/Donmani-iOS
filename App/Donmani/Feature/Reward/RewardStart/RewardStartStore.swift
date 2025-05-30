@@ -46,7 +46,7 @@ struct RewardStartStore {
         var isPresentingButton: Bool = true
         
         let lottieAnimation = LottieAnimation.named(
-            "RewardStartBottomSheet",
+            "lottie_reward_start_bottom_sheet",
             bundle: .designSystem
         )
         

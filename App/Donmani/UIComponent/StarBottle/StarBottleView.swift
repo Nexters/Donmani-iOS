@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SpriteKit
+import DesignSystem
 
 struct StarBottleView: View {
     var records: [Record]
@@ -21,7 +22,10 @@ struct StarBottleView: View {
     @State private var starScene: StarScene
     @State var opacity: CGFloat = 0.0
     
-    init(records: [Record]) {
+    init(
+        records: [Record],
+        backgroundShape: DImageAsset = .rewardBottleDefaultShape
+    ) {
         self.records = records
         self.starScene = StarScene(
             size: CGSize(
@@ -31,7 +35,8 @@ struct StarBottleView: View {
         )
         starScene.addGroundNodeWithStarBottleShape(
             width: width,
-            height: height
+            height: height,
+            shape: backgroundShape
         )
         (0..<records.count).forEach { i in
             starScene.createInitStarNode(
