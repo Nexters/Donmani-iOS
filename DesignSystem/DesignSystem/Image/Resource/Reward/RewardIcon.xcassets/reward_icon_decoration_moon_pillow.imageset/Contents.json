@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "decoration_moon_pillow.png",
+      "filename" : "decoration_floating_boat.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "decoration_moon_pillow 1.png",
+      "filename" : "decoration_floating_boat 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "decoration_moon_pillow 2.png",
+      "filename" : "decoration_floating_boat 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

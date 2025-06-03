@@ -14,9 +14,13 @@ extension MainNavigationStore {
         action: RewardStartStore.Action.Delegate
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
-        case  .pushRewardReceiveView:
+        case  .pushRewardReceiveView(let count):
             return .run { send in
-                await send(.push(.rewardReceive))
+                await send(.push(.rewardReceive(count)))
+            }
+        case .pushRecordEntryPointView:
+            return .run { send in
+                await send(.push(.record))
             }
         }
     }

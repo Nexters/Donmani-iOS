@@ -12,6 +12,8 @@ import DesignSystem
 
 struct SettingView: View {
     enum Menutype {
+        case decoration
+        case sound
         case notification
         case notice
         case recordGuide
@@ -20,6 +22,10 @@ struct SettingView: View {
         
         var title: String {
             switch self {
+            case .decoration:
+                return "꾸미기"
+            case .sound:
+                return "별통이 효과음"
             case .notification:
                 return "앱 푸시 알림"
             case .notice:
@@ -37,6 +43,8 @@ struct SettingView: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dismiss) private var dismiss
     @StateObject var keyboard = KeyboardResponder()
+    @Bindable var store: StoreOf<SettingStore>
+    
     let width = UIScreen.main.bounds.width
     @State var isPresentingRecordGuideView = false
     @State var isPresentingFeedbackView = false
@@ -50,6 +58,8 @@ struct SettingView: View {
     @State var isPresentingSymbolGuideToastView = false
     @State var isNotificationEnabled = false
     @State var isNoticeNotRead = false
+    @State var isDecorationNotRead = false
+    @State var isBackgroundSoundOn = false
     
     @FocusState var isFocusToTextField: Bool
     
@@ -104,6 +114,14 @@ struct SettingView: View {
                 .padding(.bottom, .defaultLayoutPadding)
                 
                 VStack(alignment: .leading, spacing: 0) {
+                    MenuButton(type: .decoration) {
+                        store.send(.touchDecorationButton)
+                    }
+                    
+                    MenuButton(type: .sound) {
+                        store.send(.toggleBackgroundSound)
+                    }
+                    
                     MenuButton(type: .notification) {
                         GA.Click(event: .settingNotice).send()
                         if let appSettings = URL(string: UIApplication.openSettingsURLString) {
@@ -201,6 +219,7 @@ struct SettingView: View {
             }
             Task {
                 isNoticeNotRead = !(try await NetworkService.User().fetchNoticeStatus())
+                isDecorationNotRead = !(try await NetworkService.User().fetchRewardStatus())
             }
         }
         .navigationBarBackButtonHidden()
@@ -226,6 +245,17 @@ struct SettingView: View {
                         }
                         .opacity(isNoticeNotRead ? 1 : 0)
                     }
+                    
+                    if type == .decoration {
+                        HStack(alignment: .top) {
+                            Circle()
+                                .fill(DColor.noticeColor)
+                                .frame(width: 6, height: 6)
+                                .padding(.bottom, 18)
+                        }
+                        .opacity(isDecorationNotRead ? 1 : 0)
+                    }
+                    
                     Spacer()
                 }
                 .frame(width: width - .defaultLayoutPadding * 2, alignment: .leading)
@@ -236,6 +266,9 @@ struct SettingView: View {
                     if type == .notification {
                         DToggle(isOn: $isNotificationEnabled)
                     }
+                    if type == .sound {
+                        DToggle(isOn: $isBackgroundSoundOn)
+                    }
                 }
                 .padding(.horizontal, .defaultLayoutPadding)
             }
@@ -244,5 +277,9 @@ struct SettingView: View {
 }
 
 #Preview {
-    SettingView()
+    {
+        let state = MainStateFactory().makeSettingState()
+        let store = MainStoreFactory().makeSettingStore(state: state)
+        return SettingView(store: store)
+    }()
 }

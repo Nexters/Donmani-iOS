@@ -112,6 +112,7 @@ extension RewardReceiveView {
                     Spacer()
                 }
                 .opacity(store.isPlayingLottie ? 1.0 : 0.0)
+                .allowsHitTesting(false)
             }
         }
     }

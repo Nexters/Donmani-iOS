@@ -14,7 +14,6 @@ extension StarScene {
     public static let starDoubleHighlighterTexture = SKTexture(image: DImage(.starDoubleHighlighter).uiImage)
     public static let starInnerShadow = SKTexture(image: DImage(.starInnerShadow).uiImage)
     
-    
     public func addGroundNodeWithStarBottleShape(
         width: CGFloat,
         height: CGFloat,
@@ -50,7 +49,43 @@ extension StarScene {
         addChild(roundRectNode)
     }
     
+    
+    public func createInitStarNode(
+        width: CGFloat,
+        height: CGFloat,
+        record: Record,
+        index: Int
+    ) {
+        switch currentByeoltongType {
+        case .rewardBottleDefaultShape:
+            createInitStarNodeDefault(width: width, height: height, record: record, index: index)
+        case .rewardBottleBeadsShape:
+            createInitStarNodeBeads(width: width, height: height, record: record, index: index)
+        case .rewardBottleFuzzyShape:
+            createInitStarNodeFuzzy(width: width, height: height, record: record, index: index)
+        default:
+            break
+        }
+    }
     public func createNewStarNode(
+        width: CGFloat,
+        height: CGFloat,
+        record: Record
+    ) {
+        switch currentByeoltongType {
+        case .rewardBottleDefaultShape:
+            createNewStarNodeDefault(width: width, height: height, record: record)
+        case .rewardBottleBeadsShape:
+            createNewStarNodeBeads(width: width, height: height, record: record)
+        case .rewardBottleFuzzyShape:
+            createNewStarNodeFuzzy(width: width, height: height, record: record)
+        default:
+            break
+        }
+    }
+    
+    // Default
+    public func createNewStarNodeDefault(
         width: CGFloat,
         height: CGFloat,
         record: Record
@@ -66,16 +101,16 @@ extension StarScene {
             record: record
         )
     }
-    
-    public func createInitStarNode(
+    // Default
+    public func createInitStarNodeDefault(
         width: CGFloat,
         height: CGFloat,
         record: Record,
         index: Int
     ) {
         // Test Code
-        var record = record
-        record.date = "Test\(index)"
+//        var record = record
+//        record.date = "Test\(index)"
         
         let starCountInLine: Int = 5
         let starSize = width / CGFloat(starCountInLine)
@@ -99,6 +134,178 @@ extension StarScene {
             record: record
         )
     }
+    
+    // Beads
+    public func createInitStarNodeBeads(
+        width: CGFloat,
+        height: CGFloat,
+        record: Record,
+        index: Int
+    ) {
+        let starCountInLine: Int = 5
+        let starSize: CGFloat = width / CGFloat(starCountInLine)
+        var position: CGPoint = .zero
+        if (index < 4) {
+            let startPoint: CGFloat = (width / 2.0) - ((starSize - 5) * 1.5)
+            position = CGPoint(
+                x: startPoint + CGFloat(index) * (starSize - 5),
+                y: starSize
+            )
+        } else if (index < 7) {
+            let startPoint: CGFloat = (width / 2.0) - (starSize - 5)
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 4) * (starSize - 5),
+                y: 1.6 * starSize
+            )
+        } else if (index < 11) {
+            let startPoint: CGFloat = (width / 2.0) - ((starSize - 5) * 1.5)
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 7) * (starSize - 5),
+                y: 2.2 * starSize
+            )
+        } else if (index < 16) {
+            let startPoint: CGFloat = (width / 2.0) - (2 * (starSize - 5))
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 11) * (starSize - 5),
+                y: 2.8 * starSize
+            )
+        } else if (index < 20) {
+            let startPoint: CGFloat = (width / 2.0) - ((starSize - 5) * 1.5)
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 16) * (starSize - 5),
+                y: 3.4 * starSize
+            )
+        } else if (index < 25) {
+            let startPoint: CGFloat = (width / 2.0) - (2 * (starSize - 5))
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 20) * (starSize - 5),
+                y: 4.0 * starSize
+            )
+        } else if (index < 29) {
+            let startPoint: CGFloat = (width / 2.0) - ((starSize - 5) * 1.5)
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 25) * (starSize - 5),
+                y: 4.6 * starSize
+            )
+        } else {
+            let startPoint: CGFloat = (width / 2.0) - (starSize - 5)
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 29) * (starSize - 5),
+                y: 5.2 * starSize
+            )
+        }
+        
+        createStarNode(
+            starSize: starSize,
+            position: position,
+            record: record
+        )
+    }
+    // Beads
+    public func createNewStarNodeBeads(
+        width: CGFloat,
+        height: CGFloat,
+        record: Record
+    ) {
+        let starSize = width / 5
+        let position = CGPoint(
+            x: width / 2,
+            y: 5.5 * starSize
+        )
+        createStarNode(
+            starSize: starSize,
+            position: position,
+            record: record
+        )
+    }
+    
+    // Fuzzy
+    public func createInitStarNodeFuzzy(
+        width: CGFloat,
+        height: CGFloat,
+        record: Record,
+        index: Int
+    ) {
+        let starCountInLine: Int = 5
+        let starSize: CGFloat = width / CGFloat(starCountInLine)
+        let yGap = starSize * 0.9
+        let gap: CGFloat = (starSize * 0.8)
+        var position: CGPoint = .zero
+        if (index < 3) {
+            let startPoint: CGFloat = (width / 2.0) - gap
+            position = CGPoint(
+                x: startPoint + CGFloat(index) * gap,
+                y: yGap
+            )
+        } else if (index < 5) {
+            let startPoint: CGFloat = (width / 2.0) - (gap * 0.5)
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 3) * gap,
+                y: 1.6 * yGap
+            )
+        } else if (index < 8) {
+            let startPoint: CGFloat = (width / 2.0) - gap
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 5) * gap,
+                y: 2.2 * yGap
+            )
+        } else if (index < 12) {
+            let startPoint: CGFloat = (width / 2.0) - (gap * 1.5)
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 8) * gap,
+                y: 2.8 * yGap
+            )
+        } else if (index < 17) {
+            let startPoint: CGFloat = (width / 2.0) - (gap * 2.0)
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 12) * gap,
+                y: 3.4 * yGap
+            )
+        } else if (index < 23) {
+            let startPoint: CGFloat = (width / 2.0) - (gap * 2.5)
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 17) * gap,
+                y: 4.0 * yGap
+            )
+        } else if (index < 28) {
+            let startPoint: CGFloat = (width / 2.0) - (gap * 2.0)
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 23) * gap,
+                y: 4.6 * yGap
+            )
+        } else {
+            let startPoint: CGFloat = (width / 2.0) - (gap * 1.5)
+            position = CGPoint(
+                x: startPoint + CGFloat(index - 28) * gap,
+                y: 5.2 * yGap
+            )
+        }
+        
+        createStarNode(
+            starSize: starSize,
+            position: position,
+            record: record
+        )
+    }
+    // Fuzzy
+    public func createNewStarNodeFuzzy(
+        width: CGFloat,
+        height: CGFloat,
+        record: Record
+    ) {
+        let starSize = width / 5
+        let yGap = starSize * 0.9
+        let position = CGPoint(
+            x: width / 2,
+            y: 5.6 * yGap
+        )
+        createStarNode(
+            starSize: starSize,
+            position: position,
+            record: record
+        )
+    }
+    
     
     private func createStarNode(
         starSize: CGFloat,

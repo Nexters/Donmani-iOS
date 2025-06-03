@@ -7,6 +7,6 @@
 
 public struct FeedbackInfoDTO: Decodable {
     public let isNotOpened: Bool
-    public let isFirstOpened: Bool
+    public let isFirstOpen: Bool
     public let totalCount: Int
 }

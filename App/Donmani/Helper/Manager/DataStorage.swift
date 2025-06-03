@@ -12,6 +12,8 @@ class DataStorage {
     var userName = ""
     var recordData: [String: [Record]] = [:]
     
+    
+    
     private init() {
         
     }

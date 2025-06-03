@@ -15,21 +15,32 @@ public extension DNetworkService {
             self.userKey = DNetworkService.userKey
         }
         
-        public func reqeustAcquireRewards(count: Int) async throws -> RewardDTO {
-            let response: RewardDTO = try await self.request.post(
-                path: .rewards,
-                addtionalPath: ["acquire", userKey],
-                bodyData: ["count": count]
+        public func reqeustRewardOpen() async throws -> [RewardItemDTO] {
+            let response: DResponse<[RewardItemDTO]> = try await self.request.put(
+                path: .reward,
+                addtionalPath: ["open", userKey],
+                bodyData: Data()
             )
-            return response
+            return response.responseData ?? []
         }
         
-        public func fetchRewardsInventory() async throws -> RewardInventoryDTO {
-            let response: RewardInventoryDTO = try await self.request.get(
-                path: .rewards,
-                addtionalPath: ["inventory", userKey]
+        public func reqeustRewardItem() async throws -> RewardInventoryDTO {
+            let response: DResponse<RewardInventoryDTO> = try await self.request.get(
+                path: .reward,
+                addtionalPath: ["edit", userKey]
             )
-            return response
+            guard let data = response.responseData else {
+                throw NetworkError.noData
+            }
+            return data
+        }
+        
+        public func fetchRewardNotOpenCount() async throws -> Int {
+            let response: DResponse<Int> = try await self.request.get(
+                path: .reward,
+                addtionalPath: ["not-open", userKey]
+            )
+            return response.responseData ?? 0
         }
     }
 }

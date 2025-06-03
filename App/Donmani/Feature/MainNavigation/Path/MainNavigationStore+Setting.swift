@@ -1,5 +1,5 @@
 //
-//  MainNavigationStore+RewardReceive.swift
+//  MainNavigationStore+Setting.swift
 //  Donmani
 //
 //  Created by 문종식 on 5/19/25.
@@ -9,19 +9,15 @@ import ComposableArchitecture
 import UIKit
 
 extension MainNavigationStore {
-    func rewardReceiveDelegateAction(
+    func settingDelegateAction(
         state: inout MainNavigationStore.State,
-        action: RewardReceiveStore.Action.Delegate
+        action: SettingStore.Action.Delegate
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
-        case  .pushDecorationView(let decorationItem):
+        case .pushDecoration(let decorationItem):
             return .run { send in
                 await send(.push(.decoration(decorationItem)))
             }
-            
-        case .popToRoot:
-            state.path.removeAll()
-            return .none
         }
     }
 }

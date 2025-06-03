@@ -11,6 +11,6 @@ public enum DPath: String {
     case notice
     case appVersion
     case feedback
-    case rewards
+    case reward
 }
 

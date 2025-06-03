@@ -28,7 +28,7 @@ extension DecorationView{
         ]
         let size: CGFloat = (.screenWidth / 3 - .defaultLayoutPadding)
         return LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(store.decorationItem[itemCategory, default: []], id: \.key) { reward in
+            ForEach(store.decorationItem[itemCategory, default: []], id: \.name) { reward in
                 Button {
                     store.send(.touchRewardItem(itemCategory, reward))
                 } label: {
@@ -109,5 +109,4 @@ extension DecorationView{
         }
         .padding(.bottom, .screenHeight * 0.4)
     }
-    
 }

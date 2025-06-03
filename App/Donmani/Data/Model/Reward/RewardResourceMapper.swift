@@ -44,6 +44,13 @@ struct RewardResourceMapper {
 
 private protocol RewardResourceMappable {
     func image() -> DImage
+    func resourceName() -> String
+}
+
+extension RewardResourceMappable {
+    func resourceName() -> String {
+       return ""
+   }
 }
 
 private enum RewardBackgroundPreviewResource: Int, RewardResourceMappable {
@@ -62,10 +69,10 @@ private enum RewardBackgroundPreviewResource: Int, RewardResourceMappable {
         return DImage(imageAsset)
     }
     
-    case rewardBgDefault = 101
-    case rewardBgPurpleAurora = 102
-    case rewardBgStarOcean = 103
-    case rewardBgSkyPathway = 104
+    case rewardBgDefault = 1
+    case rewardBgPurpleAurora = 10
+    case rewardBgStarOcean = 9
+    case rewardBgSkyPathway = 11
 }
 
 private enum RewardBackgroundResource: Int, RewardResourceMappable {
@@ -84,10 +91,10 @@ private enum RewardBackgroundResource: Int, RewardResourceMappable {
         return DImage(imageAsset)
     }
     
-    case rewardBgDefault = 101
-    case rewardBgPurpleAurora = 102
-    case rewardBgStarOcean = 103
-    case rewardBgSkyPathway = 104
+    case rewardBgDefault = 1
+    case rewardBgPurpleAurora = 10
+    case rewardBgStarOcean = 9
+    case rewardBgSkyPathway = 11
 }
 
 private enum RewardIconBottleResource: Int, RewardResourceMappable {
@@ -104,9 +111,9 @@ private enum RewardIconBottleResource: Int, RewardResourceMappable {
         return DImage(imageAsset)
     }
     
-    case rewardBottleDefault = 101
-    case rewardBottleBeads = 102
-    case rewardBottleFuzzy = 103
+    case rewardBottleDefault = 4
+    case rewardBottleBeads = 24
+    case rewardBottleFuzzy = 25
 }
 
 private enum RewardBottleResource: Int, RewardResourceMappable {
@@ -123,9 +130,9 @@ private enum RewardBottleResource: Int, RewardResourceMappable {
         return DImage(imageAsset)
     }
     
-    case rewardBottleDefault = 101
-    case rewardBottleBeads = 102
-    case rewardBottleFuzzy = 103
+    case rewardBottleDefault = 4
+    case rewardBottleBeads = 24
+    case rewardBottleFuzzy = 25
 }
 
 private enum RewardDecorationResource: Int, RewardResourceMappable {
@@ -148,12 +155,30 @@ private enum RewardDecorationResource: Int, RewardResourceMappable {
         return DImage(imageAsset)
     }
     
-    case rewardEmpty = 100
-    case rewardDecorationSpaceVacance = 101
-    case rewardDecorationTobyShip = 102
-    case rewardDecorationFuzzyBalloon = 103
-    case rewardDecorationMoonPillow = 104
-    case rewardDecorationFloatingBoat = 105
+    func resourceName() -> String {
+        switch self {
+        case .rewardEmpty:
+            return ""
+        case .rewardDecorationFloatingBoat:
+            return "lottie_reward_decoration_floating_boat"
+        case .rewardDecorationFuzzyBalloon:
+            return "lottie_reward_decoration_fuzzy_balloon"
+        case .rewardDecorationMoonPillow:
+            return "lottie_reward_decoration_moon_pillow"
+        case .rewardDecorationTobyShip:
+            return "lottie_reward_decoration_toby_ship"
+        case .rewardDecorationSpaceVacance:
+            return ""
+        }
+    }
+    
+    case rewardEmpty = 3
+    case rewardDecorationSpaceVacance = 23
+    case rewardDecorationTobyShip = 22
+    case rewardDecorationFuzzyBalloon = 21
+    case rewardDecorationMoonPillow = 19
+    case rewardDecorationFloatingBoat = 20
+    
 }
 
 private enum RewardEffectResource: Int, RewardResourceMappable {
@@ -172,10 +197,23 @@ private enum RewardEffectResource: Int, RewardResourceMappable {
         return DImage(imageAsset)
     }
     
-    case rewardEmpty = 100
-    case rewardEffectHeartRipple = 101
-    case rewardEffectFloatingBubble = 102
-    case rewardEffectWishingMeteor = 103
+    func resourceName() -> String {
+        switch self {
+        case .rewardEmpty:
+            return ""
+        case .rewardEffectFloatingBubble:
+            return "lottie_reward_effect_floating_bubble"
+        case .rewardEffectHeartRipple:
+            return "lottie_reward_effect_heart_ripple"
+        case .rewardEffectWishingMeteor:
+            return "lottie_reward_effect_wishing_meteor"
+        }
+    }
+    
+    case rewardEmpty = 2
+    case rewardEffectHeartRipple = 14
+    case rewardEffectFloatingBubble = 12
+    case rewardEffectWishingMeteor = 13
 }
 
 private enum RewardSoundResource: Int, RewardResourceMappable {
@@ -192,7 +230,18 @@ private enum RewardSoundResource: Int, RewardResourceMappable {
         return DImage(imageAsset)
     }
     
-    case rewardEmpty = 100
-    case rewardSoundStardropDay = 101
-    case rewardSoundWhisperingStarlight = 102
+    func resourceName() -> String {
+        switch self {
+        case .rewardEmpty:
+            return ""
+        case .rewardSoundStardropDay:
+            return "reward_sound_stardrop_day"
+        case .rewardSoundWhisperingStarlight:
+            return "reward_sound_whispering_starlight"
+        }
+    }
+    
+    case rewardEmpty = 5
+    case rewardSoundStardropDay = 28
+    case rewardSoundWhisperingStarlight = 29
 }

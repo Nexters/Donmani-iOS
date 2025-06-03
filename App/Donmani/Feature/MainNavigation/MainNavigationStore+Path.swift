@@ -14,6 +14,9 @@ extension MainNavigationStore {
         _ state: inout MainNavigationStore.State
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
+        case .setting(.delegate(let childAction)):
+            return settingDelegateAction(state: &state, action: childAction)
+        
             // Record
         case .record(.delegate(let childAction)):
             return recordEntryPointDelegateAction(state: &state, action: childAction)
@@ -43,6 +46,10 @@ extension MainNavigationStore {
         _ state: inout MainNavigationStore.State
     ) -> Effect<MainNavigationStore.Action> {
         switch destination {
+        case .setting:
+            let initialState = stateFactory.makeSettingState()
+            state.path.append(.setting(initialState))
+            
             // Record
         case .record:
             let isComplete = HistoryStateManager.shared.getState()
@@ -78,29 +85,22 @@ extension MainNavigationStore {
             state.path.append(.monthlyStarBottle(initialState))
             
             // Reward
-        case .rewardStart:
-            let context = RewardStartStore.Context(recordCount: 5, rewardCount: 5)
+        case .rewardStart(let feedbackInfo):
+            let context = RewardStartStore.Context(
+                recordCount: feedbackInfo.totalCount,
+                isNotOpened: feedbackInfo.isNotOpened,
+                isFirstOpened: feedbackInfo.isFirstOpened
+            )
             let initialState = stateFactory.makeRewardStartState(context: context)
             state.path.append(.rewardStart(initialState))
             
-        case .rewardReceive:
-            let previewData = Reward.previewAllData
-            let context = RewardReceiveStore.Context(rewardCount: previewData.count)
+        case .rewardReceive(let count):
+//            let previewData = Reward.previewAllData
+            let context = RewardReceiveStore.Context(rewardCount: count)
             let initialState = stateFactory.makeRewardReceiveState(context: context)
             state.path.append(.rewardReceive(initialState))
             
-        case .decoration:
-            let previewData = Reward.previewAllData
-            var decorationItem: [RewardItemCategory: [Reward]] = [:]
-            RewardItemCategory.allCases.forEach { c in
-                decorationItem[c] = previewData.filter { $0.category == c }.sorted { $0.id < $1.id }
-                if (c != .background && c != .byeoltong) {
-                    if (decorationItem[c, default: []].count > 0) {
-                        let emptyReward = Reward(id: 100, name: "없음", imageUrl: nil, soundUrl: nil, category: c, owned: false)
-                        decorationItem[c]?.insert(emptyReward, at: 0)
-                    }
-                }
-            }
+        case .decoration(let decorationItem):
             let context = DecorationStore.Context(decorationItem: decorationItem)
             let initialState = stateFactory.makeDecorationState(context: context)
             state.path.append(.decoration(initialState))

@@ -23,7 +23,7 @@ struct DecorationStore {
     
     @ObservableState
     struct State {
-        var isPresentingGuideBottomSheet = true //false
+        var isPresentingGuideBottomSheet = false // true
         var selectedRewardItemCategory: RewardItemCategory = .background
     
         
@@ -35,32 +35,48 @@ struct DecorationStore {
             decorationItem[selectedRewardItemCategory, default: []]
         }
         
+        var monthlyRecords: [Record]
+        
         var isSoundOn: Bool = false
         let lottieAnimation = LottieAnimation.named(
             "lottie_equalizer",
             bundle: .designSystem
         )
         
+        var byeoltongImageType : DImageAsset {
+            let id = selectedDecorationItem[.byeoltong]?.id ?? 101
+//            print(id)
+            switch id {
+            case 102:
+                return .rewardBottleBeads
+            case 103:
+                return .rewardBottleFuzzy
+            default:
+                return .rewardBottleDefault
+            }
+        }
+        
+        var byeoltongShapeType : DImageAsset = .rewardBottleDefaultShape
+        
         init(context: Context) {
             self.decorationItem = context.decorationItem
-            self.selectedDecorationItem = [
-                .background: .init(id: 101, name: "", imageUrl: "", soundUrl: "", category: .background, owned: true),
-                .effect: .init(id: 100, name: "", imageUrl: "", soundUrl: "", category: .effect, owned: true),
-                .decoration: .init(id: 100, name: "", imageUrl: "", soundUrl: "", category: .decoration, owned: true),
-                .byeoltong: .init(id: 101, name: "", imageUrl: "", soundUrl: "", category: .byeoltong, owned: true),
-                .sound: .init(id: 100, name: "", imageUrl: "", soundUrl: "", category: .sound, owned: true),
-            ]
+            self.selectedDecorationItem = [:]
+            
             backgroundShape = .rewardBottleDefault
+            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+            let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
+            self.monthlyRecords = monthlyRecords
         }
     }
     
-    enum Action {
+    enum Action: BindableAction {
         case toggleGuideBottomSheet
         case touchGuideBottomSheetButton
         case touchRewardItemCategoryButton(RewardItemCategory)
         case touchRewardItem(RewardItemCategory, Reward)
         case touchEqualizerButton
         
+        case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate {
             case popToRoot
@@ -68,6 +84,7 @@ struct DecorationStore {
     }
     
     var body: some ReducerOf<Self> {
+        BindingReducer()
         Reduce { state, action in
             switch action {
             case .toggleGuideBottomSheet:
@@ -105,6 +122,18 @@ struct DecorationStore {
                         state.isSoundOn = false
                         SoundManager.shared.stop()
                     }
+                }
+                if (category == .byeoltong) {
+                    state.byeoltongShapeType = {
+                        switch item.id {
+                        case 102:
+                            return .rewardBottleBeadsShape
+                        case 103:
+                            return .rewardBottleFuzzyShape
+                        default:
+                            return .rewardBottleDefaultShape
+                        }
+                    }()
                 }
                 
             case .touchEqualizerButton:

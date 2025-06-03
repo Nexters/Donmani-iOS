@@ -12,32 +12,34 @@ import DesignSystem
 struct StarBottleView: View {
     var records: [Record]
     
-    var width: CGFloat {
-        .screenWidth * 0.8
-    }
-    
-    var height: CGFloat {
-        .screenWidth * 0.8 * 4/3
-    }
+    let width: CGFloat
+    let height: CGFloat
     @State private var starScene: StarScene
     @State var opacity: CGFloat = 0.0
-    
+    @Binding var backgroundBottleShape: DImageAsset
+
     init(
+        size: CGFloat,
         records: [Record],
-        backgroundShape: DImageAsset = .rewardBottleDefaultShape
+        backgroundShape: Binding<DImageAsset>
     ) {
+        self.width = size
+        self.height = size * 5/4
         self.records = records
         self.starScene = StarScene(
             size: CGSize(
-                width: .screenWidth * 0.8,
-                height: .screenWidth * 0.8 * 4/3
-            )
+                width: size,
+                height: size * 5/4
+            ),
+            currentByeoltongType: backgroundShape.wrappedValue
         )
+        self._backgroundBottleShape = backgroundShape
         starScene.addGroundNodeWithStarBottleShape(
             width: width,
             height: height,
-            shape: backgroundShape
+            shape: backgroundShape.wrappedValue
         )
+        
         (0..<records.count).forEach { i in
             starScene.createInitStarNode(
                 width: width,
@@ -57,7 +59,7 @@ struct StarBottleView: View {
             scene: starScene,
             options: [
                 .allowsTransparency,
-                .ignoresSiblingOrder
+                .ignoresSiblingOrder,
             ]
         )
         .onAppear {
@@ -77,19 +79,23 @@ struct StarBottleView: View {
         .onDisappear {
             MotionManager.stopGyros()
         }
-    }
-}
-
-#Preview {
-    StarBottleView(
-        records: (0..<31).map {
-            .init(
-                date: "\($0)",
-                contents: [
-                    .init(flag: .good, category: .init(GoodCategory.allCases.shuffled().first!), memo: ""),
-                    .init(flag: .bad, category: .init(BadCategory.allCases.shuffled().first!), memo: "")
-                ]
+        .onChange(of: backgroundBottleShape) { _, newValue in
+            starScene.nodeSet.removeAll()
+            starScene.removeAllChildren()
+            starScene.currentByeoltongType = newValue
+            starScene.addGroundNodeWithStarBottleShape(
+                width: width,
+                height: height,
+                shape: newValue
             )
+            (0..<records.count).forEach { i in
+                starScene.createInitStarNode(
+                    width: width,
+                    height: height,
+                    record: records[i],
+                    index: i
+                )
+            }
         }
-    )
+    }
 }

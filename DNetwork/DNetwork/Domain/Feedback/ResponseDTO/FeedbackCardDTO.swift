@@ -9,4 +9,5 @@ public struct FeedbackCardDTO: Decodable {
     public let category: String
     public let title: String
     public let content: String
+    public let flagType: Bool
 }

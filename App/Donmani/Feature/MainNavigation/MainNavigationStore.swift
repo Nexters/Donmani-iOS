@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import DNetwork
 import ComposableArchitecture
 
 @Reducer
@@ -37,7 +38,7 @@ struct MainNavigationStore {
         
         case push(Destination)
         enum Destination {
-            // case setting
+            case setting
             
             // Record
             case record
@@ -50,9 +51,9 @@ struct MainNavigationStore {
             case monthlyStarBottle(Int, Int)
             
             // Reward
-            case rewardStart
-            case rewardReceive
-            case decoration
+            case rewardStart(FeedbackInfo)
+            case rewardReceive(Int)
+            case decoration([RewardItemCategory : [Reward]])
         }
     }
     
@@ -71,7 +72,9 @@ struct MainNavigationStore {
             case .mainAction(.delegate(let mainAction)):
                 switch mainAction {
                 case .pushSettingView:
-                    state.path.append(.setting)
+                    return .run { send in
+                        await send(.push(.setting))
+                    }
                     
                 case .pushRecordEntryPointView:
                     return .run { send in
@@ -93,7 +96,11 @@ struct MainNavigationStore {
                     
                 case .pushRewardStartView:
                     return .run { send in
-                        await send(.push(.rewardStart))
+                        guard let dto = try await NetworkService.DFeedback().fetchFeedbackInfo() else {
+                            return
+                        }
+                        let feedbackInfo = NetworkDTOMapper.mapper(dto: dto)
+                        await send(.push(.rewardStart(feedbackInfo)))
                     }
                 }
                 
@@ -181,6 +188,6 @@ extension MainNavigationStore {
         case rewardReceive(RewardReceiveStore)
         case decoration(DecorationStore)
         
-        case setting
+        case setting(SettingStore)
     }
 }
