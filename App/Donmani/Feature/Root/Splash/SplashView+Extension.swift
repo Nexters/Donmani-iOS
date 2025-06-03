@@ -16,10 +16,10 @@ extension SplashView {
                     checkAppVersion()
                 }
                 try await fetchUserData()
-//                try await fetchRecordData()
-                Record.previewData.forEach {
-                    DataStorage.setRecord($0)
-                }
+                try await fetchRecordData()
+//                Record.previewData.forEach {
+//                    DataStorage.setRecord($0)
+//                }
                 try await fetchRewardInventory()
             } catch(let e) {
                 print(e.localizedDescription)
@@ -67,9 +67,9 @@ extension SplashView {
     }
     
     private func fetchRewardInventory() async throws {
-        let inventoryDTO = try await NetworkService.DReward().fetchRewardsInventory()
-        let inventory = NetworkDTOMapper.mapper(dto: inventoryDTO)
-        DataStorage.setInventory(inventory)
+//        let inventoryDTO = try await NetworkService.DReward().fetchRewardsInventory()
+//        let inventory = NetworkDTOMapper.mapper(dto: inventoryDTO)
+//        DataStorage.setInventory(inventory)
     }
     
     private func checkAppVersion() {

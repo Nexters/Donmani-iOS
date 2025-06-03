@@ -65,7 +65,11 @@ struct MonthlyStarBottleView: View {
                                 .aspectRatio(0.75, contentMode: .fit)
                             
                             ZStack {
-                                StarBottleView(records: store.record)
+                                StarBottleView(
+                                    size: .screenWidth * 0.85,
+                                    records: store.record,
+                                    backgroundShape: .constant(.rewardBottleDefaultShape)
+                                )
                                     .frame(width: .screenWidth * 0.85)
                                     .aspectRatio(0.75, contentMode: .fit)
                                 DImage(.rewardBottleDefault).image

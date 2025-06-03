@@ -57,7 +57,7 @@ struct RewardReceiveStore {
         
         init(context: Context) {
             self.rewardCount = context.rewardCount
-            self.isPresentMultiRewardGuideText = (context.rewardCount > 1)
+            self.isPresentMultiRewardGuideText = (context.rewardCount > 0)
         }
     }
     
@@ -77,7 +77,7 @@ struct RewardReceiveStore {
         
         case delegate(Delegate)
         enum Delegate {
-            case pushDecorationView
+            case pushDecorationView([RewardItemCategory: [Reward]])
             case popToRoot
         }
     }
@@ -90,14 +90,15 @@ struct RewardReceiveStore {
 //                let count = state.rewardCount
                 if state.rewardItems.isEmpty {
                     return .run { send in
-                        //                        let rewardDTO = try await NetworkService.DReward().reqeustAcquireRewards(count: count)
-                        //                        let rewardItems: [RewardItem] = NetworkDTOMapper.mapper(dto: rewardDTO)
-                        let rewardItems = Reward.previewAllData
+                        let rewardDTO = try await NetworkService.DReward().reqeustRewardOpen()
+                        let rewardItems: [Reward] = NetworkDTOMapper.mapper(dto: rewardDTO)
                         await send(.receiveRewardItems(rewardItems))
                     }
                 } else {
                     return .run { send in
-                        await send(.delegate(.pushDecorationView))
+                        let dto = try await NetworkService.DReward().reqeustRewardItem()
+                        let decorationItem = NetworkDTOMapper.mapper(dto: dto)
+                        await send(.delegate(.pushDecorationView(decorationItem)))
                     }
                 }
                 

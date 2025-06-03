@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
+import Lottie
 
 struct DecorationView: View {
     @Environment(\.dismiss) private var dismiss
@@ -61,23 +62,81 @@ struct DecorationView: View {
                             DImage(.byeoltongBackground).image
                                 .resizable()
                                 .frame(width: .screenWidth * 0.8)
-                                .aspectRatio(0.75, contentMode: .fit)
+                                .aspectRatio(0.8, contentMode: .fit)
                             
-                            if let byeoltong = store.selectedDecorationItem[.byeoltong] {
-                                StarBottle(
-                                    backgroundShapeImage: RewardResourceMapper(
-                                        id: byeoltong.id,
-                                        category: .byeoltong
-                                    )
-                                    .image()
+                            ZStack {
+                                StarBottleView(
+                                    size: .screenWidth * 0.7,
+                                    records: store.monthlyRecords,
+                                    backgroundShape: $store.byeoltongShapeType
                                 )
-
+                                .aspectRatio(0.8, contentMode: .fit)
+                                .frame(width: .screenWidth * 0.7)
+//                                .id(store.byeoltongShapeType)
+                                
+                                DImage(store.byeoltongImageType).image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: .screenWidth * 0.7)
+//                                        .aspectRatio(0.8, contentMode: .fit)
                             }
-                            
                         }
+                        .padding(.vertical, .defaultLayoutPadding * 2)
+                        .overlay {
+                            if let effect = store.selectedDecorationItem[.decoration] {
+                                if let lottieName = effect.imageUrl {
+                                    if effect.id == 105 {
+                                        VStack {
+                                            Spacer()
+                                            HStack {
+                                                Spacer()
+                                                DLottieView(
+                                                    name: lottieName,
+                                                    loopMode: .loop
+                                                )
+                                                .frame(width: 80, height: 80)
+                                            }
+                                        }
+                                        .allowsHitTesting(false)
+                                    } else {
+                                        VStack {
+                                            HStack {
+                                                DLottieView(
+                                                    name: lottieName,
+                                                    loopMode: .loop
+                                                )
+                                                .frame(width: 80, height: 80)
+                                                Spacer()
+                                            }
+                                            Spacer()
+                                        }
+                                        .allowsHitTesting(false)
+                                    }
+                                }
+                            }
+                        }
+                        
                         Spacer()
                     }
+                    
+                    if let effect = store.selectedDecorationItem[.effect] {
+                        if let lottieName = effect.imageUrl {
+                            GeometryReader { proxy in
+                                DLottieView(
+                                    name: lottieName,
+                                    loopMode: .loop
+                                )
+                                .frame(
+                                    width: proxy.size.width,
+                                    height: .screenHeight
+                                )
+                                .ignoresSafeArea()
+                            }
+                            .allowsHitTesting(false)
+                        }
+                    }
                 }
+                .frame(width: .screenWidth)
                 
                 VStack {
                     HStack(spacing: .s4) {
@@ -149,13 +208,14 @@ struct DecorationView: View {
                 .sorted { $0.id < $1.id }
             if (c != .background && c != .byeoltong) {
                 if (decorationItem[c, default: []].count > 0) {
-                    let emptyReward = Reward(id: 100, name: "없음", imageUrl: nil, soundUrl: nil, category: c, owned: false)
+                    let emptyReward = Reward(id: 100, name: "없음", imageUrl: nil, jsonUrl: nil, soundUrl: nil, category: c, owned: false, newAcquiredFlag: false)
                     decorationItem[c]?.insert(emptyReward, at: 0)
                 }
             }
         }
         let context = DecorationStore.Context(decorationItem: decorationItem)
-        let state = MainStateFactory().makeDecorationState(context: context)
+        var state = MainStateFactory().makeDecorationState(context: context)
+        state.monthlyRecords = Record.previewData
         let store = MainStoreFactory().makeDecorationStore(state: state)
         return DecorationView(store: store)
     }()

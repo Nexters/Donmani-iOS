@@ -26,5 +26,22 @@ enum RewardItemCategory: String, CaseIterable {
             return "효과음"
         }
     }
+    
+    init(rawValue: String) {
+        switch rawValue {
+        case "EFFECT":
+            self = .effect
+        case "CASE":
+            self = .byeoltong
+        case "BACKGROUND":
+            self = .background
+        case "BGM":
+            self = .sound
+        case "DECORATION":
+            self = .decoration
+        default:
+            self = .background
+        }
+    }
 }
 

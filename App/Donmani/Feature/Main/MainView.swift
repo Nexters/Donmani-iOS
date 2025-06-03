@@ -23,7 +23,7 @@ struct MainView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
             VStack {
-                VStack(spacing: .s3) {
+                VStack(spacing: .s1) {
                     HStack {
                         AccessoryButton(asset: .setting) {
                             GA.Click(event: .mainSettingButton).send()
@@ -31,9 +31,10 @@ struct MainView: View {
                         }
                         Spacer()
                         AccessoryButton(asset: .reward) {
-                            store.send(.delegate(.pushRewardStartView))
+                            store.send(.touchRewardButton)
                         }
                     }
+                    .padding(.vertical, .s5)
                     HStack {
                         Spacer()
                         DText(store.name)
@@ -41,24 +42,28 @@ struct MainView: View {
                         Spacer()
                     }
                 }
-                .padding(.horizontal, .s4)
+                .padding(.horizontal, .defaultLayoutPadding)
                 
                 Spacer(minLength: 86)
                 ZStack {
                     DImage(.byeoltongBackground).image
                         .resizable()
                         .frame(width: .screenWidth * 0.9)
-                        .aspectRatio(0.75, contentMode: .fit)
+                        .aspectRatio(0.8, contentMode: .fit)
                     
                     ZStack {
-                        StarBottleView(records: store.monthlyRecords)
-                            .frame(width: .screenWidth * 0.85)
-                            .aspectRatio(0.75, contentMode: .fit)
+                        StarBottleView(
+                            size: .screenWidth * 0.8,
+                            records: store.monthlyRecords,
+                            backgroundShape: .constant(.rewardBottleDefaultShape)
+                        )
+                            .frame(width: .screenWidth * 0.8)
+                            .aspectRatio(0.8, contentMode: .fit)
                             .opacity(store.starBottleOpacity)
                         DImage(.rewardBottleDefault).image
                             .resizable()
-                            .frame(width: .screenWidth * 0.85)
-                            .aspectRatio(0.75, contentMode: .fit)
+                            .frame(width: .screenWidth * 0.8)
+                            .aspectRatio(0.8, contentMode: .fit)
                     }
                     .onTapGesture {
                         GA.Click(event: .mainRecordArchiveButton).send()
@@ -87,7 +92,7 @@ struct MainView: View {
                     }
                 }
             }
-            .padding(.vertical, 16)
+            .padding(.bottom, .s5)
             
             if store.isPresentingRecordEntryButton && store.isPresentingRecordYesterdayToopTip {
                 VStack {
@@ -110,6 +115,10 @@ struct MainView: View {
                 OnboardingEndView()
             }
             
+            if store.isPresentingRewardToopTipView {
+                RewardToopTipView()
+            }
+            
             if store.isLoading {
                 Color.black.opacity(0.1)
                     .ignoresSafeArea()
@@ -126,7 +135,8 @@ struct MainView: View {
 #Preview {
     {
         let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
-        let state = MainStore.State(today: today)
+        var state = MainStore.State(today: today)
+        state.monthlyRecords = Record.previewData
         return MainView(store: Store(initialState: state) { MainStore() } )
     }()
 }

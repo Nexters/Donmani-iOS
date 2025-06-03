@@ -20,6 +20,7 @@ struct MainStore {
         var isPresentingRecordYesterdayToopTip: Bool = false
         var isPresentingAlreadyWrite: Bool = false
         var isPresentingNewStarBottle: Bool = false
+        var isPresentingRewardToopTipView: Bool = false
         var isRequestNotificationPermission: Bool = true
         var isLoading: Bool = false
         
@@ -59,6 +60,7 @@ struct MainStore {
             let isCompleteYesterday = state[.yesterday, default: false]
             isPresentingRecordEntryButton = !(isCompleteToday && isCompleteYesterday)
             isNewStar += 1
+            isPresentingRewardToopTipView = true
         }
     }
     
@@ -72,6 +74,7 @@ struct MainStore {
         case dismissNewStarBottleView
         case dismissAlreadyWrite
         case shakeTwice
+        case touchRewardButton
 
         case delegate(Delegate)
         enum Delegate {
@@ -129,6 +132,14 @@ struct MainStore {
                     await send(.shakeTwice, animation: .linear(duration: 0.5))
                 }
             
+            case .touchRewardButton:
+                if (state.isPresentingRewardToopTipView) {
+                    state.isPresentingRewardToopTipView = false
+                }
+                return .run { send in
+                    await send(.delegate(.pushRewardStartView))
+                }
+                
             default:
                 break
             }

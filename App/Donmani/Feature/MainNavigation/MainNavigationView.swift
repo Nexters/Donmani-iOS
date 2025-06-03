@@ -54,8 +54,8 @@ struct MainNavigationView: View {
             case .decoration(let store):
                 DecorationView(store: store)
                 
-            case .setting:
-                SettingView()
+            case .setting(let store):
+                SettingView(store: store)
             }
         }
         .onChange(of: navigationStore.path.ids) { oldPathIDs, newPathIDs in

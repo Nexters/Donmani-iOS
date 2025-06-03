@@ -49,10 +49,27 @@ struct RewardStartView: View {
                             Spacer()
                         }
                     }
+                    
+                    if !store.isEnabledButton {
+                        VStack {
+                            Spacer()
+                            HStack(spacing: 4) {
+                                DImage(.starShape).image
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .aspectRatio(contentMode: .fit)
+                                    .foregroundStyle(DColor(.pupleBlue90).color)
+                                    .frame(width: 22)
+                                DText("내일 다시 만나요!")
+                                    .style(.b2, .semibold, .pupleBlue90)
+                            }
+                        }
+                    }
                 }
                 
                 DButton(
-                    title: store.buttonTitle
+                    title: store.buttonTitle,
+                    isEnabled: store.isEnabledButton
                 ) {
                     store.send(.touchNextButton)
                 }
@@ -88,7 +105,7 @@ struct RewardStartView: View {
 
 #Preview {
     {
-        let context = RewardStartStore.Context(recordCount: 0, rewardCount: 0)
+        let context = RewardStartStore.Context(recordCount: 2, isNotOpened: true, isFirstOpened: false)
         let state = MainStateFactory().makeRewardStartState(context: context)
         let store = MainStoreFactory().makeRewardStartStore(state: state)
         return RewardStartView(store: store)
@@ -97,7 +114,7 @@ struct RewardStartView: View {
 
 #Preview {
     {
-        let context = RewardStartStore.Context(recordCount: 5, rewardCount: 5)
+        let context = RewardStartStore.Context(recordCount: 1, isNotOpened: true, isFirstOpened: true)
         let state = MainStateFactory().makeRewardStartState(context: context)
         let store = MainStoreFactory().makeRewardStartStore(state: state)
         return RewardStartView(store: store)
@@ -106,7 +123,7 @@ struct RewardStartView: View {
 
 #Preview {
     {
-        let context = RewardStartStore.Context(recordCount: 5, rewardCount: 0)
+        let context = RewardStartStore.Context(recordCount: 0, isNotOpened: false, isFirstOpened: false)
         let state = MainStateFactory().makeRewardStartState(context: context)
         let store = MainStoreFactory().makeRewardStartStore(state: state)
         return RewardStartView(store: store)

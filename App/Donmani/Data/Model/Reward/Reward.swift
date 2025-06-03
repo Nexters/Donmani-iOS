@@ -9,9 +9,11 @@ struct Reward: Hashable {
     let id: Int
     let name: String
     let imageUrl: String?
+    let jsonUrl: String?
     let soundUrl: String?
     let category: RewardItemCategory
     let owned: Bool
+    let newAcquiredFlag: Bool
     
     var key: String {
         "\(id)-\(category)"
@@ -19,62 +21,74 @@ struct Reward: Hashable {
     
     static let previewDataBackground: [Reward] = [
         Reward(id: 101, name: "기본 배경", imageUrl: nil,
-               soundUrl: nil, category: .background, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .background,
+               owned: false, newAcquiredFlag: false),
         Reward(id: 102, name: "보랏빛 오로라 배경", imageUrl: nil,
-               soundUrl: nil, category: .background, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .background,
+               owned: false, newAcquiredFlag: false),
         Reward(id: 103, name: "별이 흐르는 바다 배경", imageUrl: nil,
-               soundUrl: nil, category: .background, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .background,
+               owned: false, newAcquiredFlag: false),
         Reward(id: 104, name: "하늘 위 산책로 배경", imageUrl: nil,
-               soundUrl: nil, category: .background, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .background,
+               owned: false, newAcquiredFlag: false),
         Reward(id: 101, name: "기본 별통이", imageUrl: nil,
-               soundUrl: nil, category: .byeoltong, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .byeoltong,
+               owned: false, newAcquiredFlag: false),
     ]
     
     static let previewAllData: [Reward] = [
         Reward(id: 101, name: "기본 배경", imageUrl: nil,
-               soundUrl: nil, category: .background, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .background,
+               owned: false, newAcquiredFlag: false),
         Reward(id: 102, name: "보랏빛 오로라 배경", imageUrl: nil,
-               soundUrl: nil, category: .background, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .background,
+               owned: false, newAcquiredFlag: false),
         Reward(id: 103, name: "별이 흐르는 바다 배경", imageUrl: nil,
-               soundUrl: nil, category: .background, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .background,
+               owned: false, newAcquiredFlag: false),
         Reward(id: 104, name: "하늘 위 산책로 배경", imageUrl: nil,
-               soundUrl: nil, category: .background, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .background,
+               owned: false, newAcquiredFlag: false),
         
         Reward(id: 101, name: "기본 별통이", imageUrl: nil,
-               soundUrl: nil, category: .byeoltong, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .byeoltong,
+               owned: false, newAcquiredFlag: false),
         Reward(id: 102, name: "구슬 별통이", imageUrl: nil,
-               soundUrl: nil, category: .byeoltong, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .byeoltong,
+               owned: false, newAcquiredFlag: false),
         Reward(id: 103, name: "몽글 별통이", imageUrl: nil,
-               soundUrl: nil, category: .byeoltong, owned: false),
+               jsonUrl: nil, soundUrl: nil, category: .byeoltong,
+               owned: false, newAcquiredFlag: false),
         
-        
-        Reward(id: 100, name: "소리 없음", imageUrl: nil,
-               soundUrl: nil, category: .sound, owned: false),
         Reward(id: 101, name: "별사탕의 하루", imageUrl: nil,
-               soundUrl: "reward_sound_stardrop_day", category: .sound, owned: false),
+               jsonUrl: nil, soundUrl: "reward_sound_stardrop_day", category: .sound,
+               owned: false, newAcquiredFlag: false),
         Reward(id: 102, name: "속삭이는 별빛", imageUrl: nil,
-               soundUrl: "reward_sound_whispering_starlight", category: .sound, owned: false),
+               jsonUrl: nil, soundUrl: "reward_sound_whispering_starlight", category: .sound,
+               owned: false, newAcquiredFlag: false),
         
+        Reward(id: 101, name: "하트잔잔", imageUrl: "lottie_reward_effect_heart_ripple",
+               jsonUrl: nil, soundUrl: nil, category: .effect,
+               owned: false, newAcquiredFlag: false),
+        Reward(id: 102, name: "둥실둥실 방울", imageUrl: "lottie_reward_effect_floating_bubble",
+               jsonUrl: nil, soundUrl: nil, category: .effect,
+               owned: false, newAcquiredFlag: false),
+        Reward(id: 103, name: "소원의 유성", imageUrl: "lottie_reward_effect_wishing_meteor",
+               jsonUrl: nil, soundUrl: nil, category: .effect,
+               owned: false, newAcquiredFlag: false),
         
-        Reward(id: 100, name: "효과 없음", imageUrl: nil,
-               soundUrl: nil, category: .effect, owned: false),
-        Reward(id: 101, name: "하트잔잔", imageUrl: nil,
-               soundUrl: nil, category: .effect, owned: false),
-        Reward(id: 102, name: "둥실둥실 방울", imageUrl: nil,
-               soundUrl: nil, category: .effect, owned: false),
-        Reward(id: 103, name: "소원의 유성", imageUrl: nil,
-               soundUrl: nil, category: .effect, owned: false),
-        
-        
-        Reward(id: 100, name: "장식 없음", imageUrl: nil,
-               soundUrl: nil, category: .decoration, owned: false),
-        Reward(id: 102, name: "토비호", imageUrl: nil,
-               soundUrl: nil, category: .decoration, owned: false),
-        Reward(id: 103, name: "몽글몽글 열기구", imageUrl: nil,
-               soundUrl: nil, category: .decoration, owned: false),
-        Reward(id: 104, name: "둥둥배", imageUrl: nil,
-               soundUrl: nil, category: .decoration, owned: false),
-        Reward(id: 105, name: "달베개", imageUrl: nil,
-               soundUrl: nil, category: .decoration, owned: false),
+        Reward(id: 102, name: "토비호", imageUrl: "lottie_reward_decoration_toby_ship",
+               jsonUrl: nil, soundUrl: nil, category: .decoration,
+               owned: false, newAcquiredFlag: false),
+        Reward(id: 103, name: "몽글몽글 열기구", imageUrl: "lottie_reward_decoration_fuzzy_balloon",
+               jsonUrl: nil, soundUrl: nil, category: .decoration,
+               owned: false, newAcquiredFlag: false),
+        Reward(id: 104, name: "달베개", imageUrl: "lottie_reward_decoration_moon_pillow",
+               jsonUrl: nil, soundUrl: nil, category: .decoration,
+               owned: false, newAcquiredFlag: false),
+        Reward(id: 105, name: "둥둥배", imageUrl: "lottie_reward_decoration_floating_boat",
+               jsonUrl: nil, soundUrl: nil, category: .decoration,
+               owned: false, newAcquiredFlag: false),
     ]
 }

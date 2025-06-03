@@ -13,18 +13,23 @@ import Lottie
 struct RewardStartStore {
     struct Context {
         let recordCount: Int
-        let rewardCount: Int
+        let isNotOpened: Bool
+        let isFirstOpened: Bool
         
-        init(recordCount: Int, rewardCount: Int) {
+        init(
+            recordCount: Int,
+            isNotOpened: Bool,
+            isFirstOpened: Bool
+        ) {
             self.recordCount = recordCount
-            self.rewardCount = rewardCount
+            self.isNotOpened = isNotOpened
+            self.isFirstOpened = isFirstOpened
         }
     }
     
     @ObservableState
     struct State {
         let recordCount: Int
-        let rewardCount: Int
         let userName: String
         
         var title: String = "앗! 아직 기록을 작성하지 않았어요"
@@ -52,23 +57,16 @@ struct RewardStartStore {
         
         init(context: Context) {
             self.recordCount = context.recordCount
-            self.rewardCount = context.rewardCount
             self.userName = DataStorage.getUserName()
-
             
             if context.recordCount > 0 {
                 title = "기록하고 토비 선물받기 🎁\n지금까지 \(context.recordCount)번 기록 중"
                 subtitle = "14번 기록하면 특별한 선물을 받아요"
                 buttonTitle = "지금 선물받기"
-                if context.rewardCount == 0 {
+                if (!context.isNotOpened) {
                     title = "오늘까지 받을 수 있는 선물을\n모두 받았어요"
                     isEnabledButton = false
                 }
-            }
-            let lastRecordDate = HistoryStateManager.shared.getLastWriteRecordDateKey()
-            let todayDate = DateManager.shared.getFormattedDate(for: .today)
-            if lastRecordDate == todayDate {
-                dayTitle = "오늘"
             }
         }
     }
@@ -80,7 +78,7 @@ struct RewardStartStore {
         case touchNextButton
         
         case requestFeedbackCard
-        case receivedFeedbackCard(FeedbackCard?)
+        case receivedFeedbackCard(FeedbackCard)
         
         case presentFeedbackTitle
         case presentFeedbackCard
@@ -88,7 +86,8 @@ struct RewardStartStore {
         
         case delegate(Delegate)
         enum Delegate {
-            case pushRewardReceiveView
+            case pushRewardReceiveView(Int)
+            case pushRecordEntryPointView
         }
     }
     
@@ -105,7 +104,7 @@ struct RewardStartStore {
                 }
                 
             case .touchGuideBottomSheetButton:
-                if (state.rewardCount > 0) {
+                if (state.recordCount > 0) {
                     return .run { send in
                         await send(.toggleGuideBottomSheet)
                         await send(.requestFeedbackCard)
@@ -117,34 +116,39 @@ struct RewardStartStore {
                 }
             
             case .touchNextButton:
-                if state.feedbackCard == nil {
+                if state.recordCount.isZero {
                     return .run { send in
-                        await send(.requestFeedbackCard)
+                        await send(.delegate(.pushRecordEntryPointView))
                     }
                 } else {
-                    UINavigationController.isBlockSwipe = true
-                    return .run { send in
-                        await send(.delegate(.pushRewardReceiveView))
+                    if state.feedbackCard == nil {
+                        return .run { send in
+                            await send(.requestFeedbackCard)
+                        }
+                    } else {
+                        UINavigationController.isBlockSwipe = true
+                        return .run { send in
+                            let count = try await NetworkService.DReward().fetchRewardNotOpenCount()
+                            await send(.delegate(.pushRewardReceiveView(count)))
+                        }
                     }
                 }
                 
             case .requestFeedbackCard:
                 return .run { send in
                     try await Task.sleep(nanoseconds: .nanosecondsPerSecond / 2)
-                    //                    let feedbackCardDTO = try? await NetworkService.DFeedback().receiveFeedbackCard()
-                    //                    var feedbackCard: FeedbackCard?
-                    //                    if let feedbackCardDTO {
-                    //                        feedbackCard = NetworkDTOMapper.mapper(dto: feedbackCardDTO)
-                    //                    }
-                    let feedbackCard: FeedbackCard? = FeedbackCard.previewData
+                    guard let feedbackCardDTO = try? await NetworkService.DFeedback().receiveFeedbackCard() else {
+                        return
+                    }
+                    let feedbackCard = NetworkDTOMapper.mapper(dto: feedbackCardDTO)
                     await send(.receivedFeedbackCard(feedbackCard))
                 }
             case .receivedFeedbackCard(let feedbackCard):
                 state.feedbackCard = feedbackCard
                 state.isPresentingFeedbackStartView = false
                 state.isPresentingButton = false
+                state.dayTitle = feedbackCard.prefix
                 return .run { send in
-                    // HStack fade out이 끝난 뒤 애니메이션 시퀀스 시작
                     try await Task.sleep(for: .seconds(0.6))
                     await send(.presentFeedbackTitle)
                     try await Task.sleep(for: .seconds(0.5))
