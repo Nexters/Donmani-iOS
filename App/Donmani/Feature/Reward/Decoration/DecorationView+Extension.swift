@@ -59,16 +59,35 @@ extension DecorationView{
             image = mapper.image(isPreview: true).image
         }
         return Group {
-            if reward.category == .background {
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } else {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(DColor(.deepBlue50).color)
-                    .overlay {
-                        image.padding(.s3 / 3)
+            ZStack {
+                if reward.category == .background {
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } else {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(DColor(.deepBlue50).color)
+                        .overlay {
+                            image.padding(.s3 / 3)
+                        }
+                }
+                if (reward.newAcquiredFlag && !reward.name.contains("기본")) {
+                    HStack {
+                        VStack {
+                            Circle()
+                                .fill(DColor.noticeColor)
+                                .frame(width: .s5, height: .s5)
+                                .overlay {
+                                    DText("N")
+                                        .style(.b4, .bold, .white)
+                                        .multilineTextAlignment(.center)
+                                }
+                            Spacer()
+                        }
+                        Spacer()
                     }
+                    .padding(10)
+                }
             }
         }
     }

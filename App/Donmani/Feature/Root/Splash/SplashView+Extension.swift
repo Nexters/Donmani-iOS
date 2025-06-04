@@ -55,6 +55,21 @@ extension SplashView {
         let result = NetworkDTOMapper.mapper(dto: response)
         records.append(contentsOf: result)
         
+        let decorationItem = NetworkDTOMapper.mapper(dto: response.saveItems)
+        var saveItem: [RewardItemCategory: Reward] = [:]
+        for item in decorationItem {
+            saveItem[item.category] = item
+            if item.category == .sound {
+                if let _ = item.soundUrl {
+                    let resource = RewardResourceMapper(id: item.id, category: .sound).resource()
+                    DataStorage.setSoundFileName(resource)
+                }
+                break
+            }
+        }
+        DataStorage.setDecorationItem(saveItem)
+        
+        
         records.forEach { record in
             if (record.date == dateManager.getFormattedDate(for: .today)) {
                 HistoryStateManager.shared.addRecord(for: .today)
@@ -70,6 +85,8 @@ extension SplashView {
 //        let inventoryDTO = try await NetworkService.DReward().fetchRewardsInventory()
 //        let inventory = NetworkDTOMapper.mapper(dto: inventoryDTO)
 //        DataStorage.setInventory(inventory)
+        let isSoundOn = HistoryStateManager.shared.getSouncState()
+        SoundManager.isSoundOn = isSoundOn
     }
     
     private func checkAppVersion() {

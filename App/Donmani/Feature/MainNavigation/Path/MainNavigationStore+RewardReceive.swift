@@ -14,9 +14,9 @@ extension MainNavigationStore {
         action: RewardReceiveStore.Action.Delegate
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
-        case  .pushDecorationView(let decorationItem):
+        case  .pushDecorationView(let decorationItem, let currentDecorationItem):
             return .run { send in
-                await send(.push(.decoration(decorationItem)))
+                await send(.push(.decoration(decorationItem, currentDecorationItem)))
             }
             
         case .popToRoot:

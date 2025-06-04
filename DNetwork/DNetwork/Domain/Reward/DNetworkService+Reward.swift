@@ -24,6 +24,21 @@ public extension DNetworkService {
             return response.responseData ?? []
         }
         
+        public func reqeustDecorationInfo(year: Int, month: Int) async throws -> [RewardItemDTO] {
+            let response: DResponse<[RewardItemDTO]> = try await self.request.get(
+                path: .reward,
+                addtionalPath: [userKey],
+                parameters: [
+                    "year" : year,
+                    "month" : month
+                ]
+            )
+            guard let data = response.responseData else {
+                throw NetworkError.noData
+            }
+            return data
+        }
+        
         public func reqeustRewardItem() async throws -> RewardInventoryDTO {
             let response: DResponse<RewardInventoryDTO> = try await self.request.get(
                 path: .reward,
@@ -41,6 +56,15 @@ public extension DNetworkService {
                 addtionalPath: ["not-open", userKey]
             )
             return response.responseData ?? 0
+        }
+        
+        public func saveDecoration(dto: RewardSaveDTO) async throws {
+            var dto = dto
+            dto.userKey = userKey
+            let response: DResponse<Data> = try await self.request.put(
+                path: .reward,
+                bodyData: dto
+            )
         }
     }
 }

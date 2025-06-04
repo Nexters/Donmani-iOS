@@ -43,9 +43,30 @@ final class HistoryStateManager {
     // Reward
     private let isFirstRewardEnterKey = "FIRST_REWARD_ENTER"
     private let isFirstDecorationEnterKey = "FIRST_DECORATION_ENTER"
-    
+    private let isPresentingRewardToolTipView = "PRESENTING_REWARD_TOOL_TIP_VIEW"
+    private let soundState = "SOUND_STATE"
     
     private init() { }
+    
+    func setSouncState(_ flag: Bool) {
+        userDefaults.set(flag, forKey: soundState)
+    }
+    
+    func getSouncState() -> Bool {
+        userDefaults.bool(forKey: soundState)
+    }
+    
+    func setIsPresentingRewardToolTipView(_ flag: Bool) {
+        if flag {
+            userDefaults.removeObject(forKey: isPresentingRewardToolTipView)
+        } else {
+            userDefaults.set(isPresentingRewardToolTipView, forKey: isPresentingRewardToolTipView)
+        }
+    }
+    
+    func getIsPresentingRewardToolTipView() -> Bool {
+        return userDefaults.string(forKey: isPresentingRewardToolTipView) != nil
+    }
     
     func setIsFirstDecorationEnter() {
         userDefaults.set(isFirstDecorationEnterKey, forKey: isFirstDecorationEnterKey)

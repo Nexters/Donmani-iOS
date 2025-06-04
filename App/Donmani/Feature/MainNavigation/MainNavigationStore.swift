@@ -48,12 +48,12 @@ struct MainNavigationStore {
             case monthlyRecordList(Int, Int, Bool)
             case bottleCalendar(RecordCountSummary)
             case statistics(Int, Int)
-            case monthlyStarBottle(Int, Int)
+            case monthlyStarBottle(Int, Int, [Reward])
             
             // Reward
             case rewardStart(FeedbackInfo)
             case rewardReceive(Int)
-            case decoration([RewardItemCategory : [Reward]])
+            case decoration([RewardItemCategory : [Reward]], [Reward])
         }
     }
     

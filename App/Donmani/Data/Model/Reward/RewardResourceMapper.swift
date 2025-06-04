@@ -40,6 +40,23 @@ struct RewardResourceMapper {
         }
         return rewardResource.image()
     }
+    
+    func resource() -> String {
+        var rewardResource: RewardResourceMappable!
+        switch category {
+        case .background:
+            rewardResource = RewardBackgroundResource(rawValue: id)
+        case .effect:
+            rewardResource = RewardEffectResource(rawValue: id)
+        case .decoration:
+            rewardResource = RewardDecorationResource(rawValue: id)
+        case .byeoltong:
+            rewardResource = RewardBottleResource(rawValue: id)
+        case .sound:
+            rewardResource = RewardSoundResource(rawValue: id)
+        }
+        return rewardResource.resourceName()
+    }
 }
 
 private protocol RewardResourceMappable {
@@ -178,7 +195,6 @@ private enum RewardDecorationResource: Int, RewardResourceMappable {
     case rewardDecorationFuzzyBalloon = 21
     case rewardDecorationMoonPillow = 19
     case rewardDecorationFloatingBoat = 20
-    
 }
 
 private enum RewardEffectResource: Int, RewardResourceMappable {

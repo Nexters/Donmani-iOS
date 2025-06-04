@@ -8,6 +8,8 @@
 public struct RecordResponseDTO: Decodable {
     public let userKey: String
     public let records: [RecordResponseDTO.RecordDTO]?
+    public let saveItems: [RewardItemDTO]
+//    public let hasNotOpenedRewards: Bool
     
     public struct RecordDTO: Decodable {
         public let date: String

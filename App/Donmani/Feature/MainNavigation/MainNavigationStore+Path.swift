@@ -79,8 +79,8 @@ extension MainNavigationStore {
             let initialState = stateFactory.makeStatisticsState(context: context)
             state.path.append(.statistics(initialState))
             
-        case .monthlyStarBottle(let year, let month):
-            let context = MonthlyStarBottleStore.Context(year: year, month: month)
+        case .monthlyStarBottle(let year, let month, let items):
+            let context = MonthlyStarBottleStore.Context(year: year, month: month, items: items)
             let initialState = stateFactory.makeMonthlyStarBottleState(context: context)
             state.path.append(.monthlyStarBottle(initialState))
             
@@ -88,8 +88,8 @@ extension MainNavigationStore {
         case .rewardStart(let feedbackInfo):
             let context = RewardStartStore.Context(
                 recordCount: feedbackInfo.totalCount,
-                isNotOpened: feedbackInfo.isNotOpened,
-                isFirstOpened: feedbackInfo.isFirstOpened
+                isNotOpened: feedbackInfo.isNotOpened
+//                isFirstOpened: feedbackInfo.isFirstOpened
             )
             let initialState = stateFactory.makeRewardStartState(context: context)
             state.path.append(.rewardStart(initialState))
@@ -100,8 +100,8 @@ extension MainNavigationStore {
             let initialState = stateFactory.makeRewardReceiveState(context: context)
             state.path.append(.rewardReceive(initialState))
             
-        case .decoration(let decorationItem):
-            let context = DecorationStore.Context(decorationItem: decorationItem)
+        case .decoration(let decorationItem, let currentDecorationItem):
+            let context = DecorationStore.Context(decorationItem: decorationItem, currentDecorationItem: currentDecorationItem)
             let initialState = stateFactory.makeDecorationState(context: context)
             state.path.append(.decoration(initialState))
         }

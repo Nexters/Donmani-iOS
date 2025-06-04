@@ -14,9 +14,9 @@ extension MainNavigationStore {
         action: SettingStore.Action.Delegate
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
-        case .pushDecoration(let decorationItem):
+        case .pushDecoration(let decorationItem, let currentDecorationItem):
             return .run { send in
-                await send(.push(.decoration(decorationItem)))
+                await send(.push(.decoration(decorationItem, currentDecorationItem)))
             }
         }
     }

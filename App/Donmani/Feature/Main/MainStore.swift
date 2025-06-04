@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import DesignSystem
 import ComposableArchitecture
 
 @Reducer
@@ -16,13 +17,40 @@ struct MainStore {
     struct State: Equatable {
         var name: String = DataStorage.getUserName()
         var monthlyRecords: [Record]
+        var byeoltongShapeType: DImageAsset = .rewardBottleDefaultShape
+        
         var isPresentingRecordEntryButton: Bool = true
         var isPresentingRecordYesterdayToopTip: Bool = false
         var isPresentingAlreadyWrite: Bool = false
         var isPresentingNewStarBottle: Bool = false
-        var isPresentingRewardToopTipView: Bool = false
+        var isPresentingRewardToolTipView: Bool = false
         var isRequestNotificationPermission: Bool = true
         var isLoading: Bool = false
+        var decorationItem: [RewardItemCategory: Reward]
+        var backgroundResource : DImageAsset? {
+            let id = decorationItem[.background]?.id ?? 1
+            switch id {
+            case 9:
+                return .rewardBgStarOcean
+            case 10:
+                return .rewardBgPurpleAurora
+            case 11:
+                return .rewardBgSkyPathway
+            default:
+                return nil
+            }
+        }
+        var byeoltongImageType : DImageAsset {
+            let id = decorationItem[.byeoltong]?.id ?? 4
+            switch id {
+            case 24:
+                return .rewardBottleBeads
+            case 25:
+                return .rewardBottleFuzzy
+            default:
+                return .rewardBottleDefault
+            }
+        }
         
         var starBottleOpacity = 1.0
         var yOffset: CGFloat = 0
@@ -42,6 +70,8 @@ struct MainStore {
             self.isPresentingRecordEntryButton = !(isCompleteToday && isCompleteYesterday)
             
             self.day = Int(today[2]) ?? 1
+            self.decorationItem = DataStorage.getDecorationItem()
+            
             if (day == 1) {
                 if HistoryStateManager.shared.getIsFirstDayOfMonth() {
                     isPresentingNewStarBottle = true
@@ -50,6 +80,7 @@ struct MainStore {
             } else {
                 HistoryStateManager.shared.removeIsFirstDayOfMonth()
             }
+            isPresentingRewardToolTipView = HistoryStateManager.shared.getIsPresentingRewardToolTipView()
         }
         
         mutating func appendNewRecord(record: Record) {
@@ -60,7 +91,8 @@ struct MainStore {
             let isCompleteYesterday = state[.yesterday, default: false]
             isPresentingRecordEntryButton = !(isCompleteToday && isCompleteYesterday)
             isNewStar += 1
-            isPresentingRewardToopTipView = true
+            isPresentingRewardToolTipView = true
+            HistoryStateManager.shared.setIsPresentingRewardToolTipView(false)
         }
     }
     
@@ -95,6 +127,18 @@ struct MainStore {
             switch action {
             case .fetchUserName:
                 state.name = DataStorage.getUserName()
+                state.decorationItem = DataStorage.getDecorationItem()
+                let id = state.decorationItem[.byeoltong]?.id ?? 4
+                state.byeoltongShapeType = {
+                    switch id {
+                    case 24:
+                        return .rewardBottleBeadsShape
+                    case 25:
+                        return .rewardBottleFuzzyShape
+                    default:
+                        return .rewardBottleDefaultShape
+                    }
+                }()
                 
             case .closePopover:
                 state.isPresentingRecordYesterdayToopTip = false
@@ -133,8 +177,9 @@ struct MainStore {
                 }
             
             case .touchRewardButton:
-                if (state.isPresentingRewardToopTipView) {
-                    state.isPresentingRewardToopTipView = false
+                if (state.isPresentingRewardToolTipView) {
+                    state.isPresentingRewardToolTipView = false
+                    HistoryStateManager.shared.setIsPresentingRewardToolTipView(true)
                 }
                 return .run { send in
                     await send(.delegate(.pushRewardStartView))

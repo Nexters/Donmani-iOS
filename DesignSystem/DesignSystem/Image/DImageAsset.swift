@@ -56,6 +56,7 @@ public enum DImageAsset: String {
     case rewardBackground = "RewardBackground"
     case rewardGuideBanner = "RewardGuideBanner"
     case rewardCharacter = "RewardCharacter"
+    case fullRewardCharacter = "full_reward_character"
     case decorationGuideImage = "DecorationGuideImage"
     
     // Reward Item Icon

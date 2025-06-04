@@ -67,18 +67,44 @@ struct RewardStartView: View {
                     }
                 }
                 
-                DButton(
-                    title: store.buttonTitle,
-                    isEnabled: store.isEnabledButton
-                ) {
-                    store.send(.touchNextButton)
+                if store.isFullReward {
+                    VStack(spacing: 10) {
+                        DButton(title: "후기 알려주기") {
+                            store.send(.touchReviewButton)
+                        }
+                        .padding(.horizontal, .defaultLayoutPadding)
+                        
+                        Button {
+                            dismiss()
+                        } label: {
+                            ZStack {
+                                RoundedRectangle(
+                                    cornerRadius: .s5,
+                                    style: .continuous
+                                )
+                                .fill(DColor(.deepBlue50).color)
+                                DText("홈으로")
+                                    .style(.h3, .bold, .white)
+                            }
+                        }
+                        .frame(height: 58)
+                        .padding(.horizontal, .defaultLayoutPadding)
+                        .padding(.bottom, .defaultLayoutPadding / 2)
+                    }
+                } else {
+                    DButton(
+                        title: store.buttonTitle,
+                        isEnabled: store.isEnabledButton
+                    ) {
+                        store.send(.touchNextButton)
+                    }
+                    .padding(.defaultLayoutPadding)
+                    .opacity(store.isPresentingButton ? 1 : 0)
+                    .animation(
+                        .easeInOut(duration: 0.6),
+                        value: store.isPresentingButton
+                    )
                 }
-                .padding(.defaultLayoutPadding)
-                .opacity(store.isPresentingButton ? 1 : 0)
-                .animation(
-                    .easeInOut(duration: 0.6),
-                    value: store.isPresentingButton
-                )
             }
             
             if store.isPresentingGuideBottomSheet {
@@ -105,7 +131,7 @@ struct RewardStartView: View {
 
 #Preview {
     {
-        let context = RewardStartStore.Context(recordCount: 2, isNotOpened: true, isFirstOpened: false)
+        let context = RewardStartStore.Context(recordCount: 2, isNotOpened: true)
         let state = MainStateFactory().makeRewardStartState(context: context)
         let store = MainStoreFactory().makeRewardStartStore(state: state)
         return RewardStartView(store: store)
@@ -114,7 +140,7 @@ struct RewardStartView: View {
 
 #Preview {
     {
-        let context = RewardStartStore.Context(recordCount: 1, isNotOpened: true, isFirstOpened: true)
+        let context = RewardStartStore.Context(recordCount: 1, isNotOpened: true)
         let state = MainStateFactory().makeRewardStartState(context: context)
         let store = MainStoreFactory().makeRewardStartStore(state: state)
         return RewardStartView(store: store)
@@ -123,7 +149,7 @@ struct RewardStartView: View {
 
 #Preview {
     {
-        let context = RewardStartStore.Context(recordCount: 0, isNotOpened: false, isFirstOpened: false)
+        let context = RewardStartStore.Context(recordCount: 0, isNotOpened: false)
         let state = MainStateFactory().makeRewardStartState(context: context)
         let store = MainStoreFactory().makeRewardStartStore(state: state)
         return RewardStartView(store: store)

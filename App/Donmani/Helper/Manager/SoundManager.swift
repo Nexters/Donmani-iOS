@@ -11,8 +11,10 @@ import Foundation
 import AVFoundation
 
 public final class SoundManager {
+    public static var isSoundOn: Bool = false
     public static let shared = SoundManager()
     private var audioPlayer: AVAudioPlayer?
+    private var fileName: String = ""
     
     private init() {}
 
@@ -21,7 +23,7 @@ public final class SoundManager {
     ///   - fileName: mp3 파일명 (확장자 제외)
     ///   - bundle: 번들 (기본값: .designSystem)
     public func play(fileName: String) {
-        
+        self.fileName = fileName
         let audioSession = AVAudioSession.sharedInstance()
         do {
             try audioSession.setCategory(.playback, mode: .default)
