@@ -73,32 +73,11 @@ extension RewardReceiveView {
     func RewardResultView() -> some View {
         VStack(alignment: .center, spacing: 0) {
             ZStack {
-                VStack(alignment: .center, spacing: 0) {
-                    HStack {
-                        DText(store.rewardTitle)
-                            .style(.h2, .bold, .deepBlue99)
-                        Spacer()
-                    }
-                    .padding(.defaultLayoutPadding)
-                    
-                    Spacer()
-                }
-                .opacity(store.isPresentingRewardTitle ? 1 : 0)
-                .offset(y: store.isPresentingRewardTitle ? -5 : 0)
-                .animation(.easeInOut(duration: 0.5), value: store.isPresentingRewardTitle)
-                
                 // Rewards
-                VStack {
-                    Spacer()
-                        .layoutPriority(2)
-                    RewardItemListView()
-                        .scaleEffect(store.isPresentingRewards ? 1 : 0.01, anchor: .center)
-                        .opacity(store.isPresentingRewards ? 1 : 0)
-                        .animation(.easeInOut(duration: 0.3), value: store.isPresentingRewards)
-                        .layoutPriority(1)
-                    Spacer()
-                        .layoutPriority(2)
-                }
+                RewardItemListView()
+                    .scaleEffect(store.isPresentingRewards ? 1 : 0.01, anchor: .center)
+                    .opacity(store.isPresentingRewards ? 1 : 0)
+                    .animation(.easeInOut(duration: 0.3), value: store.isPresentingRewards)
                 
                 // Confetti
                 VStack {
@@ -118,13 +97,45 @@ extension RewardReceiveView {
     }
     
     func RewardItemListView() -> some View {
-        TabView(selection: $store.rewardIndex) {
-            ForEach(0..<store.rewardCount, id: \.self) { i in
-                RewardItemListCardView(item: store.rewardItems[i])
+        ZStack {
+            TabView(selection: $store.rewardIndex) {
+                ForEach(0..<store.rewardCount, id: \.self) { i in
+                    ZStack {
+                        VStack {
+                            Spacer()
+                            RewardItemListCardView(item: store.rewardItems[i])
+                            Spacer()
+                        }
+                        
+                        VStack {
+                            HStack {
+                                {
+                                    let name = store.rewardItems[i].name
+                                    let particle = name.hasFinalConsonant ? "을" : "를"
+                                    return DText( "\(name)\(particle) 받았어요!")
+                                        .style(.h2, .bold, .deepBlue99)
+                                }()
+                                Spacer()
+                            }
+                            .padding(.defaultLayoutPadding)
+                            Spacer()
+                        }
+                    }
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            
+            VStack {
+                Spacer()
+                InstagramIndicator(
+                    count: store.rewardCount,
+                    current: store.rewardIndex
+                )
+                .allowsHitTesting(false)
+                .padding(.top, .screenWidth * (8/15) + .defaultLayoutPadding * 2)
+                Spacer()
             }
         }
-        .tabViewStyle(.page(indexDisplayMode: .always))
-        .frame(minHeight: .screenWidth * (8/15) + 80)
     }
                     
     func RewardItemListCardView(item: Reward) -> some View {
@@ -155,3 +166,32 @@ extension RewardReceiveView {
     }
 }
 
+struct InstagramIndicator: View {
+    let count: Int
+    let current: Int
+
+    var body: some View {
+        let indicators = indicatorIndexes()
+        HStack(spacing: 6) {
+            ForEach(indicators, id: \.self) { idx in
+                Circle()
+                    .fill(.white.opacity(idx == current ? 1.0 : 0.1))
+                    .frame(width: indicatorSize(idx), height: indicatorSize(idx))
+                    .animation(.easeInOut(duration: 0.2), value: current)
+            }
+        }
+    }
+    
+    private func indicatorIndexes() -> [Int] {
+        if count <= 5 { return Array(0..<count) }
+        let start = max(0, min(current - 2, count - 5))
+        return Array(start..<start+5)
+    }
+    
+    private func indicatorSize(_ idx: Int) -> CGFloat {
+        if idx == current { return 6 }
+        if abs(idx - current) == 1 { return 6 }
+        if abs(idx - current) == 2 { return 4 }
+        return 3
+    }
+}

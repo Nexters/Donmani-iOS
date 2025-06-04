@@ -14,8 +14,14 @@ extension MainNavigationStore {
         action: DecorationStore.Action.Delegate
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
-        case  .popToRoot:
-            state.path.removeAll()
+        case .pop:
+            if let settingID = state.path.ids.first {
+                if case .setting(_) = state.path[id: settingID] {
+                    state.path.pop(to: settingID)
+                } else {
+                    state.path.removeAll()
+                }
+            }
             return .none
         }
     }

@@ -7,6 +7,6 @@
 
 struct FeedbackInfo {
     let isNotOpened: Bool
-    let isFirstOpened: Bool
+//    let isFirstOpened: Bool
     let totalCount: Int
 }

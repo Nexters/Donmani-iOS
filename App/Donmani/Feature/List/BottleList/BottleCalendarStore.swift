@@ -48,7 +48,7 @@ struct BottleCalendarStore {
         case fetchMonthlyRecord(Int, Int)
         case delegate(Delegate)
         enum Delegate {
-            case pushMonthlyBottleView(Int, Int)
+            case pushMonthlyBottleView(Int, Int, [Reward])
         }
     }
     
@@ -82,11 +82,13 @@ struct BottleCalendarStore {
                 return .run { send in
                     let key = "2025-\(String(format: "%02d", month))"
                     if DataStorage.getRecord(yearMonth: key) == nil {
-                        let response = try await NetworkService.DRecord().fetchRecordList(year: year, month: month)
-                        let result = NetworkDTOMapper.mapper(dto: response)
-                        DataStorage.setMonthRecords(year: year, month: month, result)
+//                        let response = try await NetworkService.DRecord().fetchRecordList(year: year, month: month)
+//                        let result = NetworkDTOMapper.mapper(dto: response)
+//                        DataStorage.setMonthRecords(year: year, month: month, result)
+//                        let items = NetworkDTOMapper.mapper(dto: response.saveItems)
+//                        await send(.delegate(.pushMonthlyBottleView(year, month, items)))
+                        await send(.delegate(.pushMonthlyBottleView(2025, 6, Reward.previewData)))
                     }
-                    await send(.delegate(.pushMonthlyBottleView(year, month)))
                 }
                 
             case .delegate:

@@ -119,7 +119,10 @@ struct SettingView: View {
                     }
                     
                     MenuButton(type: .sound) {
-                        store.send(.toggleBackgroundSound)
+                        withAnimation(.linear(duration: 0.5)) {
+                            store.send(.toggleBackgroundSound)
+                            return
+                        }
                     }
                     
                     MenuButton(type: .notification) {
@@ -186,6 +189,18 @@ struct SettingView: View {
                     .padding(40)
             }
             .opacity(isPresentingSymbolGuideToastView ? 1 : 0)
+            
+            VStack {
+                Spacer()
+                ToastView(title: "앗! 아직 효과음이 없어요")
+                    .padding(40)
+                    .animation(
+                        .easeInOut(duration: 0.5),
+                        value: store.isPresentingSoundToastView
+                    )
+                    .opacity(store.isPresentingSoundToastView ? 1 : 0)
+                    .offset(y: store.isPresentingSoundToastView ? 0 : 5)
+            }
         }
         .sheet(isPresented: $isPresentingPrivacyPolicyView) {
             // Privacy Policy WebView
@@ -221,6 +236,7 @@ struct SettingView: View {
                 isNoticeNotRead = !(try await NetworkService.User().fetchNoticeStatus())
                 isDecorationNotRead = !(try await NetworkService.User().fetchRewardStatus())
             }
+            store.send(.fetchDecorationItem)
         }
         .navigationBarBackButtonHidden()
     }

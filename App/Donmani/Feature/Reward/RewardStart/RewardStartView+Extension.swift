@@ -26,10 +26,17 @@ extension RewardStartView {
             
             Spacer()
             
-            DImage(.rewardCharacter).image
-                .resizable()
-                .scaledToFit()
-                .padding(.horizontal, -.s5 / 2.0)
+            if store.isFullReward {
+                DImage(.fullRewardCharacter).image
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.horizontal, -.s5 / 2.0)
+            } else {
+                DImage(.rewardCharacter).image
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.horizontal, -.s5 / 2.0)
+            }
         }
         .opacity(store.isPresentingFeedbackStartView ? 1 : 0)
         .animation(.easeInOut(duration: 0.6), value: store.isPresentingFeedbackStartView)
