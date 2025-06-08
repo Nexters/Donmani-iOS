@@ -33,7 +33,7 @@ struct SettingView: View {
             case .recordGuide:
                 return "별별소 기록 규칙"
             case .feedback:
-                return "피드백"
+                return "별별소에게 부탁하기"
             case .privacyPolicy:
                 return "개인정보 처리방침"
             }
@@ -59,7 +59,6 @@ struct SettingView: View {
     @State var isNotificationEnabled = false
     @State var isNoticeNotRead = false
     @State var isDecorationNotRead = false
-    @State var isBackgroundSoundOn = false
     
     @FocusState var isFocusToTextField: Bool
     
@@ -119,7 +118,7 @@ struct SettingView: View {
                     }
                     
                     MenuButton(type: .sound) {
-                        withAnimation(.linear(duration: 0.5)) {
+                        withAnimation(.linear(duration: 0.3)) {
                             store.send(.toggleBackgroundSound)
                             return
                         }
@@ -283,7 +282,7 @@ struct SettingView: View {
                         DToggle(isOn: $isNotificationEnabled)
                     }
                     if type == .sound {
-                        DToggle(isOn: $isBackgroundSoundOn)
+                        DToggle(isOn: $store.isBackgroundSoundOn)
                     }
                 }
                 .padding(.horizontal, .defaultLayoutPadding)

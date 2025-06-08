@@ -71,9 +71,9 @@ struct MonthlyStarBottleStore {
             self.year = context.year
             self.month = context.month
             let key = "\(year)-\(String(format: "%02d", month))"
-            self.record = Record.previewData //(DataStorage.getRecord(yearMonth: key) ?? []).sorted {
-//                $0.date > $1.date
-//            }
+            self.record = (DataStorage.getRecord(yearMonth: key) ?? []).sorted {
+                $0.date > $1.date
+            }
             var items: [RewardItemCategory: Reward] = [:]
             for item in context.items {
                 items[item.category] = item

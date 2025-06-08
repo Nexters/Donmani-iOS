@@ -111,7 +111,7 @@ struct RewardStartStore {
                 }
                 
             case .touchGuideBottomSheetButton:
-                if (state.recordCount > 0) {
+                if (state.recordCount > 0 && state.isEnabledButton) {
                     return .run { send in
                         await send(.toggleGuideBottomSheet)
                         await send(.requestFeedbackCard)

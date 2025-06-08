@@ -125,15 +125,17 @@ extension RewardReceiveView {
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             
-            VStack {
-                Spacer()
-                InstagramIndicator(
-                    count: store.rewardCount,
-                    current: store.rewardIndex
-                )
-                .allowsHitTesting(false)
-                .padding(.top, .screenWidth * (8/15) + .defaultLayoutPadding * 2)
-                Spacer()
+            if (store.rewardCount > 1) {
+                VStack {
+                    Spacer()
+                    InstagramIndicator(
+                        count: store.rewardCount,
+                        current: store.rewardIndex
+                    )
+                    .allowsHitTesting(false)
+                    .padding(.top, .screenWidth * (8/15) + .defaultLayoutPadding * 2)
+                    Spacer()
+                }
             }
         }
     }

@@ -55,7 +55,7 @@ struct RewardReceiveStore {
         )
         
         init(context: Context) {
-            self.rewardCount = Reward.previewAllData.count // context.rewardCount
+            self.rewardCount = context.rewardCount
             self.isPresentMultiRewardGuideText = (context.rewardCount > 0)
         }
     }
@@ -76,7 +76,7 @@ struct RewardReceiveStore {
         
         case delegate(Delegate)
         enum Delegate {
-            case pushDecorationView([RewardItemCategory: [Reward]], [Reward])
+            case pushDecorationView([RewardItemCategory: [Reward]], [Reward], RewardItemCategory)
             case popToRoot
         }
     }
@@ -86,15 +86,18 @@ struct RewardReceiveStore {
         Reduce { state, action in
             switch action {
             case .touchNextButton:
-//                let count = state.rewardCount
+                
                 if state.rewardItems.isEmpty {
                     return .run { send in
-//                        let rewardDTO = try await NetworkService.DReward().reqeustRewardOpen()
-//                        let rewardItems: [Reward] = NetworkDTOMapper.mapper(dto: rewardDTO)
-                        let rewardItems = Reward.previewAllData
+                        let rewardDTO = try await NetworkService.DReward().reqeustRewardOpen()
+                        let rewardItems: [Reward] = NetworkDTOMapper.mapper(dto: rewardDTO)
                         await send(.receiveRewardItems(rewardItems))
                     }
                 } else {
+                    var category: RewardItemCategory = .background
+                    if let last = state.rewardItems.last {
+                        category = last.category
+                    }
                     return .run { send in
                         let dto = try await NetworkService.DReward().reqeustRewardItem()
                         var decorationItem = NetworkDTOMapper.mapper(dto: dto)
@@ -105,7 +108,7 @@ struct RewardReceiveStore {
                         decorationItem = DataStorage.getInventory()
                         let infoDto = try await NetworkService.DReward().reqeustDecorationInfo(year: year, month: month)
                         let currentDecorationItem = NetworkDTOMapper.mapper(dto: infoDto)
-                        await send(.delegate(.pushDecorationView(decorationItem, currentDecorationItem)))
+                        await send(.delegate(.pushDecorationView(decorationItem, currentDecorationItem, category)))
                     }
                 }
                 

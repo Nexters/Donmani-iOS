@@ -73,19 +73,23 @@ extension RewardStartView {
             )
             .strokeBorder(.white.opacity(0.2), lineWidth: 2)
             VStack(alignment: .center) {
-                ZStack {
-                    Capsule(style: .circular)
-                        .fill(Color.black.opacity(0.2))
-                    HStack(alignment: .center, spacing: 10) {
-                        DImage(.smallStar).image
-                            .resizable()
-                            .frame(width: 12, height: 12).opacity(0.2)
-                        DText("토비의 한마디").style(.b3, .bold, .deepBlue99)
-                        DImage(.smallStar).image
-                            .resizable()
-                            .frame(width: 12, height: 12).opacity(0.2)
+                HStack {
+                    Spacer()
+                    ZStack {
+                        Capsule(style: .circular)
+                            .fill(Color.black.opacity(0.2))
+                        HStack(alignment: .center, spacing: 10) {
+                            DImage(.smallStar).image
+                                .resizable()
+                                .frame(width: 12, height: 12).opacity(0.2)
+                            DText("토비의 한마디").style(.b3, .bold, .deepBlue99)
+                            DImage(.smallStar).image
+                                .resizable()
+                                .frame(width: 12, height: 12).opacity(0.2)
+                        }
+                        .padding(.s5 / 2.0)
                     }
-                    .padding(.s5 / 2.0)
+                    Spacer()
                 }
                 .frame(height: .s2)
                 .padding(.bottom, 40)

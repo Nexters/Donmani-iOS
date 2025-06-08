@@ -24,6 +24,10 @@ struct MainStore {
         var isPresentingAlreadyWrite: Bool = false
         var isPresentingNewStarBottle: Bool = false
         var isPresentingRewardToolTipView: Bool = false
+        
+        var isSaveSuccess: Bool = false
+        var isPresentingSaveSuccessToastView: Bool = false
+        
         var isRequestNotificationPermission: Bool = true
         var isLoading: Bool = false
         var decorationItem: [RewardItemCategory: Reward]
@@ -107,6 +111,8 @@ struct MainStore {
         case dismissAlreadyWrite
         case shakeTwice
         case touchRewardButton
+        
+        case dismissSaveSuccessToast
 
         case delegate(Delegate)
         enum Delegate {
@@ -139,6 +145,13 @@ struct MainStore {
                         return .rewardBottleDefaultShape
                     }
                 }()
+                if state.isSaveSuccess {
+                    state.isPresentingSaveSuccessToastView = true
+                    return .run { send in
+                        try await Task.sleep(nanoseconds: 3_000_000_000)
+                        await send(.dismissSaveSuccessToast, animation: .linear(duration: 0.5))
+                    }
+                }
                 
             case .closePopover:
                 state.isPresentingRecordYesterdayToopTip = false
@@ -184,6 +197,10 @@ struct MainStore {
                 return .run { send in
                     await send(.delegate(.pushRewardStartView))
                 }
+                
+            case .dismissSaveSuccessToast:
+                state.isSaveSuccess = false
+                state.isPresentingSaveSuccessToastView = false
                 
             default:
                 break

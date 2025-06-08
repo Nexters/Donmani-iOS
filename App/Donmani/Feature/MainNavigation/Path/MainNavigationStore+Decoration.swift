@@ -14,7 +14,8 @@ extension MainNavigationStore {
         action: DecorationStore.Action.Delegate
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
-        case .pop:
+        case .pop(let isSaved):
+            state.mainState.isSaveSuccess = isSaved
             if let settingID = state.path.ids.first {
                 if case .setting(_) = state.path[id: settingID] {
                     state.path.pop(to: settingID)
