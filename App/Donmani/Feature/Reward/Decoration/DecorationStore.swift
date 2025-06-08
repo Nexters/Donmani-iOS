@@ -16,16 +16,19 @@ struct DecorationStore {
     struct Context {
         let decorationItem: [RewardItemCategory : [Reward]]
         var currentDecorationItem: [RewardItemCategory : Reward]
+        let selectedCategory: RewardItemCategory
         
         init(
             decorationItem: [RewardItemCategory : [Reward]],
-            currentDecorationItem: [Reward]
+            currentDecorationItem: [Reward],
+            selectedCategory: RewardItemCategory
         ) {
             self.decorationItem = decorationItem
             self.currentDecorationItem = [:]
             for reward in currentDecorationItem {
                 self.currentDecorationItem[reward.category] = reward
             }
+            self.selectedCategory = selectedCategory
         }
     }
     
@@ -34,10 +37,12 @@ struct DecorationStore {
         var isPresentingGuideBottomSheet = false
         var selectedRewardItemCategory: RewardItemCategory = .background
     
-        
         var decorationItem: [RewardItemCategory : [Reward]]
         var selectedDecorationItem: [RewardItemCategory : Reward]
+        var previousDecorationItem: [RewardItemCategory : Reward]
         var backgroundShape: DImageAsset
+        
+        var disabledSaveButton = true
         
         var itemList: [Reward] {
             decorationItem[selectedRewardItemCategory, default: []]
@@ -69,6 +74,8 @@ struct DecorationStore {
         init(context: Context) {
             self.decorationItem = context.decorationItem
             self.selectedDecorationItem = context.currentDecorationItem
+            self.previousDecorationItem = context.currentDecorationItem
+            self.selectedRewardItemCategory = context.selectedCategory
             
             backgroundShape = .rewardBottleDefault
             byeoltongShapeType = {
@@ -84,7 +91,7 @@ struct DecorationStore {
             let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
             let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
             self.monthlyRecords = monthlyRecords
-            self.decorationItem[.decoration]?.removeAll { $0.id == 23 }
+            self.isPresentingGuideBottomSheet = HistoryStateManager.shared.getIsFirstDecorationEnter()
         }
     }
     
@@ -101,7 +108,7 @@ struct DecorationStore {
         case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate {
-            case pop
+            case pop(Bool)
         }
     }
     
@@ -156,6 +163,10 @@ struct DecorationStore {
                         }
                     }()
                 }
+                let diffCount = state.previousDecorationItem.compactMap { (key, item) in
+                    (state.selectedDecorationItem[key]?.id ?? 0) == (item.id) ? nil : 0
+                }.count
+                state.disabledSaveButton = (diffCount == 0)
                 
             case .touchEqualizerButton:
                 guard let sound = state.selectedDecorationItem[.sound] else {
@@ -179,7 +190,7 @@ struct DecorationStore {
                     SoundManager.shared.play(fileName: resource)
                 }
                 return .run { send in
-                    await send(.delegate(.pop))
+                    await send(.delegate(.pop(false)))
                 }
                 
             case .touchSaveButton:
@@ -197,7 +208,7 @@ struct DecorationStore {
                     let month = Int(today[1]) ?? 6
                     let dto = NetworkRequestDTOMapper.mapper(year: year, month: month, item: item)
                     try await NetworkService.DReward().saveDecoration(dto: dto)
-                    await send(.delegate(.pop))
+                    await send(.delegate(.pop(true)))
                 }
 
             default:

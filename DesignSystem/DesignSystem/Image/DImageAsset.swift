@@ -119,6 +119,7 @@ public enum DImageAsset: String {
     case reward = "Reward"
     case bottleIcon = "BottleIcon"
     case warning = "Warning"
+    case success = "Success"
     case notice = "Notice"
     
     // Image 28

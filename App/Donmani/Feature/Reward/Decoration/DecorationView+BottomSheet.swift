@@ -17,7 +17,7 @@ extension DecorationView {
                 
             }
         ) { dismissSheet in
-            VStack(alignment: .leading, spacing: .s3) {
+            VStack(alignment: .center, spacing: .s3) {
                 DText(
                     """
                     달이 바뀌어도,

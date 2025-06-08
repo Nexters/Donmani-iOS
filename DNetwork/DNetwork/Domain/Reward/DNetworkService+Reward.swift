@@ -61,9 +61,17 @@ public extension DNetworkService {
         public func saveDecoration(dto: RewardSaveDTO) async throws {
             var dto = dto
             dto.userKey = userKey
-            let response: DResponse<Data> = try await self.request.put(
+            let _: DResponse<Data> = try await self.request.put(
                 path: .reward,
                 bodyData: dto
+            )
+        }
+        
+        public func requestHiddenRead() async throws {
+            let _: DResponse<Data> = try await self.request.put(
+                path: .reward,
+                addtionalPath: ["hidden-read"],
+                bodyData: Data()
             )
         }
     }

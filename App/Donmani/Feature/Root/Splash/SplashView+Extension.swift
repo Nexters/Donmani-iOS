@@ -82,9 +82,9 @@ extension SplashView {
     }
     
     private func fetchRewardInventory() async throws {
-//        let inventoryDTO = try await NetworkService.DReward().fetchRewardsInventory()
-//        let inventory = NetworkDTOMapper.mapper(dto: inventoryDTO)
-//        DataStorage.setInventory(inventory)
+        let inventoryDTO = try await NetworkService.DReward().reqeustRewardItem()
+        let inventory = NetworkDTOMapper.mapper(dto: inventoryDTO)
+        DataStorage.setInventory(inventory)
         let isSoundOn = HistoryStateManager.shared.getSouncState()
         SoundManager.isSoundOn = isSoundOn
     }

@@ -193,6 +193,18 @@ struct MainView: View {
                 RewardToopTipView()
             }
             
+            VStack {
+                ToastView(title: "꾸미기를 반영했어요.", type: .success)
+                    .padding(40)
+                Spacer()
+            }
+            .animation(
+                .easeInOut(duration: 0.5),
+                value: store.isPresentingSaveSuccessToastView
+            )
+            .opacity(store.isPresentingSaveSuccessToastView ? 1 : 0)
+            .offset(y: store.isPresentingSaveSuccessToastView ? 0 : 5)
+            
             if store.isLoading {
                 Color.black.opacity(0.1)
                     .ignoresSafeArea()

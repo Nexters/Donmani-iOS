@@ -15,15 +15,22 @@ struct SettingStore {
     @ObservableState
     struct State {
         var isPresentingSoundToastView = false
+        var isBackgroundSoundOn = false
         var bgmName = ""
+        
+        init() {
+            self.isBackgroundSoundOn = HistoryStateManager.shared.getSouncState()
+        }
     }
+
     
-    enum Action {
+    enum Action: BindableAction {
         case fetchDecorationItem
         case touchDecorationButton
         case toggleBackgroundSound
         case dismissSoundToast
         
+        case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate {
             case pushDecoration([RewardItemCategory: [Reward]], [Reward])
@@ -31,6 +38,7 @@ struct SettingStore {
     }
     
     var body: some ReducerOf<Self> {
+        BindingReducer()
         Reduce { state, action in
             switch action {
             case .fetchDecorationItem:
@@ -48,7 +56,7 @@ struct SettingStore {
                     let decorationItem = DataStorage.getInventory()
                     let dto = try await NetworkService.DReward().reqeustDecorationInfo(year: year, month: month)
                     let currentDecorationItem = NetworkDTOMapper.mapper(dto: dto)
-//                    try await NetworkService.User().updateRewardStatus()
+                    try await NetworkService.User().updateRewardStatus()
                     await send(.delegate(.pushDecoration(decorationItem, currentDecorationItem)))
                 }
                 
@@ -66,9 +74,11 @@ struct SettingStore {
                     }
                 } else {
                     if (SoundManager.isSoundOn) {
+                        state.isBackgroundSoundOn = false
                         HistoryStateManager.shared.setSouncState(false)
                         SoundManager.shared.stop()
                     } else {
+                        state.isBackgroundSoundOn = true
                         HistoryStateManager.shared.setSouncState(true)
                         let fileName = DataStorage.getSoundFileName()
                         if !fileName.isEmpty {

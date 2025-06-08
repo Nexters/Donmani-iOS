@@ -68,7 +68,11 @@ extension DecorationView{
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .fill(DColor(.deepBlue50).color)
                         .overlay {
-                            image.padding(.s3 / 3)
+                            if reward.category == .decoration && reward.id == 23 {
+                                image
+                            } else {
+                                image.padding(.s3 / 3)
+                            }
                         }
                 }
                 if (reward.newAcquiredFlag && !reward.name.contains("기본")) {

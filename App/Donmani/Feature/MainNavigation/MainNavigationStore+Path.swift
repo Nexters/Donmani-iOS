@@ -89,19 +89,21 @@ extension MainNavigationStore {
             let context = RewardStartStore.Context(
                 recordCount: feedbackInfo.totalCount,
                 isNotOpened: feedbackInfo.isNotOpened
-//                isFirstOpened: feedbackInfo.isFirstOpened
             )
             let initialState = stateFactory.makeRewardStartState(context: context)
             state.path.append(.rewardStart(initialState))
             
         case .rewardReceive(let count):
-//            let previewData = Reward.previewAllData
             let context = RewardReceiveStore.Context(rewardCount: count)
             let initialState = stateFactory.makeRewardReceiveState(context: context)
             state.path.append(.rewardReceive(initialState))
             
-        case .decoration(let decorationItem, let currentDecorationItem):
-            let context = DecorationStore.Context(decorationItem: decorationItem, currentDecorationItem: currentDecorationItem)
+        case .decoration(let decorationItem, let currentDecorationItem, let category):
+            let context = DecorationStore.Context(
+                decorationItem: decorationItem,
+                currentDecorationItem: currentDecorationItem,
+                selectedCategory: category
+            )
             let initialState = stateFactory.makeDecorationState(context: context)
             state.path.append(.decoration(initialState))
         }

@@ -77,7 +77,10 @@ struct Reward: Hashable {
         Reward(id: 13, name: "소원의 유성", imageUrl: "lottie_reward_effect_wishing_meteor",
                jsonUrl: nil, soundUrl: nil, category: .effect,
                owned: false, newAcquiredFlag: false),
-        
+
+        Reward(id: 23, name: "토비호", imageUrl: "lottie_reward_decoration_toby_ship",
+               jsonUrl: nil, soundUrl: nil, category: .decoration,
+               owned: false, newAcquiredFlag: false),
         Reward(id: 22, name: "토비호", imageUrl: "lottie_reward_decoration_toby_ship",
                jsonUrl: nil, soundUrl: nil, category: .decoration,
                owned: false, newAcquiredFlag: false),

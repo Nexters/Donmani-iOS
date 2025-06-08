@@ -51,6 +51,7 @@ struct DecorationView: View {
                                 DNavigationBarButton("완료") {
                                     store.send(.touchSaveButton)
                                 }
+                                .disabled(store.disabledSaveButton)
                             }
                         }
                         .frame(height: .navigationBarHeight)
@@ -186,6 +187,10 @@ struct DecorationView: View {
             
             if store.selectedRewardItemCategory == .sound {
                 EqualizerButton()
+            }
+            
+            if store.isPresentingGuideBottomSheet {
+                DecorationGuideBottomSheet()
             }
             
             if store.isPresentingGuideBottomSheet {
