@@ -15,6 +15,9 @@ protocol GAProtocol {
 
 extension GAProtocol {
     func send(parameters: [GA.Parameter: Any]? = nil) {
+#if DEBUG
+        return
+#endif
         var convertKeyValue: [String: Any] = ["event_name":eventName]
         if let screen {
             convertKeyValue["screen_name"] = screen.rawValue

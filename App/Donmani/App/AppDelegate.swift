@@ -21,6 +21,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         // Firebase
         FirebaseApp.configure()
+#if DEBUG
+        FirebaseConfiguration.shared.setLoggerLevel(.min)
+#endif
         Messaging.messaging().delegate = self
         Messaging.messaging().isAutoInitEnabled = true
         
@@ -68,7 +71,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             userInfo: [key: value]
         )
         center.setBadgeCount(0, withCompletionHandler: nil)
-        
     }
     
 }

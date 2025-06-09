@@ -12,7 +12,11 @@ final class HistoryStateManager {
     
     private let userDefaults = UserDefaults.standard
     private let isShownOnboarding = "IS_SHOWN_ONBOARDING"
-    private let isFirstRecordKey = "IS_FIRST_RECORD"
+    
+    private let requestAppReviewStateKey = "REQUEST_APP_STORE_REVIEW_STATE"
+    private let readyToRequestAppStoreReviewKey = "READY_TO_REQUEST_APP_STORE_REVIEW"
+    private let completeRequestAppReviewKey = "COMPLETE_REQUEST_APP_STORE_REVIEW"
+    
     private let guideShownKey = "GUIDE_SHOWN"
     private let lastRecordKey = "LAST_RECORD"
     private let secondToLastRecordKey = "SECOND_TO_LAST_RECORD"
@@ -30,13 +34,64 @@ final class HistoryStateManager {
     private let requestNotificationPermission = "REQUSET_NOTIFICATION_PERMISSION"
     
     //
-    private let isShownBottleListToopTip = "IS_SHOWN_BOTTLE_LIST_TOOP_TIP"
+    private let isShownBottleCalendarToopTip = "IS_SHOWN_BOTTLE_LIST_TOOP_TIP"
     
     // streak_submit
     private let streakSubmitCountKey = "STREAK_SUBMIT_COUNT"
     private let lastWriteRecordDateKey = "LAST_WRITE_RECORD_DATE"
     
-    private init() {}
+    // Reward
+    private let isFirstRewardEnterKey = "FIRST_REWARD_ENTER"
+    private let isFirstDecorationEnterKey = "FIRST_DECORATION_ENTER"
+    private let isPresentingRewardToolTipView = "PRESENTING_REWARD_TOOL_TIP_VIEW"
+    private let soundState = "SOUND_STATE"
+    private let isShownFullRewardBottmSheet = "IS_SHOWN_FULL_REWARD_BOTTOM_SHEET"
+    
+    private init() { }
+    
+    func setIsShownFullRewardBottmeSheet() {
+        userDefaults.set(isShownFullRewardBottmSheet, forKey: isShownFullRewardBottmSheet)
+    }
+    
+    func getIsShownFullRewardBottmeSheet() -> Bool {
+        userDefaults.string(forKey: isShownFullRewardBottmSheet) != nil
+    }
+    
+    func setSouncState(_ flag: Bool) {
+        userDefaults.set(flag, forKey: soundState)
+    }
+    
+    func getSouncState() -> Bool {
+        userDefaults.bool(forKey: soundState)
+    }
+    
+    func setIsPresentingRewardToolTipView(_ flag: Bool) {
+        if flag {
+            userDefaults.removeObject(forKey: isPresentingRewardToolTipView)
+        } else {
+            userDefaults.set(isPresentingRewardToolTipView, forKey: isPresentingRewardToolTipView)
+        }
+    }
+    
+    func getIsPresentingRewardToolTipView() -> Bool {
+        return userDefaults.string(forKey: isPresentingRewardToolTipView) != nil
+    }
+    
+    func setIsFirstDecorationEnter() {
+        userDefaults.set(isFirstDecorationEnterKey, forKey: isFirstDecorationEnterKey)
+    }
+    
+    func getIsFirstDecorationEnter() -> Bool {
+        return userDefaults.string(forKey: isFirstDecorationEnterKey) == nil
+    }
+    
+    func setIsFirstRewardEnter() {
+        userDefaults.set(isFirstRewardEnterKey, forKey: isFirstRewardEnterKey)
+    }
+    
+    func getIsFirstRewardEnter() -> Bool {
+        return userDefaults.string(forKey: isFirstRewardEnterKey) == nil
+    }
     
     func getLastWriteRecordDateKey() -> String {
         if let value = userDefaults.string(forKey: lastWriteRecordDateKey) {
@@ -69,11 +124,11 @@ final class HistoryStateManager {
         )
     }
     
-    func getIsShownBottleListToopTip() -> String? {
-        userDefaults.string(forKey: isShownBottleListToopTip)
+    func getIsShownBottleCalendarToopTip() -> String? {
+        userDefaults.string(forKey: isShownBottleCalendarToopTip)
     }
-    func setIsShownBottleListToopTip() {
-        userDefaults.set(isShownBottleListToopTip, forKey: isShownBottleListToopTip)
+    func setIsShownBottleCalendarToopTip() {
+        userDefaults.set(isShownBottleCalendarToopTip, forKey: isShownBottleCalendarToopTip)
     }
     
     func getRequestNotificationPermission() -> String? {
@@ -141,12 +196,23 @@ final class HistoryStateManager {
         userDefaults.set(emptyRecordGuideKey, forKey: emptyRecordGuideKey)
     }
     
-    func getIsFirstRecord() -> String? {
-        userDefaults.string(forKey: isFirstRecordKey)
+    func getRequestAppReviewState() -> String? {
+        userDefaults.string(forKey: requestAppReviewStateKey)
     }
     
-    func setIsFirstRecord() {
-        userDefaults.set(isFirstRecordKey, forKey: isFirstRecordKey)
+    func setReadyToRequestAppReview() {
+        userDefaults.set(readyToRequestAppStoreReviewKey, forKey: requestAppReviewStateKey)
+    }
+    
+    func setCompleteRequestAppReview() {
+        userDefaults.set(completeRequestAppReviewKey, forKey: requestAppReviewStateKey)
+    }
+    
+    func isReadyToRequestAppReview() -> Bool {
+        guard let state = getRequestAppReviewState() else {
+            return false
+        }
+        return state == readyToRequestAppStoreReviewKey
     }
     
     func addRecord(for type: DayType) {

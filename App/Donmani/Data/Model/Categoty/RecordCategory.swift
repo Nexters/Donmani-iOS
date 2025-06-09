@@ -10,7 +10,6 @@ import DesignSystem
 
 struct RecordCategory: Hashable {
     
-    private let _isEqual: (Any) -> Bool
     private let _hashValue: () -> Int
     private let _title: String
     private let _instance: any CategoryProtocol
@@ -41,7 +40,6 @@ struct RecordCategory: Hashable {
     
     init<T: CategoryProtocol>(_ instance: T) {
         _title = instance.title
-        _isEqual = { ($0 as? T) == instance }
         _hashValue = { instance.hashValue }
         _instance = instance
         _color = instance.color
@@ -55,7 +53,7 @@ struct RecordCategory: Hashable {
     }
 
     static func == (lhs: RecordCategory, rhs: RecordCategory) -> Bool {
-        lhs._isEqual(rhs)
+        lhs._instance.hashValue == rhs._instance.hashValue
     }
 
     func hash(into hasher: inout Hasher) {

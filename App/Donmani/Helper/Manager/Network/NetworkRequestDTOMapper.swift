@@ -18,4 +18,18 @@ struct NetworkRequestDTOMapper {
                 )
         }
     }
+    
+    static func mapper(year: Int, month: Int, item: [RewardItemCategory : Reward]) -> RewardSaveDTO {
+        let dto = RewardSaveDTO(
+            userKey: "",
+            year: year,
+            month: month,
+            backgroundId: item[.background]?.id ?? 0,
+            effectId: item[.effect]?.id ?? 0,
+            decorationId: item[.decoration]?.id ?? 0,
+            byeoltongCaseId: item[.byeoltong]?.id ?? 0,
+            bgmId: item[.sound]?.id ?? 0
+        )
+        return dto
+    }
 }

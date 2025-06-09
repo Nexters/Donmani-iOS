@@ -8,11 +8,50 @@
 class DataStorage {
     private static let shared = DataStorage()
     
+    var inventory: [RewardItemCategory: [Reward]] = [:]
     var userName = ""
     var recordData: [String: [Record]] = [:]
     
+    var decorationItem: [RewardItemCategory:Reward] = [:]
+    var currentMonthSound: String = ""
+    
     private init() {
         
+    }
+    
+    static func setDecorationItem(_ item: [RewardItemCategory:Reward]) {
+        shared.decorationItem = item
+    }
+    
+    static func getDecorationItem() -> [RewardItemCategory:Reward] {
+        return shared.decorationItem
+    }
+    
+    static func setSoundFileName(_ name: String) {
+        shared.currentMonthSound = name
+    }
+    
+    static func getSoundFileName() -> String {
+        return shared.currentMonthSound
+    }
+    
+    static func setInventory(_ item: [RewardItemCategory: [Reward]]) {
+        for (key, value) in item {
+            shared.inventory[key] = value //Reward.previewAllData.filter{ $0.category == key }
+            switch key {
+            case .decoration, .effect, .sound:
+                let itemCount = shared.inventory[key]?.count ?? 0
+                if (itemCount < 2) {
+                    shared.inventory[key] = []
+                }
+            default:
+                break
+            }
+        }
+    }
+    
+    static func getInventory() -> [RewardItemCategory: [Reward]] {
+        shared.inventory
     }
     
     

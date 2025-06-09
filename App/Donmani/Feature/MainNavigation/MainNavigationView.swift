@@ -9,28 +9,61 @@ import SwiftUI
 import ComposableArchitecture
 
 struct MainNavigationView: View {
-    @Bindable var store: StoreOf<MainNavigationStore>
+    @Bindable var navigationStore: StoreOf<MainNavigationStore>
+    
+    init(store: StoreOf<MainNavigationStore>) {
+        self.navigationStore = store
+        UINavigationController.store = self.navigationStore
+    }
     
     var body: some View {
         NavigationStack(
-            path: $store.scope(state: \.path, action: \.path)
+            path: $navigationStore.scope(state: \.path, action: \.path)
         ) {
-            MainView(store: store.scope(
+            MainView(store: navigationStore.scope(
                 state: \.mainState,
                 action: \.mainAction
             ))
         } destination: { store in
             switch store.case {
+                // Record
+            case .record(let store):
+                RecordEntryPointView(store: store) { record in
+                    navigationStore.send(.completeWriteRecord(record))
+                }
+            case .recordWriting(let store):
+                RecordWritingView(store: store) { recordContent in
+                    navigationStore.send(.completeWriteRecordContent(recordContent))
+                }
+            
+                // List
             case .monthlyRecordList(let store):
                 RecordListView(store: store)
             case .bottleCalendar(let store):
-                BottleListView(store: store)
+                BottleCalendarView(store: store)
             case .statistics(let store):
                 StatisticsView(store: store)
             case .monthlyStarBottle(let store):
                 MonthlyStarBottleView(store: store)
-            case .setting:
-                SettingView()
+                
+                // Reward
+            case .rewardStart(let store):
+                RewardStartView(store: store)
+            case .rewardReceive(let store):
+                RewardReceiveView(store: store)
+            case .decoration(let store):
+                DecorationView(store: store)
+                
+            case .setting(let store):
+                SettingView(store: store)
+            }
+        }
+        .onChange(of: navigationStore.path.ids) { oldPathIDs, newPathIDs in
+            if newPathIDs.count.isZero {
+                Task {
+                    try await Task.sleep(nanoseconds: .nanosecondsPerSecond / 3)
+                    await navigationStore.send(.requestNotificationPermission).finish()
+                }
             }
         }
     }

@@ -21,7 +21,7 @@ extension MainView {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: .s3)
         }
-        .frame(width: .s3 * 2, height: .s3 * 2)
+        .frame(width: .s3, height: .s3)
     }
     
     func RecordButton() -> some View {
@@ -73,11 +73,27 @@ extension MainView {
         }
     }
     
-//    func StarEffectView(
-//        record: Record
-//    ) -> some View {
-//        Color.black.opacity(0.9)
-//            
-//    }
-    
+    func RewardToopTipView() -> some View {
+        VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                Triangle(direction: .up)
+                    .fill(DColor(.deepBlue70).color)
+                    .frame(width: 14, height: 8)
+                    .padding(.trailing, 12)
+            }
+            HStack {
+                Spacer()
+                DText("선물 도착!✨")
+                    .style(.b3, .semibold, .white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 8)
+                    .background(DColor(.deepBlue70).color)
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            }
+            Spacer()
+        }
+        .padding(.top, 42)
+        .padding(.horizontal, 13)
+    }
 }

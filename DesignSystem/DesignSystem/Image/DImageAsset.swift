@@ -20,7 +20,6 @@ public enum DImageAsset: String {
     case emptyRecord = "EmptyRecord"
     case starBottle = "StarBottle"
     case lockedStarBottle = "LockedStarBottle"
-    case starBottleBackground = "StarBottleBackground"
     case save = "Save"
     
     case smallStar = "SmallStar"
@@ -52,6 +51,57 @@ public enum DImageAsset: String {
     case onboardingPage3 = "OnboardingPage3"
     case onboardingPage4 = "OnboardingPage4"
     case onboardingEnd = "OnboardingEnd"
+    
+    // Reward
+    case rewardBackground = "RewardBackground"
+    case rewardGuideBanner = "RewardGuideBanner"
+    case rewardCharacter = "RewardCharacter"
+    case fullRewardCharacter = "full_reward_character"
+    case decorationGuideImage = "DecorationGuideImage"
+    
+    // Reward Item Icon
+    case rewardIconBgDefault = "reward_icon_bg_default"
+    case rewardIconBgPurpleAurora = "reward_icon_bg_purple_aurora"
+    case rewardIconBgSkyPathway = "reward_icon_bg_sky_pathway"
+    case rewardIconBgStarOcean = "reward_icon_bg_star_ocean"
+    
+    case rewardPreviewBgDefault = "reward_preview_bg_default"
+    case rewardPreviewBgPurpleAurora = "reward_preview_bg_purple_aurora"
+    case rewardPreviewBgSkyPathway = "reward_preview_bg_sky_pathway"
+    case rewardPreviewBgStarOcean = "reward_preview_bg_star_ocean"
+
+    case rewardIconBottleBeads = "reward_icon_bottle_beads"
+    case rewardIconBottleDefault = "reward_icon_bottle_default"
+    case rewardIconBottleFuzzy = "reward_icon_bottle_fuzzy"
+
+    case rewardIconDecorationFloatingBoat = "reward_icon_decoration_floating_boat"
+    case rewardIconDecorationFuzzyBalloon = "reward_icon_decoration_fuzzy_balloon"
+    case rewardIconDecorationMoonPillow = "reward_icon_decoration_moon_pillow"
+    case rewardIconDecorationTobyShip = "reward_icon_decoration_toby_ship"
+    case rewardIconDecorationSpaceVacance = "reward_icon_decoration_space_vacance"
+
+    case rewardIconEffectFloatingBubble = "reward_icon_effect_floating_bubble"
+    case rewardIconEffectHeartRipple = "reward_icon_effect_heart_ripple"
+    case rewardIconEffectWishingMeteor = "reward_icon_effect_wishing_meteor"
+
+    case rewardIconSoundStardropDay = "reward_icon_sound_stardrop_day"
+    case rewardIconSoundWhisperingStarlight = "reward_icon_sound_whispering_starlight"
+    
+    case rewardIconEmpty = "reward_icon_empty"
+    
+    // Reward Item
+    case rewardBgPurpleAurora = "reward_bg_purple_aurora"
+    case rewardBgSkyPathway = "reward_bg_sky_pathway"
+    case rewardBgStarOcean = "reward_bg_star_ocean"
+
+    case rewardBottleBeads = "reward_byeoltong_beads"
+    case rewardBottleDefault = "reward_byeoltong_default"
+    case rewardBottleFuzzy = "reward_byeoltong_fuzzy"
+    
+    case rewardBottleBeadsShape = "reward_byeoltong_beads_shape"
+    case rewardBottleDefaultShape = "reward_byeoltong_default_shape"
+    case rewardBottleFuzzyShape = "reward_byeoltong_fuzzy_shape"
+    case byeoltongBackground = "byeoltong_background"
    
     // Image 16
     case close = "Close"
@@ -66,8 +116,10 @@ public enum DImageAsset: String {
     case rightArrow = "RightArrow"
     case calendar = "Calendar"
     case setting = "Setting"
+    case reward = "Reward"
     case bottleIcon = "BottleIcon"
     case warning = "Warning"
+    case success = "Success"
     case notice = "Notice"
     
     // Image 28
@@ -77,3 +129,5 @@ public enum DImageAsset: String {
     // Image 32
     case addLog = "AddLog"
 }
+
+

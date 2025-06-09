@@ -22,6 +22,8 @@ extension GA {
 
             // Statistics
             case insight
+            
+            case customize
         }
         
         var eventName: String {
@@ -39,6 +41,8 @@ extension GA {
                 value += "recordhistory"
             case .insight:
                 value += "insight"
+            case .customize:
+                value += "customize"
             }
             return value
         }
@@ -57,6 +61,8 @@ extension GA {
                 return .recordhistory
             case .insight:
                 return .insight
+            case .customize:
+                return .customize
             }
         }
         

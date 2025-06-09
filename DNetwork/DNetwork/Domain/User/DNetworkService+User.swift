@@ -42,19 +42,38 @@ public extension DNetworkService {
         }
         
         public func fetchNoticeStatus() async throws -> Bool {
-            let response: DResponse<[String:Bool]> = try await self.request.get(
+            let response: [String:Bool] = try await self.request.get(
                 path: .notice,
                 addtionalPath: ["status", userKey]
             )
-            guard let data = response.responseData?["read"] else {
+            guard let data = response["read"] else {
                 throw NetworkError.noData
             }
             return data
         }
         
         public func updateNoticeStatus() async throws {
-            let response: DResponse<Data> = try await self.request.put(
+            let _: DResponse<Data> = try await self.request.put(
                 path: .notice,
+                addtionalPath: ["status", userKey],
+                bodyData: Data()
+            )
+        }
+        
+        public func fetchRewardStatus() async throws -> Bool {
+            let response: [String:Bool] = try await self.request.get(
+                path: .reward,
+                addtionalPath: ["status", userKey]
+            )
+            guard let data = response["checked"] else {
+                throw NetworkError.noData
+            }
+            return data
+        }
+        
+        public func updateRewardStatus() async throws {
+            let _: DResponse<Data> = try await self.request.put(
+                path: .reward,
                 addtionalPath: ["status", userKey],
                 bodyData: Data()
             )
