@@ -35,6 +35,7 @@ struct DecorationStore {
     @ObservableState
     struct State {
         var isPresentingGuideBottomSheet = false
+        var isPresentingFinalBottomSheet = false
         var selectedRewardItemCategory: RewardItemCategory = .background
     
         var decorationItem: [RewardItemCategory : [Reward]]
@@ -56,9 +57,17 @@ struct DecorationStore {
             bundle: .designSystem
         )
         
+        let lottieFinalAnimation = LottieAnimation.named(
+            "lottie_reward_final_bottom_sheet",
+            bundle: .designSystem
+        )
+        let confettiLottieAnimation = LottieAnimation.named(
+            "lottie_confetti",
+            bundle: .designSystem
+        )
+        
         var byeoltongImageType : DImageAsset {
             let id = selectedDecorationItem[.byeoltong]?.id ?? 4
-//            print(id)
             switch id {
             case 24:
                 return .rewardBottleBeads
@@ -98,6 +107,8 @@ struct DecorationStore {
     enum Action: BindableAction {
         case toggleGuideBottomSheet
         case touchGuideBottomSheetButton
+        case touchFinalBottomSheetButton
+        
         case touchRewardItemCategoryButton(RewardItemCategory)
         case touchRewardItem(RewardItemCategory, Reward)
         case touchEqualizerButton
@@ -124,11 +135,25 @@ struct DecorationStore {
                         UINavigationController.isBlockSwipe = false
                     }
                 }
+                var count = 0
+                for (_, value) in state.decorationItem {
+                    count += value.count
+                }
+                if (count >= 19) {
+                    if !HistoryStateManager.shared.getIsShownFullRewardBottmeSheet() {
+                        HistoryStateManager.shared.setIsShownFullRewardBottmeSheet()
+                        state.isPresentingFinalBottomSheet = !state.isPresentingFinalBottomSheet
+                    }
+                }
                 
             case .touchGuideBottomSheetButton:
                 return .run { send in
                     await send(.toggleGuideBottomSheet)
                 }
+                
+            case .touchFinalBottomSheetButton:
+                state.isPresentingFinalBottomSheet = false
+                UINavigationController.isBlockSwipe = false
                 
             case .touchRewardItemCategoryButton(let category):
                 state.selectedRewardItemCategory = category
@@ -187,7 +212,9 @@ struct DecorationStore {
             case .touchBackButton:
                 if SoundManager.isSoundOn {
                     let resource = DataStorage.getSoundFileName()
-                    SoundManager.shared.play(fileName: resource)
+                    if resource.isNotEmpty {
+                        SoundManager.shared.play(fileName: resource)
+                    }
                 }
                 return .run { send in
                     await send(.delegate(.pop(false)))
@@ -200,7 +227,9 @@ struct DecorationStore {
                 let resource = RewardResourceMapper(id: soundItemId, category: .sound).resource()
                 DataStorage.setSoundFileName(resource)
                 if SoundManager.isSoundOn {
-                    SoundManager.shared.play(fileName: resource)
+                    if resource.isNotEmpty {
+                        SoundManager.shared.play(fileName: resource)
+                    }
                 }
                 return .run { send in
                     let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")

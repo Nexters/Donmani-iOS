@@ -28,7 +28,7 @@ extension DecorationView{
         ]
         let size: CGFloat = (.screenWidth / 3 - .defaultLayoutPadding)
         return LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(store.decorationItem[itemCategory, default: []], id: \.name) { reward in
+            ForEach(store.decorationItem[itemCategory, default: []], id: \.id) { reward in
                 Button {
                     store.send(.touchRewardItem(itemCategory, reward))
                 } label: {
@@ -70,6 +70,10 @@ extension DecorationView{
                         .overlay {
                             if reward.category == .decoration && reward.id == 23 {
                                 image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .padding(-5)
+                                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                             } else {
                                 image.padding(.s3 / 3)
                             }

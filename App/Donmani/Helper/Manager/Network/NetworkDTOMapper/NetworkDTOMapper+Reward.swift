@@ -53,9 +53,10 @@ extension NetworkDTOMapper {
             imageUrl: dto.imageUrl,
             jsonUrl: dto.jsonUrl,
             soundUrl: dto.mp3Url,
+            thumbnailUrl: dto.thumbnailUrl,
             category: rewardItemCategory,
-            owned: dto.owned,
-            newAcquiredFlag: dto.newAcquiredFlag
+            newAcquiredFlag: dto.newAcquiredFlag,
+            hidden: dto.hidden
         )
         return rewardItem
     }
@@ -70,9 +71,10 @@ extension NetworkDTOMapper {
                 imageUrl: item.imageUrl,
                 jsonUrl: item.jsonUrl,
                 soundUrl: item.mp3Url,
+                thumbnailUrl: item.thumbnailUrl,
                 category: RewardItemCategory(rawValue: item.category),
-                owned: item.owned,
-                newAcquiredFlag: item.newAcquiredFlag
+                newAcquiredFlag: item.newAcquiredFlag,
+                hidden: item.hidden
             )
         }
         return rewardItemList

@@ -48,8 +48,16 @@ struct DecorationView: View {
                                     store.send(.touchBackButton)
                                 }
                                 Spacer()
-                                DNavigationBarButton("완료") {
+                                Button {
                                     store.send(.touchSaveButton)
+                                } label: {
+                                    DText("완료")
+                                        .style(.b1, .semibold,
+                                               store.disabledSaveButton
+                                               ? .white.opacity(0.4)
+                                               : .white
+                                        )
+                                        .frame(height: .s3)
                                 }
                                 .disabled(store.disabledSaveButton)
                             }
@@ -193,8 +201,11 @@ struct DecorationView: View {
                 DecorationGuideBottomSheet()
             }
             
-            if store.isPresentingGuideBottomSheet {
-                DecorationGuideBottomSheet()
+            if store.isPresentingFinalBottomSheet {
+                DecorationFullBottomSheet()
+                LottieView(animation: store.confettiLottieAnimation)
+                    .playing(loopMode: .playOnce)
+                    .aspectRatio(1.0, contentMode: .fit)
             }
         }
         .onAppear {

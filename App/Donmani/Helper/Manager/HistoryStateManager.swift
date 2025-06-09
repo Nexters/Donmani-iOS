@@ -45,8 +45,17 @@ final class HistoryStateManager {
     private let isFirstDecorationEnterKey = "FIRST_DECORATION_ENTER"
     private let isPresentingRewardToolTipView = "PRESENTING_REWARD_TOOL_TIP_VIEW"
     private let soundState = "SOUND_STATE"
+    private let isShownFullRewardBottmSheet = "IS_SHOWN_FULL_REWARD_BOTTOM_SHEET"
     
     private init() { }
+    
+    func setIsShownFullRewardBottmeSheet() {
+        userDefaults.set(isShownFullRewardBottmSheet, forKey: isShownFullRewardBottmSheet)
+    }
+    
+    func getIsShownFullRewardBottmeSheet() -> Bool {
+        userDefaults.string(forKey: isShownFullRewardBottmSheet) != nil
+    }
     
     func setSouncState(_ flag: Bool) {
         userDefaults.set(flag, forKey: soundState)
