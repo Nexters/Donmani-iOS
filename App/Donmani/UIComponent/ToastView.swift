@@ -9,11 +9,22 @@ import SwiftUI
 import DesignSystem
 
 struct ToastView: View {
+    enum `Type` {
+        case warning
+        case success
+    }
+    
     let title: String
+    let type: ToastView.`Type`
+    
+    init(title: String, type: ToastView.`Type` = .warning) {
+        self.title = title
+        self.type = type
+    }
     
     var body: some View {
         HStack(spacing: 8) {
-            DImage(.warning).image
+            DImage(type == .success ? .success : .warning).image
                 .resizable()
                 .frame(width: .s3, height: .s3)
             DText(title)
@@ -28,5 +39,5 @@ struct ToastView: View {
 }
 
 #Preview {
-    ToastView(title: "ToastView")
+    ToastView(title: "ToastView", type: .success)
 }

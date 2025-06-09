@@ -80,6 +80,14 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-noFIRDebugEnabled"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-FIRDebugDisabled"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-noFIRAnalyticsDebugEnabled"
             isEnabled = "YES">
          </CommandLineArgument>

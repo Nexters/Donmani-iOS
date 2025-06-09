@@ -11,8 +11,10 @@ import DesignSystem
 struct BottomSheetView<Content: View>: View {
     let isActiveClose: Bool
     let closeAction: () -> Void
+    let addCancelButton: Bool
     let content: (@escaping (@escaping () -> Void) -> Void) -> Content
     @State private var isPresented = false
+    
     
     init(
         isActiveClose: Bool = true,
@@ -22,6 +24,19 @@ struct BottomSheetView<Content: View>: View {
         self.isActiveClose = isActiveClose
         self.closeAction = closeAction
         self.content = content
+        self.addCancelButton = isActiveClose
+    }
+    
+    init(
+        isActiveClose: Bool = true,
+        addCancelButton: Bool,
+        closeAction: @escaping () -> Void,
+        @ViewBuilder _ content: @escaping (@escaping (@escaping () -> Void) -> Void) -> Content
+    ) {
+        self.isActiveClose = isActiveClose
+        self.closeAction = closeAction
+        self.content = content
+        self.addCancelButton = addCancelButton
     }
     
     var body: some View {
@@ -42,12 +57,14 @@ struct BottomSheetView<Content: View>: View {
                         HStack {
                             Spacer()
                             if isActiveClose {
-                                Button {
-                                    dismiss(nil)
-                                } label: {
-                                    DImage(.circleClose).image
-                                        .resizable()
-                                        .frame(width: .s2, height: .s2)
+                                if addCancelButton {
+                                    Button {
+                                        dismiss(nil)
+                                    } label: {
+                                        DImage(.circleClose).image
+                                            .resizable()
+                                            .frame(width: .s2, height: .s2)
+                                    }
                                 }
                             }
                         }
@@ -80,7 +97,7 @@ struct BottomSheetView<Content: View>: View {
             withAnimation {
                 isPresented.toggle()
             }
-            UINavigationController.blockSwipe = true
+            UINavigationController.isBlockSwipe = true
         }
     }
     

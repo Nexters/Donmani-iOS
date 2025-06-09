@@ -9,7 +9,8 @@ import SwiftUI
 import DesignSystem
 
 struct DNavigationBarButton: View {
-    let icon: DImageAsset
+    var icon: DImageAsset? = nil
+    var text: String? = nil
     let action: (() -> Void)
     
     init(
@@ -20,14 +21,30 @@ struct DNavigationBarButton: View {
         self.action = action
     }
     
+    init(
+        _ text: String,
+        _ action: @escaping () -> Void
+    ) {
+        self.text = text
+        self.action = action
+    }
+    
+    
     var body: some View {
         Button {
             action()
         } label: {
-            DImage(icon).image
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: .s3)
+            if let icon {
+                DImage(icon).image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: .s3)
+            }
+            if let text {
+                DText(text)
+                    .style(.b1, .semibold, .deepBlue99)
+                    .frame(height: .s3)
+            }
         }
     }
 }

@@ -10,4 +10,7 @@ public enum DPath: String {
     case expenses
     case notice
     case appVersion
+    case feedback
+    case reward
 }
+

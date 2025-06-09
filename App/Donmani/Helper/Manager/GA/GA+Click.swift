@@ -19,6 +19,7 @@ extension GA {
             case mainRecordButton
             case mainRecordArchiveButton
             case mainSettingButton
+            case mainShopButton
             
             // RecordList
             case recordhistoryRecordButton
@@ -53,6 +54,18 @@ extension GA {
             case settingApppush
             case settingNotice
             case settingRules
+            case settingCustomize
+            case soundEffectOn
+            case soundEffectOff
+            
+            // Reward
+            case rewardReceivedButton
+            case rewardFeedbackButton
+            case rewardButton
+            case customizeRewardButton
+            
+            // Decoration
+            case customizeSubmitButton
         }
         
         var eventName: String {
@@ -70,6 +83,9 @@ extension GA {
                 value += "main_record_archive_button"
             case .mainSettingButton:
                 value += "main_setting_button"
+            case .mainShopButton:
+                value += "main_shop_button"
+                
             case .recordhistoryRecordButton:
                 value += "recordhistory_record_button"
             case .listButton:
@@ -118,6 +134,23 @@ extension GA {
                 value += "setting_notice"
             case .settingRules:
                 value += "setting_rules"
+            case .settingCustomize:
+                value += "setting_customize"
+            case .soundEffectOn:
+                value += "sound_effect_on"
+            case .soundEffectOff:
+                value += "sound_effect_off"
+                
+            case .rewardReceivedButton:
+                value += "reward_received_button"
+            case .rewardFeedbackButton:
+                value += "reward_feedback_button"
+            case .rewardButton:
+                value += "reward_button"
+            case .customizeRewardButton:
+                value += "customize_reward_button"
+            case .customizeSubmitButton:
+                value += "customize_submit_button"
             }
             return value
         }
@@ -131,7 +164,8 @@ extension GA {
                 
             case .mainRecordButton,
                     .mainRecordArchiveButton,
-                    .mainSettingButton:
+                    .mainSettingButton,
+                    .mainShopButton:
                 return .main
                 
             case .recordhistoryRecordButton,
@@ -165,8 +199,20 @@ extension GA {
             case .settingNickname,
                     .settingApppush,
                     .settingNotice,
-                    .settingRules:
+                    .settingRules,
+                    .settingCustomize,
+                    .soundEffectOn,
+                    .soundEffectOff:
                 return .setting
+                
+            case .rewardReceivedButton,
+                    .rewardFeedbackButton,
+                    .rewardButton,
+                    .customizeRewardButton:
+                return .reward
+                
+            case .customizeSubmitButton:
+                return .customize
             }
         }
         

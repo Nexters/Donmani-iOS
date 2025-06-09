@@ -71,18 +71,6 @@ public extension DNetworkService {
                 throw NetworkError.noData
             }
             return data
-//            return data.records?.map { record in
-//                Record(
-//                    date: record.date,
-//                    contents: record.contents?.compactMap{$0}.map { content in
-//                        RecordContent(
-//                            flag: content.flag,
-//                            category: content.category,
-//                            memo: content.memo
-//                        )
-//                    }
-//                )
-//            } ?? []
         }
         
         /// 한달 카테고리별 기록 개수
@@ -106,18 +94,6 @@ public extension DNetworkService {
                 throw NetworkError.noData
             }
             return data
-//            return data.records?.map { record in
-//                Record(
-//                    date: record.date,
-//                    contents: record.contents?.compactMap{$0}.map { content in
-//                        RecordContent(
-//                            flag: content.flag,
-//                            category: content.category,
-//                            memo: content.memo
-//                        )
-//                    }
-//                )
-//            } ?? []
         }
     }
 }
