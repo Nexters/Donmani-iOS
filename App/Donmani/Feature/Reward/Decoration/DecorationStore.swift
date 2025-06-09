@@ -128,6 +128,13 @@ struct DecorationStore {
         Reduce { state, action in
             switch action {
             case .toggleGuideBottomSheet:
+                GA.View.init(event: .customize).send(parameters: [
+                    .reward_배경: state.previousDecorationItem[.background]?.name ?? "",
+                    .reward_효과: state.previousDecorationItem[.effect]?.name ?? "",
+                    .reward_장식: state.previousDecorationItem[.decoration]?.name ?? "",
+                    .reward_별통이: state.previousDecorationItem[.byeoltong]?.name ?? "",
+                    .reward_효과음: state.previousDecorationItem[.sound]?.name ?? "",
+                ])
                 if HistoryStateManager.shared.getIsFirstDecorationEnter() {
                     HistoryStateManager.shared.setIsFirstDecorationEnter()
                     state.isPresentingGuideBottomSheet = !state.isPresentingGuideBottomSheet
@@ -221,6 +228,13 @@ struct DecorationStore {
                 }
                 
             case .touchSaveButton:
+                GA.Click(event: .customizeSubmitButton).send(parameters: [
+                    .reward_배경: state.selectedDecorationItem[.background]?.name ?? "",
+                    .reward_효과: state.selectedDecorationItem[.effect]?.name ?? "",
+                    .reward_장식: state.selectedDecorationItem[.decoration]?.name ?? "",
+                    .reward_별통이: state.selectedDecorationItem[.byeoltong]?.name ?? "",
+                    .reward_효과음: state.selectedDecorationItem[.sound]?.name ?? "",
+                ])
                 let item = state.selectedDecorationItem
                 DataStorage.setDecorationItem(item)
                 let soundItemId = state.selectedDecorationItem[.sound]?.id ?? 5

@@ -25,6 +25,8 @@ class GA {
         case confirm
         case insight
         case setting
+        case customize
+        case reward
     }
 }
 

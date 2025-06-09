@@ -20,6 +20,13 @@ extension GA {
         case recordID
         case 별통이ID
         
+        // Reward
+        case reward_배경
+        case reward_효과
+        case reward_장식
+        case reward_별통이
+        case reward_효과음
+        
         var value: String {
             switch self {
             case .screenType:
@@ -46,6 +53,16 @@ extension GA {
                 return "record_id"
             case .별통이ID:
                 return "별통이_id"
+            case .reward_배경:
+                return "배경"
+            case .reward_효과:
+                return "효과"
+            case .reward_장식:
+                return "장식"
+            case .reward_별통이:
+                return "별통이"
+            case .reward_효과음:
+                return "효과음"
             }
         }
     }

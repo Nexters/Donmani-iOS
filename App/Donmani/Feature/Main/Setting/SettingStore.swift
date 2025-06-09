@@ -49,6 +49,7 @@ struct SettingStore {
                 }
                 
             case .touchDecorationButton:
+                GA.Click(event: .settingCustomize).send()
                 return .run { send in
                     let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
                     let inventoryDTO = try await NetworkService.DReward().reqeustRewardItem()
@@ -70,6 +71,7 @@ struct SettingStore {
                     if (state.isPresentingSoundToastView) {
                         break
                     }
+                    GA.Click(event: .soundEffectOn).send()
                     state.isPresentingSoundToastView = true
                     return .run { send in
                         try await Task.sleep(nanoseconds: 3_000_000_000)
@@ -77,10 +79,12 @@ struct SettingStore {
                     }
                 } else {
                     if (SoundManager.isSoundOn) {
+                        GA.Click(event: .soundEffectOff).send()
                         state.isBackgroundSoundOn = false
                         HistoryStateManager.shared.setSouncState(false)
                         SoundManager.shared.stop()
                     } else {
+                        GA.Click(event: .soundEffectOn).send()
                         state.isBackgroundSoundOn = true
                         HistoryStateManager.shared.setSouncState(true)
                         let fileName = DataStorage.getSoundFileName()
