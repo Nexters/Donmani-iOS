@@ -51,6 +51,9 @@ struct SettingStore {
             case .touchDecorationButton:
                 return .run { send in
                     let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+                    let inventoryDTO = try await NetworkService.DReward().reqeustRewardItem()
+                    let inventory = NetworkDTOMapper.mapper(dto: inventoryDTO)
+                    DataStorage.setInventory(inventory)
                     let year = Int(today[0]) ?? 2025
                     let month = Int(today[1]) ?? 6
                     let decorationItem = DataStorage.getInventory()
@@ -62,7 +65,7 @@ struct SettingStore {
                 
             case .toggleBackgroundSound:
                 let decorationItem = DataStorage.getInventory()
-                let itemCount = (decorationItem[.sound]?.filter{ $0.owned }.count ?? 0)
+                let itemCount = (decorationItem[.sound]?.count ?? 0)
                 if (itemCount < 2) {
                     if (state.isPresentingSoundToastView) {
                         break
