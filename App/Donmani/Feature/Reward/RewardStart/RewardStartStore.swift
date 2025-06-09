@@ -129,10 +129,12 @@ struct RewardStartStore {
                     }
                 } else {
                     if state.feedbackCard == nil {
+                        GA.Click(event: .rewardButton).send()
                         return .run { send in
                             await send(.requestFeedbackCard)
                         }
                     } else {
+                        GA.Click(event: .rewardFeedbackButton).send()
                         UINavigationController.isBlockSwipe = true
                         return .run { send in
                             let count = try await NetworkService.DReward().fetchRewardNotOpenCount()

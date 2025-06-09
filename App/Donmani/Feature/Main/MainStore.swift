@@ -190,6 +190,7 @@ struct MainStore {
                 }
             
             case .touchRewardButton:
+                GA.Click(event: .mainShopButton).send()
                 if (state.isPresentingRewardToolTipView) {
                     state.isPresentingRewardToolTipView = false
                     HistoryStateManager.shared.setIsPresentingRewardToolTipView(true)

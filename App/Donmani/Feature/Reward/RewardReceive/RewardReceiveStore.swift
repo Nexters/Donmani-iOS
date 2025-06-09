@@ -86,18 +86,16 @@ struct RewardReceiveStore {
         Reduce { state, action in
             switch action {
             case .touchNextButton:
-                
                 if state.rewardItems.isEmpty {
                     return .run { send in
+                        GA.Click(event: .rewardReceivedButton).send()
                         let rewardDTO = try await NetworkService.DReward().reqeustRewardOpen()
                         let rewardItems: [Reward] = NetworkDTOMapper.mapper(dto: rewardDTO)
                         await send(.receiveRewardItems(rewardItems))
                     }
                 } else {
-                    var category: RewardItemCategory = .background
-                    if let last = state.rewardItems.last {
-                        category = last.category
-                    }
+                    GA.Click(event: .customizeRewardButton).send()
+                    let category: RewardItemCategory = state.rewardItems.last?.category ?? .background
                     return .run { send in
                         let dto = try await NetworkService.DReward().reqeustRewardItem()
                         var decorationItem = NetworkDTOMapper.mapper(dto: dto)
