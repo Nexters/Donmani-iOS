@@ -12,6 +12,10 @@ enum RewardItemCategory: String, CaseIterable {
     case byeoltong
     case sound
     
+    static var cases: [RewardItemCategory] {
+        Self.allCases.dropLast()
+    }
+    
     var title: String {
         switch self {
         case .background:

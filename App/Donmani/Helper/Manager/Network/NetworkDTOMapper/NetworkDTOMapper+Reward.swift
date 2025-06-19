@@ -10,12 +10,15 @@ import DNetwork
 extension NetworkDTOMapper {
     static func mapper(dto: FeedbackCardDTO) -> FeedbackCard {
         let rawValue = dto.category.lowercased()
-        var category = mapper(type: .good, rawValue: rawValue)
-        if (category == nil) {
-            category = mapper(type: .bad, rawValue: rawValue)
+        var category: RecordCategory? = nil
+        if rawValue != "none" {
+            category = mapper(type: .good, rawValue: rawValue)
+            if (category == nil) {
+                category = mapper(type: .bad, rawValue: rawValue)
+            }
         }
         return FeedbackCard(
-            category: category!,
+            category: category,
             title: dto.title,
             content: dto.content,
             prefix: dto.flagType ? "오늘은" : "요즘은"
@@ -25,7 +28,6 @@ extension NetworkDTOMapper {
     static func mapper(dto: FeedbackInfoDTO) -> FeedbackInfo {
         return FeedbackInfo(
             isNotOpened: dto.isNotOpened,
-//            isFirstOpened: dto.isFirstOpen,
             totalCount: dto.totalCount
         )
     }
@@ -85,7 +87,7 @@ extension NetworkDTOMapper {
         result[.background] = mapper(dto: dto.BACKGROUND)
         result[.effect] = mapper(dto: dto.EFFECT)
         result[.byeoltong] = mapper(dto: dto.CASE)
-        result[.sound] = mapper(dto: dto.BGM)
+//        result[.sound] = mapper(dto: dto.BGM)
         result[.decoration] = mapper(dto: dto.DECORATION)
         return result
     }

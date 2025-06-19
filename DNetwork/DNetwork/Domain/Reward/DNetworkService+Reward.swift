@@ -74,5 +74,10 @@ public extension DNetworkService {
                 bodyData: Data()
             )
         }
+        
+        public func downloadData(from url: String) async throws -> Data {
+            let responseData: Data = try await self.request.getData(urlString: url)
+            return responseData
+        }
     }
 }

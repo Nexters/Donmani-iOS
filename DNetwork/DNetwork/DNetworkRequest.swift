@@ -46,11 +46,35 @@ struct DNetworkRequest {
         }
         return returnData
     }
+    
+    private func runData(request: URLRequest) async throws -> Data {
+        guard let (data, response) = try? await URLSession.shared.data(for: request) else {
+            throw NetworkError.requestFailed
+        }
+        let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500
+        if stateCode >= 400 {
+            throw NetworkError.serverError(statusCode: stateCode)
+        }
+        return data
+    }
 }
 
 
 // Get Request
 extension DNetworkRequest {
+    public func getData(
+        urlString: String
+    ) async throws -> Data {
+        var url = try createURL(baseURL: urlString)
+        return try await getData(url: url)
+    }
+    func getData(
+        url: URL
+    ) async throws -> Data {
+        let request = createURLReqeust(method: .GET, url: url)
+        return try await runData(request: request)
+    }
+    
     public func get<R: Decodable>(
         urlString: String,
         addtionalPath: [String] = [],

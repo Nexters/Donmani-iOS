@@ -84,9 +84,29 @@ extension SplashView {
     private func fetchRewardInventory() async throws {
         let inventoryDTO = try await NetworkService.DReward().reqeustRewardItem()
         let inventory = NetworkDTOMapper.mapper(dto: inventoryDTO)
+        // TODO: Remove Duplicate Code - Total 4 location
+        for reward in (inventory[.effect] ?? []) {
+            if let _ = DownloadManager.Effect(rawValue: reward.id),
+               let contentUrl = reward.jsonUrl {
+                let data = try await NetworkService.DReward().downloadData(from: contentUrl)
+                let name = RewardResourceMapper(id: reward.id, category: .effect).resource()
+                try DataStorage.saveJsonFile(data: data, name: name)
+            }
+        }
+//        for (key, value) in inventory {
+//            for reward in value {
+//                guard let contentUrl = reward.jsonUrl else {
+//                    continue
+//                }
+//                let data = try await NetworkService.DReward().downloadData(from: contentUrl)
+//                let name = RewardResourceMapper(id: reward.id, category: key).resource()
+//                try DataStorage.saveImageFile(data: data, name: name)
+//            }
+//        }
         DataStorage.setInventory(inventory)
-        let isSoundOn = HistoryStateManager.shared.getSouncState()
-        SoundManager.isSoundOn = isSoundOn
+        
+//        let isSoundOn = HistoryStateManager.shared.getSouncState()
+//        SoundManager.isSoundOn = isSoundOn
     }
     
     private func checkAppVersion() {

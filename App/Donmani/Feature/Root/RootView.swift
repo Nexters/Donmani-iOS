@@ -21,14 +21,11 @@ struct RootView: View {
     
     var body: some View {
         ZStack {
+            SplashView {
+                store.send(.completeSplash)
+            }
+            .id("splash")
             switch store.route {
-            case .splash:
-                SplashView {
-                    store.send(.completeSplash)
-                }
-                .transition(.opacity)
-                .id("splash")
-                
             case .onboarding:
                 OnboardingView { confirmType in
                     store.send(.completeOnboarding(confirmType))
@@ -39,6 +36,8 @@ struct RootView: View {
                 MainNavigationView(store: store)
                     .transition(.move(edge: .trailing))
                     .id("main")
+            case .splash:
+                Spacer()
             }
         }
         .animation(.smooth, value: store.route)

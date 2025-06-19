@@ -16,6 +16,7 @@ public enum DImageAsset: String {
     case defaultBadSticker = "DefaultBadSticker"
     case goodRecord = "GoodRecord"
     case badRecord = "BadRecord"
+    case noneSticker = "NoneSticker"
     
     case emptyRecord = "EmptyRecord"
     case starBottle = "StarBottle"
@@ -102,6 +103,8 @@ public enum DImageAsset: String {
     case rewardBottleDefaultShape = "reward_byeoltong_default_shape"
     case rewardBottleFuzzyShape = "reward_byeoltong_fuzzy_shape"
     case byeoltongBackground = "byeoltong_background"
+    
+    case rewardDecorationSpaceVacance = "reward_decoration_space_vacance"
    
     // Image 16
     case close = "Close"
