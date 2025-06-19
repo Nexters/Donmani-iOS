@@ -20,7 +20,7 @@ extension RewardStartView {
             VStack(alignment: .center, spacing: .s3) {
                 DText(
                     """
-                    오늘부터 14번 기록하면
+                    오늘부터 12번 기록하면
                     특별한 선물을 받아요
                     """
                 )

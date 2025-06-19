@@ -10,10 +10,10 @@
 		<dict>
 			<key>211.188.60.38</key>
 			<dict>
-				<key>NSIncluedsSubdomains</key>
-				<string></string>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
+				<key>NSIncluedsSubdomains</key>
+				<string></string>
 			</dict>
 		</dict>
 	</dict>

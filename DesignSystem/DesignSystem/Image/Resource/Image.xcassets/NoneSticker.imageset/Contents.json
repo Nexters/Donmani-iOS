@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "NoSpendingSticker.png",
+      "filename" : "NoneSticker.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "NoSpendingSticker 1.png",
+      "filename" : "NoneSticker 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "NoSpendingSticker 2.png",
+      "filename" : "NoneSticker 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

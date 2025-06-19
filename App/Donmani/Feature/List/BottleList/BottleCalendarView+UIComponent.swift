@@ -54,7 +54,7 @@ extension BottleCalendarView {
                         GA.Click(event: .list별통이Button).send(parameters: [.별통이ID: 2500 + month.0])
                         if (month.1 == 0) {
                             store.send(.showEmptyBottleToast)
-                        } else {//if month.1 != -1 {
+                        } else { //if month.1 != -1 {
                             store.send(.fetchMonthlyRecord(2025, month.0))
                         }
                     }

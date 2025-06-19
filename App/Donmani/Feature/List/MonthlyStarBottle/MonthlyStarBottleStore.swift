@@ -98,25 +98,25 @@ struct MonthlyStarBottleStore {
         Reduce { state, action in
             switch action {
             case .playBackgroundMusic:
-                SoundManager.shared.stop()
-                if SoundManager.isSoundOn {
-                    let soundId = state.decorationItem[.sound]?.id ?? 5
-                    if (soundId > 5) {
-                        let fileName = RewardResourceMapper(id: soundId, category: .sound).resource()
-                        SoundManager.shared.play(fileName: fileName)
-                    }
-                }
+//                SoundManager.shared.stop()
+//                if SoundManager.isSoundOn {
+//                    let soundId = state.decorationItem[.sound]?.id ?? 5
+//                    if (soundId > 5) {
+//                        let fileName = RewardResourceMapper(id: soundId, category: .sound).resource()
+//                        SoundManager.shared.play(fileName: fileName)
+//                    }
+//                }
                 return .none
                 
             case .playOriginBackgroundMusic:
-                SoundManager.shared.stop()
-                if SoundManager.isSoundOn {
-                    let soundId = DataStorage.getDecorationItem()[.sound]?.id ?? 5
-                    if (soundId > 5) {
-                        let fileName = RewardResourceMapper(id: soundId, category: .sound).resource()
-                        SoundManager.shared.play(fileName: fileName)
-                    }
-                }
+//                SoundManager.shared.stop()
+//                if SoundManager.isSoundOn {
+//                    let soundId = DataStorage.getDecorationItem()[.sound]?.id ?? 5
+//                    if (soundId > 5) {
+//                        let fileName = RewardResourceMapper(id: soundId, category: .sound).resource()
+//                        SoundManager.shared.play(fileName: fileName)
+//                    }
+//                }
                 return .none
                 
             case .delegate:

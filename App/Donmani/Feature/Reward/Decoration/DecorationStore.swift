@@ -200,29 +200,29 @@ struct DecorationStore {
                 }.count
                 state.disabledSaveButton = (diffCount == 0)
                 
-            case .touchEqualizerButton:
-                guard let sound = state.selectedDecorationItem[.sound] else {
-                    return .none
-                }
-                if state.isSoundOn {
-                    state.isSoundOn = false
-                    SoundManager.shared.stop()
-                } else {
-                    if (sound.id > 100) {
-                        if let fileName = sound.soundUrl {
-                            state.isSoundOn = true
-                            SoundManager.shared.play(fileName: fileName)
-                        }
-                    }
-                }
+//            case .touchEqualizerButton:
+//                guard let sound = state.selectedDecorationItem[.sound] else {
+//                    return .none
+//                }
+//                if state.isSoundOn {
+//                    state.isSoundOn = false
+//                    SoundManager.shared.stop()
+//                } else {
+//                    if (sound.id > 100) {
+//                        if let fileName = sound.soundUrl {
+//                            state.isSoundOn = true
+//                            SoundManager.shared.play(fileName: fileName)
+//                        }
+//                    }
+//                }
             
             case .touchBackButton:
-                if SoundManager.isSoundOn {
-                    let resource = DataStorage.getSoundFileName()
-                    if resource.isNotEmpty {
-                        SoundManager.shared.play(fileName: resource)
-                    }
-                }
+//                if SoundManager.isSoundOn {
+//                    let resource = DataStorage.getSoundFileName()
+//                    if resource.isNotEmpty {
+//                        SoundManager.shared.play(fileName: resource)
+//                    }
+//                }
                 return .run { send in
                     await send(.delegate(.pop(false)))
                 }
@@ -240,11 +240,11 @@ struct DecorationStore {
                 let soundItemId = state.selectedDecorationItem[.sound]?.id ?? 5
                 let resource = RewardResourceMapper(id: soundItemId, category: .sound).resource()
                 DataStorage.setSoundFileName(resource)
-                if SoundManager.isSoundOn {
-                    if resource.isNotEmpty {
-                        SoundManager.shared.play(fileName: resource)
-                    }
-                }
+//                if SoundManager.isSoundOn {
+//                    if resource.isNotEmpty {
+//                        SoundManager.shared.play(fileName: resource)
+//                    }
+//                }
                 return .run { send in
                     let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
                     let year = Int(today[0]) ?? 2025

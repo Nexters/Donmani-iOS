@@ -41,6 +41,26 @@ struct MonthlyStarBottleView: View {
                     .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
             }
             
+            if let effect = store.decorationItem[.effect] {
+                let lottieName = RewardResourceMapper(
+                    id: effect.id, category: .effect
+                ).resource()
+                if !lottieName.isEmpty {
+                    GeometryReader { proxy in
+                        DLottieView(
+                            name: lottieName,
+                            loopMode: .loop
+                        )
+                        .frame(
+                            width: proxy.size.width,
+                            height: .screenHeight
+                        )
+                        .ignoresSafeArea()
+                    }
+                    .allowsHitTesting(false)
+                }
+            }
+            
             // Navigation Bar
             VStack(alignment: .center, spacing: 0) {
                 ZStack {
@@ -52,14 +72,14 @@ struct MonthlyStarBottleView: View {
                     }
                     HStack {
                         DNavigationBarButton(.leftArrow) {
-                            SoundManager.shared.stop()
-                            if SoundManager.isSoundOn {
-                                let soundId = DataStorage.getDecorationItem()[.sound]?.id ?? 5
-                                if (soundId > 5) {
-                                    let fileName = RewardResourceMapper(id: soundId, category: .sound).resource()
-                                    SoundManager.shared.play(fileName: fileName)
-                                }
-                            }
+//                            SoundManager.shared.stop()
+//                            if SoundManager.isSoundOn {
+//                                let soundId = DataStorage.getDecorationItem()[.sound]?.id ?? 5
+//                                if (soundId > 5) {
+//                                    let fileName = RewardResourceMapper(id: soundId, category: .sound).resource()
+//                                    SoundManager.shared.play(fileName: fileName)
+//                                }
+//                            }
                             dismiss()
                         }
                         Spacer()
@@ -101,6 +121,43 @@ struct MonthlyStarBottleView: View {
                                     .resizable()
                                     .frame(width: .screenWidth * 0.8)
                                     .aspectRatio(0.8, contentMode: .fit)
+                                    .overlay {
+                                        if let decoration = store.decorationItem[.decoration] {
+                                            let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
+                                            let offsetY: CGFloat = {
+                                                switch store.byeoltongShapeType {
+                                                case .rewardBottleBeadsShape:
+                                                    return -.screenWidth * 0.21 * 0.6
+                                                case .rewardBottleFuzzyShape:
+                                                    return 0
+                                                default:
+                                                    return -.screenWidth * 0.21 * 0.6
+                                                }
+                                            }()
+                                            if !lottieName.isEmpty {
+                                                if decoration.id == 23 {
+                                                    VStack {
+                                                        HStack {
+                                                            DImage(.rewardDecorationSpaceVacance)
+                                                                .image
+                                                                .resizable()
+                                                                .aspectRatio(0.67, contentMode: .fit)
+                                                                .frame(height: .screenWidth * 0.21)
+                                                                .offset(
+                                                                    x: (store.byeoltongShapeType == .rewardBottleDefaultShape
+                                                                        ||
+                                                                        store.byeoltongShapeType == .rewardBottleFuzzyShape)
+                                                                    ? .screenWidth * 0.21 * 0.8
+                                                                    : 0,
+                                                                    y: offsetY
+                                                                )
+                                                        }
+                                                        Spacer()
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                             }
                             .onTapGesture {
                                 store.send(.delegate(.pushRecordListView(store.year, store.month)))
@@ -111,25 +168,7 @@ struct MonthlyStarBottleView: View {
                 Spacer()
             }
             
-            if let effect = store.decorationItem[.effect] {
-                let lottieName = RewardResourceMapper(
-                    id: effect.id, category: .effect
-                ).resource()
-                if !lottieName.isEmpty {
-                    GeometryReader { proxy in
-                        DLottieView(
-                            name: lottieName,
-                            loopMode: .loop
-                        )
-                        .frame(
-                            width: proxy.size.width,
-                            height: .screenHeight
-                        )
-                        .ignoresSafeArea()
-                    }
-                    .allowsHitTesting(false)
-                }
-            }
+
             
             if let decoration = store.decorationItem[.decoration] {
                 let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
@@ -171,9 +210,6 @@ struct MonthlyStarBottleView: View {
         .navigationBarBackButtonHidden()
         .onAppear {
             store.send(.playBackgroundMusic)
-        }
-        .onDisappear {
-            store.send(.playOriginBackgroundMusic)
         }
     }
 }

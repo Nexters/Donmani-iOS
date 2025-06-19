@@ -117,12 +117,12 @@ struct SettingView: View {
                         store.send(.touchDecorationButton)
                     }
                     
-                    MenuButton(type: .sound) {
-                        withAnimation(.linear(duration: 0.3)) {
-                            store.send(.toggleBackgroundSound)
-                            return
-                        }
-                    }
+//                    MenuButton(type: .sound) {
+//                        withAnimation(.linear(duration: 0.3)) {
+//                            store.send(.toggleBackgroundSound)
+//                            return
+//                        }
+//                    }
                     
                     MenuButton(type: .notification) {
                         GA.Click(event: .settingNotice).send()

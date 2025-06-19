@@ -39,6 +39,27 @@ struct MainView: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
             }
+            
+            if let effect = store.decorationItem[.effect] {
+                let lottieName = RewardResourceMapper(
+                    id: effect.id, category: .effect
+                ).resource()
+                if !lottieName.isEmpty {
+                    GeometryReader { proxy in
+                        DLottieView(
+                            name: lottieName,
+                            loopMode: .loop
+                        )
+                        .frame(
+                            width: proxy.size.width,
+                            height: .screenHeight
+                        )
+                        .ignoresSafeArea()
+                    }
+                    .allowsHitTesting(false)
+                }
+            }
+            
             VStack {
                 VStack(spacing: .s1) {
                     HStack {
@@ -81,6 +102,43 @@ struct MainView: View {
                             .resizable()
                             .frame(width: .screenWidth * 0.8)
                             .aspectRatio(0.8, contentMode: .fit)
+                            .overlay {
+                                if let decoration = store.decorationItem[.decoration] {
+                                    let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
+                                    let offsetY: CGFloat = {
+                                        switch store.byeoltongShapeType {
+                                        case .rewardBottleBeadsShape:
+                                            return -.screenWidth * 0.21 * 0.6
+                                        case .rewardBottleFuzzyShape:
+                                            return 0
+                                        default:
+                                            return -.screenWidth * 0.21 * 0.6
+                                        }
+                                    }()
+                                    if !lottieName.isEmpty {
+                                        if decoration.id == 23 {
+                                            VStack {
+                                                HStack {
+                                                    DImage(.rewardDecorationSpaceVacance)
+                                                        .image
+                                                        .resizable()
+                                                        .aspectRatio(0.67, contentMode: .fit)
+                                                        .frame(height: .screenWidth * 0.21)
+                                                        .offset(
+                                                            x: (store.byeoltongShapeType == .rewardBottleDefaultShape
+                                                                ||
+                                                                store.byeoltongShapeType == .rewardBottleFuzzyShape)
+                                                            ? .screenWidth * 0.21 * 0.8
+                                                            : 0,
+                                                            y: offsetY
+                                                        )
+                                                }
+                                                Spacer()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                     }
                     .onTapGesture {
                         GA.Click(event: .mainRecordArchiveButton).send()
@@ -111,25 +169,7 @@ struct MainView: View {
             }
             .padding(.bottom, .s5)
             
-            if let effect = store.decorationItem[.effect] {
-                let lottieName = RewardResourceMapper(
-                    id: effect.id, category: .effect
-                ).resource()
-                if !lottieName.isEmpty {
-                    GeometryReader { proxy in
-                        DLottieView(
-                            name: lottieName,
-                            loopMode: .loop
-                        )
-                        .frame(
-                            width: proxy.size.width,
-                            height: .screenHeight
-                        )
-                        .ignoresSafeArea()
-                    }
-                    .allowsHitTesting(false)
-                }
-            }
+
             
             if let decoration = store.decorationItem[.decoration] {
                 let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
@@ -149,7 +189,7 @@ struct MainView: View {
                         .allowsHitTesting(false)
                         .padding(.bottom, 70)
                         .padding(.trailing, .defaultLayoutPadding)
-                    } else {
+                    } else if decoration.id != 23 {
                         VStack {
                             HStack {
                                 DLottieView(
@@ -194,7 +234,7 @@ struct MainView: View {
             }
             
             VStack {
-                ToastView(title: "꾸미기를 반영했어요.", type: .success)
+                ToastView(title: "꾸미기를 반영했어요", type: .success)
                     .padding(40)
                 Spacer()
             }
@@ -203,7 +243,7 @@ struct MainView: View {
                 value: store.isPresentingSaveSuccessToastView
             )
             .opacity(store.isPresentingSaveSuccessToastView ? 1 : 0)
-            .offset(y: store.isPresentingSaveSuccessToastView ? 0 : 5)
+//            .offset(y: store.isPresentingSaveSuccessToastView ? 0 : 5)
             
             if store.isLoading {
                 Color.black.opacity(0.1)

@@ -6,7 +6,7 @@
 //
 
 public struct RewardInventoryDTO: Decodable {
-    public let BGM : [RewardItemDTO]
+//    public let BGM : [RewardItemDTO]
     public let CASE : [RewardItemDTO]
     public let EFFECT : [RewardItemDTO]
     public let BACKGROUND : [RewardItemDTO]
