@@ -63,112 +63,108 @@ struct MonthlyStarBottleView: View {
             
             // Navigation Bar
             VStack(alignment: .center, spacing: 0) {
-                ZStack {
-                    HStack {
-                        Spacer()
-                        DText("\(store.year % 100)년 \(store.month)월")
-                            .style(.b1, .semibold, .white)
-                        Spacer()
-                    }
-                    HStack {
-                        DNavigationBarButton(.leftArrow) {
-//                            SoundManager.shared.stop()
-//                            if SoundManager.isSoundOn {
-//                                let soundId = DataStorage.getDecorationItem()[.sound]?.id ?? 5
-//                                if (soundId > 5) {
-//                                    let fileName = RewardResourceMapper(id: soundId, category: .sound).resource()
-//                                    SoundManager.shared.play(fileName: fileName)
-//                                }
-//                            }
-                            dismiss()
+                VStack(spacing: .s1) {
+                    ZStack {
+                        HStack {
+                            Spacer()
+                            DText("\(store.year % 100)년 \(store.month)월")
+                                .style(.b1, .semibold, .white)
+                            Spacer()
                         }
-                        Spacer()
-                    }
-                }
-                .frame(height: .navigationBarHeight)
-                .padding(.horizontal, .defaultLayoutPadding)
-                
-                Spacer()
-                
-                ZStack {                    
-                    if store.record.isEmpty {
-                            DImage(.lockedStarBottle).image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .padding(.horizontal, 38)
-                            VStack {
-                                TopBannerView()
-                                Spacer()
+                        HStack {
+                            DNavigationBarButton(.leftArrow) {
+                                dismiss()
                             }
-                            .padding(.top, .s5)
-                            .padding(.horizontal, .defaultLayoutPadding)
-                    } else {
+                            Spacer()
+                        }
+                    }
+                    .frame(height: .navigationBarHeight)
+                    .padding(.horizontal, .defaultLayoutPadding)
+                }
+                
+                ZStack {
+                    if store.record.isEmpty {
+                        VStack {
+                            TopBannerView()
+                            Spacer()
+                        }
+                        .padding(.horizontal, .defaultLayoutPadding)
+                    }
+                    VStack {
+                        Spacer(minLength: 86)
                         ZStack {
-                            DImage(.byeoltongBackground).image
-                                .resizable()
-                                .frame(width: .screenWidth * 0.9)
-                                .aspectRatio(0.8, contentMode: .fit)
-                            
-                            ZStack {
-                                StarBottleView(
-                                    size: .screenWidth * 0.8,
-                                    records: store.record,
-                                    backgroundShape: .constant(store.byeoltongShapeType)
-                                )
-                                .frame(width: .screenWidth * 0.8)
-                                .aspectRatio(0.8, contentMode: .fit)
-                                DImage(store.byeoltongImageType).image
+                            if store.record.isEmpty {
+                                DImage(.lockedStarBottle).image
                                     .resizable()
-                                    .frame(width: .screenWidth * 0.8)
-                                    .aspectRatio(0.8, contentMode: .fit)
-                                    .overlay {
-                                        if let decoration = store.decorationItem[.decoration] {
-                                            let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
-                                            let offsetY: CGFloat = {
-                                                switch store.byeoltongShapeType {
-                                                case .rewardBottleBeadsShape:
-                                                    return -.screenWidth * 0.21 * 0.6
-                                                case .rewardBottleFuzzyShape:
-                                                    return 0
-                                                default:
-                                                    return -.screenWidth * 0.21 * 0.6
-                                                }
-                                            }()
-                                            if !lottieName.isEmpty {
-                                                if decoration.id == 23 {
-                                                    VStack {
-                                                        HStack {
-                                                            DImage(.rewardDecorationSpaceVacance)
-                                                                .image
-                                                                .resizable()
-                                                                .aspectRatio(0.67, contentMode: .fit)
-                                                                .frame(height: .screenWidth * 0.21)
-                                                                .offset(
-                                                                    x: (store.byeoltongShapeType == .rewardBottleDefaultShape
-                                                                        ||
-                                                                        store.byeoltongShapeType == .rewardBottleFuzzyShape)
-                                                                    ? .screenWidth * 0.21 * 0.8
-                                                                    : 0,
-                                                                    y: offsetY
-                                                                )
+                                    .aspectRatio(contentMode: .fit)
+                                    .padding(.horizontal, 38)
+                            } else {
+                                ZStack {
+                                    DImage(.byeoltongBackground).image
+                                        .resizable()
+                                        .frame(width: .screenWidth * 0.9)
+                                        .aspectRatio(0.8, contentMode: .fit)
+                                    
+                                    ZStack {
+                                        StarBottleView(
+                                            size: .screenWidth * 0.8,
+                                            records: store.record,
+                                            backgroundShape: .constant(store.byeoltongShapeType)
+                                        )
+                                        .frame(width: .screenWidth * 0.8)
+                                        .aspectRatio(0.8, contentMode: .fit)
+                                        DImage(store.byeoltongImageType).image
+                                            .resizable()
+                                            .frame(width: .screenWidth * 0.8)
+                                            .aspectRatio(0.8, contentMode: .fit)
+                                            .overlay {
+                                                if let decoration = store.decorationItem[.decoration] {
+                                                    let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
+                                                    let offsetY: CGFloat = {
+                                                        switch store.byeoltongShapeType {
+                                                        case .rewardBottleBeadsShape:
+                                                            return -.screenWidth * 0.21 * 0.6
+                                                        case .rewardBottleFuzzyShape:
+                                                            return 0
+                                                        default:
+                                                            return -.screenWidth * 0.21 * 0.6
                                                         }
-                                                        Spacer()
+                                                    }()
+                                                    if !lottieName.isEmpty {
+                                                        if decoration.id == 23 {
+                                                            VStack {
+                                                                HStack {
+                                                                    DImage(.rewardDecorationSpaceVacance)
+                                                                        .image
+                                                                        .resizable()
+                                                                        .aspectRatio(0.67, contentMode: .fit)
+                                                                        .frame(height: .screenWidth * 0.21)
+                                                                        .offset(
+                                                                            x: (store.byeoltongShapeType == .rewardBottleDefaultShape
+                                                                                ||
+                                                                                store.byeoltongShapeType == .rewardBottleFuzzyShape)
+                                                                            ? .screenWidth * 0.21 * 0.8
+                                                                            : 0,
+                                                                            y: offsetY
+                                                                        )
+                                                                }
+                                                                Spacer()
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
                                     }
-                            }
-                            .onTapGesture {
-                                store.send(.delegate(.pushRecordListView(store.year, store.month)))
+                                    .onTapGesture {
+                                        store.send(.delegate(.pushRecordListView(store.year, store.month)))
+                                    }
+                                }
                             }
                         }
+                        Spacer()
                     }
                 }
-                Spacer()
             }
-            
-
             
             if let decoration = store.decorationItem[.decoration] {
                 let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
@@ -201,7 +197,7 @@ struct MonthlyStarBottleView: View {
                             Spacer()
                         }
                         .allowsHitTesting(false)
-                        .padding(.top, 140)
+                        .padding(.top, 100)
                         .padding(.leading, .defaultLayoutPadding)
                     }
                 }
@@ -216,7 +212,13 @@ struct MonthlyStarBottleView: View {
 
 #Preview {
     {
-        let context = MonthlyStarBottleStore.Context(year: 2025, month: 1, items: [])
+        let context = MonthlyStarBottleStore.Context(
+            year: 2025,
+            month: 1,
+            items: [Reward(id: 22, name: "",
+                           imageUrl: nil, jsonUrl: nil, soundUrl: nil, thumbnailUrl: nil,
+                           category: .decoration, newAcquiredFlag: false, hidden: false)]
+        )
         let state = MainStateFactory().makeMonthlyStarBottleState(context: context)
         let store = MainStoreFactory().makeMonthlyStarBottleStore(state: state)
         return MonthlyStarBottleView(store: store)

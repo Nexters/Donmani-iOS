@@ -32,7 +32,7 @@ struct MainStore {
         var isLoading: Bool = false
         var decorationItem: [RewardItemCategory: Reward]
         var backgroundResource : DImageAsset? {
-            let id = decorationItem[.background]?.id ?? 1
+            let id = decorationItem[.background]?.id ?? 11
             switch id {
             case 9:
                 return .rewardBgStarOcean
@@ -69,8 +69,8 @@ struct MainStore {
             let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
             self.monthlyRecords = monthlyRecords
             let state = HistoryStateManager.shared.getState()
-            let isCompleteToday = state[.today, default: false]
-            let isCompleteYesterday = state[.yesterday, default: false]
+            let isCompleteToday = true // state[.today, default: false]
+            let isCompleteYesterday = true // state[.yesterday, default: false]
             self.isPresentingRecordEntryButton = !(isCompleteToday && isCompleteYesterday)
             
             self.day = Int(today[2]) ?? 1

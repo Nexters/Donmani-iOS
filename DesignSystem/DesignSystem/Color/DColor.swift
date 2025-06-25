@@ -16,6 +16,8 @@ public struct DColor {
     public static let noticeColor: Color = Color("NoticeColor", bundle: .designSystem) 
     public static let emptyColor: Color = Color("EmptyColor", bundle: .designSystem)
     
+    public static let mainToolTipBackgroundColor: Color = Color("MainToolTipBackgroundColor", bundle: .designSystem)
+    
     public var type: DColorType = .deepBlue50
     public var name: String? = nil
     

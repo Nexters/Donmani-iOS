@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
+import DNetwork
 
 struct RewardStartView: View {
     @Environment(\.dismiss) private var dismiss
@@ -50,7 +51,7 @@ struct RewardStartView: View {
                         }
                     }
                     
-                    if !store.isEnabledButton {
+                    if !store.isEnabledButton && !store.isFullReward {
                         VStack {
                             Spacer()
                             HStack(spacing: 4) {
@@ -110,6 +111,9 @@ struct RewardStartView: View {
             if store.isPresentingGuideBottomSheet {
                 RewardGuideBottomSheet()
             }
+        }
+        .sheet(isPresented: $store.isPresentingRewardFeedbackView) {
+            InnerWebView(urlString: DURL.rewardFeedback.urlString)
         }
         .onAppear {
             store.send(.toggleGuideBottomSheet)

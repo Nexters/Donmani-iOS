@@ -33,7 +33,7 @@ struct RewardStartStore {
         let userName: String
         
         var title: String = "앗! 아직 기록을 작성하지 않았어요"
-        var subtitle: String = "오늘부터 기록하고 숨겨진 14개 선물을 받아 보세요!"
+        var subtitle: String = "오늘부터 기록하고 숨겨진 12개 선물을 받아 보세요!"
         var buttonTitle: String = "기록하러 가기"
         
         var isFullReward = false
@@ -51,6 +51,7 @@ struct RewardStartStore {
         var isPresentingFeedbackTitle: Bool = false
         var isPresentingFeedbackCard: Bool = false
         var isPresentingButton: Bool = true
+        var isPresentingRewardFeedbackView: Bool = false
         
         let lottieAnimation = LottieAnimation.named(
             "lottie_reward_start_bottom_sheet",
@@ -62,10 +63,17 @@ struct RewardStartStore {
             self.userName = DataStorage.getUserName()
             
             if (context.recordCount >= 12) {
-                title = "준비한 선물을 모두 받았어요!\n이번 선물 어떠셨나요?"
-                subtitle = "다섯 분을 선정해 스타벅스 기프티콘을 드려요!"
-                isFullReward = true
-                isEnabledButton = false
+                
+                if (context.isNotOpened) {
+                    title = "기록하고 토비 선물받기 🎁\n지금까지 \(context.recordCount)번 기록 중"
+                    subtitle = "12번 기록하면 특별한 선물을 받아요"
+                    buttonTitle = "지금 선물받기"
+                } else {
+                    title = "준비한 선물을 모두 받았어요!\n이번 선물 어떠셨나요?"
+                    subtitle = "다섯 분을 선정해 스타벅스 기프티콘을 드려요"
+                    isFullReward = true
+                    isEnabledButton = false
+                }
             } else if context.recordCount > 0 {
                 title = "기록하고 토비 선물받기 🎁\n지금까지 \(context.recordCount)번 기록 중"
                 subtitle = "12번 기록하면 특별한 선물을 받아요"
@@ -77,7 +85,7 @@ struct RewardStartStore {
                         isEnabledButton = false
                     } else {
                         title = "앗! 아직 기록을 작성하지 않았어요"
-                        subtitle = "오늘부터 기록하고 숨겨진 14개 선물을 받아 보세요!"
+                        subtitle = "오늘부터 기록하고 숨겨진 12개 선물을 받아 보세요!"
                         buttonTitle = "기록하러 가기"
                         enabledWriteRecord = true
                     }
@@ -88,7 +96,7 @@ struct RewardStartStore {
         }
     }
     
-    enum Action {
+    enum Action: BindableAction {
         case toggleGuideBottomSheet
         case touchGuideBottomSheetButton
         
@@ -102,6 +110,7 @@ struct RewardStartStore {
         case presentFeedbackCard
         case presentNextButton
         
+        case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate {
             case pushRewardReceiveView(Int)
@@ -110,6 +119,7 @@ struct RewardStartStore {
     }
     
     var body: some ReducerOf<Self> {
+        BindingReducer()
         Reduce { state, action in
             switch action {
             case .toggleGuideBottomSheet:
@@ -155,13 +165,14 @@ struct RewardStartStore {
                 }
                 
             case .touchReviewButton:
-                return .run { send in
-                    let urlString = "https://forms.gle/UJ8BHkGCivPmNQVN7"
-                    guard let url = URL(string: urlString) else {
-                        return
-                    }
-                    await UIApplication.shared.open(url)
-                }
+                state.isPresentingRewardFeedbackView = true
+//                return .run { send in
+//                    let urlString = "https://forms.gle/UJ8BHkGCivPmNQVN7"
+//                    guard let url = URL(string: urlString) else {
+//                        return
+//                    }
+//                    await UIApplication.shared.open(url)
+//                }
                 
             case .requestFeedbackCard:
                 return .run { send in
