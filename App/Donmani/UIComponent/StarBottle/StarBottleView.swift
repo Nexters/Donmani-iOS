@@ -14,6 +14,7 @@ struct StarBottleView: View {
     
     let width: CGFloat
     let height: CGFloat
+    let motionManager = MotionManager()
     @State private var starScene: StarScene
     @State var opacity: CGFloat = 0.0
     @Binding var backgroundBottleShape: DImageAsset
@@ -63,7 +64,7 @@ struct StarBottleView: View {
             ]
         )
         .onAppear {
-            MotionManager.startGyros { dx, dy in
+            motionManager.startGyros { dx, dy in
                 starScene.setGravity(dx: dx, dy: -dy)
             }
         }
@@ -77,7 +78,7 @@ struct StarBottleView: View {
             }
         }
         .onDisappear {
-            MotionManager.stopGyros()
+//            motionManager.stopGyros()
         }
         .onChange(of: backgroundBottleShape) { _, newValue in
             starScene.nodeSet.removeAll()

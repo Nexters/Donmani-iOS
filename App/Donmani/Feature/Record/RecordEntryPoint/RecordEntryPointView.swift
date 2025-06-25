@@ -94,7 +94,7 @@ struct RecordEntryPointView: View {
                         ) {
                             store.send(.readyToSave)
                         }
-                        .padding(8)
+                        .padding(.vertical, 8)
                     }
                 }
             }

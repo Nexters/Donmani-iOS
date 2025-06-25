@@ -55,7 +55,15 @@ struct RecordEntryPointStore {
                     let hours = remainingTime / 3600
                     let minutes = (remainingTime % 3600) / 60
                     let seconds = remainingTime % 60
-                    return "\(hours)시간 \(minutes)분 \(seconds)초 안에 별사탕 받자!"
+                    var text = "\(seconds)초 안에 별사탕 받자!"
+                    if hours > 0 {
+                        text = "\(hours)시간 \(minutes)분 " + text
+                    } else {
+                        if minutes > 0 {
+                            text = "\(minutes)분 " + text
+                        }
+                    }
+                    return text
                 }
             } else {
                 return "기록하고 별사탕 받자!"

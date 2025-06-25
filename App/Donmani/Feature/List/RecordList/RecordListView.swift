@@ -98,5 +98,4 @@ struct RecordListView: View {
         let store = MainStoreFactory().makeMonthlyRecordListStore(state: state)
         return RecordListView(store: store)
     }()
-    
 }

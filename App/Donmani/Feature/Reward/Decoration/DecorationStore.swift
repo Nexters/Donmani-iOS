@@ -101,6 +101,11 @@ struct DecorationStore {
             let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
             self.monthlyRecords = monthlyRecords
             self.isPresentingGuideBottomSheet = HistoryStateManager.shared.getIsFirstDecorationEnter()
+            
+            let itemCount = self.decorationItem.map { $0.value.count }.reduce(0,+)
+            if itemCount == 12 {
+                self.isPresentingFinalBottomSheet = HistoryStateManager.shared.getIsShownFullRewardBottmeSheet()
+            }
         }
     }
     
@@ -160,7 +165,11 @@ struct DecorationStore {
                 
             case .touchFinalBottomSheetButton:
                 state.isPresentingFinalBottomSheet = false
+                HistoryStateManager.shared.setIsShownFullRewardBottmeSheet()
                 UINavigationController.isBlockSwipe = false
+                return .run { _ in
+                    try await NetworkService.DReward().requestHiddenRead()
+                }
                 
             case .touchRewardItemCategoryButton(let category):
                 state.selectedRewardItemCategory = category

@@ -160,10 +160,17 @@ struct MainView: View {
                             .resizable()
                             .renderingMode(.template)
                             .aspectRatio(contentMode: .fit)
-                            .foregroundStyle(DColor(.pupleBlue90).color)
+                            .foregroundStyle(.white)
                             .frame(width: 22)
                         DText("오늘 남길 수 있는 기록은 모두 작성했어요!")
-                            .style(.b2, .semibold, .pupleBlue90)
+                            .style(.b2, .semibold, .white)
+                    }
+                    .background {
+                        Ellipse()
+                            .fill(DColor.mainToolTipBackgroundColor)
+                            .frame(width: .infinity, height: 22)
+                            .blur(radius: 20.0)
+                            .opacity(0.6)
                     }
                 }
             }

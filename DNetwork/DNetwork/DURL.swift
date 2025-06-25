@@ -13,6 +13,7 @@ public enum DURL {
     case appStore
     case proposeFunction
     case notice
+    case rewardFeedback
     
     public var urlString: String {
         switch self {
@@ -30,6 +31,8 @@ public enum DURL {
             return "https://forms.gle/6of9Y96wY65S9iuL8"
         case .notice:
             return "https://nine-wax-dd5.notion.site/1c3be7cd6b9680aeb006cce982404d96"
+        case .rewardFeedback:
+            return "https://forms.gle/UJ8BHkGCivPmNQVN7"
         }
     }
 }
