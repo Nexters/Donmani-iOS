@@ -168,7 +168,7 @@ struct MainView: View {
                     .background {
                         Ellipse()
                             .fill(DColor.mainToolTipBackgroundColor)
-                            .frame(width: .infinity, height: 22)
+                            .frame(height: 14)
                             .blur(radius: 20.0)
                             .opacity(0.6)
                     }
