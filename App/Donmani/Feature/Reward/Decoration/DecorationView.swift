@@ -236,7 +236,56 @@ struct DecorationView: View {
             }
             
             if store.isPresentingDecorationGuideAlert {
-                
+                ZStack {
+                    Color.black.opacity(0.6)
+                        .ignoresSafeArea()
+                    VStack(spacing: .s4) {
+                        DText("설정 > 꾸미기에서\n언제든 바꿀 수 있어요")
+                            .style(.h2, .bold, .deepBlue99)
+                            .lineSpacing(8)
+                            .multilineTextAlignment(.center)
+                        HStack(spacing: 10) {
+                            Button {
+                                store.send(.cancelSave)
+                            } label: {
+                                ZStack {
+                                    RoundedRectangle(
+                                        cornerRadius: .s1 / 2,
+                                        style: .continuous
+                                    )
+                                    .fill(DColor(.deepBlue50).color)
+                                    .frame(height: 58)
+                                    DText("돌아가기")
+                                        .style(.h3, .bold, .white)
+                                }
+                            }
+                            
+                            Button {
+                                store.send(.saveDecorationItem)
+                            } label: {
+                                ZStack {
+                                    RoundedRectangle(
+                                        cornerRadius: .s1 / 2,
+                                        style: .continuous
+                                    )
+                                    .fill(DColor(.gray95).color)
+                                    .frame(height: 58)
+                                    DText("저장하기")
+                                        .style(.h3, .bold, .deepBlue20)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.defaultLayoutPadding)
+                    .background {
+                        RoundedRectangle(
+                            cornerRadius: .s1,
+                            style: .continuous
+                        )
+                        .fill(DColor(.deepBlue60).color)
+                    }
+                    .padding(.defaultLayoutPadding)
+                }
             }
         }
         .onAppear {

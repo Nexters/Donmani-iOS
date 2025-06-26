@@ -121,6 +121,8 @@ struct DecorationStore {
         
         case touchBackButton
         case touchSaveButton
+        case cancelSave
+        case saveDecorationItem
         
         case binding(BindingAction<State>)
         case delegate(Delegate)
@@ -236,8 +238,23 @@ struct DecorationStore {
                 return .run { send in
                     await send(.delegate(.pop(false)))
                 }
-                
+            
+            
             case .touchSaveButton:
+                let isFirstSave = HistoryStateManager.shared.getIsFirstDecorationSave()
+                if isFirstSave {
+                    state.isPresentingDecorationGuideAlert = true
+                } else {
+                    return .run { send in
+                        await send(.saveDecorationItem)
+                    }
+                }
+
+            case .cancelSave:
+                state.isPresentingDecorationGuideAlert = false
+                
+            case .saveDecorationItem:
+                HistoryStateManager.shared.setIsFirstDecorationSave()
                 GA.Click(event: .customizeSubmitButton).send(parameters: [
                     .reward_배경: state.selectedDecorationItem[.background]?.name ?? "",
                     .reward_효과: state.selectedDecorationItem[.effect]?.name ?? "",
@@ -263,7 +280,8 @@ struct DecorationStore {
                     try await NetworkService.DReward().saveDecoration(dto: dto)
                     await send(.delegate(.pop(true)))
                 }
-
+                
+                
             default:
                 break
             }
