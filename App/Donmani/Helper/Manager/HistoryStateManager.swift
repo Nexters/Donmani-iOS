@@ -46,8 +46,17 @@ final class HistoryStateManager {
     private let isPresentingRewardToolTipView = "PRESENTING_REWARD_TOOL_TIP_VIEW"
     private let soundState = "SOUND_STATE"
     private let isShownFullRewardBottmSheet = "IS_SHOWN_FULL_REWARD_BOTTOM_SHEET"
+    private let isFirstDecorationSave = "IS_FIRST_DECORATION_SAVE"
     
     private init() { }
+    
+    func setIsFirstDecorationSave() {
+        userDefaults.set(isFirstDecorationSave, forKey: isFirstDecorationSave)
+    }
+    
+    func getIsFirstDecorationSave() -> Bool {
+        userDefaults.string(forKey: isFirstDecorationSave) == nil
+    }
     
     func setIsShownFullRewardBottmeSheet() {
         userDefaults.set(isShownFullRewardBottmSheet, forKey: isShownFullRewardBottmSheet)
