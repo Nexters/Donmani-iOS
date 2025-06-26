@@ -76,7 +76,7 @@ struct RewardStartView: View {
                         .padding(.horizontal, .defaultLayoutPadding)
                         
                         Button {
-                            dismiss()
+                            store.send(.touchDecorationButton)
                         } label: {
                             ZStack {
                                 RoundedRectangle(
@@ -84,7 +84,7 @@ struct RewardStartView: View {
                                     style: .continuous
                                 )
                                 .fill(DColor(.deepBlue50).color)
-                                DText("홈으로")
+                                DText("받은 선물 꾸며보기")
                                     .style(.h3, .bold, .white)
                             }
                         }
@@ -153,7 +153,7 @@ struct RewardStartView: View {
 
 #Preview {
     {
-        let context = RewardStartStore.Context(recordCount: 0, isNotOpened: false)
+        let context = RewardStartStore.Context(recordCount: 12, isNotOpened: false)
         let state = MainStateFactory().makeRewardStartState(context: context)
         let store = MainStoreFactory().makeRewardStartStore(state: state)
         return RewardStartView(store: store)

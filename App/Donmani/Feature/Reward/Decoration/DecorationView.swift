@@ -234,6 +234,10 @@ struct DecorationView: View {
                     .playing(loopMode: .playOnce)
                     .aspectRatio(1.0, contentMode: .fit)
             }
+            
+            if store.isPresentingDecorationGuideAlert {
+                
+            }
         }
         .onAppear {
             store.send(.toggleGuideBottomSheet)

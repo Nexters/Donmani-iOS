@@ -36,6 +36,7 @@ struct DecorationStore {
     struct State {
         var isPresentingGuideBottomSheet = false
         var isPresentingFinalBottomSheet = false
+        var isPresentingDecorationGuideAlert = false
         var selectedRewardItemCategory: RewardItemCategory = .background
     
         var decorationItem: [RewardItemCategory : [Reward]]

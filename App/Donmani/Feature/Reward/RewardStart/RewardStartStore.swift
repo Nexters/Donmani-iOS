@@ -102,6 +102,7 @@ struct RewardStartStore {
         
         case touchNextButton
         case touchReviewButton
+        case touchDecorationButton
         
         case requestFeedbackCard
         case receivedFeedbackCard(FeedbackCard)
@@ -115,6 +116,7 @@ struct RewardStartStore {
         enum Delegate {
             case pushRewardReceiveView(Int)
             case pushRecordEntryPointView
+            case pushDecorationView([RewardItemCategory: [Reward]], [Reward], RewardItemCategory)
         }
     }
     
@@ -173,6 +175,29 @@ struct RewardStartStore {
 //                    }
 //                    await UIApplication.shared.open(url)
 //                }
+                
+            case .touchDecorationButton:
+                GA.Click(event: .customizeRewardButton).send()
+                return .run { send in
+                    let dto = try await NetworkService.DReward().reqeustRewardItem()
+                    var decorationItem = NetworkDTOMapper.mapper(dto: dto)
+                    for reward in (decorationItem[.effect] ?? []) {
+                        if let effect = DownloadManager.Effect(rawValue: reward.id),
+                           let contentUrl = reward.jsonUrl {
+                            let data = try await NetworkService.DReward().downloadData(from: contentUrl)
+                            let name = RewardResourceMapper(id: reward.id, category: .effect).resource()
+                            try DataStorage.saveJsonFile(data: data, name: name)
+                        }
+                    }
+                    DataStorage.setInventory(decorationItem)
+                    let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+                    let year = Int(today[0]) ?? 2025
+                    let month = Int(today[1]) ?? 6
+                    decorationItem = DataStorage.getInventory()
+                    let infoDto = try await NetworkService.DReward().reqeustDecorationInfo(year: year, month: month)
+                    let currentDecorationItem = NetworkDTOMapper.mapper(dto: infoDto)
+                    await send(.delegate(.pushDecorationView(decorationItem, currentDecorationItem, .background)))
+                }
                 
             case .requestFeedbackCard:
                 return .run { send in

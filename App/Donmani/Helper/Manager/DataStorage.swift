@@ -41,8 +41,8 @@ class DataStorage {
     static func setInventory(_ item: [RewardItemCategory: [Reward]]) {
         for (key, value) in item {
             // TODO: - Remove All Data
-             shared.inventory[key] = value
-//            shared.inventory[key] = Reward.previewAllData.filter{ $0.category == key }
+//             shared.inventory[key] = value
+            shared.inventory[key] = Reward.previewAllData.filter{ $0.category == key }
             switch key {
             case .decoration, .effect, .sound:
                 let itemCount = shared.inventory[key]?.count ?? 0
