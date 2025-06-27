@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "bottle_beads.png",
+      "filename" : "reward_icon_bottle_beads.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "bottle_beads 1.png",
+      "filename" : "reward_icon_bottle_beads 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "bottle_beads 2.png",
+      "filename" : "reward_icon_bottle_beads 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

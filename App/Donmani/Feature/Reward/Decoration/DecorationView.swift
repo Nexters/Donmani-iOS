@@ -29,7 +29,7 @@ struct DecorationView: View {
                                 .image(isPreview: true)
                                 .image
                                 .resizable()
-                                .scaledToFill()
+                                .scaledToFill() 
                                 .ignoresSafeArea()
                                 .padding(-5)
                             }
@@ -119,7 +119,7 @@ struct DecorationView: View {
                                                     .image
                                                     .resizable()
                                                     .aspectRatio(0.67, contentMode: .fit)
-                                                    .frame(height: .screenWidth * 0.21)
+                                                    .frame(height: .screenWidth * 0.27)
                                                     .offset(
                                                         x: (store.byeoltongShapeType == .rewardBottleDefaultShape
                                                             ||
@@ -127,10 +127,10 @@ struct DecorationView: View {
                                                         ? .screenWidth * 0.15
                                                         : 0,
                                                         y: store.byeoltongShapeType == .rewardBottleDefaultShape
-                                                        ? -20
+                                                        ? -25
                                                         : (store.byeoltongShapeType == .rewardBottleFuzzyShape
                                                         ? +20
-                                                        : 0)
+                                                        : -20)
                                                     )
                                             }
                                             Spacer()

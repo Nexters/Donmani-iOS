@@ -75,7 +75,7 @@ extension RewardStartView {
                 style: .continuous
             )
             .strokeBorder(.white.opacity(0.2), lineWidth: 2)
-            VStack(alignment: .center) {
+            VStack(alignment: .center, spacing: 0) {
                 HStack {
                     Spacer()
                     HStack(alignment: .center, spacing: 10) {
@@ -105,10 +105,12 @@ extension RewardStartView {
                 (feedbackCard.category?.image ?? DImage(.noneSticker).image)
                     .resizable()
                     .frame(width: 78, height: 78)
+                    .padding(.bottom, 20)
                 
                 DText(feedbackCard.title)
                     .style(.h2, .bold, .white)
                     .padding(.bottom, 10)
+                
                 DText(feedbackCard.content+"\n")
                     .style(.b2, .regular, .gray95)
                     .lineSpacing(4)
