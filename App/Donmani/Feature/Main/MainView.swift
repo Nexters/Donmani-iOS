@@ -110,9 +110,19 @@ struct MainView: View {
                                         case .rewardBottleBeadsShape:
                                             return -.screenWidth * 0.21 * 0.6
                                         case .rewardBottleFuzzyShape:
-                                            return 0
+                                            return -.screenWidth * 0.21 * 0.1
                                         default:
-                                            return -.screenWidth * 0.21 * 0.6
+                                            return -.screenWidth * 0.21 * 0.8
+                                        }
+                                    }()
+                                    let offsetX: CGFloat = {
+                                        switch store.byeoltongShapeType {
+                                        case .rewardBottleDefaultShape:
+                                            return .screenWidth * 0.21 * 0.8
+                                        case .rewardBottleFuzzyShape:
+                                            return .screenWidth * 0.21
+                                        default:
+                                            return 0
                                         }
                                     }()
                                     if !lottieName.isEmpty {
@@ -123,13 +133,9 @@ struct MainView: View {
                                                         .image
                                                         .resizable()
                                                         .aspectRatio(0.67, contentMode: .fit)
-                                                        .frame(height: .screenWidth * 0.21)
+                                                        .frame(height: .screenWidth * 0.27)
                                                         .offset(
-                                                            x: (store.byeoltongShapeType == .rewardBottleDefaultShape
-                                                                ||
-                                                                store.byeoltongShapeType == .rewardBottleFuzzyShape)
-                                                            ? .screenWidth * 0.21 * 0.8
-                                                            : 0,
+                                                            x: offsetX,
                                                             y: offsetY
                                                         )
                                                 }
