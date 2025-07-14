@@ -63,7 +63,6 @@ struct RewardStartStore {
             self.userName = DataStorage.getUserName()
             
             if (context.recordCount >= 12) {
-                
                 if (context.isNotOpened) {
                     title = "기록하고 토비 선물받기 🎁\n지금까지 \(context.recordCount)번 기록 중"
                     subtitle = "12번 기록하면 특별한 선물을 받아요"
@@ -134,7 +133,7 @@ struct RewardStartStore {
                 }
                 
             case .touchGuideBottomSheetButton:
-                if (state.recordCount > 0 && state.isEnabledButton) {
+                if (state.recordCount > 0 && state.isEnabledButton && !state.enabledWriteRecord) {
                     return .run { send in
                         await send(.toggleGuideBottomSheet)
                         await send(.requestFeedbackCard)

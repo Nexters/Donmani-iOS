@@ -245,7 +245,9 @@ struct RecordEntryPointStore {
                 
             case .readyToSave:
                 GA.Click(event: .recordmainSubmitButton).send(parameters: [.screenType: state.dayTitle])
-                GA.View(event: .confirm).send(parameters: [.referrer: true])
+//                GA.View(event: .confirm).send(parameters: [.referrer: true])
+                GA.View(event: .confirm).send(parameters: [.screenType: state.dayTitle])
+                
                 
                 state.isReadyToSave = true
                 state.isFullWriting = true

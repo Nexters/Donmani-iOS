@@ -75,7 +75,9 @@ extension DecorationView{
                                     .padding(-5)
                                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                             } else {
-                                image.padding(.s3 / 3)
+                                image
+                                    .resizable()
+                                    .padding((.s3 / 3) + 0.5)
                             }
                         }
                 }

@@ -104,7 +104,7 @@ struct DecorationStore {
             self.isPresentingGuideBottomSheet = HistoryStateManager.shared.getIsFirstDecorationEnter()
             
             let itemCount = self.decorationItem.map { $0.value.count }.reduce(0,+)
-            if itemCount == 12 {
+            if itemCount >= 16 {
                 self.isPresentingFinalBottomSheet = HistoryStateManager.shared.getIsShownFullRewardBottmeSheet()
             }
         }
@@ -136,13 +136,14 @@ struct DecorationStore {
         Reduce { state, action in
             switch action {
             case .toggleGuideBottomSheet:
-                GA.View.init(event: .customize).send(parameters: [
-                    .reward_배경: state.previousDecorationItem[.background]?.name ?? "",
-                    .reward_효과: state.previousDecorationItem[.effect]?.name ?? "",
-                    .reward_장식: state.previousDecorationItem[.decoration]?.name ?? "",
-                    .reward_별통이: state.previousDecorationItem[.byeoltong]?.name ?? "",
-                    .reward_효과음: state.previousDecorationItem[.sound]?.name ?? "",
-                ])
+                GA.View(event: .customize).send()
+//                GA.View(event: .customize).send(parameters: [
+//                    .reward_배경: state.previousDecorationItem[.background]?.name ?? "",
+//                    .reward_효과: state.previousDecorationItem[.effect]?.name ?? "",
+//                    .reward_장식: state.previousDecorationItem[.decoration]?.name ?? "",
+//                    .reward_별통이: state.previousDecorationItem[.byeoltong]?.name ?? "",
+//                    .reward_효과음: state.previousDecorationItem[.sound]?.name ?? "",
+//                ])
                 if HistoryStateManager.shared.getIsFirstDecorationEnter() {
                     HistoryStateManager.shared.setIsFirstDecorationEnter()
                     state.isPresentingGuideBottomSheet = !state.isPresentingGuideBottomSheet
@@ -150,16 +151,16 @@ struct DecorationStore {
                         UINavigationController.isBlockSwipe = false
                     }
                 }
-                var count = 0
-                for (_, value) in state.decorationItem {
-                    count += value.count
-                }
-                if (count >= 19) {
-                    if !HistoryStateManager.shared.getIsShownFullRewardBottmeSheet() {
-                        HistoryStateManager.shared.setIsShownFullRewardBottmeSheet()
-                        state.isPresentingFinalBottomSheet = !state.isPresentingFinalBottomSheet
-                    }
-                }
+//                var count = 0
+//                for (_, value) in state.decorationItem {
+//                    count += value.count
+//                }
+//                if (count >= 17) {
+//                    if !HistoryStateManager.shared.getIsShownFullRewardBottmeSheet() {
+//                        HistoryStateManager.shared.setIsShownFullRewardBottmeSheet()
+//                        state.isPresentingFinalBottomSheet = !state.isPresentingFinalBottomSheet
+//                    }
+//                }
                 
             case .touchGuideBottomSheetButton:
                 return .run { send in

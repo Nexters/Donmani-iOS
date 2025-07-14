@@ -55,6 +55,9 @@ struct StatisticsView: View {
             // Propose Function WebView
             InnerWebView(urlString: DURL.proposeFunction.urlString)
         }
+        .onAppear {
+            GA.View(event: .insight).send()
+        }
         .navigationBarBackButtonHidden()
     }
 }

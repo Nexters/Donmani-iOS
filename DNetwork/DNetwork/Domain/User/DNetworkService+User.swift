@@ -61,7 +61,7 @@ public extension DNetworkService {
         }
         
         public func fetchRewardStatus() async throws -> Bool {
-            let response: [String:Bool] = try await self.request.get(
+            let response: [String: Bool] = try await self.request.get(
                 path: .reward,
                 addtionalPath: ["status", userKey]
             )

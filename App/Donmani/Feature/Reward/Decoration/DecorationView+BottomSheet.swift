@@ -61,7 +61,9 @@ extension DecorationView {
                 .padding(.top, -4)
                 
                 DText("12개 선물을 모두 모아\n토비의 우주바캉스🏝️를 받았어요!")
-                    .style(.b2, .regular, .deepBlue90)
+                    .style(.b2, .regular, .deepBlue99)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, -10)
                 
                 LottieView(animation: store.lottieFinalAnimation)
                     .playing(loopMode: .loop)

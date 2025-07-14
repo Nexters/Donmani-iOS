@@ -50,13 +50,16 @@ struct RewardReceiveView: View {
                 .padding(.defaultLayoutPadding)
             }
         }
+        .onAppear {
+            GA.View(event: .reward).send()
+        }
         .navigationBarBackButtonHidden()
     }
 }
 
 #Preview {
     {
-        let context = RewardReceiveStore.Context(rewardCount: 3)
+        let context = RewardReceiveStore.Context(rewardCount: 2)
         let state = MainStateFactory().makeRewardReceiveState(context: context)
         let store = MainStoreFactory().makeRewardReceiveStore(state: state)
         return RewardReceiveView(store: store)

@@ -18,10 +18,11 @@ extension GAProtocol {
 #if DEBUG
         return
 #endif
-        var convertKeyValue: [String: Any] = ["event_name":eventName]
+        var convertKeyValue: [String: Any] = ["event_name": eventName]
         if let screen {
-            convertKeyValue["screen_name"] = screen.rawValue
+//            convertKeyValue["screen_name"] = screen.rawValue
             convertKeyValue[AnalyticsParameterScreenName] = screen.rawValue
+            convertKeyValue[AnalyticsParameterScreenClass] = screen.rawValue
         }
         
         parameters?.forEach {

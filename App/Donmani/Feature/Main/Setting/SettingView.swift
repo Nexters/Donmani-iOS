@@ -209,6 +209,7 @@ struct SettingView: View {
                         isDecorationNotRead = !(try await NetworkService.User().fetchRewardStatus())
                     }
                     store.send(.fetchDecorationItem)
+                    GA.View(event: .setting).send()
                 }
                 .navigationBarBackButtonHidden()
             }

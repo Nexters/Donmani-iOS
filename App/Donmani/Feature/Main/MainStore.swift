@@ -95,7 +95,8 @@ struct MainStore {
             let isCompleteYesterday = state[.yesterday, default: false]
             isPresentingRecordEntryButton = !(isCompleteToday && isCompleteYesterday)
             isNewStar += 1
-            isPresentingRewardToolTipView = true
+            let itemCount = DataStorage.getInventory().reduce(into: 0) { result, items in result += items.value.count }
+            isPresentingRewardToolTipView = !(itemCount > 15)
             HistoryStateManager.shared.setIsPresentingRewardToolTipView(false)
         }
     }
@@ -135,6 +136,7 @@ struct MainStore {
                 state.name = DataStorage.getUserName()
                 state.decorationItem = DataStorage.getDecorationItem()
                 let id = state.decorationItem[.byeoltong]?.id ?? 4
+                GA.View(event: .main).send()
                 state.byeoltongShapeType = {
                     switch id {
                     case 24:
