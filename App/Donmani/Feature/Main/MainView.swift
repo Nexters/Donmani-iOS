@@ -108,7 +108,7 @@ struct MainView: View {
                                     let offsetY: CGFloat = {
                                         switch store.byeoltongShapeType {
                                         case .rewardBottleBeadsShape:
-                                            return -.screenWidth * 0.21 * 0.6
+                                            return -.screenWidth * 0.21 * 0.4
                                         case .rewardBottleFuzzyShape:
                                             return -.screenWidth * 0.21 * 0.1
                                         default:

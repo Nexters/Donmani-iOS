@@ -19,7 +19,7 @@ extension RewardReceiveView {
                     .frame(width: .s3, height: .s3)
             }
             VStack(alignment: .leading, spacing: .s5 / 2.0) {
-                DText("열지 않은 선물 \(store.rewardCount)개 함께 열게요")
+                DText("열지 않은 선물 \(store.rewardCount - 1)개 함께 열게요")
                     .style(.b1, .semibold, .gray99)
                 DText("이벤트 기간동안 기록 할 때마다 선물 받아요")
                     .style(.b2, .regular, .gray99)

@@ -84,6 +84,7 @@ extension SplashView {
     private func fetchRewardInventory() async throws {
         let inventoryDTO = try await NetworkService.DReward().reqeustRewardItem()
         let inventory = NetworkDTOMapper.mapper(dto: inventoryDTO)
+//        print(inventory.reduce(into: 0) { $0 += $1.value.count })
         // TODO: Remove Duplicate Code - Total 4 location
         for reward in (inventory[.effect] ?? []) {
             if let _ = DownloadManager.Effect(rawValue: reward.id),

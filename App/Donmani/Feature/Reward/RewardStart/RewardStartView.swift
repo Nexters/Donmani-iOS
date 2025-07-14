@@ -47,6 +47,9 @@ struct RewardStartView: View {
                                 .padding(.defaultLayoutPadding)
                             Spacer()
                             FeedbackCardView(feedbackCard: feedbackCard)
+                                .onAppear {
+                                    GA.View(event: .feedback).send()
+                                }
                             Spacer()
                         }
                     }
@@ -117,6 +120,7 @@ struct RewardStartView: View {
         }
         .onAppear {
             store.send(.toggleGuideBottomSheet)
+            GA.View(event: .received).send()
         }
         .navigationBarBackButtonHidden()
     }
@@ -153,7 +157,7 @@ struct RewardStartView: View {
 
 #Preview {
     {
-        let context = RewardStartStore.Context(recordCount: 12, isNotOpened: false)
+        let context = RewardStartStore.Context(recordCount: 0, isNotOpened: false)
         let state = MainStateFactory().makeRewardStartState(context: context)
         let store = MainStoreFactory().makeRewardStartStore(state: state)
         return RewardStartView(store: store)

@@ -63,7 +63,7 @@ final class HistoryStateManager {
     }
     
     func getIsShownFullRewardBottmeSheet() -> Bool {
-        userDefaults.string(forKey: isShownFullRewardBottmSheet) != nil
+        userDefaults.string(forKey: isShownFullRewardBottmSheet) == nil
     }
     
     func setSouncState(_ flag: Bool) {

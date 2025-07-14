@@ -117,6 +117,7 @@ struct RecordEntryPointView: View {
         }
         .onAppear {
             store.send(.startTimer)
+            GA.View(event: .recordmain).send(parameters: [.screenType: store.dayTitle])
         }
         .navigationBarBackButtonHidden()
     }

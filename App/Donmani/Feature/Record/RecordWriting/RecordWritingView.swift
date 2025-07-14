@@ -141,6 +141,7 @@ struct RecordWritingView: View {
                 } else {
                     isFocusToTextField = true
                 }
+                GA.View(event: .record).send()
             }
             
             TextGuideView()

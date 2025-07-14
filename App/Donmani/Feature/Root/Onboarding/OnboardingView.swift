@@ -33,6 +33,9 @@ struct OnboardingView: View {
                 pageStepView
             }
         }
+        .onAppear {
+            GA.View(event: .onboarding).send()
+        }
     }
 }
 
