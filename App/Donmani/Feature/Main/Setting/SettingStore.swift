@@ -76,7 +76,7 @@ struct SettingStore {
                     let decorationItem = DataStorage.getInventory()
                     let dto = try await NetworkService.DReward().reqeustDecorationInfo(year: year, month: month)
                     let currentDecorationItem = NetworkDTOMapper.mapper(dto: dto)
-                    try await NetworkService.User().updateRewardStatus()
+//                    try await NetworkService.User().updateRewardStatus()
                     await send(.delegate(.pushDecoration(decorationItem, currentDecorationItem)))
                 }
                 
