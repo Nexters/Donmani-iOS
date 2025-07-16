@@ -76,7 +76,8 @@ extension NetworkDTOMapper {
                 thumbnailUrl: item.thumbnailUrl,
                 category: RewardItemCategory(rawValue: item.category),
                 newAcquiredFlag: item.newAcquiredFlag,
-                hidden: item.hidden
+                hidden: item.hidden,
+                hiddenRead: item.hiddenRead
             )
         }
         return rewardItemList

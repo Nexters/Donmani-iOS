@@ -103,10 +103,19 @@ struct DecorationStore {
             self.monthlyRecords = monthlyRecords
             self.isPresentingGuideBottomSheet = HistoryStateManager.shared.getIsFirstDecorationEnter()
             
-            let itemCount = self.decorationItem.map { $0.value.count }.reduce(0,+)
-            if itemCount >= 16 {
-                self.isPresentingFinalBottomSheet = HistoryStateManager.shared.getIsShownFullRewardBottmeSheet()
-            }
+            let itemCount = self.decorationItem.map {
+                if ($0.key == .decoration) {
+                    for item in $0.value {
+                        if (item.hidden && !item.hiddenRead) {
+                            self.isPresentingFinalBottomSheet = true
+                        }
+                    }
+                }
+                return $0.value.count
+            }.reduce(0,+)
+//            if itemCount >= 16 {
+//                self.isPresentingFinalBottomSheet = HistoryStateManager.shared.getIsShownFullRewardBottmeSheet()
+//            }
         }
     }
     
@@ -171,7 +180,7 @@ struct DecorationStore {
                 state.isPresentingFinalBottomSheet = false
                 HistoryStateManager.shared.setIsShownFullRewardBottmeSheet()
                 UINavigationController.isBlockSwipe = false
-                return .run { _ in
+                return .run { send in
                     try await NetworkService.DReward().requestHiddenRead()
                 }
                 
@@ -212,6 +221,11 @@ struct DecorationStore {
                     (state.selectedDecorationItem[key]?.id ?? 0) == (item.id) ? nil : 0
                 }.count
                 state.disabledSaveButton = (diffCount == 0)
+                if (item.id == 23 && !item.hiddenRead) {
+                    Task {
+                        try await NetworkService.DReward().requestHiddenRead()
+                    }
+                }
                 
 //            case .touchEqualizerButton:
 //                guard let sound = state.selectedDecorationItem[.sound] else {

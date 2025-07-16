@@ -15,4 +15,5 @@ public struct RewardItemDTO: Decodable {
     public let category: String
     public let newAcquiredFlag: Bool
     public let hidden: Bool
+    public let hiddenRead: Bool
 }
