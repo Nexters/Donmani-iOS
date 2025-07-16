@@ -307,7 +307,7 @@ extension StarScene {
         )
     }
     
-    
+    @MainActor
     private func createStarNode(
         starSize: CGFloat,
         position: CGPoint,
