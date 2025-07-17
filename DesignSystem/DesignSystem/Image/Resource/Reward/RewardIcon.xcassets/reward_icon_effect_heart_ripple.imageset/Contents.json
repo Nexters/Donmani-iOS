@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "효과_하트잔잔.png",
+      "filename" : "reward_icon_effect_heart_ripple 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "효과_하트잔잔 1.png",
+      "filename" : "reward_icon_effect_heart_ripple 2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "효과_하트잔잔 2.png",
+      "filename" : "reward_icon_effect_heart_ripple 3.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

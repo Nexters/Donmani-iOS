@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "효과_소원의 유성.png",
+      "filename" : "reward_icon_effect_wishing_meteor 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "효과_소원의 유성 1.png",
+      "filename" : "reward_icon_effect_wishing_meteor 2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "효과_소원의 유성 2.png",
+      "filename" : "reward_icon_effect_wishing_meteor 3.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
