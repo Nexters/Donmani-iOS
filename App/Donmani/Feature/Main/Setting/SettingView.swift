@@ -206,7 +206,7 @@ struct SettingView: View {
                     }
                     Task {
                         isNoticeNotRead = !(try await NetworkService.User().fetchNoticeStatus())
-                        isDecorationNotRead = !(try await NetworkService.User().fetchRewardStatus())
+                        isDecorationNotRead = (try await NetworkService.User().fetchRewardStatus())
                     }
                     store.send(.fetchDecorationItem)
                     GA.View(event: .setting).send()

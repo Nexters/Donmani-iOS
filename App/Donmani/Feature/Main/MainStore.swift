@@ -154,7 +154,7 @@ struct MainStore {
                         await send(.dismissSaveSuccessToast, animation: .linear(duration: 0.5))
                     }
                 }
-                
+                 
             case .closePopover:
                 state.isPresentingRecordYesterdayToopTip = false
                 HistoryStateManager.shared.setLastYesterdayToopTipDay()
