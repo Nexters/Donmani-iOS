@@ -113,12 +113,16 @@ extension SplashView {
     private func checkAppVersion() {
         Task {
             let appVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "0.0"
-            let storeVerion = (try? await NetworkService.Version().fetchAppVersionFromAppStore()) ?? "0.0"
-            let isLatestVersion = VersionManager().isLastestVersion(store: storeVerion, current: appVersion)
+//            let storeVerion = (try? await NetworkService.Version().fetchAppVersionFromAppStore()) ?? "0.0"
+            let updateInfo = try await NetworkService.Version().fetchAppVersionFromServer()
+            let isLatestVersion = VersionManager().isLastestVersion(store: updateInfo.latestVersion, current: appVersion)
             self.isLatestVersion = isLatestVersion
-            if isLatestVersion {
-                completeHandler?()
+            if updateInfo.forcedUpdateYn == "Y" {
+                if !isLatestVersion {
+                    return
+                }
             }
+            completeHandler?()
         }
     }
 }
