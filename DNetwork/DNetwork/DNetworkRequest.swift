@@ -41,6 +41,7 @@ struct DNetworkRequest {
             let tempResponse = DResponse(statusCode: 200, responseMessage: "Success", responseData: Data())
             return tempResponse as! R
         }
+//        print(String(data: data, encoding: .utf8))
         guard let returnData = try? JSONDecoder().decode(R.self, from: data) else {
             throw NetworkError.decodingFailed
         }
