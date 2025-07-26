@@ -9,19 +9,21 @@ import Foundation
 
 extension URL {
     mutating func add(paths: [String]) {
-        for p in paths {
-            self.append(path: p)
+        for path in paths {
+            self.append(path: path)
         }
     }
     
-    func addQueryItems(parameters: [String: Any]) -> URL {
-        var result: URL = self
-        if var components = URLComponents(url: self, resolvingAgainstBaseURL: true) {
-            components.queryItems = parameters.map { item in
-                URLQueryItem(name: item.key, value: String(describing: item.value))
-            }
-            result = components.url ?? self
+    func addQueryItems(parameters: [String: Any]) throws -> URL {
+        guard var components = URLComponents(url: self, resolvingAgainstBaseURL: true) else {
+            throw NetworkError.invalidURL
         }
-        return result
+        components.queryItems = parameters.map { item in
+            URLQueryItem(name: item.key, value: String(describing: item.value))
+        }
+        guard let url = components.url else {
+            throw NetworkError.invalidURL
+        }
+        return url
     }
 }
