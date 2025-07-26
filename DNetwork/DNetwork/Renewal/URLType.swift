@@ -5,14 +5,31 @@
 //  Created by 문종식 on 3/9/25.
 //
 
-public enum DURL {
+public typealias DURL = URLType
+
+public enum URLType {
+    /// 개인정보처리 약관 Notion URL
     case privacyPolicy
+    
+    /// 앱 사용 피드백 Google Form URL
     case feedback
+    
+    /// API URL
     case api
+    
+    /// App Store Version Check URL
     case appInfo
+    
+    /// App Store URL
     case appStore
+    
+    /// 기능 제안 Google Form URL
     case proposeFunction
+    
+    /// 공지사항 Notion URL
     case notice
+    
+    /// 리워드 이벤트 피드백 URL
     case rewardFeedback
     
     public var urlString: String {
