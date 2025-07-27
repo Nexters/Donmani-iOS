@@ -6,7 +6,7 @@
 //
 
 struct RecordService {
-    let request: NetworkRequest
+    private let request: NetworkRequest
     
     init(request: NetworkRequest) {
         self.request = request
