@@ -1,20 +1,16 @@
 //
-//  DNetworkService.swift
-//  Donmani
+//  NetworkRequest.swift
+//  DNetwork
 //
-//  Created by 문종식 on 2/13/25.
+//  Created by 문종식 on 7/27/25.
 //
 
-import Foundation
-
-struct DNetworkRequest {
-    var apiBaseURL: String {
+public struct NetworkRequest {
+    private var apiBaseURL: String {
         DURL.api.urlString
     }
     
-    public init() {
-        
-    }
+    public init() { }
     
     func createURL(
         _ path: APIPath,
@@ -34,25 +30,6 @@ struct DNetworkRequest {
         return url
     }
     
-    func createURLReqeust<T: Encodable>(
-        method: HTTPMethod,
-        url: URL,
-        bodyData: T?
-    ) throws -> URLRequest {
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        request.setValue("application/json;charset=UTF-8", forHTTPHeaderField: "accept")
-        request.setValue("application/json;charset=UTF-8", forHTTPHeaderField: "Content-Type")
-        if let bodyData {
-            guard let body = try? JSONEncoder().encode(bodyData) else {
-                throw NetworkError.encodingFailed
-            }
-            request.httpBody = body
-        }
-        return request
-    }
-    
-    // Old Request
     func createURLReqeust(
         method: HTTPMethod,
         url: URL
@@ -64,11 +41,19 @@ struct DNetworkRequest {
         return request
     }
     
-    func createURL(baseURL: String) throws -> URL {
-        guard let url = URL(string: baseURL) else {
-            throw NetworkError.invalidURL
+    func createURLReqeust<T: Encodable>(
+        method: HTTPMethod,
+        url: URL,
+        bodyData: T?
+    ) throws -> URLRequest {
+        var request = createURLReqeust(method: method, url: url)
+        if let bodyData {
+            guard let body = try? JSONEncoder().encode(bodyData) else {
+                throw NetworkError.encodingFailed
+            }
+            request.httpBody = body
         }
-        return url
+        return request
     }
     
     /// Request With Decodable Response
@@ -104,17 +89,6 @@ struct DNetworkRequest {
         if stateCode >= 400 {
             throw NetworkError.serverError(statusCode: stateCode)
         }
-    }
-    
-    func runData(request: URLRequest) async throws -> Data {
-        guard let (data, response) = try? await URLSession.shared.data(for: request) else {
-            throw NetworkError.requestFailed
-        }
-        let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500
-        if stateCode >= 400 {
-            throw NetworkError.serverError(statusCode: stateCode)
-        }
-        return data
     }
 }
 
