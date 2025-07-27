@@ -14,7 +14,7 @@ public struct UserService {
     
     /// 사용자 등록
     public func postRegisterUser(userKey: String) async throws -> UserResponse {
-        let result: DResponse<UserResponse> = try await request.post(
+        let result: ResponseWrapper<UserResponse> = try await request.post(
             path: .user,
             addtionalPaths: ["register"],
             bodyData: ["userKey": userKey]
@@ -27,7 +27,7 @@ public struct UserService {
     
     /// 사용자 정보 업데이트
     public func postUpdateUser(userKey: String, newUserName: String) async throws -> UserUpdateResponse {
-        let result: DResponse<UserUpdateResponse> = try await request.post(
+        let result: ResponseWrapper<UserUpdateResponse> = try await request.post(
             path: .user,
             addtionalPaths: ["register"],
             bodyData: [
@@ -43,7 +43,7 @@ public struct UserService {
     
     /// 마지막 로그인 업데이트
     public func putLastLogin(userKey: String) async throws {
-        let result: DResponse<EmptyResponse> = try await request.get(
+        let result: ResponseWrapper<EmptyResponse> = try await request.get(
             path: .user,
             addtionalPaths: ["last-login", userKey]
         )
@@ -62,7 +62,7 @@ public struct UserService {
     
     /// 공지사항 확인 상태 조회
     public func getNoticeStatus(userKey: String) async throws -> NoticeStatusResponse {
-        let result: DResponse<NoticeStatusResponse> = try await request.get(
+        let result: ResponseWrapper<NoticeStatusResponse> = try await request.get(
             path: .notice,
             addtionalPaths: ["status", userKey]
         )
@@ -82,7 +82,7 @@ public struct UserService {
     
     /// 새 리워드 아이템 확인 상태 조회
     public func getRewardStatus(userKey: String) async throws -> RewardStatusResponse {
-        let result: DResponse<RewardStatusResponse> = try await request.get(
+        let result: ResponseWrapper<RewardStatusResponse> = try await request.get(
             path: .reward,
             addtionalPaths: ["status", userKey]
         )

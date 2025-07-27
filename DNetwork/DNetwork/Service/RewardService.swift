@@ -5,10 +5,10 @@
 //  Created by 문종식 on 7/27/25.
 //
 
-struct RewardService {
-    let request: NetworkRequest
+public struct RewardService {
+    private let request: NetworkRequest
     
-    init(request: NetworkRequest) {
+    public init(request: NetworkRequest) {
         self.request = request
     }
     

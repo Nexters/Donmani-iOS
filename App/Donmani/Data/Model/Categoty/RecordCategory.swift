@@ -59,4 +59,17 @@ struct RecordCategory: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(_hashValue())
     }
+    
+    init?(rawValue: String) {
+        var category: (any CategoryProtocol)?
+        if let goodCategory = GoodCategory(rawValue: rawValue) {
+            category = goodCategory
+        } else if let badCategory = BadCategory(rawValue: rawValue) {
+            category = badCategory
+        }
+        guard let category else {
+            return nil
+        }
+        self = RecordCategory(category)
+    }
 }
