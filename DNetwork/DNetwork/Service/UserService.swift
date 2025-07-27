@@ -61,7 +61,7 @@ public struct UserService {
     }
     
     /// 공지사항 확인 상태 조회
-    func getNoticeStatus(userKey: String) async throws -> NoticeStatusResponse {
+    public func getNoticeStatus(userKey: String) async throws -> NoticeStatusResponse {
         let result: DResponse<NoticeStatusResponse> = try await request.get(
             path: .notice,
             addtionalPaths: ["status", userKey]
@@ -73,7 +73,7 @@ public struct UserService {
     }
     
     /// 새 리워드 아이템 확인 상태 업데이트
-    func putRewardStatus(userKey: String) async throws {
+    public func putRewardStatus(userKey: String) async throws {
         let _: EmptyResponse = try await request.put(
             path: .reward,
             addtionalPaths: ["status", userKey]
@@ -81,7 +81,7 @@ public struct UserService {
     }
     
     /// 새 리워드 아이템 확인 상태 조회
-    func getRewardStatus(userKey: String) async throws -> RewardStatusResponse {
+    public func getRewardStatus(userKey: String) async throws -> RewardStatusResponse {
         let result: DResponse<RewardStatusResponse> = try await request.get(
             path: .reward,
             addtionalPaths: ["status", userKey]
