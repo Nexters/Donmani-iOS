@@ -66,7 +66,7 @@ struct RewardService {
     }
     
     /// 리워드 아이템 오픈
-    func putOpenReward() async throws -> [RewardItemResponse] {
+    func putOpenReward(userKey: String) async throws -> [RewardItemResponse] {
         let result: DResponse<[RewardItemResponse]> = try await request.put(
             path: .reward,
             addtionalPaths: ["open", userKey],
@@ -80,22 +80,15 @@ struct RewardService {
     
     /// 월별 리워드 아이템 저장
     func putOpenReward(
-        year: Int,
-        month: Int,
-        backgroundId: Int,
-        effectId: Int,
-        decorationId: Int,
-        byeoltongCaseId: Int
+        bodyData: RewardSaveRequest
+//        userKey: String,
+//        year: Int,
+//        month: Int,
+//        backgroundId: Int,
+//        effectId: Int,
+//        decorationId: Int,
+//        byeoltongCaseId: Int
     ) async throws {
-        let bodyData: RewardSaveRequest = RewardSaveRequest(
-            userKey: userKey,
-            year: year,
-            month: month,
-            backgroundId: backgroundId,
-            effectId: effectId,
-            decorationId: decorationId,
-            byeoltongCaseId: byeoltongCaseId
-        )
         let _: EmptyResponse = try await request.put(
             path: .reward,
             bodyData: bodyData
