@@ -26,4 +26,15 @@ enum RecordContentType: String, Equatable {
             return "후회됐"
         }
     }
+    
+    init(rawValue: String) {
+        switch rawValue {
+        case "GOOD":
+            self = .good
+        case "BAD":
+            self = .bad
+        default:
+            self = .good
+        }
+    }
 }

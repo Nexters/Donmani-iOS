@@ -14,26 +14,19 @@ final actor RecordRepository {
         self.service = service
     }
     
-//    /// 기록 작성
-//    public func postRecord(record: RecordRequest) async throws {
-//        try await request.post(path: .expenses, bodyData: record)
-//    }
-//    
-//    /// 월별 기록 정보(리스트)
-//    public func getMonthlyRecordList(userKey: String, year: Int, month: Int) async throws -> MonthlyRecordResponse {
-//        let result: DResponse<MonthlyRecordResponse> = try await request.get(
-//            path: .expenses,
-//            addtionalPaths: ["list", userKey],
-//            parameters: [
-//                "year": year,
-//                "month": month
-//            ]
-//        )
-//        guard let data = result.responseData else {
-//            throw NetworkError.noData
-//        }
-//        return data
-//    }
+    /// 기록 작성
+    public func postRecord(userKey: String, record: Record) async throws {
+        try await service.postRecord(record: .from(userKey: userKey, record: record))
+    }
+    
+    /// 월별 기록 정보(리스트)
+    public func getMonthlyRecordList(userKey: String, year: Int, month: Int) async throws -> MonthlyRecordState {
+        try await service.getMonthlyRecordList(
+            userKey: userKey,
+            year: year,
+            month: month
+        ).toDomain()
+    }
 //    
 //    /// 월별 기록 정보(캘린더)
 //    public func getMonthlyRecordCalendar(userKey: String, year: Int, month: Int) async throws -> MonthlyRecordResponse {

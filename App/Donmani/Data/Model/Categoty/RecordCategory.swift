@@ -60,7 +60,7 @@ struct RecordCategory: Hashable {
         hasher.combine(_hashValue())
     }
     
-    init?(rawValue: String) {
+    init(rawValue: String) {
         var category: (any CategoryProtocol)?
         if let goodCategory = GoodCategory(rawValue: rawValue) {
             category = goodCategory
@@ -68,7 +68,8 @@ struct RecordCategory: Hashable {
             category = badCategory
         }
         guard let category else {
-            return nil
+            self = RecordCategory(GoodCategory.happiness)
+            return
         }
         self = RecordCategory(category)
     }

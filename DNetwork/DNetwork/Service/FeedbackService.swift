@@ -25,8 +25,8 @@ public struct FeedbackService {
     }
     
     /// 피드백 카드 정보
-    public func getFeedbackCard(userKey: String) async throws -> FeedBackCardResponse {
-        let result: DResponse<FeedBackCardResponse> = try await request.get(
+    public func getFeedbackCard(userKey: String) async throws -> FeedbackCardResponse {
+        let result: DResponse<FeedbackCardResponse> = try await request.get(
             path: .feedback,
             addtionalPaths: ["content", userKey]
         )
