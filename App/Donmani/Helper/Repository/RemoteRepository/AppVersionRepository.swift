@@ -16,7 +16,7 @@ final actor AppVersionRepository {
     
     /// 앱 버전 정보 요청
     func getAppVersion() async throws -> Version {
-        let response = self.service.getAppVersion()
+        let response = try await self.service.getAppVersion()
         return response.toDomain()
     }
 }
