@@ -66,10 +66,14 @@ public struct RecordService {
     }
     
     /// 월간 카테고리별 기록 수
-    public func getMonthlyRecordCalendar(userKey: String) async throws -> CategoryStatisticsResponse {
+    public func getMonthlyCategorySatistics(userKey: String, year: Int, month: Int) async throws -> CategoryStatisticsResponse {
         let result: DResponse<CategoryStatisticsResponse> = try await request.get(
             path: .expenses,
-            addtionalPaths: ["category-statistics", userKey]
+            addtionalPaths: ["category-statistics", userKey],
+            parameters: [
+                "year": year,
+                "month": month
+            ]
         )
         guard let data = result.responseData else {
             throw NetworkError.noData

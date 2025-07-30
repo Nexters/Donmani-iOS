@@ -10,18 +10,7 @@ import DNetwork
 extension MonthlyRecordResponse {
     func toDomain() -> MonthlyRecordState {
         MonthlyRecordState(
-            records: self.records?.map { record in
-                Record(
-                    date: record.date,
-                    contents: record.contents?.map {
-                        RecordContent(
-                            flag: RecordContentType(rawValue: $0.flag),
-                            category: RecordCategory(rawValue: $0.category),
-                            memo: $0.memo
-                        )
-                    }
-                )
-            },
+            records: self.records?.map { $0.toDomain() },
             saveItems: self.saveItems.map {
                 Reward(
                     id: $0.id,
