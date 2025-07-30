@@ -8,21 +8,13 @@
 import DNetwork
 
 extension RecordRequest {
-    static func from(userKey: String, record: Record) -> RecordRequest {
-        RecordRequest(
+    init(userKey: String, record: Record) {
+        self.init(
             userKey: userKey,
-            records: [
-                RecordElementRequest(
-                    date: record.date,
-                    contents: record.contents?.map {
-                        RecordContentRequest(
-                            flag: $0.flag.rawValue,
-                            category: $0.category.uppercaseTitle,
-                            memo: $0.memo
-                        )
-                    }
-                )
-            ]
+            date: record.date,
+            records: record.contents?.map {
+                ($0.flag.rawValue, $0.category.uppercaseTitle, $0.memo)
+            }
         )
     }
 }
