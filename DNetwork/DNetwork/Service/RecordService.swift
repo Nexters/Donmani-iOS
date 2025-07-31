@@ -13,8 +13,8 @@ public struct RecordService {
     }
     
     /// 기록 작성
-    public func postRecord(record: RecordRequest) async throws {
-        try await request.post(path: .expenses, bodyData: record)
+    public func postRecord(bodyData: RecordRequest) async throws {
+        try await request.post(path: .expenses, bodyData: bodyData)
     }
     
     /// 월별 기록 정보(리스트)

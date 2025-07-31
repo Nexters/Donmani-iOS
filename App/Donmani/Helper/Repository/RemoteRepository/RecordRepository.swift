@@ -16,7 +16,8 @@ final actor RecordRepository {
     
     /// 기록 작성
     public func postRecord(userKey: String, record: Record) async throws {
-        try await service.postRecord(record: RecordRequest(userKey: userKey, record: record))
+        let bodyData = RecordRequest(userKey: userKey, record: record)
+        try await service.postRecord(bodyData: bodyData)
     }
     
     /// 월별 기록 정보(리스트)

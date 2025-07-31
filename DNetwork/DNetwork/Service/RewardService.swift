@@ -13,7 +13,7 @@ public struct RewardService {
     }
     
     /// 사용자의 리워드 아이템 조회
-    func getUserRewardItem(userKey: String) async throws -> UserRewardItemResponse {
+    public func getUserRewardItem(userKey: String) async throws -> UserRewardItemResponse {
         let result: DResponse<UserRewardItemResponse> = try await request.get(
             path: .reward,
             addtionalPaths: ["edit", userKey]
@@ -25,7 +25,7 @@ public struct RewardService {
     }
     
     /// 열지 않은 리워드 개수 조회
-    func getNotOpenRewardCount(userKey: String) async throws -> Int {
+    public func getNotOpenRewardCount(userKey: String) async throws -> Int {
         let result: DResponse<Int> = try await request.get(
             path: .reward,
             addtionalPaths: ["not-open", userKey]
@@ -37,7 +37,7 @@ public struct RewardService {
     }
     
     /// 월별 착용아이템 조회
-    func getMonthlyRewardItem(userKey: String, year: Int, month: Int) async throws -> [RewardItemResponse] {
+    public func getMonthlyRewardItem(userKey: String, year: Int, month: Int) async throws -> [RewardItemResponse] {
         let result: DResponse<[RewardItemResponse]> = try await request.get(
             path: .reward,
             addtionalPaths: [userKey],
@@ -53,7 +53,7 @@ public struct RewardService {
     }
     
     /// 히든 아이템 확인 여부 업데이트
-    func putHiddenRead(userKey: String, year: Int, month: Int) async throws {
+    public func putHiddenRead(userKey: String, year: Int, month: Int) async throws {
         let _: EmptyResponse = try await request.put(
             path: .reward,
             addtionalPaths: ["hidden-read"],
@@ -66,7 +66,7 @@ public struct RewardService {
     }
     
     /// 리워드 아이템 오픈
-    func putOpenReward(userKey: String) async throws -> [RewardItemResponse] {
+    public func putOpenReward(userKey: String) async throws -> [RewardItemResponse] {
         let result: DResponse<[RewardItemResponse]> = try await request.put(
             path: .reward,
             addtionalPaths: ["open", userKey],
@@ -79,7 +79,7 @@ public struct RewardService {
     }
     
     /// 월별 리워드 아이템 저장
-    func putOpenReward(
+    public func putSaveReward(
         bodyData: RewardSaveRequest
 //        userKey: String,
 //        year: Int,
