@@ -63,6 +63,9 @@ struct RecordListView: View {
             
         }
         .navigationBarBackButtonHidden()
+        .onAppear {
+            GA.View(event: .recordhistory).send()
+        }
         .onDisappear {
             if store.record.count > 0 {
                 let id = store.dateSet.count - 1
@@ -98,5 +101,4 @@ struct RecordListView: View {
         let store = MainStoreFactory().makeMonthlyRecordListStore(state: state)
         return RecordListView(store: store)
     }()
-    
 }

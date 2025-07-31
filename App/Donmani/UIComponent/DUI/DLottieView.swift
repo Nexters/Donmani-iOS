@@ -19,7 +19,18 @@ struct DLottieView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> AnimationViewContainer {
         let container = AnimationViewContainer()
-        let animation = LottieAnimation.named(name, bundle: .designSystem)
+        var animation: LottieAnimation!
+        
+        let fileManager = FileManager.default
+        let fileName = "\(name).json"
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let destinationURL = documentsURL.appendingPathComponent(fileName)
+        if fileManager.fileExists(atPath: destinationURL.path) {
+            animation = LottieAnimation.filepath(destinationURL.path)
+        } else {
+            animation = LottieAnimation.named(name, bundle: .designSystem)
+        }
+        
         container.animationView.animation = animation
         container.animationView.loopMode = loopMode
         container.animationView.contentMode = .scaleAspectFill

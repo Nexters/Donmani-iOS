@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "effect_floating_bubble.png",
+      "filename" : "reward_icon_effect_floating_bubble 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "effect_floating_bubble 1.png",
+      "filename" : "reward_icon_effect_floating_bubble 2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "effect_floating_bubble 2.png",
+      "filename" : "reward_icon_effect_floating_bubble 3.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

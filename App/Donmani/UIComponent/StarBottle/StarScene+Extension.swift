@@ -201,6 +201,7 @@ extension StarScene {
             record: record
         )
     }
+    
     // Beads
     public func createNewStarNodeBeads(
         width: CGFloat,
@@ -210,7 +211,7 @@ extension StarScene {
         let starSize = width / 5
         let position = CGPoint(
             x: width / 2,
-            y: 5.5 * starSize
+            y: 5.2 * starSize
         )
         createStarNode(
             starSize: starSize,
@@ -306,7 +307,7 @@ extension StarScene {
         )
     }
     
-    
+    @MainActor
     private func createStarNode(
         starSize: CGFloat,
         position: CGPoint,

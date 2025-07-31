@@ -36,6 +36,7 @@ struct DecorationStore {
     struct State {
         var isPresentingGuideBottomSheet = false
         var isPresentingFinalBottomSheet = false
+        var isPresentingDecorationGuideAlert = false
         var selectedRewardItemCategory: RewardItemCategory = .background
     
         var decorationItem: [RewardItemCategory : [Reward]]
@@ -101,6 +102,20 @@ struct DecorationStore {
             let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
             self.monthlyRecords = monthlyRecords
             self.isPresentingGuideBottomSheet = HistoryStateManager.shared.getIsFirstDecorationEnter()
+            
+            let itemCount = self.decorationItem.map {
+                if ($0.key == .decoration) {
+                    for item in $0.value {
+                        if (item.hidden && !item.hiddenRead) {
+                            self.isPresentingFinalBottomSheet = true
+                        }
+                    }
+                }
+                return $0.value.count
+            }.reduce(0,+)
+//            if itemCount >= 16 {
+//                self.isPresentingFinalBottomSheet = HistoryStateManager.shared.getIsShownFullRewardBottmeSheet()
+//            }
         }
     }
     
@@ -115,6 +130,8 @@ struct DecorationStore {
         
         case touchBackButton
         case touchSaveButton
+        case cancelSave
+        case saveDecorationItem
         
         case binding(BindingAction<State>)
         case delegate(Delegate)
@@ -128,13 +145,14 @@ struct DecorationStore {
         Reduce { state, action in
             switch action {
             case .toggleGuideBottomSheet:
-                GA.View.init(event: .customize).send(parameters: [
-                    .reward_배경: state.previousDecorationItem[.background]?.name ?? "",
-                    .reward_효과: state.previousDecorationItem[.effect]?.name ?? "",
-                    .reward_장식: state.previousDecorationItem[.decoration]?.name ?? "",
-                    .reward_별통이: state.previousDecorationItem[.byeoltong]?.name ?? "",
-                    .reward_효과음: state.previousDecorationItem[.sound]?.name ?? "",
-                ])
+                GA.View(event: .customize).send()
+//                GA.View(event: .customize).send(parameters: [
+//                    .reward_배경: state.previousDecorationItem[.background]?.name ?? "",
+//                    .reward_효과: state.previousDecorationItem[.effect]?.name ?? "",
+//                    .reward_장식: state.previousDecorationItem[.decoration]?.name ?? "",
+//                    .reward_별통이: state.previousDecorationItem[.byeoltong]?.name ?? "",
+//                    .reward_효과음: state.previousDecorationItem[.sound]?.name ?? "",
+//                ])
                 if HistoryStateManager.shared.getIsFirstDecorationEnter() {
                     HistoryStateManager.shared.setIsFirstDecorationEnter()
                     state.isPresentingGuideBottomSheet = !state.isPresentingGuideBottomSheet
@@ -142,16 +160,16 @@ struct DecorationStore {
                         UINavigationController.isBlockSwipe = false
                     }
                 }
-                var count = 0
-                for (_, value) in state.decorationItem {
-                    count += value.count
-                }
-                if (count >= 19) {
-                    if !HistoryStateManager.shared.getIsShownFullRewardBottmeSheet() {
-                        HistoryStateManager.shared.setIsShownFullRewardBottmeSheet()
-                        state.isPresentingFinalBottomSheet = !state.isPresentingFinalBottomSheet
-                    }
-                }
+//                var count = 0
+//                for (_, value) in state.decorationItem {
+//                    count += value.count
+//                }
+//                if (count >= 17) {
+//                    if !HistoryStateManager.shared.getIsShownFullRewardBottmeSheet() {
+//                        HistoryStateManager.shared.setIsShownFullRewardBottmeSheet()
+//                        state.isPresentingFinalBottomSheet = !state.isPresentingFinalBottomSheet
+//                    }
+//                }
                 
             case .touchGuideBottomSheetButton:
                 return .run { send in
@@ -160,7 +178,11 @@ struct DecorationStore {
                 
             case .touchFinalBottomSheetButton:
                 state.isPresentingFinalBottomSheet = false
+                HistoryStateManager.shared.setIsShownFullRewardBottmeSheet()
                 UINavigationController.isBlockSwipe = false
+                return .run { send in
+                    try await NetworkService.DReward().requestHiddenRead()
+                }
                 
             case .touchRewardItemCategoryButton(let category):
                 state.selectedRewardItemCategory = category
@@ -199,35 +221,55 @@ struct DecorationStore {
                     (state.selectedDecorationItem[key]?.id ?? 0) == (item.id) ? nil : 0
                 }.count
                 state.disabledSaveButton = (diffCount == 0)
-                
-            case .touchEqualizerButton:
-                guard let sound = state.selectedDecorationItem[.sound] else {
-                    return .none
-                }
-                if state.isSoundOn {
-                    state.isSoundOn = false
-                    SoundManager.shared.stop()
-                } else {
-                    if (sound.id > 100) {
-                        if let fileName = sound.soundUrl {
-                            state.isSoundOn = true
-                            SoundManager.shared.play(fileName: fileName)
-                        }
+                if (item.id == 23 && !item.hiddenRead) {
+                    Task {
+                        try await NetworkService.DReward().requestHiddenRead()
                     }
                 }
+                
+//            case .touchEqualizerButton:
+//                guard let sound = state.selectedDecorationItem[.sound] else {
+//                    return .none
+//                }
+//                if state.isSoundOn {
+//                    state.isSoundOn = false
+//                    SoundManager.shared.stop()
+//                } else {
+//                    if (sound.id > 100) {
+//                        if let fileName = sound.soundUrl {
+//                            state.isSoundOn = true
+//                            SoundManager.shared.play(fileName: fileName)
+//                        }
+//                    }
+//                }
             
             case .touchBackButton:
-                if SoundManager.isSoundOn {
-                    let resource = DataStorage.getSoundFileName()
-                    if resource.isNotEmpty {
-                        SoundManager.shared.play(fileName: resource)
-                    }
-                }
+//                if SoundManager.isSoundOn {
+//                    let resource = DataStorage.getSoundFileName()
+//                    if resource.isNotEmpty {
+//                        SoundManager.shared.play(fileName: resource)
+//                    }
+//                }
                 return .run { send in
                     await send(.delegate(.pop(false)))
                 }
-                
+            
+            
             case .touchSaveButton:
+                let isFirstSave = HistoryStateManager.shared.getIsFirstDecorationSave()
+                if isFirstSave {
+                    state.isPresentingDecorationGuideAlert = true
+                } else {
+                    return .run { send in
+                        await send(.saveDecorationItem)
+                    }
+                }
+
+            case .cancelSave:
+                state.isPresentingDecorationGuideAlert = false
+                
+            case .saveDecorationItem:
+                HistoryStateManager.shared.setIsFirstDecorationSave()
                 GA.Click(event: .customizeSubmitButton).send(parameters: [
                     .reward_배경: state.selectedDecorationItem[.background]?.name ?? "",
                     .reward_효과: state.selectedDecorationItem[.effect]?.name ?? "",
@@ -240,11 +282,11 @@ struct DecorationStore {
                 let soundItemId = state.selectedDecorationItem[.sound]?.id ?? 5
                 let resource = RewardResourceMapper(id: soundItemId, category: .sound).resource()
                 DataStorage.setSoundFileName(resource)
-                if SoundManager.isSoundOn {
-                    if resource.isNotEmpty {
-                        SoundManager.shared.play(fileName: resource)
-                    }
-                }
+//                if SoundManager.isSoundOn {
+//                    if resource.isNotEmpty {
+//                        SoundManager.shared.play(fileName: resource)
+//                    }
+//                }
                 return .run { send in
                     let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
                     let year = Int(today[0]) ?? 2025
@@ -253,7 +295,8 @@ struct DecorationStore {
                     try await NetworkService.DReward().saveDecoration(dto: dto)
                     await send(.delegate(.pop(true)))
                 }
-
+                
+                
             default:
                 break
             }

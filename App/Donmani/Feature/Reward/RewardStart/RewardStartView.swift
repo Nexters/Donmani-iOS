@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
+import DNetwork
 
 struct RewardStartView: View {
     @Environment(\.dismiss) private var dismiss
@@ -46,11 +47,14 @@ struct RewardStartView: View {
                                 .padding(.defaultLayoutPadding)
                             Spacer()
                             FeedbackCardView(feedbackCard: feedbackCard)
+                                .onAppear {
+                                    GA.View(event: .feedback).send()
+                                }
                             Spacer()
                         }
                     }
                     
-                    if !store.isEnabledButton {
+                    if !store.isEnabledButton && !store.isFullReward {
                         VStack {
                             Spacer()
                             HStack(spacing: 4) {
@@ -75,7 +79,7 @@ struct RewardStartView: View {
                         .padding(.horizontal, .defaultLayoutPadding)
                         
                         Button {
-                            dismiss()
+                            store.send(.touchDecorationButton)
                         } label: {
                             ZStack {
                                 RoundedRectangle(
@@ -83,7 +87,7 @@ struct RewardStartView: View {
                                     style: .continuous
                                 )
                                 .fill(DColor(.deepBlue50).color)
-                                DText("홈으로")
+                                DText("받은 선물 꾸며보기")
                                     .style(.h3, .bold, .white)
                             }
                         }
@@ -111,8 +115,12 @@ struct RewardStartView: View {
                 RewardGuideBottomSheet()
             }
         }
+        .sheet(isPresented: $store.isPresentingRewardFeedbackView) {
+            InnerWebView(urlString: DURL.rewardFeedback.urlString)
+        }
         .onAppear {
             store.send(.toggleGuideBottomSheet)
+            GA.View(event: .received).send()
         }
         .navigationBarBackButtonHidden()
     }

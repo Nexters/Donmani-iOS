@@ -29,11 +29,30 @@ struct DecorationView: View {
                                 .image(isPreview: true)
                                 .image
                                 .resizable()
-                                .scaledToFill()
+                                .scaledToFill() 
                                 .ignoresSafeArea()
                                 .padding(-5)
                             }
                     }
+                    
+                    if let effect = store.selectedDecorationItem[.effect] {
+                        let lottieName = RewardResourceMapper(id: effect.id, category: .effect).resource()
+                        if !lottieName.isEmpty {
+                            GeometryReader { proxy in
+                                DLottieView(
+                                    name: lottieName,
+                                    loopMode: .loop
+                                )
+                                .frame(
+                                    width: proxy.size.width,
+                                    height: .screenHeight
+                                )
+                                .ignoresSafeArea()
+                            }
+                            .allowsHitTesting(false)
+                        }
+                    }
+                    
                     VStack(alignment: .center, spacing: 0) {
                         // Navigation Bar
                         ZStack {
@@ -86,7 +105,6 @@ struct DecorationView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: .screenWidth * 0.7)
-//                                        .aspectRatio(0.8, contentMode: .fit)
                             }
                         }
                         .padding(.vertical, .defaultLayoutPadding * 2)
@@ -94,32 +112,57 @@ struct DecorationView: View {
                             if let decoration = store.selectedDecorationItem[.decoration] {
                                 let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
                                 if !lottieName.isEmpty {
-                                    if decoration.id == 20 {
+                                    if decoration.id == 23 {
                                         VStack {
-                                            Spacer()
                                             HStack {
-                                                Spacer()
-                                                DLottieView(
-                                                    name: lottieName,
-                                                    loopMode: .loop
-                                                )
-                                                .frame(width: 80, height: 80)
+                                                DImage(.rewardDecorationSpaceVacance)
+                                                    .image
+                                                    .resizable()
+                                                    .aspectRatio(0.67, contentMode: .fit)
+                                                    .frame(height: .screenWidth * 0.27)
+                                                    .offset(
+                                                        x: (store.byeoltongShapeType == .rewardBottleDefaultShape
+                                                            ||
+                                                            store.byeoltongShapeType == .rewardBottleFuzzyShape)
+                                                        ? .screenWidth * 0.15
+                                                        : 0,
+                                                        y: store.byeoltongShapeType == .rewardBottleDefaultShape
+                                                        ? -25
+                                                        : (store.byeoltongShapeType == .rewardBottleFuzzyShape
+                                                        ? +20
+                                                        : -20)
+                                                    )
                                             }
+                                            Spacer()
                                         }
-                                        .allowsHitTesting(false)
                                     } else {
-                                        VStack {
-                                            HStack {
-                                                DLottieView(
-                                                    name: lottieName,
-                                                    loopMode: .loop
-                                                )
-                                                .frame(width: 80, height: 80)
+                                        if decoration.id == 20 {
+                                            VStack {
+                                                Spacer()
+                                                HStack {
+                                                    Spacer()
+                                                    DLottieView(
+                                                        name: lottieName,
+                                                        loopMode: .loop
+                                                    )
+                                                    .frame(width: 80, height: 80)
+                                                }
+                                            }
+                                            .allowsHitTesting(false)
+                                        } else {
+                                            VStack {
+                                                HStack {
+                                                    DLottieView(
+                                                        name: lottieName,
+                                                        loopMode: .loop
+                                                    )
+                                                    .frame(width: 80, height: 80)
+                                                    Spacer()
+                                                }
                                                 Spacer()
                                             }
-                                            Spacer()
+                                            .allowsHitTesting(false)
                                         }
-                                        .allowsHitTesting(false)
                                     }
                                 }
                             }
@@ -128,30 +171,14 @@ struct DecorationView: View {
                         Spacer()
                     }
                     
-                    if let effect = store.selectedDecorationItem[.effect] {
-                        let lottieName = RewardResourceMapper(id: effect.id, category: .effect).resource()
-                        if !lottieName.isEmpty {
-                            GeometryReader { proxy in
-                                DLottieView(
-                                    name: lottieName,
-                                    loopMode: .loop
-                                )
-                                .frame(
-                                    width: proxy.size.width,
-                                    height: .screenHeight
-                                )
-                                .ignoresSafeArea()
-                            }
-                            .allowsHitTesting(false)
-                        }
-                    }
+
                 }
                 .frame(width: .screenWidth)
                 
                 VStack {
                     HStack(spacing: .s4) {
                         ForEach(
-                            RewardItemCategory.allCases,
+                            RewardItemCategory.cases,
                             id: \.self
                         ) { item in
                             Button {
@@ -178,24 +205,24 @@ struct DecorationView: View {
                     } else {
                         ItemGridView(itemCategory: store.selectedRewardItemCategory)
                         Spacer()
-                        if store.selectedRewardItemCategory == .sound {
-                            HStack{
-                                DText("・휴대폰을 흔들면 효과음이 들려요 🎹")
-                                    .style(.b2, .medium, .deepBlue90)
-                                Spacer()
-                            }
-                            .padding(.horizontal, .defaultLayoutPadding)
-                            .padding(.bottom, .defaultLayoutPadding)
-                        }
+//                        if store.selectedRewardItemCategory == .sound {
+//                            HStack{
+//                                DText("・휴대폰을 흔들면 효과음이 들려요 🎹")
+//                                    .style(.b2, .medium, .deepBlue90)
+//                                Spacer()
+//                            }
+//                            .padding(.horizontal, .defaultLayoutPadding)
+//                            .padding(.bottom, .defaultLayoutPadding)
+//                        }
                     }
                 }
                 .frame(height: .screenHeight * 0.4)
                 .background(DColor(.deepBlue60).color)
             }
             
-            if store.selectedRewardItemCategory == .sound {
-                EqualizerButton()
-            }
+//            if store.selectedRewardItemCategory == .sound {
+//                EqualizerButton()
+//            }
             
             if store.isPresentingGuideBottomSheet {
                 DecorationGuideBottomSheet()
@@ -207,6 +234,59 @@ struct DecorationView: View {
                     .playing(loopMode: .playOnce)
                     .aspectRatio(1.0, contentMode: .fit)
             }
+            
+            if store.isPresentingDecorationGuideAlert {
+                ZStack {
+                    Color.black.opacity(0.6)
+                        .ignoresSafeArea()
+                    VStack(spacing: .s4) {
+                        DText("설정 > 꾸미기에서\n언제든 바꿀 수 있어요")
+                            .style(.h2, .bold, .deepBlue99)
+                            .lineSpacing(8)
+                            .multilineTextAlignment(.center)
+                        HStack(spacing: 10) {
+                            Button {
+                                store.send(.cancelSave)
+                            } label: {
+                                ZStack {
+                                    RoundedRectangle(
+                                        cornerRadius: .s1 / 2,
+                                        style: .continuous
+                                    )
+                                    .fill(DColor(.deepBlue50).color)
+                                    .frame(height: 58)
+                                    DText("돌아가기")
+                                        .style(.h3, .bold, .white)
+                                }
+                            }
+                            
+                            Button {
+                                store.send(.saveDecorationItem)
+                            } label: {
+                                ZStack {
+                                    RoundedRectangle(
+                                        cornerRadius: .s1 / 2,
+                                        style: .continuous
+                                    )
+                                    .fill(DColor(.gray95).color)
+                                    .frame(height: 58)
+                                    DText("저장하기")
+                                        .style(.h3, .bold, .deepBlue20)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.defaultLayoutPadding)
+                    .background {
+                        RoundedRectangle(
+                            cornerRadius: .s1,
+                            style: .continuous
+                        )
+                        .fill(DColor(.deepBlue60).color)
+                    }
+                    .padding(.defaultLayoutPadding)
+                }
+            }
         }
         .onAppear {
             store.send(.toggleGuideBottomSheet)
@@ -215,25 +295,29 @@ struct DecorationView: View {
     }
 }
 
-//#Preview {
-//    {
-//        let previewData = Reward.previewAllData
-//        var decorationItem: [RewardItemCategory: [Reward]] = [:]
-//        RewardItemCategory.allCases.forEach { c in
-//            decorationItem[c] = previewData
-//                .filter { $0.category == c }
-//                .sorted { $0.id < $1.id }
-//            if (c != .background && c != .byeoltong) {
-//                if (decorationItem[c, default: []].count > 0) {
-//                    let emptyReward = Reward(id: 100, name: "없음", imageUrl: nil, jsonUrl: nil, soundUrl: nil, category: c, owned: false, newAcquiredFlag: false)
-//                    decorationItem[c]?.insert(emptyReward, at: 0)
-//                }
-//            }
-//        }
-//        let context = DecorationStore.Context(decorationItem: decorationItem)
-//        var state = MainStateFactory().makeDecorationState(context: context)
-//        state.monthlyRecords = Record.previewData
-//        let store = MainStoreFactory().makeDecorationStore(state: state)
-//        return DecorationView(store: store)
-//    }()
-//}
+#Preview {
+    {
+        var decorationItem: [RewardItemCategory: [Reward]] = [:]
+        for key in RewardItemCategory.allCases {
+            decorationItem[key] = Reward.previewAllData.filter{ $0.category == key }
+            switch key {
+            case .decoration, .effect, .sound:
+                let itemCount = decorationItem[key]?.count ?? 0
+                if (itemCount < 2) {
+                    decorationItem[key] = []
+                }
+            default:
+                break
+            }
+        }
+        let context = DecorationStore.Context(
+            decorationItem: decorationItem,
+            currentDecorationItem: [],
+            selectedCategory: .background
+        )
+        var state = MainStateFactory().makeDecorationState(context: context)
+        state.monthlyRecords = Record.previewData
+        let store = MainStoreFactory().makeDecorationStore(state: state)
+        return DecorationView(store: store)
+    }()
+}

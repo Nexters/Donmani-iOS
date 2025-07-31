@@ -15,6 +15,7 @@ struct Reward: Hashable {
     let category: RewardItemCategory
     let newAcquiredFlag: Bool
     let hidden: Bool
+    var hiddenRead: Bool = false
     
     var key: String {
         "\(id)-\(category)"

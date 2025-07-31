@@ -5,6 +5,8 @@
 //  Created by 문종식 on 2/16/25.
 //
 
+import Foundation
+
 class DataStorage {
     private static let shared = DataStorage()
     
@@ -37,7 +39,9 @@ class DataStorage {
     
     static func setInventory(_ item: [RewardItemCategory: [Reward]]) {
         for (key, value) in item {
-            shared.inventory[key] = value //Reward.previewAllData.filter{ $0.category == key }
+            // TODO: - Remove All Data
+             shared.inventory[key] = value
+//            shared.inventory[key] = Reward.previewAllData.filter{ $0.category == key }
             switch key {
             case .decoration, .effect, .sound:
                 let itemCount = shared.inventory[key]?.count ?? 0
@@ -77,5 +81,27 @@ class DataStorage {
     static func setMonthRecords(year: Int, month: Int, _ records: [Record]) {
         let key = "\(year)-\(String(format: "%02d", month))"
         shared.recordData[key] = records
+    }
+    
+    static func saveJsonFile(data: Data, name: String) throws {
+        let fileManager = FileManager.default
+        let fileName = "\(name).json"
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let destinationURL = documentsURL.appendingPathComponent(fileName)
+        if fileManager.fileExists(atPath: destinationURL.path) {
+            try? fileManager.removeItem(at: destinationURL)
+        }
+        try data.write(to: destinationURL)
+    }
+    
+    static func saveImageFile(data: Data, name: String) throws {
+        let fileManager = FileManager.default
+        let fileName = "\(name).png"
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let destinationURL = documentsURL.appendingPathComponent(fileName)
+        if fileManager.fileExists(atPath: destinationURL.path) {
+            try? fileManager.removeItem(at: destinationURL)
+        }
+        try data.write(to: destinationURL)
     }
 }

@@ -84,20 +84,45 @@ extension SplashView {
     private func fetchRewardInventory() async throws {
         let inventoryDTO = try await NetworkService.DReward().reqeustRewardItem()
         let inventory = NetworkDTOMapper.mapper(dto: inventoryDTO)
+//        print(inventory.reduce(into: 0) { $0 += $1.value.count })
+        // TODO: Remove Duplicate Code - Total 4 location
+        for reward in (inventory[.effect] ?? []) {
+            if let _ = DownloadManager.Effect(rawValue: reward.id),
+               let contentUrl = reward.jsonUrl {
+                let data = try await NetworkService.DReward().downloadData(from: contentUrl)
+                let name = RewardResourceMapper(id: reward.id, category: .effect).resource()
+                try DataStorage.saveJsonFile(data: data, name: name)
+            }
+        }
+//        for (key, value) in inventory {
+//            for reward in value {
+//                guard let contentUrl = reward.jsonUrl else {
+//                    continue
+//                }
+//                let data = try await NetworkService.DReward().downloadData(from: contentUrl)
+//                let name = RewardResourceMapper(id: reward.id, category: key).resource()
+//                try DataStorage.saveImageFile(data: data, name: name)
+//            }
+//        }
         DataStorage.setInventory(inventory)
-        let isSoundOn = HistoryStateManager.shared.getSouncState()
-        SoundManager.isSoundOn = isSoundOn
+        
+//        let isSoundOn = HistoryStateManager.shared.getSouncState()
+//        SoundManager.isSoundOn = isSoundOn
     }
     
     private func checkAppVersion() {
         Task {
             let appVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "0.0"
-            let storeVerion = (try? await NetworkService.Version().fetchAppVersionFromAppStore()) ?? "0.0"
-            let isLatestVersion = VersionManager().isLastestVersion(store: storeVerion, current: appVersion)
+//            let storeVerion = (try? await NetworkService.Version().fetchAppVersionFromAppStore()) ?? "0.0"
+            let updateInfo = try await NetworkService.Version().fetchAppVersionFromServer()
+            let isLatestVersion = VersionManager().isLastestVersion(store: updateInfo.latestVersion, current: appVersion)
             self.isLatestVersion = isLatestVersion
-            if isLatestVersion {
-                completeHandler?()
+            if updateInfo.forcedUpdateYn == "Y" {
+                if !isLatestVersion {
+                    return
+                }
             }
+            completeHandler?()
         }
     }
 }

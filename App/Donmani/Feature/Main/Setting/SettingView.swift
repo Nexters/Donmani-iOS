@@ -72,98 +72,151 @@ struct SettingView: View {
     
     var body: some View {
         ZStack {
-            BackgroundView()
-            VStack(alignment: .center, spacing: .defaultLayoutPadding) {
+            ScrollView {
                 ZStack {
-                    HStack {
-                        DNavigationBarButton(.leftArrow) {
-                            dismiss()
+                    //                BackgroundView()
+                    VStack(alignment: .center, spacing: .defaultLayoutPadding) {
+                        ZStack {
+                            HStack {
+                                DNavigationBarButton(.leftArrow) {
+                                    dismiss()
+                                }
+                                Spacer()
+                            }
+                            .padding(.horizontal, .defaultLayoutPadding)
+                            DText("설정")
+                                .style(.b1, .semibold, .white)
+                        }
+                        .padding(.vertical, 14)
+                        
+                        VStack(alignment: .center, spacing: 12) {
+                            DImage(.profile).image
+                                .resizable()
+                                .aspectRatio(1, contentMode: .fit)
+                                .frame(width: 100, height: 100)
+                            HStack(spacing: 6) {
+                                Button {
+                                    GA.Click(event: .settingNickname).send()
+                                    editUserName = userName
+                                    isFocusToTextField = true
+                                    isPresentingEditNameView = true
+                                    UINavigationController.isBlockSwipe = true
+                                } label: {
+                                    DText(userName)
+                                        .style(.b1, .semibold, .white)
+                                    DImage(.edit).image
+                                        .resizable()
+                                        .aspectRatio(1, contentMode: .fit)
+                                        .frame(width: .s4, height: .s4)
+                                }
+                            }
+                        }
+                        .padding(.defaultLayoutPadding)
+                        .padding(.bottom, .defaultLayoutPadding)
+                        
+                        VStack(alignment: .leading, spacing: 0) {
+                            MenuButton(type: .decoration) {
+                                store.send(.touchDecorationButton)
+                            }
+                            
+                            //                    MenuButton(type: .sound) {
+                            //                        withAnimation(.linear(duration: 0.3)) {
+                            //                            store.send(.toggleBackgroundSound)
+                            //                            return
+                            //                        }
+                            //                    }
+                            
+                            MenuButton(type: .notification) {
+                                GA.Click(event: .settingNotice).send()
+                                if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                                    if UIApplication.shared.canOpenURL(appSettings) {
+                                        UIApplication.shared.open(appSettings)
+                                    }
+                                }
+                            }
+                            MenuButton(type: .notice) {
+                                GA.Click(event: .settingNotice).send()
+                                Task {
+                                    try await NetworkService.User().updateNoticeStatus()
+                                    isNoticeNotRead = false
+                                    isPresentingNoticeView.toggle()
+                                }
+                            }
+                            MenuButton(type: .recordGuide) {
+                                GA.Click(event: .settingRules).send()
+                                UINavigationController.isBlockSwipe = true
+                                isPresentingRecordGuideView.toggle()
+                            }
+                            
+                            MenuButton(type: .feedback) {
+                                isPresentingFeedbackView.toggle()
+                            }
+                            
+                            MenuButton(type: .privacyPolicy) {
+                                isPresentingPrivacyPolicyView.toggle()
+                            }
                         }
                         Spacer()
                     }
-                    .padding(.horizontal, .defaultLayoutPadding)
-                    DText("설정")
-                        .style(.b1, .semibold, .white)
-                }
-                .padding(.vertical, 14)
-                
-                VStack(alignment: .center, spacing: 12) {
-                    DImage(.profile).image
-                        .resizable()
-                        .aspectRatio(1, contentMode: .fit)
-                        .frame(width: 100, height: 100)
-                    HStack(spacing: 6) {
-                        Button {
-                            GA.Click(event: .settingNickname).send()
-                            editUserName = userName
-                            isFocusToTextField = true
-                            isPresentingEditNameView = true
-                            UINavigationController.isBlockSwipe = true
-                        } label: {
-                            DText(userName)
-                                .style(.b1, .semibold, .white)
-                            DImage(.edit).image
-                                .resizable()
-                                .aspectRatio(1, contentMode: .fit)
-                                .frame(width: .s4, height: .s4)
-                        }
-                    }
-                }
-                .padding(.defaultLayoutPadding)
-                .padding(.bottom, .defaultLayoutPadding)
-                
-                VStack(alignment: .leading, spacing: 0) {
-                    MenuButton(type: .decoration) {
-                        store.send(.touchDecorationButton)
-                    }
                     
-                    MenuButton(type: .sound) {
-                        withAnimation(.linear(duration: 0.3)) {
-                            store.send(.toggleBackgroundSound)
-                            return
-                        }
-                    }
+
                     
-                    MenuButton(type: .notification) {
-                        GA.Click(event: .settingNotice).send()
-                        if let appSettings = URL(string: UIApplication.openSettingsURLString) {
-                            if UIApplication.shared.canOpenURL(appSettings) {
-                                UIApplication.shared.open(appSettings)
+//                    VStack {
+//                        Spacer()
+//                        ToastView(title: "앗! 아직 효과음이 없어요")
+//                            .padding(40)
+//                            .animation(
+//                                .easeInOut(duration: 0.5),
+//                                value: store.isPresentingSoundToastView
+//                            )
+//                            .opacity(store.isPresentingSoundToastView ? 1 : 0)
+//                            .offset(y: store.isPresentingSoundToastView ? 0 : 5)
+//                    }
+                }
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+                .sheet(isPresented: $isPresentingPrivacyPolicyView) {
+                    // Privacy Policy WebView
+                    InnerWebView(urlString: DURL.privacyPolicy.urlString)
+                }
+                .sheet(isPresented: $isPresentingFeedbackView) {
+                    // Feeback WebView
+                    InnerWebView(urlString: DURL.feedback.urlString)
+                }
+                .sheet(isPresented: $isPresentingNoticeView) {
+                    // Notice WebView
+                    InnerWebView(urlString: DURL.notice.urlString)
+                }
+                .onChange(of: scenePhase) { oldPhase, newPhase  in
+                    //            print("OnAppear")
+                    if newPhase == .active {
+                        let notification = NotificationManager()
+                        notification.getNotificationPermissionStatus { status in
+                            if (status == .authorized) {
+                                notification.registerForRemoteNotifications()
+                            } else {
+                                notification.unregisterForRemoteNotifications()
                             }
+                            isNotificationEnabled = (status == .authorized)
                         }
-                    }
-                    MenuButton(type: .notice) {
-                        GA.Click(event: .settingNotice).send()
-                        Task {
-                            try await NetworkService.User().updateNoticeStatus()
-                            isNoticeNotRead = false
-                            isPresentingNoticeView.toggle()
-                        }
-                    }
-                    MenuButton(type: .recordGuide) {
-                        GA.Click(event: .settingRules).send()
-                        UINavigationController.isBlockSwipe = true
-                        isPresentingRecordGuideView.toggle()
-                    }
-                    
-                    MenuButton(type: .feedback) {
-                        isPresentingFeedbackView.toggle()
-                    }
-                    
-                    MenuButton(type: .privacyPolicy) {
-                        isPresentingPrivacyPolicyView.toggle()
                     }
                 }
-                Spacer()
-            }
-            
-            if isPresentingRecordGuideView {
-                RecordGuideView()
-                    .onDisappear {
-                        UINavigationController.isBlockSwipe = false
+                .onAppear() {
+                    NotificationManager().getNotificationPermissionStatus { status in
+                        isNotificationEnabled = (status == .authorized)
                     }
+                    Task {
+                        isNoticeNotRead = !(try await NetworkService.User().fetchNoticeStatus())
+                        isDecorationNotRead = (try await NetworkService.User().fetchRewardStatus())
+                    }
+                    store.send(.fetchDecorationItem)
+                    GA.View(event: .setting).send()
+                }
+                .navigationBarBackButtonHidden()
             }
-            
+            .scrollBounceBehavior(.basedOnSize)
+            .background {
+                BackgroundView()
+            }
             if isPresentingEditNameView {
                 EditNameView()
                     .padding(.bottom, keyboard.currentHeight)
@@ -174,70 +227,30 @@ struct SettingView: View {
                         UINavigationController.isBlockSwipe = false
                     }
             }
+            if isPresentingRecordGuideView {
+                RecordGuideView()
+                    .onDisappear {
+                        UINavigationController.isBlockSwipe = false
+                    }
+            }
             
             VStack {
-                Spacer()
                 ToastView(title: "최대로 작성했어요")
+                    .padding(.top, 40)
                     .padding(40)
+                Spacer()
             }
             .opacity(isPresentingLengthGuideToastView ? 1 : 0)
             
             VStack {
-                Spacer()
                 ToastView(title: "특수문자는 입력할 수 없어요")
+                    .padding(.top, 40)
                     .padding(40)
+                Spacer()
             }
             .opacity(isPresentingSymbolGuideToastView ? 1 : 0)
-            
-            VStack {
-                Spacer()
-                ToastView(title: "앗! 아직 효과음이 없어요")
-                    .padding(40)
-                    .animation(
-                        .easeInOut(duration: 0.5),
-                        value: store.isPresentingSoundToastView
-                    )
-                    .opacity(store.isPresentingSoundToastView ? 1 : 0)
-                    .offset(y: store.isPresentingSoundToastView ? 0 : 5)
-            }
         }
-        .sheet(isPresented: $isPresentingPrivacyPolicyView) {
-            // Privacy Policy WebView
-            InnerWebView(urlString: DURL.privacyPolicy.urlString)
-        }
-        .sheet(isPresented: $isPresentingFeedbackView) {
-            // Feeback WebView
-            InnerWebView(urlString: DURL.feedback.urlString)
-        }
-        .sheet(isPresented: $isPresentingNoticeView) {
-            // Notice WebView
-            InnerWebView(urlString: DURL.notice.urlString)
-        }
-        .onChange(of: scenePhase) { oldPhase, newPhase  in
-//            print("OnAppear")
-            if newPhase == .active {
-                let notification = NotificationManager()
-                notification.getNotificationPermissionStatus { status in
-                    if (status == .authorized) {
-                        notification.registerForRemoteNotifications()
-                    } else {
-                        notification.unregisterForRemoteNotifications()
-                    }
-                    isNotificationEnabled = (status == .authorized)
-                }
-            }
-        }
-        .onAppear() {
-            NotificationManager().getNotificationPermissionStatus { status in
-                isNotificationEnabled = (status == .authorized)
-            }
-            Task {
-                isNoticeNotRead = !(try await NetworkService.User().fetchNoticeStatus())
-                isDecorationNotRead = !(try await NetworkService.User().fetchRewardStatus())
-            }
-            store.send(.fetchDecorationItem)
-        }
-        .navigationBarBackButtonHidden()
+        .ignoresSafeArea(.keyboard)
     }
     
     private func MenuButton(

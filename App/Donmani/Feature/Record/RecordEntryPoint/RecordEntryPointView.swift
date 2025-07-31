@@ -94,7 +94,7 @@ struct RecordEntryPointView: View {
                         ) {
                             store.send(.readyToSave)
                         }
-                        .padding(8)
+                        .padding(.vertical, 8)
                     }
                 }
             }
@@ -117,6 +117,7 @@ struct RecordEntryPointView: View {
         }
         .onAppear {
             store.send(.startTimer)
+            GA.View(event: .recordmain).send(parameters: [.screenType: store.dayTitle])
         }
         .navigationBarBackButtonHidden()
     }

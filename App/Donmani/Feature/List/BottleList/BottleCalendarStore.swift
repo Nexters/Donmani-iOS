@@ -26,6 +26,7 @@ struct BottleCalendarStore {
 //            self.rowIndex = (starCount.count / 3) + 1
             let dateManager = DateManager.shared
             let todayMonth = dateManager.getFormattedDate(for: .today, .yearMonth).components(separatedBy: "-").last ?? "0"
+//            print(context.monthlyRecords)
             
             for month in (3...12) {
                 self.starCount[month] = context.monthlyRecords[month]?.recordCount ?? -1
@@ -80,15 +81,12 @@ struct BottleCalendarStore {
                 
             case .fetchMonthlyRecord(let year, let month):
                 return .run { send in
-                    let key = "2025-\(String(format: "%02d", month))"
-                    if DataStorage.getRecord(yearMonth: key) == nil {
-//                        let response = try await NetworkService.DRecord().fetchRecordList(year: year, month: month)
-//                        let result = NetworkDTOMapper.mapper(dto: response)
-//                        DataStorage.setMonthRecords(year: year, month: month, result)
-//                        let items = NetworkDTOMapper.mapper(dto: response.saveItems)
-//                        await send(.delegate(.pushMonthlyBottleView(year, month, items)))
-                        await send(.delegate(.pushMonthlyBottleView(2025, 6, Reward.previewData)))
-                    }
+//                    let key = "2025-\(String(format: "%02d", month))"
+                    let response = try await NetworkService.DRecord().fetchRecordList(year: year, month: month)
+                    let result = NetworkDTOMapper.mapper(dto: response)
+                    DataStorage.setMonthRecords(year: year, month: month, result)
+                    let items = NetworkDTOMapper.mapper(dto: response.saveItems)
+                    await send(.delegate(.pushMonthlyBottleView(year, month, items)))
                 }
                 
             case .delegate:

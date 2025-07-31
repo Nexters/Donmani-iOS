@@ -6,7 +6,7 @@
 //
 
 struct FeedbackCard {
-    let category: RecordCategory
+    let category: RecordCategory?
     let title: String
     let content: String
     let prefix: String
