@@ -10,6 +10,7 @@ public struct RewardItemResponse: Decodable {
     public let name: String
     public let imageUrl: String?
     public let jsonUrl: String?
+    public let mp3Url: String?
     public let thumbnailUrl: String?
     public let category: String
     public let newAcquiredFlag: Bool

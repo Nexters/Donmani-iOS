@@ -28,6 +28,7 @@ extension NetworkDTOMapper {
     static func mapper(dto: FeedbackInfoDTO) -> FeedbackInfo {
         return FeedbackInfo(
             isNotOpened: dto.isNotOpened,
+            isFirstOpened: dto.isFirstOpen,
             totalCount: dto.totalCount
         )
     }

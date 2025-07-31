@@ -7,8 +7,8 @@
 
 
 public struct RecordRequest: Encodable {
-    public let userKey: String
-    public let records: [Self.RecordElement]
+    private let userKey: String
+    private let records: [Self.RecordElement]
     
     public init(
         userKey: String,
