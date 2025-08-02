@@ -9,10 +9,10 @@ import DNetwork
 
 extension UserRewardItemResponse {
     func toDomain() -> [RewardItemCategory: [Reward]] {
-        var result: [RewardItemCategory: [Reward]] = [:]
-        for (key, value) in self {
-            result[RewardItemCategory(rawValue: key)] = value.map { $0.toDomain() }
-        }
-        return result
+        Dictionary<RewardItemCategory, [Reward]>(
+            uniqueKeysWithValues: self.map { (key, value) in
+                (RewardItemCategory(rawValue: key), value.map { $0.toDomain() })
+            }
+        )
     }
 }

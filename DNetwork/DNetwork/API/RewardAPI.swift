@@ -1,11 +1,11 @@
 //
-//  RewardService.swift
+//  RewardAPI.swift
 //  DNetwork
 //
 //  Created by 문종식 on 7/27/25.
 //
 
-public struct RewardService {
+public struct RewardAPI {
     private let request: NetworkRequest
     
     public init(request: NetworkRequest) {

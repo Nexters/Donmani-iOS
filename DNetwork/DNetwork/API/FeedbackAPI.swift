@@ -1,11 +1,11 @@
 //
-//  FeedbackService.swift
+//  FeedbackAPI.swift
 //  DNetwork
 //
 //  Created by 문종식 on 7/27/25.
 //
 
-public struct FeedbackService {
+public struct FeedbackAPI {
     private let request: NetworkRequest
     
     public init(request: NetworkRequest) {

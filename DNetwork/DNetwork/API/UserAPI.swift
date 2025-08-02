@@ -1,11 +1,11 @@
 //
-//  UserService.swift
+//  UserAPI.swift
 //  DNetwork
 //
 //  Created by 문종식 on 7/27/25.
 //
 
-public struct UserService {
+public struct UserAPI {
     private let request: NetworkRequest
     
     public init(request: NetworkRequest) {

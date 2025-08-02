@@ -1,11 +1,11 @@
 //
-//  RecordService.swift
+//  RecordAPI.swift
 //  DNetwork
 //
 //  Created by 문종식 on 7/27/25.
 //
 
-public struct RecordService {
+public struct RecordAPI {
     private let request: NetworkRequest
     
     public init(request: NetworkRequest) {

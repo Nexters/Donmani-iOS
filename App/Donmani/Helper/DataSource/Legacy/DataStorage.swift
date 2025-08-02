@@ -2,7 +2,7 @@
 //  DataStorage.swift
 //  Donmani
 //
-//  Created by 문종식 on 2/16/25.
+//  Created by 문종식 on 8/2/25.
 //
 
 import Foundation
@@ -39,9 +39,7 @@ class DataStorage {
     
     static func setInventory(_ item: [RewardItemCategory: [Reward]]) {
         for (key, value) in item {
-            // TODO: - Remove All Data
-             shared.inventory[key] = value
-//            shared.inventory[key] = Reward.previewAllData.filter{ $0.category == key }
+            shared.inventory[key] = value
             switch key {
             case .decoration, .effect, .sound:
                 let itemCount = shared.inventory[key]?.count ?? 0

@@ -1,11 +1,11 @@
 //
-//  AppVersionService.swift
+//  AppVersionAPI.swift
 //  DNetwork
 //
 //  Created by 문종식 on 7/26/25.
 //
 
-public struct AppVersionService {
+public struct AppVersionAPI {
     private let request: NetworkRequest
     
     public init(request: NetworkRequest) {

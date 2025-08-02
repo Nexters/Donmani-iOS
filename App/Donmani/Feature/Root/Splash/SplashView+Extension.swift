@@ -17,9 +17,6 @@ extension SplashView {
                 }
                 try await fetchUserData()
                 try await fetchRecordData()
-//                Record.previewData.forEach {
-//                    DataStorage.setRecord($0)
-//                }
                 try await fetchRewardInventory()
             } catch(let e) {
                 print(e.localizedDescription)
@@ -29,7 +26,6 @@ extension SplashView {
     
     private func fetchUserData() async throws {
         let keychainManager = KeychainManager()
-        // keychainManager.saveToKeychain(to: .uuid, value: "6B788207-4A6A-4B54-A44F-C23853918C09")
         let (key, _) = keychainManager.generateUUID()
         // let isFirstUser = keychainManager.getUserName().isEmpty
         NetworkService.setUserKey(key)
@@ -94,26 +90,12 @@ extension SplashView {
                 try DataStorage.saveJsonFile(data: data, name: name)
             }
         }
-//        for (key, value) in inventory {
-//            for reward in value {
-//                guard let contentUrl = reward.jsonUrl else {
-//                    continue
-//                }
-//                let data = try await NetworkService.DReward().downloadData(from: contentUrl)
-//                let name = RewardResourceMapper(id: reward.id, category: key).resource()
-//                try DataStorage.saveImageFile(data: data, name: name)
-//            }
-//        }
         DataStorage.setInventory(inventory)
-        
-//        let isSoundOn = HistoryStateManager.shared.getSouncState()
-//        SoundManager.isSoundOn = isSoundOn
     }
     
     private func checkAppVersion() {
         Task {
             let appVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "0.0"
-//            let storeVerion = (try? await NetworkService.Version().fetchAppVersionFromAppStore()) ?? "0.0"
             let updateInfo = try await NetworkService.Version().fetchAppVersionFromServer()
             let isLatestVersion = VersionManager().isLastestVersion(store: updateInfo.latestVersion, current: appVersion)
             self.isLatestVersion = isLatestVersion

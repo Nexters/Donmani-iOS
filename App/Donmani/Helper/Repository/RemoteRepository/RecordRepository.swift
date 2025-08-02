@@ -8,21 +8,21 @@
 import DNetwork
 
 final actor RecordRepository {
-    let service: RecordService
+    let dataSource: RecordAPI
     
-    init(service: RecordService) {
-        self.service = service
+    init(dataSource: RecordAPI) {
+        self.dataSource = dataSource
     }
     
     /// 기록 작성
     public func postRecord(userKey: String, record: Record) async throws {
         let bodyData = RecordRequest(userKey: userKey, record: record)
-        try await service.postRecord(bodyData: bodyData)
+        try await dataSource.postRecord(bodyData: bodyData)
     }
     
     /// 월별 기록 정보(리스트)
     public func getMonthlyRecordList(userKey: String, year: Int, month: Int) async throws -> MonthlyRecordState {
-        try await service.getMonthlyRecordList(
+        try await dataSource.getMonthlyRecordList(
             userKey: userKey,
             year: year,
             month: month
@@ -31,7 +31,7 @@ final actor RecordRepository {
     
     /// 월별 기록 정보(캘린더)
     public func getMonthlyRecordCalendar(userKey: String, year: Int, month: Int) async throws -> MonthlyRecordState {
-        try await service.getMonthlyRecordCalendar(
+        try await dataSource.getMonthlyRecordCalendar(
             userKey: userKey,
             year: year,
             month: month
@@ -40,7 +40,7 @@ final actor RecordRepository {
     
     /// 월별 행복/후회 기록 개수 통계
     public func getMonthlyRecordStatistics(userKey: String, year: Int, month: Int) async throws -> RecordStatistics {
-        try await service.getMonthlyRecordStatistics(
+        try await dataSource.getMonthlyRecordStatistics(
             userKey: userKey,
             year: year,
             month: month
@@ -49,7 +49,7 @@ final actor RecordRepository {
     
     /// 월간 카테고리별 기록 수
     public func getMonthlyCategorySatistics(userKey: String, year: Int, month: Int) async throws -> CategoryStatistics {
-        try await service.getMonthlyCategorySatistics(
+        try await dataSource.getMonthlyCategorySatistics(
             userKey: userKey,
             year: year,
             month: month
@@ -58,6 +58,6 @@ final actor RecordRepository {
     
     /// 연간 기록(별통이 달력)
     public func getYearlyRecordSummary(userKey: String, year: Int) async throws -> SummaryResponse {
-        try await service.getYearlyRecordSummary(userKey: userKey, year: year)
+        try await dataSource.getYearlyRecordSummary(userKey: userKey, year: year)
     }
 }
