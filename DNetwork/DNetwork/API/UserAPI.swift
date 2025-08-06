@@ -6,11 +6,9 @@
 //
 
 public struct UserAPI {
-    private let request: NetworkRequest
+    private let request = NetworkRequest()
     
-    public init(request: NetworkRequest) {
-        self.request = request
-    }
+    public init() { }
     
     /// 사용자 등록
     public func postRegisterUser(userKey: String) async throws -> UserResponse {

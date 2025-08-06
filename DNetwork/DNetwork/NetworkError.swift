@@ -14,7 +14,7 @@ public enum NetworkError: Error {
     case encodingFailed
     case serverError(statusCode: Int)
     
-    var message: String {
+    public var message: String {
         switch self {
         case .invalidURL:
             return "Invalid URL"

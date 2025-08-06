@@ -6,11 +6,9 @@
 //
 
 public struct AppVersionAPI {
-    private let request: NetworkRequest
+    private let request = NetworkRequest()
     
-    public init(request: NetworkRequest) {
-        self.request = request
-    }
+    public init() { }
     
     /// 앱 버전 정보 요청
     public func getAppVersion() async throws -> AppVersionResponse {

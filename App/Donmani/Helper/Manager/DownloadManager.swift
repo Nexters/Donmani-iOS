@@ -6,12 +6,8 @@
 //
 
 import SwiftUI
-// TODO : - Remove
-class DownloadManager {
-    static let prefixUrl = "https://kr.object.ncloudstorage.com/donmani.bucket/reward_content/"
-    enum Effect: Int {
-        case rewardEffectFloatingBubble = 12
-        case rewardEffectWishingMeteor = 13
-        case rewardEffectHeartRipple = 14
-    }
+
+final class DownloadManager {
+    
+    
 }

@@ -22,6 +22,14 @@ struct RootStore {
         case splash
         case onboarding
         case main(StoreOf<MainNavigationStore>)
+        
+        var id: String {
+            switch self {
+            case .splash:       "splash"
+            case .onboarding:   "onboarding"
+            case .main(_):      "main"
+            }
+        }
     }
     
     @ObservableState

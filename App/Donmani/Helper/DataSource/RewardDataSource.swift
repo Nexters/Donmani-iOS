@@ -5,7 +5,17 @@
 //  Created by 문종식 on 8/2/25.
 //
 
-final actor RewardDataSource {
+import ComposableArchitecture
+
+protocol RewardDataSource {
+    func saveEquippedItems(year: Int, month: Int, items: [Reward]) async
+    func loadEquippedItems(year: Int, month: Int) async -> [RewardItemCategory: Reward] 
+    func saveReward(item: Reward) async
+    func saveRewards(items: [Reward]) async
+    func initRewardInventory() async
+}
+
+final actor DefaultRewardDataSource: RewardDataSource {
     // Typealias
     private typealias Year = Int
     private typealias Month = Int
@@ -40,5 +50,16 @@ final actor RewardDataSource {
     
     func initRewardInventory() {
         userRewardInventory = [:]
+    }
+}
+
+enum RewardDataSourceDependencyKey: DependencyKey {
+    static var liveValue: RewardDataSource = DefaultRewardDataSource()
+}
+
+extension DependencyValues {
+    var rewardDataSource: RewardDataSource {
+        get { self[RewardDataSourceDependencyKey.self] }
+        set { self[RewardDataSourceDependencyKey.self] = newValue }
     }
 }

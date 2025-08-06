@@ -9,7 +9,7 @@ import Foundation
 
 @propertyWrapper
 struct UserDefault<T> {
-    private let key: UserDefaultsDataSource.Key
+    private let key: Settings.Key
     private let defaultValue: T
     private let userDefaults: UserDefaults
 
@@ -19,7 +19,7 @@ struct UserDefault<T> {
     }
 
     init(
-        key: UserDefaultsDataSource.Key,
+        key: Settings.Key,
         defaultValue: T,
         userDefaults: UserDefaults = .standard
     ) {
@@ -29,7 +29,7 @@ struct UserDefault<T> {
     }
 }
 
-final class UserDefaultsDataSource {
+struct Settings {
     // rawValue를 직접 지정한 case는 민감 정보로 변경이 어려운 case입니다.
     enum Key: String {
         /// 온보딩 페이지 표시 여부: Bool
@@ -92,7 +92,7 @@ final class UserDefaultsDataSource {
     }
     
     /// 온보딩 페이지 표시 여부: Bool
-    @UserDefault(key: .shouldShowOnboarding, defaultValue: true)
+    @UserDefault(key: .shouldShowOnboarding, defaultValue: false)
     static var shouldShowOnboarding: Bool
     
     /// APNs Token: String
@@ -108,11 +108,11 @@ final class UserDefaultsDataSource {
     static var shouldShowAppStoreReviewRequest: Bool
     
     /// 마지막 기록 날짜(YYYY-MM-DD): String
-    @UserDefault(key: .lastRecordDay, defaultValue: "")
+    @UserDefault(key: .lastRecordDay, defaultValue: "0000-00-00")
     static var lastRecordDay: String
     
     /// 마지막에서 두번째 기록 날짜(YYYY-MM-DD): String
-    @UserDefault(key: .secondToLastRecordDay, defaultValue: "")
+    @UserDefault(key: .secondToLastRecordDay, defaultValue: "0000-00-00")
     static var secondToLastRecordDay: String
     
     /// 기록하기 페이지 내 무소비 툴팁 표시 여부: Bool

@@ -6,11 +6,9 @@
 //
 
 public struct FeedbackAPI {
-    private let request: NetworkRequest
+    private let request = NetworkRequest()
     
-    public init(request: NetworkRequest) {
-        self.request = request
-    }
+    public init() { }
     
     /// 피드백 상태(미확인 리워드, 첫 오픈 여부, 리워드 개수)
     public func getFeedbackState(userKey: String) async throws -> FeedbackStateResponse {

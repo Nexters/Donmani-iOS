@@ -28,15 +28,15 @@ final class KeychainManager {
     }
     
     /// Keychain에서 UUID 가져오기 (없으면 새로 생성 후 저장)
-    public func generateUUID() -> (key: String, isInitialized: Bool) {
+    public func generateUUID() -> String {
         if let uuid = loadValue(from: .uuid) {
-            return (uuid, false)
-        } else {
-            let newUUID = UUID().uuidString
-            saveToKeychain(to: .uuid, value: newUUID)
-            return (newUUID, true)
+            return uuid
         }
+        let newUUID = UUID().uuidString
+        saveToKeychain(to: .uuid, value: newUUID)
+        return newUUID
     }
+    
     
     public func getUserName() -> String {
         loadValue(from: .name) ?? ""
@@ -47,7 +47,7 @@ final class KeychainManager {
     }
     
     /// Keychain에 UUID 저장
-//    private
+    //    private
     func saveToKeychain(to type: DataType, value: String) {
         let data = Data(value.utf8)
         
@@ -88,13 +88,10 @@ final class KeychainManager {
         var dataTypeRef: AnyObject?
         let status = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
         
-        if status == errSecSuccess {
-            if let data = dataTypeRef as? Data,
-               let uuid = String(data: data, encoding: .utf8) {
-                return uuid
-            }
-        }
-        return nil
+        if !(status == errSecSuccess) { return nil }
+        guard let data = dataTypeRef as? Data else { return nil }
+        guard let uuid = String(data: data, encoding: .utf8) else { return nil }
+        return uuid
     }
 }
 

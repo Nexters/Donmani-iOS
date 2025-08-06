@@ -94,7 +94,7 @@ struct OnboardingStore {
                 state.isPresentingEndOnboardingView = true
                 
             case .touchEndOnboarding:
-                HistoryStateManager.shared.setOnboardingState()
+                Settings.shouldShowOnboarding = false
                 
             case .binding(\.pageIndex):
                 state.step = state.pageIndex < 4 ? .page : .final

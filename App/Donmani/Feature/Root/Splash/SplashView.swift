@@ -11,6 +11,10 @@ import ComposableArchitecture
 
 struct SplashView: View {
     @State var isLatestVersion: Bool = true
+    @Dependency(\.settings) var settings
+    let userRepository = UserRespository()
+    let recordRepository = RecordRepository()
+    let rewardRepository = RewardRepository()
     let completeHandler: (() -> Void)?
     
     init(completeHandler: @escaping () -> Void) {

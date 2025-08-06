@@ -9,21 +9,18 @@ struct Record: Equatable {
     var date: String
     var contents: [RecordContent]?
     
-    let year: Int
-    let month: Int
+    let day: Day
     
     init(date: String, contents: [RecordContent]? = nil) {
         self.date = date
         self.contents = contents
-        self.year = -1
-        self.month = -1
+        self.day = Day(yyyymmdd: date)
     }
     
-    init(year: Int, month: Int, contents: [RecordContent]? = nil) {
-        self.date = ""
+    init(day: Day, contents: [RecordContent]? = nil) {
+        self.date = "\(day.year)-\(day.month.twoDigitString)-\(day.day.twoDigitString)"
         self.contents = contents
-        self.year = year
-        self.month = month
+        self.day = day
     }
     
     static let previewData: [Record] = {

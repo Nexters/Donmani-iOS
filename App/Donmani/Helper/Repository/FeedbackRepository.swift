@@ -6,22 +6,25 @@
 //
 
 import DNetwork
+import ComposableArchitecture
 
 final actor FeedbackRepository {
-    let dataSource: FeedbackAPI
+    private let dataSource = FeedbackAPI()
+    @Dependency(\.keychainDataSource) var keychainDataSource
     
-    init(dataSource: FeedbackAPI) {
-        self.dataSource = dataSource
+    /// 사용자 ID
+    private var userKey: String {
+        keychainDataSource.generateUUID()
     }
     
     /// 피드백 상태(미확인 리워드, 첫 오픈 여부, 리워드 개수)
-    public func getFeedbackState(userKey: String) async throws -> FeedbackInfo {
+    public func getFeedbackState() async throws -> FeedbackInfo {
         let response = try await self.dataSource.getFeedbackState(userKey: userKey)
         return response.toDomain()
     }
     
     /// 피드백 카드 정보
-    public func getFeedbackCard(userKey: String) async throws -> FeedbackCard {
+    public func getFeedbackCard() async throws -> FeedbackCard {
         let response = try await self.dataSource.getFeedbackCard(userKey: userKey)
         return response.toDomain()
     }

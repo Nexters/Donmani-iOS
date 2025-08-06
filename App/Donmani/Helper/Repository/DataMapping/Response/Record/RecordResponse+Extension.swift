@@ -10,7 +10,7 @@ import DNetwork
 extension RecordResponse {
     func toDomain() -> Record {
         Record(
-            date: self.date,
+            day: Day(yyyymmdd: self.date),
             contents: self.contents?.map {
                 RecordContent(
                     flag: RecordContentType(rawValue: $0.flag),

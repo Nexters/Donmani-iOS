@@ -28,4 +28,15 @@ extension NetworkRequest {
         let request = createURLReqeust(method: .GET, url: url)
         try await run(request: request)
     }
+    
+    /// GET Request with Raw URL String
+    func get(
+        urlString: String,
+        addtionalPaths: [String]? = nil,
+        parameters: [String: Any]? = nil
+    ) async throws -> Data {
+        let url = try createURL(urlString, addtionalPaths, parameters)
+        let request = createURLReqeust(method: .GET, url: url)
+        return try await run(dataRequest: request)
+    }
 }

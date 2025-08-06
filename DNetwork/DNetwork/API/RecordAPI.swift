@@ -6,11 +6,9 @@
 //
 
 public struct RecordAPI {
-    private let request: NetworkRequest
+    private let request = NetworkRequest()
     
-    public init(request: NetworkRequest) {
-        self.request = request
-    }
+    public init() { }
     
     /// 기록 작성
     public func postRecord(bodyData: RecordRequest) async throws {

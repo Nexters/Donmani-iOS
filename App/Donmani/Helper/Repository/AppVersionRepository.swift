@@ -8,11 +8,7 @@
 import DNetwork
 
 final actor AppVersionRepository {
-    let dataSource: AppVersionAPI
-    
-    init(dataSource: AppVersionAPI) {
-        self.dataSource = dataSource
-    }
+    private let dataSource = AppVersionAPI()
     
     /// 앱 버전 정보 요청
     func getAppVersion() async throws -> Version {

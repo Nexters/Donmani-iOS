@@ -11,13 +11,16 @@ import DNetwork
 extension SplashView {
     func loadData() {
         Task {
+            defer {
+                checkAppVersion()
+            }
+            async let userTask: () = fetchUserData()
+            async let recordTask: () = fetchRecordData()
+            async let rewardTask: () = fetchRewardData()
             do {
-                defer {
-                    checkAppVersion()
-                }
-                try await fetchUserData()
-                try await fetchRecordData()
-                try await fetchRewardInventory()
+                try await userTask
+                try await recordTask
+                try await rewardTask
             } catch(let e) {
                 print(e.localizedDescription)
             }
@@ -25,62 +28,57 @@ extension SplashView {
     }
     
     private func fetchUserData() async throws {
-        let keychainManager = KeychainManager()
-        let (key, _) = keychainManager.generateUUID()
-        // let isFirstUser = keychainManager.getUserName().isEmpty
-        NetworkService.setUserKey(key)
-        var userName = try await NetworkService.User().register()
-        userName = try await NetworkService.User().update(name: userName)
-        keychainManager.setUserName(name: userName)
-        DataStorage.setUserName(userName)
+        let user = try await userRepository.registerUser()
+        if user.new {
+            Settings.shouldShowOnboarding = true
+        }
     }
     
     private func fetchRecordData() async throws {
-        let dateManager = DateManager.shared
-        var records: [Record] = []
-        let recordDAO = NetworkService.DRecord()
-        
-        let today = dateManager.getFormattedDate(for: .today).components(separatedBy: "-").compactMap(Int.init)
-        if (today[2] == 1) {
-            let yesterday = dateManager.getFormattedDate(for: .yesterday).components(separatedBy: "-").compactMap(Int.init)
-            let response = try await recordDAO.fetchRecordCalendar(year: yesterday[0], month: yesterday[1])
-            let result = NetworkDTOMapper.mapper(dto: response)
-            records.append(contentsOf: result)
-        }
-        let response = try await recordDAO.fetchRecordCalendar(year: today[0], month: today[1])
-        let result = NetworkDTOMapper.mapper(dto: response)
-        records.append(contentsOf: result)
-        
-        let decorationItem = NetworkDTOMapper.mapper(dto: response.saveItems)
-        var saveItem: [RewardItemCategory: Reward] = [:]
-        for item in decorationItem {
-            saveItem[item.category] = item
-            if item.category == .sound {
-                if let _ = item.soundUrl {
-                    let resource = RewardResourceMapper(id: item.id, category: .sound).resource()
-                    DataStorage.setSoundFileName(resource)
-                }
-                break
-            }
-        }
-        DataStorage.setDecorationItem(saveItem)
-        
-        
-        records.forEach { record in
-            if (record.date == dateManager.getFormattedDate(for: .today)) {
-                HistoryStateManager.shared.addRecord(for: .today)
-            }
-            if (record.date == dateManager.getFormattedDate(for: .yesterday)) {
-                HistoryStateManager.shared.addRecord(for: .yesterday)
-            }
-            DataStorage.setRecord(record)
+        let today = Day.today
+        if today.day == 1 {
+            async let yesterdayTask: Void = fetchRecrodData(at: .yesterDay)
+            async let todayTask: Void = fetchRecrodData(at: .today)
+            try await yesterdayTask
+            try await todayTask
+        } else {
+            _ = try await fetchRecrodData(at: .today)
         }
     }
     
-    private func fetchRewardInventory() async throws {
+    private func fetchRecrodData(at date: Day) async throws {
+        let monthlyRecordState = try await recordRepository.getMonthlyRecordList(
+            year: date.year,
+            month: date.month
+        )
+        if let records = monthlyRecordState.records {
+            await recordRepository.saveRecords(records)
+        }
+    }
+    
+    // TODO
+    private func fetchRewardData() async throws {
+        let today = Day.today
+        let equippedItems = try await rewardRepository.getMonthlyRewardItem(
+            year: today.year,
+            month: today.month
+        )
+        await rewardRepository.saveEquippedItems(
+            year: today.year,
+            month: today.month,
+            items: equippedItems
+        )
+        
+        let reward = try await rewardRepository.getUserRewardItem()
+        for (category, items) in reward {
+            await rewardRepository.saveRewards(items: items)
+            
+        }
+        
+        
         let inventoryDTO = try await NetworkService.DReward().reqeustRewardItem()
         let inventory = NetworkDTOMapper.mapper(dto: inventoryDTO)
-//        print(inventory.reduce(into: 0) { $0 += $1.value.count })
+        //        print(inventory.reduce(into: 0) { $0 += $1.value.count })
         // TODO: Remove Duplicate Code - Total 4 location
         for reward in (inventory[.effect] ?? []) {
             if let _ = DownloadManager.Effect(rawValue: reward.id),
@@ -95,7 +93,8 @@ extension SplashView {
     
     private func checkAppVersion() {
         Task {
-            let appVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "0.0"
+            let infoDictionaryKey = "CFBundleShortVersionString"
+            let appVersion = (Bundle.main.infoDictionary?[infoDictionaryKey] as? String) ?? "0.0"
             let updateInfo = try await NetworkService.Version().fetchAppVersionFromServer()
             let isLatestVersion = VersionManager().isLastestVersion(store: updateInfo.latestVersion, current: appVersion)
             self.isLatestVersion = isLatestVersion

@@ -30,6 +30,23 @@ public struct NetworkRequest {
         return url
     }
     
+    func createURL(
+        _ urlString: String,
+        _ addtionalPaths: [String]?,
+        _ parameters: [String: Any]? = nil
+    ) throws -> URL {
+        guard var url = URL(string: urlString) else {
+            throw NetworkError.invalidURLString
+        }
+        if let addtionalPaths {
+            url.add(paths: addtionalPaths)
+        }
+        if let parameters {
+            url = try url.addQueryItems(parameters: parameters)
+        }
+        return url
+    }
+    
     func createURLReqeust(
         method: HTTPMethod,
         url: URL
@@ -89,6 +106,18 @@ public struct NetworkRequest {
         if stateCode >= 400 {
             throw NetworkError.serverError(statusCode: stateCode)
         }
+    }
+    
+    /// Request with Raw URL String
+    func run(dataRequest: URLRequest) async throws -> Data {
+        guard let (data, response) = try? await URLSession.shared.data(for: request) else {
+            throw NetworkError.requestFailed
+        }
+        let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500
+        if stateCode >= 400 {
+            throw NetworkError.serverError(statusCode: stateCode)
+        }
+        return data
     }
 }
 

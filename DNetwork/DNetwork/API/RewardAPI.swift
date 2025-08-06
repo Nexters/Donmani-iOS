@@ -6,11 +6,9 @@
 //
 
 public struct RewardAPI {
-    private let request: NetworkRequest
+    private let request = NetworkRequest()
     
-    public init(request: NetworkRequest) {
-        self.request = request
-    }
+    public init() { }
     
     /// 사용자의 리워드 아이템 조회
     public func getUserRewardItem(userKey: String) async throws -> UserRewardItemResponse {
