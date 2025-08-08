@@ -11,11 +11,12 @@ import FirebaseMessaging
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         if let fcmToken {
-            HistoryStateManager.shared.setFirebaseToken(token: fcmToken)
             Task {
-                try await NetworkService.FCM().register(token: fcmToken)
+                let userRepository = UserRespository()
+                let updatedToken = try await userRepository.postUpdateToken(token: fcmToken)
+                Settings.firebaseToken = updatedToken
+                print("FCM Token:", updatedToken)
             }
-            print("FCM Token:", fcmToken)
         }
     }
 }

@@ -8,7 +8,7 @@
 extension NetworkRequest {
     /// PUT Request with Decodable Response
     func put<T: Encodable, R: Decodable>(
-        path: APIPath,
+        path: APIPath?,
         addtionalPaths: [String]? = nil,
         bodyData: T?
     ) async throws -> R {
@@ -19,7 +19,7 @@ extension NetworkRequest {
     
     /// PUT Request with Empty Request
     func put<R: Decodable>(
-        path: APIPath,
+        path: APIPath?,
         addtionalPaths: [String]? = nil
     ) async throws -> R {
         let url = try createURL(path, addtionalPaths)

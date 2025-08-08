@@ -19,7 +19,13 @@ extension RewardItemResponse {
             category: RewardItemCategory(rawValue: self.category),
             newAcquiredFlag: self.newAcquiredFlag,
             hidden: self.hidden,
-            hiddenRead: self.hiddenRead
+            hiddenRead: self.hiddenRead,
+            resourceType: {
+                if self.imageUrl.isSome { return .image }
+                if self.jsonUrl.isSome { return .json }
+                if self.mp3Url.isSome { return .mp3 }
+                return .image
+            }()
         )
     }
 }

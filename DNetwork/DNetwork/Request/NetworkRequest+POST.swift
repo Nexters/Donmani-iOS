@@ -8,7 +8,7 @@
 extension NetworkRequest {
     /// POST Request with Decodable Response
     func post<T: Encodable, R: Decodable>(
-        path: APIPath,
+        path: APIPath?,
         addtionalPaths: [String]? = nil,
         bodyData: T? = nil
     ) async throws -> R {
@@ -19,7 +19,7 @@ extension NetworkRequest {
     
     /// POST Request with Empty Response
     func post<T: Encodable> (
-        path: APIPath,
+        path: APIPath?,
         addtionalPaths: [String]? = nil,
         bodyData: T? = nil
     ) async throws {

@@ -48,6 +48,11 @@ final actor DefaultRewardDataSource: RewardDataSource {
         items.forEach { saveReward(item: $0) }
     }
     
+    func loadReward(category: RewardItemCategory, id: Int) -> Reward? {
+        guard let rewards = userRewardInventory[category] else { return nil }
+        return rewards.first { $0.id == id }
+    }
+    
     func initRewardInventory() {
         userRewardInventory = [:]
     }

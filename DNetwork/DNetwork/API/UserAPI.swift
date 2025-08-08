@@ -39,6 +39,15 @@ public struct UserAPI {
         return data
     }
     
+    /// FCM 토큰 업데이트
+    public func postUpdateToken(userKey: String, token: String) async throws -> String {
+        try await request.post(
+            path: nil,
+            addtionalPaths: [userKey, "token"],
+            bodyData: token
+        )
+    }
+    
     /// 마지막 로그인 업데이트
     public func putLastLogin(userKey: String) async throws {
         let result: ResponseWrapper<EmptyResponse> = try await request.get(

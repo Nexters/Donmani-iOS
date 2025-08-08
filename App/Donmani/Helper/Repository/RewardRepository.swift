@@ -10,9 +10,9 @@ import ComposableArchitecture
 
 final actor RewardRepository {
     private let dataSource = RewardAPI()
-    private let downloader = DownloadAPI()
     @Dependency(\.keychainDataSource) private var keychainDataSource
     @Dependency(\.rewardDataSource) private var rewardDataSource
+    
     
     // KeychainDataSource
     /// 사용자 ID
@@ -36,7 +36,7 @@ final actor RewardRepository {
     }
     
     /// 리워드 아이템을 저장합니다.
-    func saveReward(item: Reward) async {
+    func saveReward(item: Reward) async throws {
         await rewardDataSource.saveReward(item: item)
     }
     
@@ -98,9 +98,5 @@ final actor RewardRepository {
             byeoltongCaseId: byeoltongCaseId
         )
         try await dataSource.putSaveReward(bodyData: bodyData)
-    }
-    
-    func downloadRewardData(from urlString: String) async throws -> Data {
-        try await downloader.getResourceData(urlString: urlString)
     }
 }

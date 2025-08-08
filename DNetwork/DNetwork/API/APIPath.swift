@@ -12,5 +12,7 @@ public enum APIPath: String {
     case appVersion
     case feedback
     case reward
+    case none
+    
 }
 

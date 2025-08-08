@@ -17,10 +17,12 @@ extension SplashView {
             async let userTask: () = fetchUserData()
             async let recordTask: () = fetchRecordData()
             async let rewardTask: () = fetchRewardData()
+            async let downloadTask: () = downloadRewardData()
             do {
                 try await userTask
                 try await recordTask
                 try await rewardTask
+                try await downloadTask
             } catch(let e) {
                 print(e.localizedDescription)
             }
@@ -56,7 +58,7 @@ extension SplashView {
         }
     }
     
-    // TODO
+    
     private func fetchRewardData() async throws {
         let today = Day.today
         let equippedItems = try await rewardRepository.getMonthlyRewardItem(
@@ -68,27 +70,13 @@ extension SplashView {
             month: today.month,
             items: equippedItems
         )
-        
+    }
+    
+    private func downloadRewardData() async throws {
         let reward = try await rewardRepository.getUserRewardItem()
-        for (category, items) in reward {
+        for (_, items) in reward {
             await rewardRepository.saveRewards(items: items)
-            
         }
-        
-        
-        let inventoryDTO = try await NetworkService.DReward().reqeustRewardItem()
-        let inventory = NetworkDTOMapper.mapper(dto: inventoryDTO)
-        //        print(inventory.reduce(into: 0) { $0 += $1.value.count })
-        // TODO: Remove Duplicate Code - Total 4 location
-        for reward in (inventory[.effect] ?? []) {
-            if let _ = DownloadManager.Effect(rawValue: reward.id),
-               let contentUrl = reward.jsonUrl {
-                let data = try await NetworkService.DReward().downloadData(from: contentUrl)
-                let name = RewardResourceMapper(id: reward.id, category: .effect).resource()
-                try DataStorage.saveJsonFile(data: data, name: name)
-            }
-        }
-        DataStorage.setInventory(inventory)
     }
     
     private func checkAppVersion() {

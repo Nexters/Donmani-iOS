@@ -38,6 +38,11 @@ final actor UserRespository {
         return response.toDomain()
     }
     
+    /// FCM 토큰 업데이트
+    public func postUpdateToken(token: String) async throws -> String {
+        try await dataSource.postUpdateToken(userKey: userKey, token: token)
+    }
+    
     /// 마지막 로그인 업데이트
     public func putLastLogin() async throws {
         try await dataSource.putLastLogin(userKey: userKey)

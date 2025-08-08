@@ -9,7 +9,7 @@
 extension NetworkRequest {
     /// GET Request with Decodable Response
     func get<R: Decodable>(
-        path: APIPath,
+        path: APIPath?,
         addtionalPaths: [String]? = nil,
         parameters: [String: Any]? = nil
     ) async throws -> R {
@@ -20,7 +20,7 @@ extension NetworkRequest {
     
     /// GET Request with Empty Response
     func get(
-        path: APIPath,
+        path: APIPath?,
         addtionalPaths: [String]? = nil,
         parameters: [String: Any]? = nil
     ) async throws {

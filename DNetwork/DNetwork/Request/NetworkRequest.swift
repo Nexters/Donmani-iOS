@@ -13,14 +13,16 @@ public struct NetworkRequest {
     public init() { }
     
     func createURL(
-        _ path: APIPath,
+        _ path: APIPath?,
         _ addtionalPaths: [String]?,
         _ parameters: [String: Any]? = nil
     ) throws -> URL {
         guard var url = URL(string: apiBaseURL) else {
             throw NetworkError.invalidURLString
         }
-        url.add(paths: [path.rawValue])
+        if let path {
+            url.add(paths: [path.rawValue])
+        }
         if let addtionalPaths {
             url.add(paths: addtionalPaths)
         }
@@ -110,7 +112,7 @@ public struct NetworkRequest {
     
     /// Request with Raw URL String
     func run(dataRequest: URLRequest) async throws -> Data {
-        guard let (data, response) = try? await URLSession.shared.data(for: request) else {
+        guard let (data, response) = try? await URLSession.shared.data(for: dataRequest) else {
             throw NetworkError.requestFailed
         }
         let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500

@@ -180,14 +180,14 @@ struct RewardStartStore {
                 return .run { send in
                     let dto = try await NetworkService.DReward().reqeustRewardItem()
                     var decorationItem = NetworkDTOMapper.mapper(dto: dto)
-                    for reward in (decorationItem[.effect] ?? []) {
-                        if let effect = DownloadManager.Effect(rawValue: reward.id),
-                           let contentUrl = reward.jsonUrl {
-                            let data = try await NetworkService.DReward().downloadData(from: contentUrl)
-                            let name = RewardResourceMapper(id: reward.id, category: .effect).resource()
-                            try DataStorage.saveJsonFile(data: data, name: name)
-                        }
-                    }
+//                    for reward in (decorationItem[.effect] ?? []) {
+//                        if let effect = DownloadManager.Effect(rawValue: reward.id),
+//                           let contentUrl = reward.jsonUrl {
+//                            let data = try await NetworkService.DReward().downloadData(from: contentUrl)
+//                            let name = RewardResourceMapper(id: reward.id, category: .effect).resource()
+//                            try DataStorage.saveJsonFile(data: data, name: name)
+//                        }
+//                    }
                     DataStorage.setInventory(decorationItem)
                     let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
                     let year = Int(today[0]) ?? 2025
