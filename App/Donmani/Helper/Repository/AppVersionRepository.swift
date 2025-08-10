@@ -12,7 +12,7 @@ final actor AppVersionRepository {
     
     /// 앱 버전 정보 요청
     func getAppVersion() async throws -> Version {
-        let response = try await self.dataSource.getAppVersion()
+        let response = try await dataSource.getAppVersion()
         return response.toDomain()
     }
 }

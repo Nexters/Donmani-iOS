@@ -40,4 +40,10 @@ final class TimeManager {
     static func getRemainingTime() -> Int {
         return calculateTimeRemaining()
     }
+    
+    deinit {
+#if DEBUG
+        print("\(#function) \(Self.self)")
+#endif
+    }
 }

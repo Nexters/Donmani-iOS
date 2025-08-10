@@ -9,7 +9,5 @@ import Testing
 @testable import Donmani
 
 struct DonmaniTests {
-
-
     
 }

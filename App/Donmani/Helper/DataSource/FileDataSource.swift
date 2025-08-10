@@ -31,12 +31,12 @@ enum FileType {
     }
 }
 
-protocol FileService {
+protocol FileDataSource {
     func saveFile(from data: Data, name: String, type: FileType) async throws
     func loadFile(name: String, type: FileType) async throws -> Data
 }
 
-final actor DefaultFileService: FileService {
+final actor DefaultFileDataSource: FileDataSource {
     private var fileManager: FileManager {
         FileManager.default
     }
@@ -64,13 +64,13 @@ final actor DefaultFileService: FileService {
     }
 }
 
-enum FileServiceDependencyKey: DependencyKey {
-    static var liveValue: FileService = DefaultFileService()
+enum FileDataSourceDependencyKey: DependencyKey {
+    static var liveValue: FileDataSource = DefaultFileDataSource()
 }
 
 extension DependencyValues {
-    var fileService: FileService {
-        get { self[FileServiceDependencyKey.self] }
-        set { self[FileServiceDependencyKey.self] = newValue }
+    var fileDataSource: FileDataSource {
+        get { self[FileDataSourceDependencyKey.self] }
+        set { self[FileDataSourceDependencyKey.self] = newValue }
     }
 }

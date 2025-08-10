@@ -22,7 +22,6 @@ public struct VersionManager {
             if storeNum == currentNum {
                 continue
             }
-            
             if storeNum > currentNum {
                 return false
             }
@@ -32,5 +31,11 @@ public struct VersionManager {
         }
         
         return true
+    }
+    
+    deinit {
+#if DEBUG
+        print("\(#function) \(Self.self)")
+#endif
     }
 }

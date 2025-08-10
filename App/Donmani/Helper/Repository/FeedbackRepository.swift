@@ -19,13 +19,13 @@ final actor FeedbackRepository {
     
     /// 피드백 상태(미확인 리워드, 첫 오픈 여부, 리워드 개수)
     public func getFeedbackState() async throws -> FeedbackInfo {
-        let response = try await self.dataSource.getFeedbackState(userKey: userKey)
+        let response = try await dataSource.getFeedbackState(userKey: userKey)
         return response.toDomain()
     }
     
     /// 피드백 카드 정보
     public func getFeedbackCard() async throws -> FeedbackCard {
-        let response = try await self.dataSource.getFeedbackCard(userKey: userKey)
+        let response = try await dataSource.getFeedbackCard(userKey: userKey)
         return response.toDomain()
     }
 }

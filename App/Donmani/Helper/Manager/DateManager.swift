@@ -57,4 +57,10 @@ final class DateManager {
         }
         return result
     }
+    
+    deinit {
+#if DEBUG
+        print("\(#function) \(Self.self)")
+#endif
+    }
 }

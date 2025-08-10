@@ -8,34 +8,34 @@
 import DNetwork
 import ComposableArchitecture
 
-final actor DataRepository {
+final actor FileRepository {
     private let downloader = DownloadAPI()
-    @Dependency(\.fileService) private var fileService
+    @Dependency(\.fileDataSource) private var fileDataSource
     
     func saveRewardData(from item: Reward) async throws {
         try await withThrowingTaskGroup(of: Void.self) { group in
             if let thumbnailUrl = item.thumbnailUrl {
                 group.addTask {
                     let data = try await self.downloader.getResourceData(urlString: thumbnailUrl)
-                    try await self.fileService.saveFile(from: data, name: "\(item.name)", type: .thumbnail)
+                    try await self.fileDataSource.saveFile(from: data, name: "\(item.name)", type: .thumbnail)
                 }
             }
             if let jsonUrl = item.jsonUrl {
                 group.addTask {
                     let data = try await self.downloader.getResourceData(urlString: jsonUrl)
-                    try await self.fileService.saveFile(from: data, name: "\(item.name)", type: .json)
+                    try await self.fileDataSource.saveFile(from: data, name: "\(item.name)", type: .json)
                 }
             }
             if let imageUrl = item.imageUrl {
                 group.addTask {
                     let data = try await self.downloader.getResourceData(urlString: imageUrl)
-                    try await self.fileService.saveFile(from: data, name: "\(item.name)", type: .image)
+                    try await self.fileDataSource.saveFile(from: data, name: "\(item.name)", type: .image)
                 }
             }
             if let soundUrl = item.soundUrl {
                 group.addTask {
                     let data = try await self.downloader.getResourceData(urlString: soundUrl)
-                    try await self.fileService.saveFile(from: data, name: "\(item.name)", type: .mp3)
+                    try await self.fileDataSource.saveFile(from: data, name: "\(item.name)", type: .mp3)
                 }
             }
             try await group.waitForAll()
@@ -46,7 +46,7 @@ final actor DataRepository {
         from item: Reward,
         resourceType: Reward.ResourceType
     ) async throws -> Data {
-        try await self.fileService.loadFile(
+        try await fileDataSource.loadFile(
             name: "\(item.name)",
             type: {
                 switch resourceType {
