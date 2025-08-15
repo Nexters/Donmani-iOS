@@ -14,7 +14,6 @@ struct SplashView: View {
     let userRepository = UserRespository()
     let recordRepository = RecordRepository()
     let rewardRepository = RewardRepository()
-    let fileService = DefaultFileService()
     let completeHandler: (() -> Void)?
     
     init(completeHandler: @escaping () -> Void) {

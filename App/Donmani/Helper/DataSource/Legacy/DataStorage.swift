@@ -21,11 +21,11 @@ class DataStorage {
         
     }
     
-    static func setDecorationItem(_ item: [RewardItemCategory:Reward]) {
+    static func setDecorationItem(_ item: [RewardItemCategory: Reward]) {
         shared.decorationItem = item
     }
     
-    static func getDecorationItem() -> [RewardItemCategory:Reward] {
+    static func getDecorationItem() -> [RewardItemCategory: Reward] {
         return shared.decorationItem
     }
     

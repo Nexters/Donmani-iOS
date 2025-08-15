@@ -217,7 +217,7 @@ struct MonthlyStarBottleView: View {
             month: 1,
             items: [Reward(id: 22, name: "",
                            imageUrl: nil, jsonUrl: nil, soundUrl: nil, thumbnailUrl: nil,
-                           category: .decoration, newAcquiredFlag: false, hidden: false)]
+                           category: .decoration, newAcquiredFlag: false, hidden: false, resourceType: .image)]
         )
         let state = MainStateFactory().makeMonthlyStarBottleState(context: context)
         let store = MainStoreFactory().makeMonthlyStarBottleStore(state: state)

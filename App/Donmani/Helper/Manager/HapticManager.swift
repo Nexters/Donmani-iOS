@@ -56,10 +56,4 @@ struct HapticManager {
             print("Error creating a haptic transient pattern: \(error)")
         }
     }
-    
-    deinit {
-#if DEBUG
-        print("\(#function) \(Self.self)")
-#endif
-    }
 }

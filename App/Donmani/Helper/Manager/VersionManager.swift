@@ -32,10 +32,4 @@ public struct VersionManager {
         
         return true
     }
-    
-    deinit {
-#if DEBUG
-        print("\(#function) \(Self.self)")
-#endif
-    }
 }

@@ -12,6 +12,12 @@ import ComposableArchitecture
 @Reducer
 struct MainStore {
     
+    struct Context {
+        let records: [Record]
+        let hasRecord: (today: Bool, yesterday: Bool)
+        let decorationItem: [RewardItemCategory: Reward]
+    }
+    
     // MARK: - State
     @ObservableState
     struct State: Equatable {
@@ -61,29 +67,19 @@ struct MainStore {
         var shakeCount = 0
         var isNewStar = 0
         
-        var month = 0
-        var day = 0
+        var day: Day
         
-        init(today: [String]) {
-            self.month = Int(today[1]) ?? 1
-            let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
-            self.monthlyRecords = monthlyRecords
-            let state = HistoryStateManager.shared.getState()
-            let isCompleteToday = state[.today, default: false]
-            let isCompleteYesterday = state[.yesterday, default: false]
-            self.isPresentingRecordEntryButton = !(isCompleteToday && isCompleteYesterday)
+        init(context: MainStore.Context) {
+            self.day = .today
+            self.monthlyRecords = context.records
+            self.isPresentingRecordEntryButton = !(context.hasRecord.today && context.hasRecord.yesterday)
+            self.decorationItem = context.decorationItem
             
-            self.day = Int(today[2]) ?? 1
-            self.decorationItem = DataStorage.getDecorationItem()
-            
-            if (day == 1) {
-                if HistoryStateManager.shared.getIsFirstDayOfMonth() {
-                    isPresentingNewStarBottle = true
-                    HistoryStateManager.shared.setIsFirstDayOfMonth()
-                }
-            } else {
-                HistoryStateManager.shared.removeIsFirstDayOfMonth()
+            if (day.day == 1) {
+                // TODO: - 1일에 표시하는 Bottom Sheet
             }
+            
+            // TODO: - 리워드 툴팁 표시
             isPresentingRewardToolTipView = HistoryStateManager.shared.getIsPresentingRewardToolTipView()
         }
         

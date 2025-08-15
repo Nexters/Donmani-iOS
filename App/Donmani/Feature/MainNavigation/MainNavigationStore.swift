@@ -17,9 +17,8 @@ struct MainNavigationStore {
         var mainState: MainStore.State
         var path = StackState<MainNavigationStore.Path.State>()
         
-        init() {
-            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
-            self.mainState = MainStore.State(today: today)
+        init(mainState: MainStore.State) {
+            self.mainState = mainState
         }
     }
     

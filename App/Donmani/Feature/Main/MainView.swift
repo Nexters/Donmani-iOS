@@ -256,7 +256,6 @@ struct MainView: View {
                 value: store.isPresentingSaveSuccessToastView
             )
             .opacity(store.isPresentingSaveSuccessToastView ? 1 : 0)
-//            .offset(y: store.isPresentingSaveSuccessToastView ? 0 : 5)
             
             if store.isLoading {
                 Color.black.opacity(0.1)
@@ -273,8 +272,13 @@ struct MainView: View {
 
 #Preview {
     {
-        let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
-        var state = MainStore.State(today: today)
+//        let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+        let context = MainStore.Context(
+            records: [Record],
+            hasRecord: <#T##(today: Bool, yesterday: Bool)#>,
+            decorationItem: <#T##[RewardItemCategory : Reward]#>
+        )
+        var state = MainStore.State(context: context)
         state.monthlyRecords = Record.previewData
         return MainView(store: Store(initialState: state) { MainStore() } )
     }()

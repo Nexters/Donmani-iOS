@@ -39,7 +39,7 @@ extension SplashView {
     private func fetchRecordData() async throws {
         let today = Day.today
         if today.day == 1 {
-            async let yesterdayTask: Void = fetchRecrodData(at: .yesterDay)
+            async let yesterdayTask: Void = fetchRecrodData(at: .yesterday)
             async let todayTask: Void = fetchRecrodData(at: .today)
             try await yesterdayTask
             try await todayTask

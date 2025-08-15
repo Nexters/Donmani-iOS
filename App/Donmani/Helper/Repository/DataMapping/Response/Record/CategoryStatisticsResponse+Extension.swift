@@ -15,7 +15,7 @@ extension CategoryStatisticsResponse {
             categoryCounts: Dictionary(
                 uniqueKeysWithValues:
                     self.categoryCounts.map { (key, value) in
-                        (RecordCategory(rawValue: key), value)
+                        (RecordCategory(rawValue: key.lowercased()), value)
                     }
             )
         )

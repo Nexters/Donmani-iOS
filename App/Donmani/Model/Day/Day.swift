@@ -74,7 +74,7 @@ extension Day {
         )
     }
     
-    static var yesterDay: Day {
+    static var yesterday: Day {
         let components = yesterdayComponents
         return Day(
             year: components.year ?? 0,
@@ -82,8 +82,6 @@ extension Day {
             day: components.day ?? 0
         )
     }
-    
-    
     
     private static var todayComponents: DateComponents {
         Calendar.current.dateComponents([.day, .month, .year], from: Date())
