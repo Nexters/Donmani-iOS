@@ -1,5 +1,5 @@
 //
-//  UserRespository.swift
+//  UserRepository.swift
 //  Donmani
 //
 //  Created by 문종식 on 7/27/25.
@@ -8,7 +8,7 @@
 import DNetwork
 import ComposableArchitecture
 
-protocol UserRespository {
+protocol UserRepository {
     func registerUser() async throws -> User
     func getUserName() -> String
     func updateUserName(newUserName: String) async throws -> User
@@ -20,10 +20,9 @@ protocol UserRespository {
     func getRewardStatus() async throws -> Bool
 }
 
-struct DefaultUserRespository: UserRespository {
+struct DefaultUserRepository: UserRepository {
     private let dataSource = UserAPI()
     private var keychainDataSource: KeychainDataSource
-//    @Dependency(\.keychainDataSource)
     
     init(keychainDataSource: KeychainDataSource) {
         self.keychainDataSource = keychainDataSource
@@ -58,7 +57,6 @@ struct DefaultUserRespository: UserRespository {
         keychainDataSource.setUserName(name: user.userName)
         return user
     }
-    
     
     /// FCM 토큰 업데이트
     func postUpdateToken(token: String) async throws -> String {
@@ -96,17 +94,17 @@ struct DefaultUserRespository: UserRespository {
 }
 
 extension DependencyValues {
-    private enum UserRespositoryKey: DependencyKey {
-        static let liveValue: UserRespository = {
+    private enum UserRepositoryKey: DependencyKey {
+        static let liveValue: UserRepository = {
             @Dependency(\.keychainDataSource) var keychainDataSource
-            return DefaultUserRespository(
+            return DefaultUserRepository(
                 keychainDataSource: keychainDataSource
             )
         }()
     }
     
-    var userRespository: UserRespository {
-        get { self[UserRespositoryKey.self] }
-        set { self[UserRespositoryKey.self] = newValue }
+    var userRepository: UserRepository {
+        get { self[UserRepositoryKey.self] }
+        set { self[UserRepositoryKey.self] = newValue }
     }
 }

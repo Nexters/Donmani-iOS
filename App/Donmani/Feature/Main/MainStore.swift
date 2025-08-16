@@ -11,9 +11,6 @@ import ComposableArchitecture
 
 @Reducer
 struct MainStore {
-    let userRepository = UserRespository()
-    let rewardRepository = RewardRepository()
-    
     struct Context {
         let records: [Record]
         let hasRecord: (today: Bool, yesterday: Bool)
@@ -125,7 +122,7 @@ struct MainStore {
         
         enum Update {
             case fetchUserName(String)
-            case fetchDecoratinItem([RewardItemCategory: Reward])
+            case fetchDecorationItem([RewardItemCategory: Reward])
             case fetchWriteRecordButtonState(Bool)
         }
         
@@ -138,7 +135,8 @@ struct MainStore {
         }
     }
     
-    // MARK: - Dependency
+    // MARK: - Dependency (UseCase)
+    @Dependency(.writeRecordUseCase) var writeRecordUseCase
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
@@ -148,7 +146,7 @@ struct MainStore {
             case .onAppear:
                 return .run { send in
                     await send(.update(.fetchUserName(userRepository.userName)))
-                    await send(.update(.fetchDecoratinItem(rewardRepository.loadEquippedItems(
+                    await send(.update(.fetchDecorationItem(rewardRepository.loadEquippedItems(
                         year: Day.today.year,
                         month: Day.today.month
                     ))))

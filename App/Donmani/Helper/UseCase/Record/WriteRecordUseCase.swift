@@ -28,7 +28,7 @@ struct DefaultWriteRecordUseCase: WriteRecordUseCase {
 }
 
 extension DependencyValues {
-    private enum WriteRecordUseCaseDependencyKey: DependencyKey {
+    private enum WriteRecordUseCaseKey: DependencyKey {
         static let liveValue: WriteRecordUseCase = {
             @Dependency(\.recordDataSource) var recordDataSource
             return DefaultWriteRecordUseCase(
@@ -38,7 +38,7 @@ extension DependencyValues {
     }
     
     var writeRecordUseCase: WriteRecordUseCase {
-        get { self[WriteRecordUseCaseDependencyKey.self] }
-        set { self[WriteRecordUseCaseDependencyKey.self] = newValue }
+        get { self[WriteRecordUseCaseKey.self] }
+        set { self[WriteRecordUseCaseKey.self] = newValue }
     }
 }
