@@ -8,10 +8,31 @@
 import DNetwork
 import ComposableArchitecture
 
-final actor RecordRepository {
+protocol RecordRepository {
+    func save(_ record: Record)
+    func load(date: Day) -> Record?
+    func saveRecords(_ records: [Record])
+    func loadRecords(year: Int, month: Int) -> [Record]?
+    func postRecord(record: Record) async throws
+    func getMonthlyRecordList(year: Int, month: Int) async throws -> MonthlyRecordState
+    func getMonthlyRecordCalendar(year: Int, month: Int) async throws -> MonthlyRecordState
+    func getMonthlyRecordStatistics(year: Int, month: Int) async throws -> RecordStatistics
+    func getMonthlyCategorySatistics(year: Int, month: Int) async throws -> CategoryStatistics
+    func getYearlyRecordSummary(year: Int) async throws -> SummaryResponse
+}
+
+struct DefaultRecordRepository: RecordRepository {
     private let dataSource = RecordAPI()
-    @Dependency(\.keychainDataSource) private var keychainDataSource
-    @Dependency(\.recordDataSource) private var recordDataSource
+    private var keychainDataSource: KeychainDataSource
+    private var recordDataSource: RecordDataSource
+    
+    init(
+        keychainDataSource: KeychainDataSource,
+        recordDataSource: RecordDataSource
+    ) {
+        self.keychainDataSource = keychainDataSource
+        self.recordDataSource = recordDataSource
+    }
     
     // KeychainDataSource
     /// 사용자 ID
@@ -21,40 +42,36 @@ final actor RecordRepository {
     
     // RecordDataSource
     /// 기록을 저장합니다.
-    func save(_ record: Record) async {
-        await recordDataSource.save(record)
+    func save(_ record: Record) {
+        recordDataSource.save(record)
     }
     
     /// 기록을 불러옵니다.
-    func load(date: Day) async -> Record? {
-        await recordDataSource.load(year: date.year, month: date.month, day: date.day)
+    func load(date: Day) -> Record? {
+        recordDataSource.load(year: date.year, month: date.month, day: date.day)
     }
     
     /// 기록 리스트를 저장합니다.
-    func saveRecords(_ records: [Record]) async {
-        await withTaskGroup(of: Void.self) { group in
-            for record in records {
-                group.addTask {
-                    await self.save(record)
-                }
-            }
+    func saveRecords(_ records: [Record]) {
+        for record in records {
+            save(record)
         }
     }
     
     /// 기록 리스트를 불러옵니다.
-    func loadRecords(year: Int, month: Int) async -> [Record]? {
-        await recordDataSource.loadRecords(year: year, month: month)
+    func loadRecords(year: Int, month: Int) -> [Record]? {
+        recordDataSource.loadRecords(year: year, month: month)
     }
     
     // RecordAPI
     /// 기록 작성
-    public func postRecord(record: Record) async throws {
+    func postRecord(record: Record) async throws {
         let bodyData = RecordRequest(userKey: userKey, record: record)
         try await dataSource.postRecord(bodyData: bodyData)
     }
     
     /// 월별 기록 정보(리스트)
-    public func getMonthlyRecordList(year: Int, month: Int) async throws -> MonthlyRecordState {
+    func getMonthlyRecordList(year: Int, month: Int) async throws -> MonthlyRecordState {
         try await dataSource.getMonthlyRecordList(
             userKey: userKey,
             year: year,
@@ -63,7 +80,7 @@ final actor RecordRepository {
     }
     
     /// 월별 기록 정보(캘린더)
-    public func getMonthlyRecordCalendar(year: Int, month: Int) async throws -> MonthlyRecordState {
+    func getMonthlyRecordCalendar(year: Int, month: Int) async throws -> MonthlyRecordState {
         try await dataSource.getMonthlyRecordCalendar(
             userKey: userKey,
             year: year,
@@ -72,7 +89,7 @@ final actor RecordRepository {
     }
     
     /// 월별 행복/후회 기록 개수 통계
-    public func getMonthlyRecordStatistics(year: Int, month: Int) async throws -> RecordStatistics {
+    func getMonthlyRecordStatistics(year: Int, month: Int) async throws -> RecordStatistics {
         try await dataSource.getMonthlyRecordStatistics(
             userKey: userKey,
             year: year,
@@ -81,7 +98,7 @@ final actor RecordRepository {
     }
     
     /// 월간 카테고리별 기록 수
-    public func getMonthlyCategorySatistics(year: Int, month: Int) async throws -> CategoryStatistics {
+    func getMonthlyCategorySatistics(year: Int, month: Int) async throws -> CategoryStatistics {
         try await dataSource.getMonthlyCategorySatistics(
             userKey: userKey,
             year: year,
@@ -90,7 +107,25 @@ final actor RecordRepository {
     }
     
     /// 연간 기록(별통이 달력)
-    public func getYearlyRecordSummary(year: Int) async throws -> SummaryResponse {
+    func getYearlyRecordSummary(year: Int) async throws -> SummaryResponse {
         try await dataSource.getYearlyRecordSummary(userKey: userKey, year: year)
+    }
+}
+
+extension DependencyValues {
+    private enum RecordRepositoryKey: DependencyKey {
+        static let liveValue: RecordRepository = {
+            @Dependency(\.keychainDataSource) var keychainDataSource
+            @Dependency(\.recordDataSource) var recordDataSource
+            return DefaultRecordRepository(
+                keychainDataSource: keychainDataSource,
+                recordDataSource: recordDataSource
+            )
+        }()
+    }
+    
+    var recordRepository: RecordRepository {
+        get { self[RecordRepositoryKey.self] }
+        set { self[RecordRepositoryKey.self] = newValue }
     }
 }

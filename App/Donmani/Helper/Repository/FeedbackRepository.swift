@@ -8,9 +8,18 @@
 import DNetwork
 import ComposableArchitecture
 
-final actor FeedbackRepository {
+protocol FeedbackRepository {
+    func getFeedbackState() async throws -> FeedbackInfo
+    func getFeedbackCard() async throws -> FeedbackCard
+}
+
+struct DefaultFeedbackRepository: FeedbackRepository {
     private let dataSource = FeedbackAPI()
-    @Dependency(\.keychainDataSource) var keychainDataSource
+    private var keychainDataSource: KeychainDataSource
+    
+    init(keychainDataSource: KeychainDataSource) {
+        self.keychainDataSource = keychainDataSource
+    }
     
     /// 사용자 ID
     private var userKey: String {
@@ -27,5 +36,21 @@ final actor FeedbackRepository {
     public func getFeedbackCard() async throws -> FeedbackCard {
         let response = try await dataSource.getFeedbackCard(userKey: userKey)
         return response.toDomain()
+    }
+}
+
+extension DependencyValues {
+    private enum FeedbackRepositoryKey: DependencyKey {
+        static let liveValue: FeedbackRepository = {
+                @Dependency(\.keychainDataSource) var keychainDataSource
+            return DefaultFeedbackRepository(
+                keychainDataSource: keychainDataSource
+            )
+        }()
+    }
+    
+    var feedbackRepository: FeedbackRepository {
+        get { self[FeedbackRepositoryKey.self] }
+        set { self[FeedbackRepositoryKey.self] = newValue }
     }
 }

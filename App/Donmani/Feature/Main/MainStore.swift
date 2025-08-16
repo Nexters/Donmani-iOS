@@ -11,6 +11,8 @@ import ComposableArchitecture
 
 @Reducer
 struct MainStore {
+    let userRepository = UserRespository()
+    let rewardRepository = RewardRepository()
     
     struct Context {
         let records: [Record]
@@ -20,12 +22,18 @@ struct MainStore {
     
     // MARK: - State
     @ObservableState
-    struct State: Equatable {
-        var name: String = DataStorage.getUserName()
-        var monthlyRecords: [Record]
+    struct State {
+        var userName: String = ""
+        var day: Day
+        var records: [Record]
+        var decorationItem: [RewardItemCategory: Reward]
+ 
+        /// 기록 작성 가능 여부
+        var canWriteRecord: Bool
+        
         var byeoltongShapeType: DImageAsset = .rewardBottleDefaultShape
         
-        var isPresentingRecordEntryButton: Bool = true
+//        var isPresentingRecordEntryButton: Bool = true
         var isPresentingRecordYesterdayToopTip: Bool = false
         var isPresentingAlreadyWrite: Bool = false
         var isPresentingNewStarBottle: Bool = false
@@ -36,7 +44,6 @@ struct MainStore {
         
         var isRequestNotificationPermission: Bool = true
         var isLoading: Bool = false
-        var decorationItem: [RewardItemCategory: Reward]
         var backgroundResource : DImageAsset? {
             let id = decorationItem[.background]?.id ?? 9
             switch id {
@@ -67,13 +74,13 @@ struct MainStore {
         var shakeCount = 0
         var isNewStar = 0
         
-        var day: Day
-        
         init(context: MainStore.Context) {
             self.day = .today
-            self.monthlyRecords = context.records
-            self.isPresentingRecordEntryButton = !(context.hasRecord.today && context.hasRecord.yesterday)
+            self.records = context.records
             self.decorationItem = context.decorationItem
+            
+            self.canWriteRecord = !(context.hasRecord.today && context.hasRecord.yesterday)
+            
             
             if (day.day == 1) {
                 // TODO: - 1일에 표시하는 Bottom Sheet
@@ -84,12 +91,12 @@ struct MainStore {
         }
         
         mutating func appendNewRecord(record: Record) {
-            monthlyRecords.append(record)
+            records.append(record)
             let historyStateManager = HistoryStateManager.shared
             let state = historyStateManager.getState()
             let isCompleteToday = state[.today, default: false]
             let isCompleteYesterday = state[.yesterday, default: false]
-            isPresentingRecordEntryButton = !(isCompleteToday && isCompleteYesterday)
+            canWriteRecord = !(isCompleteToday && isCompleteYesterday)
             isNewStar += 1
             let itemCount = DataStorage.getInventory().reduce(into: 0) { result, items in result += items.value.count }
             isPresentingRewardToolTipView = !(itemCount > 15)
@@ -101,7 +108,8 @@ struct MainStore {
     enum Action: BindableAction {
         case binding(BindingAction<State>)
         
-        case fetchUserName
+        case onAppear
+        
         case closePopover
         case checkPopover
         case dismissNewStarBottleView
@@ -112,6 +120,15 @@ struct MainStore {
         case dismissSaveSuccessToast
 
         case delegate(Delegate)
+        
+        case update(Update)
+        
+        enum Update {
+            case fetchUserName(String)
+            case fetchDecoratinItem([RewardItemCategory: Reward])
+            case fetchWriteRecordButtonState(Bool)
+        }
+        
         enum Delegate {
             case pushSettingView
             case pushRecordEntryPointView
@@ -128,28 +145,37 @@ struct MainStore {
         BindingReducer()
         Reduce { state, action in
             switch action {
-            case .fetchUserName:
-                state.name = DataStorage.getUserName()
-                state.decorationItem = DataStorage.getDecorationItem()
-                let id = state.decorationItem[.byeoltong]?.id ?? 4
-                GA.View(event: .main).send()
-                state.byeoltongShapeType = {
-                    switch id {
-                    case 24:
-                        return .rewardBottleBeadsShape
-                    case 25:
-                        return .rewardBottleFuzzyShape
-                    default:
-                        return .rewardBottleDefaultShape
-                    }
-                }()
-                if state.isSaveSuccess {
-                    state.isPresentingSaveSuccessToastView = true
-                    return .run { send in
-                        try await Task.sleep(nanoseconds: 3_000_000_000)
-                        await send(.dismissSaveSuccessToast, animation: .linear(duration: 0.5))
-                    }
+            case .onAppear:
+                return .run { send in
+                    await send(.update(.fetchUserName(userRepository.userName)))
+                    await send(.update(.fetchDecoratinItem(rewardRepository.loadEquippedItems(
+                        year: Day.today.year,
+                        month: Day.today.month
+                    ))))
+                    
+                    await send(.update(.fetchWriteRecordButtonState(<#T##Bool#>)))
                 }
+                
+//                state.decorationItem = DataStorage.getDecorationItem()
+//                let id = state.decorationItem[.byeoltong]?.id ?? 4
+//                GA.View(event: .main).send()
+//                state.byeoltongShapeType = {
+//                    switch id {
+//                    case 24:
+//                        return .rewardBottleBeadsShape
+//                    case 25:
+//                        return .rewardBottleFuzzyShape
+//                    default:
+//                        return .rewardBottleDefaultShape
+//                    }
+//                }()
+//                if state.isSaveSuccess {
+//                    state.isPresentingSaveSuccessToastView = true
+//                    return .run { send in
+//                        try await Task.sleep(nanoseconds: 3_000_000_000)
+//                        await send(.dismissSaveSuccessToast, animation: .linear(duration: 0.5))
+//                    }
+//                }
                  
             case .closePopover:
                 state.isPresentingRecordYesterdayToopTip = false
@@ -201,9 +227,22 @@ struct MainStore {
                 state.isSaveSuccess = false
                 state.isPresentingSaveSuccessToastView = false
                 
+            case .update(let update):
+                switch update {
+                case .fetchUserName(let userName):
+                    state.userName = userName
+                case .fetchDecoratinItem(let item):
+                    state.decorationItem = item
+                case .fetchWriteRecordButtonState(let canWriteRecord):
+                    state.canWriteRecord = canWriteRecord
+                default:
+                    break
+                }
+                
             default:
                 break
             }
+            
             return .none
         }
     }

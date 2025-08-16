@@ -8,48 +8,70 @@
 import DNetwork
 import ComposableArchitecture
 
-final actor UserRespository {
+protocol UserRespository {
+    func registerUser() async throws -> User
+    func getUserName() -> String
+    func updateUserName(newUserName: String) async throws -> User
+    func postUpdateToken(token: String) async throws -> String
+    func putLastLogin() async throws
+    func putNoticeStatus() async throws
+    func getNoticeStatus() async throws -> Bool
+    func putRewardStatus() async throws
+    func getRewardStatus() async throws -> Bool
+}
+
+struct DefaultUserRespository: UserRespository {
     private let dataSource = UserAPI()
-    @Dependency(\.keychainDataSource) private var keychainDataSource
+    private var keychainDataSource: KeychainDataSource
+//    @Dependency(\.keychainDataSource)
+    
+    init(keychainDataSource: KeychainDataSource) {
+        self.keychainDataSource = keychainDataSource
+    }
     
     /// 사용자 이름
     private var userName: String {
-        get { keychainDataSource.getUserName() }
-        set { keychainDataSource.setUserName(name: newValue) }
+        keychainDataSource.getUserName()
     }
     
     /// 사용자 ID
-    var userKey: String {
+    private var userKey: String {
         keychainDataSource.generateUUID()
     }
     
     /// 사용자 등록
-    public func registerUser() async throws -> User {
+    func registerUser() async throws -> User {
         let response = try await dataSource.postRegisterUser(userKey: userKey)
         let user = response.toDomain()
-        userName = user.userName
+        keychainDataSource.setUserName(name: user.userName)
         return user
     }
     
-    /// 사용자 정보 업데이트
-    public func updateUserName(newUserName: String) async throws -> User {
-        let response = try await dataSource.postUpdateUser(userKey: userKey, newUserName: newUserName)
-        userName = newUserName
-        return response.toDomain()
+    func getUserName() -> String {
+        userName
     }
     
+    /// 사용자 정보 업데이트
+    func updateUserName(newUserName: String) async throws -> User {
+        let response = try await dataSource.postUpdateUser(userKey: userKey, newUserName: newUserName)
+        let user = response.toDomain()
+        keychainDataSource.setUserName(name: user.userName)
+        return user
+    }
+    
+    
     /// FCM 토큰 업데이트
-    public func postUpdateToken(token: String) async throws -> String {
+    func postUpdateToken(token: String) async throws -> String {
         try await dataSource.postUpdateToken(userKey: userKey, token: token)
     }
     
     /// 마지막 로그인 업데이트
-    public func putLastLogin() async throws {
+    func putLastLogin() async throws {
         try await dataSource.putLastLogin(userKey: userKey)
     }
     
     /// 공지사항 확인 상태 업데이트
-    public func putNoticeStatus() async throws {
+    func putNoticeStatus() async throws {
         try await dataSource.putNoticeStatus(userKey: userKey)
     }
     
@@ -70,5 +92,21 @@ final actor UserRespository {
         let response = try await dataSource.getRewardStatus(userKey: userKey)
         let hasNewBadge = response.checked
         return hasNewBadge
+    }
+}
+
+extension DependencyValues {
+    private enum UserRespositoryKey: DependencyKey {
+        static let liveValue: UserRespository = {
+            @Dependency(\.keychainDataSource) var keychainDataSource
+            return DefaultUserRespository(
+                keychainDataSource: keychainDataSource
+            )
+        }()
+    }
+    
+    var userRespository: UserRespository {
+        get { self[UserRespositoryKey.self] }
+        set { self[UserRespositoryKey.self] = newValue }
     }
 }

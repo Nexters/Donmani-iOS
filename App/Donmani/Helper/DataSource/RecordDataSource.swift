@@ -8,14 +8,18 @@
 import ComposableArchitecture
 
 protocol RecordDataSource {
-    func save(_ record: Record) async
-    func load(year: Int, month: Int, day: Int) async -> Record?
-    func loadRecords(year: Int, month: Int) async -> [Record]?
+    func save(_ record: Record)
+    func load(year: Int, month: Int, day: Int) -> Record?
+    func loadRecords(year: Int, month: Int) -> [Record]?
 }
 
-final actor DefaultRecordDataSource: RecordDataSource {
+final class DefaultRecordDataSource: RecordDataSource {
     private typealias MonthlyRecord = [Int: [Record]]
     private var data: [Int: MonthlyRecord] = [:]
+    
+    init() {
+        self.data = [:]
+    }
     
     func save(_ record: Record) {
         let year = record.day.year
@@ -36,13 +40,15 @@ final actor DefaultRecordDataSource: RecordDataSource {
     }
 }
 
-enum RecordDataSourceDependencyKey: DependencyKey {
-    static var liveValue: RecordDataSource = DefaultRecordDataSource()
-}
+
 
 extension DependencyValues {
+    private enum RecordDataSourceKey: DependencyKey {
+        static let liveValue: RecordDataSource = DefaultRecordDataSource()
+    }
+    
     var recordDataSource: RecordDataSource {
-        get { self[RecordDataSourceDependencyKey.self] }
-        set { self[RecordDataSourceDependencyKey.self] = newValue }
+        get { self[RecordDataSourceKey.self] }
+        set { self[RecordDataSourceKey.self] = newValue }
     }
 }

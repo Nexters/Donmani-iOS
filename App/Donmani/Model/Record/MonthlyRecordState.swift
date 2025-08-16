@@ -6,7 +6,7 @@
 //
 
 struct MonthlyRecordState {
-    public let records: [NewRecord]?
+    public let records: [Record]?
     public let saveItems: [Reward]
     public let hasNotOpenedRewards: Bool
     public let totalExpensesCount: Int

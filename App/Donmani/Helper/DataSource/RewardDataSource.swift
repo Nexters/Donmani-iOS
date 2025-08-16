@@ -7,23 +7,29 @@
 
 import ComposableArchitecture
 
+
 protocol RewardDataSource {
-    func saveEquippedItems(year: Int, month: Int, items: [Reward]) async
-    func loadEquippedItems(year: Int, month: Int) async -> [RewardItemCategory: Reward] 
-    func saveReward(item: Reward) async
-    func saveRewards(items: [Reward]) async
-    func initRewardInventory() async
+    func saveEquippedItems(year: Int, month: Int, items: [Reward])
+    func loadEquippedItems(year: Int, month: Int) -> [RewardItemCategory: Reward]
+    func saveReward(item: Reward)
+    func saveRewards(items: [Reward])
+    func initRewardInventory()
 }
 
-final actor DefaultRewardDataSource: RewardDataSource {
+final class DefaultRewardDataSource: RewardDataSource {
     // Typealias
     private typealias Year = Int
     private typealias Month = Int
     private typealias EquippedItem = [RewardItemCategory: Reward]
     private typealias MonthlyEquippedItem = [Month: EquippedItem]
     
-    private var yearlyEquippedItem: [Year: MonthlyEquippedItem] = [:]
-    private var userRewardInventory: [RewardItemCategory: [Reward]] = [:]
+    private var yearlyEquippedItem: [Year: MonthlyEquippedItem]
+    private var userRewardInventory: [RewardItemCategory: [Reward]]
+    
+    init() {
+        self.yearlyEquippedItem = [:]
+        self.userRewardInventory = [:]
+    }
     
     func saveEquippedItems(year: Int, month: Int, items: [Reward]) {
         items.forEach { reward in
@@ -58,13 +64,13 @@ final actor DefaultRewardDataSource: RewardDataSource {
     }
 }
 
-enum RewardDataSourceDependencyKey: DependencyKey {
-    static var liveValue: RewardDataSource = DefaultRewardDataSource()
-}
-
 extension DependencyValues {
+    private enum RewardDataSourceKey: DependencyKey {
+        static var liveValue: RewardDataSource = DefaultRewardDataSource()
+    }
+    
     var rewardDataSource: RewardDataSource {
-        get { self[RewardDataSourceDependencyKey.self] }
-        set { self[RewardDataSourceDependencyKey.self] = newValue }
+        get { self[RewardDataSourceKey.self] }
+        set { self[RewardDataSourceKey.self] = newValue }
     }
 }

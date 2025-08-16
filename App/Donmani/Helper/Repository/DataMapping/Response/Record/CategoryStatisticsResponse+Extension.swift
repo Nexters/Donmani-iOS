@@ -12,12 +12,12 @@ extension CategoryStatisticsResponse {
         CategoryStatistics(
             year: self.year,
             month: self.month,
-            categoryCounts: Dictionary(
-                uniqueKeysWithValues:
-                    self.categoryCounts.map { (key, value) in
-                        (RecordCategory(rawValue: key.lowercased()), value)
-                    }
-            )
+            categoryCounts: self.categoryCounts.reduce(
+                into: [RecordCategory: Int]()
+            ) { result, item in
+                let category = RecordCategory(rawValue: item.key.lowercased()) ?? .none
+                result[category] = item.value
+            }
         )
     }
 }

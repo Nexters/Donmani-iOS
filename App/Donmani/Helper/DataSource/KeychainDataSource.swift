@@ -98,11 +98,11 @@ struct DefaultKeychainDataSource: KeychainDataSource {
     }
 }
 
-enum KeychainDataSourceKey: DependencyKey {
-    static var liveValue: KeychainDataSource = DefaultKeychainDataSource()
-}
-
 extension DependencyValues {
+    private enum KeychainDataSourceKey: DependencyKey {
+        static let liveValue: KeychainDataSource = DefaultKeychainDataSource()
+    }
+    
     var keychainDataSource: KeychainDataSource {
         get { self[KeychainDataSourceKey.self] }
         set { self[KeychainDataSourceKey.self] = newValue }

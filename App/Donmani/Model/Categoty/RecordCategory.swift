@@ -5,8 +5,8 @@
 //  Created by 문종식 on 2/6/25.
 //
 
-import SwiftUI
-import DesignSystem
+//import SwiftUI
+//import DesignSystem
 
 //struct LegacyRecordCategory: Hashable {
 //    

@@ -7,14 +7,16 @@
 
 import UIKit
 import FirebaseMessaging
+import ComposableArchitecture
 
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         if let fcmToken {
             Task {
+                @Dependency(\.settings) var settings
                 let userRepository = UserRespository()
                 let updatedToken = try await userRepository.postUpdateToken(token: fcmToken)
-                Settings.firebaseToken = updatedToken
+                settings.firebaseToken = updatedToken
                 print("FCM Token:", updatedToken)
             }
         }

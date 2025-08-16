@@ -8,5 +8,5 @@
 struct CategoryStatistics {
     let year: Int
     let month: Int
-    let categoryCounts: [NewRecordCategory: Int]
+    let categoryCounts: [RecordCategory: Int]
 }

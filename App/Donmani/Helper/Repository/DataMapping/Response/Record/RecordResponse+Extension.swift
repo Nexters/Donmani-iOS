@@ -8,8 +8,8 @@
 import DNetwork
 
 extension RecordResponse {
-    func toDomain() -> NewRecord {
-        NewRecord(
+    func toDomain() -> Record {
+        Record(
             day: Day(yyyymmdd: self.date),
             records: self.contents?.map { $0.toDomain() } ?? []
         )
@@ -17,10 +17,10 @@ extension RecordResponse {
 }
 
 extension RecordResponse.RecordContentResponse {
-    func toDomain() -> NewRecordContent {
-        NewRecordContent(
+    func toDomain() -> RecordContent {
+        RecordContent(
             flag: RecordContentType(rawValue: self.flag),
-            category: NewRecordCategory(rawValue: self.category.lowercased()) ?? .none,
+            category: RecordCategory(rawValue: self.category.lowercased()) ?? .none,
             memo: self.memo
         )
     }

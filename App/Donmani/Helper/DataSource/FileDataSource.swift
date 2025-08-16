@@ -32,11 +32,11 @@ enum FileType {
 }
 
 protocol FileDataSource {
-    func saveFile(from data: Data, name: String, type: FileType) async throws
-    func loadFile(name: String, type: FileType) async throws -> Data
+    func saveFile(from data: Data, name: String, type: FileType) throws
+    func loadFile(name: String, type: FileType) throws -> Data
 }
 
-final actor DefaultFileDataSource: FileDataSource {
+struct DefaultFileDataSource: FileDataSource {
     private var fileManager: FileManager {
         FileManager.default
     }
@@ -55,7 +55,7 @@ final actor DefaultFileDataSource: FileDataSource {
         try data.write(to: fileURL)
     }
     
-    func loadFile(name: String, type: FileType) async throws -> Data {
+    func loadFile(name: String, type: FileType) throws -> Data {
         let fileURL = getFileURL(name: name, type: type)
         guard fileManager.fileExists(atPath: fileURL.path) else {
             throw NSError(domain: "DefaultFileService", code: 404, userInfo: [NSLocalizedDescriptionKey: "File not found"])
@@ -64,13 +64,13 @@ final actor DefaultFileDataSource: FileDataSource {
     }
 }
 
-enum FileDataSourceDependencyKey: DependencyKey {
-    static var liveValue: FileDataSource = DefaultFileDataSource()
-}
-
 extension DependencyValues {
+    private enum FileDataSourceKey: DependencyKey {
+        static let liveValue: FileDataSource = DefaultFileDataSource()
+    }
+    
     var fileDataSource: FileDataSource {
-        get { self[FileDataSourceDependencyKey.self] }
-        set { self[FileDataSourceDependencyKey.self] = newValue }
+        get { self[FileDataSourceKey.self] }
+        set { self[FileDataSourceKey.self] = newValue }
     }
 }

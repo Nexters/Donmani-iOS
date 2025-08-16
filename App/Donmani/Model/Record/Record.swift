@@ -27,9 +27,9 @@
 
 struct Record {
     let day: Day
-    var records: [RecordContentType: NewRecordContent]
+    var records: [RecordContentType: RecordContent]
     
-    init(day: Day, records: [NewRecordContent]) {
+    init(day: Day, records: [RecordContent]) {
         self.day = day
         self.records = [:]
         records.forEach { record in

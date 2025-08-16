@@ -75,7 +75,7 @@ struct MainView: View {
                     .padding(.vertical, .s5)
                     HStack {
                         Spacer()
-                        DText(store.name)
+                        DText(store.userName)
                             .style(.h1, .bold, .gray95)
                         Spacer()
                     }
@@ -92,7 +92,7 @@ struct MainView: View {
                     ZStack {
                         StarBottleView(
                             size: .screenWidth * 0.8,
-                            records: store.monthlyRecords,
+                            records: store.records,
                             backgroundShape: $store.byeoltongShapeType
                         )
                         .frame(width: .screenWidth * 0.8)
@@ -158,7 +158,7 @@ struct MainView: View {
                 
                 Spacer()
                 
-                if store.isPresentingRecordEntryButton {
+                if store.canWriteRecord {
                     RecordButton()
                 } else {
                     HStack(spacing: 4) {
@@ -221,7 +221,7 @@ struct MainView: View {
                 }
             }
             
-            if store.isPresentingRecordEntryButton && store.isPresentingRecordYesterdayToopTip {
+            if store.canWriteRecord && store.isPresentingRecordYesterdayToopTip {
                 VStack {
                     Spacer()
                     HStack {
@@ -263,7 +263,7 @@ struct MainView: View {
             }
         }
         .onAppear {
-            store.send(.fetchUserName)
+            store.send(.onAppear)
             store.send(.checkPopover)
         }
         .navigationBarBackButtonHidden()
@@ -272,14 +272,13 @@ struct MainView: View {
 
 #Preview {
     {
-//        let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
         let context = MainStore.Context(
-            records: [Record],
-            hasRecord: <#T##(today: Bool, yesterday: Bool)#>,
-            decorationItem: <#T##[RewardItemCategory : Reward]#>
+            userName: "User Name",
+            records: [],
+            hasRecord: (true, true),
+            decorationItem: [:]
         )
         var state = MainStore.State(context: context)
-        state.monthlyRecords = Record.previewData
         return MainView(store: Store(initialState: state) { MainStore() } )
     }()
 }

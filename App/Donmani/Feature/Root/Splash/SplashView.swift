@@ -10,6 +10,7 @@ import DesignSystem
 import ComposableArchitecture
 
 struct SplashView: View {
+    @Dependency(\.settings) var settings
     @State var isLatestVersion: Bool = true
     let userRepository = UserRespository()
     let recordRepository = RecordRepository()

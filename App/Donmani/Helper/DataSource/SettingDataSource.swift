@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import ComposableArchitecture
 
 @propertyWrapper
 struct UserDefault<T> {
-    private let key: Settings.Key
+    private let key: SettingDataSource.Key
     private let defaultValue: T
     private let userDefaults: UserDefaults
 
@@ -19,7 +20,7 @@ struct UserDefault<T> {
     }
 
     init(
-        key: Settings.Key,
+        key: SettingDataSource.Key,
         defaultValue: T,
         userDefaults: UserDefaults = .standard
     ) {
@@ -29,7 +30,7 @@ struct UserDefault<T> {
     }
 }
 
-struct Settings {
+struct SettingDataSource {
     // rawValue를 직접 지정한 case는 민감 정보로 변경이 어려운 case입니다.
     enum Key: String {
         /// 온보딩 페이지 표시 여부: Bool
@@ -146,4 +147,15 @@ struct Settings {
     /// 꾸미기 저장 완료 안내 Alert 표시 여부: Bool
     @UserDefault(key: .shouldShowDecorationSaveAlert, defaultValue: true)
     static var shouldShowDecorationSaveAlert: Bool
+}
+
+extension DependencyValues {
+    private enum SettingKey: DependencyKey {
+        static var liveValue: SettingDataSource.Type = SettingDataSource.self
+    }
+    
+    var settings: SettingDataSource.Type {
+        get { self[SettingKey.self] }
+        set { self[SettingKey.self] = newValue }
+    }
 }

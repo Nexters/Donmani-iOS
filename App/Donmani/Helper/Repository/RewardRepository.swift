@@ -8,11 +8,31 @@
 import DNetwork
 import ComposableArchitecture
 
-final actor RewardRepository {
+protocol RewardRepository {
+    func saveEquippedItems(year: Int, month: Int, items: [Reward])
+    func loadEquippedItems(year: Int, month: Int) -> [RewardItemCategory: Reward]
+    func saveReward(item: Reward)
+    func saveRewards(items: [Reward])
+    func getUserRewardItem() async throws -> [RewardItemCategory: [Reward]]
+    func getNotOpenRewardCount() async throws -> Int
+    func getMonthlyRewardItem(year: Int, month: Int) async throws -> [Reward]
+    func putHiddenRead(year: Int, month: Int) async throws
+    func putOpenReward() async throws -> [Reward]
+    func putSaveReward(year: Int, month: Int, backgroundId: Int, effectId: Int, decorationId: Int, byeoltongCaseId: Int) async throws
+}
+
+struct DefaultRewardRepository: RewardRepository {
     private let dataSource = RewardAPI()
-    @Dependency(\.keychainDataSource) private var keychainDataSource
-    @Dependency(\.rewardDataSource) private var rewardDataSource
+    private var keychainDataSource: KeychainDataSource
+    private var rewardDataSource: RewardDataSource
     
+    init(
+        keychainDataSource: KeychainDataSource,
+        rewardDataSource: RewardDataSource
+    ) {
+        self.keychainDataSource = keychainDataSource
+        self.rewardDataSource = rewardDataSource
+    }
     
     // KeychainDataSource
     /// 사용자 ID
@@ -22,8 +42,8 @@ final actor RewardRepository {
     
     // RewardDataSource
     /// 꾸미기 정보를 저장합니다.
-    func saveEquippedItems(year: Int, month: Int, items: [Reward]) async {
-        await rewardDataSource.saveEquippedItems(
+    func saveEquippedItems(year: Int, month: Int, items: [Reward]) {
+        rewardDataSource.saveEquippedItems(
             year: year,
             month: month,
             items: items
@@ -31,18 +51,18 @@ final actor RewardRepository {
     }
     
     /// 꾸미기 정보를 불러옵니다.
-    func loadEquippedItems(year: Int, month: Int) async -> [RewardItemCategory: Reward] {
-        await rewardDataSource.loadEquippedItems(year: year, month: month)
+    func loadEquippedItems(year: Int, month: Int) -> [RewardItemCategory: Reward] {
+        rewardDataSource.loadEquippedItems(year: year, month: month)
     }
     
     /// 리워드 아이템을 저장합니다.
-    func saveReward(item: Reward) async throws {
-        await rewardDataSource.saveReward(item: item)
+    func saveReward(item: Reward) {
+        rewardDataSource.saveReward(item: item)
     }
     
     /// 리워드 아이템 리스트를 저장합니다.
-    func saveRewards(items: [Reward]) async {
-        await rewardDataSource.saveRewards(items: items)
+    func saveRewards(items: [Reward]) {
+        rewardDataSource.saveRewards(items: items)
     }
     
     // RewardAPI
@@ -98,5 +118,23 @@ final actor RewardRepository {
             byeoltongCaseId: byeoltongCaseId
         )
         try await dataSource.putSaveReward(bodyData: bodyData)
+    }
+}
+
+extension DependencyValues {
+    private enum RewardRepositoryKey: DependencyKey {
+        static let liveValue: RewardRepository = {
+            @Dependency(\.keychainDataSource) var keychainDataSource
+            @Dependency(\.rewardDataSource) var rewardDataSource
+            return DefaultRewardRepository(
+                keychainDataSource: keychainDataSource,
+                rewardDataSource: rewardDataSource
+            )
+        }()
+    }
+    
+    var rewardRepository: RewardRepository {
+        get { self[RewardRepositoryKey.self] }
+        set { self[RewardRepositoryKey.self] = newValue }
     }
 }
