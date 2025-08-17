@@ -11,5 +11,5 @@ struct RecordStatistics {
     let goodCount: Int
     let badCount: Int
     let hasRecords: Bool
-    let records: [NewRecord]?
+    let records: [Record]?
 }

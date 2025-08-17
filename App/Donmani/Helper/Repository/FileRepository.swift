@@ -10,7 +10,7 @@ import ComposableArchitecture
 
 protocol FileRepository {
     func saveRewardData(from item: Reward) async throws
-    func loadRewardData(from item: Reward, resourceType: Reward.ResourceType) async throws -> Data
+    func loadRewardData(from item: Reward, resourceType: Reward.ResourceType) throws -> Data
 }
 
 struct DefaultFileRepository: FileRepository {
@@ -56,7 +56,7 @@ struct DefaultFileRepository: FileRepository {
     func loadRewardData(
         from item: Reward,
         resourceType: Reward.ResourceType
-    ) async throws -> Data {
+    ) throws -> Data {
         try fileDataSource.loadFile(
             name: "\(item.name)",
             type: {

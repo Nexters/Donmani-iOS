@@ -87,7 +87,7 @@ extension RecordCategory {
 }
 
 extension RecordCategory {
-    var badCategorys: [RecordCategory] {
+    static var badCategory: [RecordCategory] {
         [
             .greed, .addiction, .laziness,
             .impulse, .meaninglessness, .boastfulness,
@@ -95,12 +95,21 @@ extension RecordCategory {
         ]
     }
     
-    var goodCategorys: [RecordCategory] {
+    static var goodCategory: [RecordCategory] {
         [
             .energy, .growth, .healing,
             .happiness, .flex, .dignity,
             .affection, .health, .saving
         ]
+    }
+    
+    static func cases(type: RecordContentType) -> [RecordCategory] {
+        switch type {
+        case .good:
+            RecordCategory.goodCategory
+        case .bad:
+            RecordCategory.badCategory
+        }
     }
 }
 

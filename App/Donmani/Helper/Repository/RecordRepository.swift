@@ -18,7 +18,7 @@ protocol RecordRepository {
     func getMonthlyRecordCalendar(year: Int, month: Int) async throws -> MonthlyRecordState
     func getMonthlyRecordStatistics(year: Int, month: Int) async throws -> RecordStatistics
     func getMonthlyCategorySatistics(year: Int, month: Int) async throws -> CategoryStatistics
-    func getYearlyRecordSummary(year: Int) async throws -> SummaryResponse
+    func getYearlyRecordSummary(year: Int) async throws -> RecordCountSummary
 }
 
 struct DefaultRecordRepository: RecordRepository {
@@ -107,8 +107,11 @@ struct DefaultRecordRepository: RecordRepository {
     }
     
     /// 연간 기록(별통이 달력)
-    func getYearlyRecordSummary(year: Int) async throws -> SummaryResponse {
-        try await dataSource.getYearlyRecordSummary(userKey: userKey, year: year)
+    func getYearlyRecordSummary(year: Int) async throws -> RecordCountSummary {
+        try await dataSource.getYearlyRecordSummary(
+            userKey: userKey,
+            year: year
+        ).toDomain()
     }
 }
 

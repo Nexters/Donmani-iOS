@@ -14,30 +14,26 @@ struct BottleCalendarStore {
     @ObservableState
     struct State {
         var isPresentingTopBanner: Bool
-        var isPresendTextGuide: Bool = false
-//        var rowIndex: Int = 0
+        var isPresentTextGuide: Bool = false
         
         var starCount: [Int:Int] = [:]
         var starCountSort: [(Int,Int)] = []
-        var endOfDay: [Int: Int] = [:]
+        var lastDaysOfMonths: [Int: Int] {
+            Day.lastDaysOfMonths(year: Day.today.year)
+        }
         
         init(context: RecordCountSummary) {
             self.isPresentingTopBanner = HistoryStateManager.shared.getMonthlyBottleGuide()
-//            self.rowIndex = (starCount.count / 3) + 1
-            let dateManager = DateManager.shared
-            let todayMonth = dateManager.getFormattedDate(for: .today, .yearMonth).components(separatedBy: "-").last ?? "0"
-//            print(context.monthlyRecords)
-            
-            for month in (3...12) {
+            self.starCountSort = self.starCount.sorted { $0.key < $1.key }
+            let today: Day = .today
+            for month in (3...12) { // Only in 2025
                 self.starCount[month] = context.monthlyRecords[month]?.recordCount ?? -1
                 if self.starCount[month, default: -1] == -1 {
-                    if month <= Int(todayMonth) ?? 1 {
+                    if month <= today.month{
                         self.starCount[month] = 0
                     }
                 }
             }
-            self.endOfDay = dateManager.generateEndOfDay(year: 2025)
-            self.starCountSort = self.starCount.sorted { $0.key < $1.key }
         }
     }
     
@@ -54,6 +50,7 @@ struct BottleCalendarStore {
     }
     
     // MARK: - Dependency
+    @Dependency(\.recordRepository) var recordRepository
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
@@ -65,10 +62,10 @@ struct BottleCalendarStore {
                 return .none
                 
             case .showEmptyBottleToast:
-                if (state.isPresendTextGuide) {
+                if (state.isPresentTextGuide) {
                     return .none
                 }
-                state.isPresendTextGuide = true
+                state.isPresentTextGuide = true
                 return .run { send in
                     try await Task.sleep(nanoseconds: .nanosecondsPerSecond * 3)
                     await send(.dismissEmptyBottleToast, animation: .linear(duration: 0.5)
@@ -76,17 +73,15 @@ struct BottleCalendarStore {
                 }
                 
             case .dismissEmptyBottleToast:
-                state.isPresendTextGuide = false
+                state.isPresentTextGuide = false
                 return .none
                 
             case .fetchMonthlyRecord(let year, let month):
                 return .run { send in
-//                    let key = "2025-\(String(format: "%02d", month))"
-                    let response = try await NetworkService.DRecord().fetchRecordList(year: year, month: month)
-                    let result = NetworkDTOMapper.mapper(dto: response)
-                    DataStorage.setMonthRecords(year: year, month: month, result)
-                    let items = NetworkDTOMapper.mapper(dto: response.saveItems)
-                    await send(.delegate(.pushMonthlyBottleView(year, month, items)))
+                    let monthlyRecordState = try await recordRepository.getMonthlyRecordList(year: year, month: month)
+                    let records = monthlyRecordState.records ?? []
+                    recordRepository.saveRecords(records)
+                    await send(.delegate(.pushMonthlyBottleView(year, month, monthlyRecordState.saveItems)))
                 }
                 
             case .delegate:

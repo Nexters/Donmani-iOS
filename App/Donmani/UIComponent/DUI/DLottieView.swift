@@ -10,8 +10,21 @@ import Lottie
 import DesignSystem
 
 struct DLottieView: UIViewRepresentable {
-    let name: String
+    let name: String?
     let loopMode: LottieLoopMode
+    let data: Data?
+    
+    init(name: String, loopMode: LottieLoopMode) {
+        self.name = name
+        self.loopMode = loopMode
+        self.data = nil
+    }
+    
+    init(data: Data, loopMode: LottieLoopMode) {
+        self.name = nil
+        self.loopMode = loopMode
+        self.data = data
+    }
 
     class AnimationViewContainer: UIView {
         let animationView = LottieAnimationView()
@@ -21,17 +34,23 @@ struct DLottieView: UIViewRepresentable {
         let container = AnimationViewContainer()
         var animation: LottieAnimation!
         
-        let fileManager = FileManager.default
-        let fileName = "\(name).json"
-        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let destinationURL = documentsURL.appendingPathComponent(fileName)
-        if fileManager.fileExists(atPath: destinationURL.path) {
-            animation = LottieAnimation.filepath(destinationURL.path)
-        } else {
-            animation = LottieAnimation.named(name, bundle: .designSystem)
+        if let name {
+            let fileManager = FileManager.default
+            let fileName = "\(name).json"
+            let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let destinationURL = documentsURL.appendingPathComponent(fileName)
+            if fileManager.fileExists(atPath: destinationURL.path) {
+                animation = LottieAnimation.filepath(destinationURL.path)
+            } else {
+                animation = LottieAnimation.named(name, bundle: .designSystem)
+            }
         }
-        
-        container.animationView.animation = animation
+        if let data {
+            animation = try? LottieAnimation.from(data: data)
+        }
+        if let animation {
+            container.animationView.animation = animation
+        }
         container.animationView.loopMode = loopMode
         container.animationView.contentMode = .scaleAspectFill
         container.animationView.backgroundBehavior = .pauseAndRestore
@@ -49,7 +68,24 @@ struct DLottieView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: AnimationViewContainer, context: Context) {
-        let animation = LottieAnimation.named(name, bundle: .designSystem)
+        var animation: LottieAnimation!
+        if let name {
+            let fileManager = FileManager.default
+            let fileName = "\(name).json"
+            let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let destinationURL = documentsURL.appendingPathComponent(fileName)
+            if fileManager.fileExists(atPath: destinationURL.path) {
+                animation = LottieAnimation.filepath(destinationURL.path)
+            } else {
+                animation = LottieAnimation.named(name, bundle: .designSystem)
+            }
+        }
+        if let data {
+            animation = try? LottieAnimation.from(data: data)
+        }
+        if animation.isNil {
+            return
+        }
         uiView.animationView.animation = animation
         uiView.animationView.loopMode = loopMode
         uiView.animationView.play()

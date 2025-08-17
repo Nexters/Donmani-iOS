@@ -11,54 +11,14 @@ import DesignSystem
 
 struct MainView: View {
     @Bindable var store: StoreOf<MainStore>
+    @Dependency(\.recordRepository) var recordRepository
     
     var body: some View {
         ZStack {
-            if let backgroud = store.backgroundResource {
-                Color.clear
-                    .ignoresSafeArea()
-                    .background {
-                        DImage(backgroud)
-                            .image
-                            .resizable()
-                            .ignoresSafeArea()
-                            .scaledToFill()
-                            .padding(-5)
-                    }
-                DImage(.mainBackgroundStar).image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
-            } else {
-                BackgroundView(colors: [
-                    DColor.backgroundTop,
-                    DColor.backgroundBottom,
-                ])
-                DImage(.mainBackgroundStar).image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
-            }
-            
-            if let effect = store.decorationItem[.effect] {
-                let lottieName = RewardResourceMapper(
-                    id: effect.id, category: .effect
-                ).resource()
-                if !lottieName.isEmpty {
-                    GeometryReader { proxy in
-                        DLottieView(
-                            name: lottieName,
-                            loopMode: .loop
-                        )
-                        .frame(
-                            width: proxy.size.width,
-                            height: .screenHeight
-                        )
-                        .ignoresSafeArea()
-                    }
-                    .allowsHitTesting(false)
-                }
-            }
+            StarBottleView(
+                records: store.records,
+                decorationItems: store.decorationItem
+            )
             
             VStack {
                 VStack(spacing: .s1) {
@@ -81,80 +41,6 @@ struct MainView: View {
                     }
                 }
                 .padding(.horizontal, .defaultLayoutPadding)
-                
-                Spacer(minLength: 86)
-                ZStack {
-                    DImage(.byeoltongBackground).image
-                        .resizable()
-                        .frame(width: .screenWidth * 0.9)
-                        .aspectRatio(0.8, contentMode: .fit)
-                    
-                    ZStack {
-                        StarBottleView(
-                            size: .screenWidth * 0.8,
-                            records: store.records,
-                            backgroundShape: $store.byeoltongShapeType
-                        )
-                        .frame(width: .screenWidth * 0.8)
-                        .aspectRatio(0.8, contentMode: .fit)
-                        .opacity(store.starBottleOpacity)
-                        DImage(store.byeoltongImageType).image
-                            .resizable()
-                            .frame(width: .screenWidth * 0.8)
-                            .aspectRatio(0.8, contentMode: .fit)
-                            .overlay {
-                                if let decoration = store.decorationItem[.decoration] {
-                                    let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
-                                    let offsetY: CGFloat = {
-                                        switch store.byeoltongShapeType {
-                                        case .rewardBottleBeadsShape:
-                                            return -.screenWidth * 0.21 * 0.4
-                                        case .rewardBottleFuzzyShape:
-                                            return -.screenWidth * 0.21 * 0.1
-                                        default:
-                                            return -.screenWidth * 0.21 * 0.8
-                                        }
-                                    }()
-                                    let offsetX: CGFloat = {
-                                        switch store.byeoltongShapeType {
-                                        case .rewardBottleDefaultShape:
-                                            return .screenWidth * 0.21 * 0.8
-                                        case .rewardBottleFuzzyShape:
-                                            return .screenWidth * 0.21
-                                        default:
-                                            return 0
-                                        }
-                                    }()
-                                    if !lottieName.isEmpty {
-                                        if decoration.id == 23 {
-                                            VStack {
-                                                HStack {
-                                                    DImage(.rewardDecorationSpaceVacance)
-                                                        .image
-                                                        .resizable()
-                                                        .aspectRatio(0.67, contentMode: .fit)
-                                                        .frame(height: .screenWidth * 0.27)
-                                                        .offset(
-                                                            x: offsetX,
-                                                            y: offsetY
-                                                        )
-                                                }
-                                                Spacer()
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                    }
-                    .onTapGesture {
-                        GA.Click(event: .mainRecordArchiveButton).send()
-                        store.send(.delegate(.pushRecordListView))
-                    }
-                }
-                .offset(y: store.yOffset)
-                .onChange(of: store.isNewStar) { _, _ in
-                    store.send(.shakeTwice)
-                }
                 
                 Spacer()
                 
@@ -182,45 +68,6 @@ struct MainView: View {
             }
             .padding(.bottom, .s5)
             
-
-            
-            if let decoration = store.decorationItem[.decoration] {
-                let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
-                if !lottieName.isEmpty {
-                    if decoration.id == 20 {
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Spacer()
-                                DLottieView(
-                                    name: lottieName,
-                                    loopMode: .loop
-                                )
-                                .frame(width: 80, height: 80)
-                            }
-                        }
-                        .allowsHitTesting(false)
-                        .padding(.bottom, 70)
-                        .padding(.trailing, .defaultLayoutPadding)
-                    } else if decoration.id != 23 {
-                        VStack {
-                            HStack {
-                                DLottieView(
-                                    name: lottieName,
-                                    loopMode: .loop
-                                )
-                                .frame(width: 80, height: 80)
-                                Spacer()
-                            }
-                            Spacer()
-                        }
-                        .allowsHitTesting(false)
-                        .padding(.top, 140)
-                        .padding(.leading, .defaultLayoutPadding)
-                    }
-                }
-            }
-            
             if store.canWriteRecord && store.isPresentingRecordYesterdayToopTip {
                 VStack {
                     Spacer()
@@ -228,7 +75,6 @@ struct MainView: View {
                         Spacer()
                         RecordYesterdayViewToolTip()
                             .frame(width: .screenWidth)
-                        
                         Spacer()
                     }
                 }
@@ -273,7 +119,6 @@ struct MainView: View {
 #Preview {
     {
         let context = MainStore.Context(
-            userName: "User Name",
             records: [],
             hasRecord: (true, true),
             decorationItem: [:]
@@ -282,3 +127,161 @@ struct MainView: View {
         return MainView(store: Store(initialState: state) { MainStore() } )
     }()
 }
+
+//                Spacer(minLength: 86)
+//                ZStack {
+//                    DImage(.byeoltongBackground).image
+//                        .resizable()
+//                        .frame(width: .screenWidth * 0.9)
+//                        .aspectRatio(0.8, contentMode: .fit)
+//
+//                    ZStack {
+//                        StarBottleView(
+//                            size: .screenWidth * 0.8,
+//                            records: store.records,
+//                            backgroundShape: $store.byeoltongShapeType
+//                        )
+//                        .frame(width: .screenWidth * 0.8)
+//                        .aspectRatio(0.8, contentMode: .fit)
+//                        .opacity(store.starBottleOpacity)
+//                        DImage(store.byeoltongImageType).image
+//                            .resizable()
+//                            .frame(width: .screenWidth * 0.8)
+//                            .aspectRatio(0.8, contentMode: .fit)
+//                            .overlay {
+//                                if let decoration = store.decorationItem[.decoration] {
+//                                    let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
+//                                    let offsetY: CGFloat = {
+//                                        switch store.byeoltongShapeType {
+//                                        case .rewardBottleBeadsShape:
+//                                            return -.screenWidth * 0.21 * 0.4
+//                                        case .rewardBottleFuzzyShape:
+//                                            return -.screenWidth * 0.21 * 0.1
+//                                        default:
+//                                            return -.screenWidth * 0.21 * 0.8
+//                                        }
+//                                    }()
+//                                    let offsetX: CGFloat = {
+//                                        switch store.byeoltongShapeType {
+//                                        case .rewardBottleDefaultShape:
+//                                            return .screenWidth * 0.21 * 0.8
+//                                        case .rewardBottleFuzzyShape:
+//                                            return .screenWidth * 0.21
+//                                        default:
+//                                            return 0
+//                                        }
+//                                    }()
+//                                    if !lottieName.isEmpty {
+//                                        if decoration.id == 23 {
+//                                            VStack {
+//                                                HStack {
+//                                                    DImage(.rewardDecorationSpaceVacance)
+//                                                        .image
+//                                                        .resizable()
+//                                                        .aspectRatio(0.67, contentMode: .fit)
+//                                                        .frame(height: .screenWidth * 0.27)
+//                                                        .offset(
+//                                                            x: offsetX,
+//                                                            y: offsetY
+//                                                        )
+//                                                }
+//                                                Spacer()
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                    }
+//                    .onTapGesture {
+//                        GA.Click(event: .mainRecordArchiveButton).send()
+//                        store.send(.delegate(.pushRecordListView))
+//                    }
+//                }
+//                .offset(y: store.yOffset)
+//                .onChange(of: store.isNewStar) { _, _ in
+//                    store.send(.shakeTwice)
+//                }
+
+//            if let backgroud = store.backgroundResource {
+//                Color.clear
+//                    .ignoresSafeArea()
+//                    .background {
+//                        DImage(backgroud)
+//                            .image
+//                            .resizable()
+//                            .ignoresSafeArea()
+//                            .scaledToFill()
+//                            .padding(-5)
+//                    }
+//                DImage(.mainBackgroundStar).image
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
+//                    .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
+//            } else {
+//                BackgroundView(colors: [
+//                    DColor.backgroundTop,
+//                    DColor.backgroundBottom,
+//                ])
+//                DImage(.mainBackgroundStar).image
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
+//                    .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
+//            }
+
+//            if let effect = store.decorationItem[.effect] {
+//                let lottieName = RewardResourceMapper(
+//                    id: effect.id, category: .effect
+//                ).resource()
+//                if !lottieName.isEmpty {
+//                    GeometryReader { proxy in
+//                        DLottieView(
+//                            name: lottieName,
+//                            loopMode: .loop
+//                        )
+//                        .frame(
+//                            width: proxy.size.width,
+//                            height: .screenHeight
+//                        )
+//                        .ignoresSafeArea()
+//                    }
+//                    .allowsHitTesting(false)
+//                }
+//            }
+
+
+//            if let decoration = store.decorationItem[.decoration] {
+//                let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
+//                if !lottieName.isEmpty {
+//                    if decoration.id == 20 {
+//                        VStack {
+//                            Spacer()
+//                            HStack {
+//                                Spacer()
+//                                DLottieView(
+//                                    name: lottieName,
+//                                    loopMode: .loop
+//                                )
+//                                .frame(width: 80, height: 80)
+//                            }
+//                        }
+//                        .allowsHitTesting(false)
+//                        .padding(.bottom, 70)
+//                        .padding(.trailing, .defaultLayoutPadding)
+//                    } else if decoration.id != 23 {
+//                        VStack {
+//                            HStack {
+//                                DLottieView(
+//                                    name: lottieName,
+//                                    loopMode: .loop
+//                                )
+//                                .frame(width: 80, height: 80)
+//                                Spacer()
+//                            }
+//                            Spacer()
+//                        }
+//                        .allowsHitTesting(false)
+//                        .padding(.top, 140)
+//                        .padding(.leading, .defaultLayoutPadding)
+//                    }
+//                }
+//            }

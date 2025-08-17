@@ -9,7 +9,7 @@ enum RewardItemCategory: String, CaseIterable {
     case background
     case effect
     case decoration
-    case byeoltong
+    case bottle
     case sound
     
     static var cases: [RewardItemCategory] {
@@ -24,7 +24,7 @@ enum RewardItemCategory: String, CaseIterable {
             return "효과"
         case .decoration:
             return "장식"
-        case .byeoltong:
+        case .bottle:
             return "별통이"
         case .sound:
             return "효과음"
@@ -36,7 +36,7 @@ enum RewardItemCategory: String, CaseIterable {
         case "EFFECT":
             self = .effect
         case "CASE":
-            self = .byeoltong
+            self = .bottle
         case "BACKGROUND":
             self = .background
         case "BGM":

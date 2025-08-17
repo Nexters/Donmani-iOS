@@ -46,8 +46,9 @@ extension MainNavigationStore {
         _ state: inout MainNavigationStore.State
     ) -> Effect<MainNavigationStore.Action> {
         switch destination {
-        case .setting:
-            let initialState = stateFactory.makeSettingState()
+        case .setting(let userName):
+            let context = SettingStore.Context(userName: userName)
+            let initialState = stateFactory.makeSettingState(context: context)
             state.path.append(.setting(initialState))
             
             // Record
@@ -65,8 +66,8 @@ extension MainNavigationStore {
             state.path.append(.recordWriting(initialState))
             
             // List
-        case .monthlyRecordList(let year, let month, let isShowNavigationButton):
-            let context = RecordListStore.Context(year: year, month: month, isShowNavigationButton)
+        case .monthlyRecordList(let day, let records, let isShowNavigationButton):
+            let context = RecordListStore.Context(day: day, records: records, isShowNavigationButton)
             let initialState = stateFactory.makeMonthlyRecordListState(context: context)
             state.path.append(.monthlyRecordList(initialState))
             
@@ -74,13 +75,13 @@ extension MainNavigationStore {
             let initialState = stateFactory.makeBottleCalendarState(context: context)
             state.path.append(.bottleCalendar(initialState))
             
-        case .statistics(let year, let month):
-            let context = StatisticsStore.Context(year: year, month: month)
+        case .statistics(let day, let records):
+            let context = StatisticsStore.Context(day: day, records: records)
             let initialState = stateFactory.makeStatisticsState(context: context)
             state.path.append(.statistics(initialState))
             
-        case .monthlyStarBottle(let year, let month, let items):
-            let context = MonthlyStarBottleStore.Context(year: year, month: month, items: items)
+        case .monthlyStarBottle(let day, let records, let items):
+            let context = MonthlyStarBottleStore.Context(day: day, records: records, items: items)
             let initialState = stateFactory.makeMonthlyStarBottleState(context: context)
             state.path.append(.monthlyStarBottle(initialState))
             

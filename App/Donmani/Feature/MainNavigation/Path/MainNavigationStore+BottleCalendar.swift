@@ -14,9 +14,9 @@ extension MainNavigationStore {
         action: BottleCalendarStore.Action.Delegate
     ) -> Effect<MainNavigationStore.Action> {
         switch action {
-        case .pushMonthlyBottleView(let year, let month, let items):
+        case .pushMonthlyBottleView(let day, let records, let items):
             return .run { send in
-                await send(.push(.monthlyStarBottle(year, month, items)))
+                await send(.push(.monthlyStarBottle(day, records, items)))
             }
         }
     }

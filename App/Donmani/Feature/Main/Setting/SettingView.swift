@@ -52,7 +52,6 @@ struct SettingView: View {
     @State var isPresentingNoticeView = false
     @State var isPresentingEditNameView = false
     @State var isSaveEnabled = true
-    @State var userName = DataStorage.getUserName()
     @State var editUserName: String = ""
     @State var isPresentingLengthGuideToastView = false
     @State var isPresentingSymbolGuideToastView = false
@@ -62,6 +61,8 @@ struct SettingView: View {
     
     @FocusState var isFocusToTextField: Bool
     
+    @Dependency(\.rewardRepository) var rewardRepository
+    @Dependency(\.userRepository) var userRepository
     
     let pattern = "^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9\\s]+$"
     var isSaveEnable: Bool {
@@ -97,12 +98,12 @@ struct SettingView: View {
                             HStack(spacing: 6) {
                                 Button {
                                     GA.Click(event: .settingNickname).send()
-                                    editUserName = userName
+                                    editUserName = store.userName
                                     isFocusToTextField = true
                                     isPresentingEditNameView = true
                                     UINavigationController.isBlockSwipe = true
                                 } label: {
-                                    DText(userName)
+                                    DText(store.userName)
                                         .style(.b1, .semibold, .white)
                                     DImage(.edit).image
                                         .resizable()
@@ -118,14 +119,6 @@ struct SettingView: View {
                             MenuButton(type: .decoration) {
                                 store.send(.touchDecorationButton)
                             }
-                            
-                            //                    MenuButton(type: .sound) {
-                            //                        withAnimation(.linear(duration: 0.3)) {
-                            //                            store.send(.toggleBackgroundSound)
-                            //                            return
-                            //                        }
-                            //                    }
-                            
                             MenuButton(type: .notification) {
                                 GA.Click(event: .settingNotice).send()
                                 if let appSettings = URL(string: UIApplication.openSettingsURLString) {
@@ -137,7 +130,7 @@ struct SettingView: View {
                             MenuButton(type: .notice) {
                                 GA.Click(event: .settingNotice).send()
                                 Task {
-                                    try await NetworkService.User().updateNoticeStatus()
+                                    try await userRepository.putNoticeStatus()
                                     isNoticeNotRead = false
                                     isPresentingNoticeView.toggle()
                                 }
@@ -158,20 +151,6 @@ struct SettingView: View {
                         }
                         Spacer()
                     }
-                    
-
-                    
-//                    VStack {
-//                        Spacer()
-//                        ToastView(title: "앗! 아직 효과음이 없어요")
-//                            .padding(40)
-//                            .animation(
-//                                .easeInOut(duration: 0.5),
-//                                value: store.isPresentingSoundToastView
-//                            )
-//                            .opacity(store.isPresentingSoundToastView ? 1 : 0)
-//                            .offset(y: store.isPresentingSoundToastView ? 0 : 5)
-//                    }
                 }
                 .ignoresSafeArea(.keyboard, edges: .bottom)
                 .sheet(isPresented: $isPresentingPrivacyPolicyView) {
@@ -205,10 +184,9 @@ struct SettingView: View {
                         isNotificationEnabled = (status == .authorized)
                     }
                     Task {
-                        isNoticeNotRead = !(try await NetworkService.User().fetchNoticeStatus())
-                        isDecorationNotRead = (try await NetworkService.User().fetchRewardStatus())
+                        isNoticeNotRead = !(try await userRepository.getNoticeStatus())
+                        isDecorationNotRead = (try await userRepository.getRewardStatus())
                     }
-                    store.send(.fetchDecorationItem)
                     GA.View(event: .setting).send()
                 }
                 .navigationBarBackButtonHidden()
@@ -294,9 +272,9 @@ struct SettingView: View {
                     if type == .notification {
                         DToggle(isOn: $isNotificationEnabled)
                     }
-                    if type == .sound {
-                        DToggle(isOn: $store.isBackgroundSoundOn)
-                    }
+//                    if type == .sound {
+//                        DToggle(isOn: $store.isBackgroundSoundOn)
+//                    }
                 }
                 .padding(.horizontal, .defaultLayoutPadding)
             }
@@ -305,9 +283,11 @@ struct SettingView: View {
 }
 
 #Preview {
-    {
-        let state = MainStateFactory().makeSettingState()
-        let store = MainStoreFactory().makeSettingStore(state: state)
-        return SettingView(store: store)
-    }()
+    SettingView(
+        store: MainStoreFactory().makeSettingStore(
+            state: MainStateFactory().makeSettingState(
+                context: SettingStore.Context(userName: "닉네임")
+            )
+        )
+    )
 }

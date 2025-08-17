@@ -9,7 +9,7 @@ import SpriteKit
 import SwiftUI
 import DesignSystem
 
-extension StarScene {
+extension StarBottleScene {
     public static let starShapeTexture = SKTexture(image: DImage(.starShape).uiImage)
     public static let starDoubleHighlighterTexture = SKTexture(image: DImage(.starDoubleHighlighter).uiImage)
     public static let starInnerShadow = SKTexture(image: DImage(.starInnerShadow).uiImage)
@@ -17,11 +17,11 @@ extension StarScene {
     public func addGroundNodeWithStarBottleShape(
         width: CGFloat,
         height: CGFloat,
-        shape: DImageAsset
+        shape: BottleShape
     ) {
         self.backgroundColor = .clear
         let nodeSize = CGSize(width: size.width, height: size.height)
-        let texture = SKTexture(image: DImage(shape).uiImage)
+        let texture = SKTexture(image: DImage(shape.imageAsset).uiImage)
         let node = SKSpriteNode(texture: texture)
         node.size = nodeSize
         node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.size)
@@ -56,15 +56,13 @@ extension StarScene {
         record: Record,
         index: Int
     ) {
-        switch currentByeoltongType {
-        case .rewardBottleDefaultShape:
+        switch bottleShape {
+        case .default:
             createInitStarNodeDefault(width: width, height: height, record: record, index: index)
-        case .rewardBottleBeadsShape:
+        case .bead:
             createInitStarNodeBeads(width: width, height: height, record: record, index: index)
-        case .rewardBottleFuzzyShape:
+        case .heart:
             createInitStarNodeFuzzy(width: width, height: height, record: record, index: index)
-        default:
-            break
         }
     }
     public func createNewStarNode(
@@ -72,15 +70,13 @@ extension StarScene {
         height: CGFloat,
         record: Record
     ) {
-        switch currentByeoltongType {
-        case .rewardBottleDefaultShape:
+        switch bottleShape {
+        case .default:
             createNewStarNodeDefault(width: width, height: height, record: record)
-        case .rewardBottleBeadsShape:
+        case .bead:
             createNewStarNodeBeads(width: width, height: height, record: record)
-        case .rewardBottleFuzzyShape:
+        case .heart:
             createNewStarNodeFuzzy(width: width, height: height, record: record)
-        default:
-            break
         }
     }
     
@@ -313,10 +309,10 @@ extension StarScene {
         position: CGPoint,
         record: Record
     ) {
-        if nodeSet.contains(record.date) {
+        if nodeSet.contains(record.day) {
             return
         }
-        nodeSet.insert(record.date)
+        nodeSet.insert(record.day)
         let size = CGSize(width: starSize - 5, height: starSize - 5)
         let starNode = SKSpriteNode(texture: Self.starShapeTexture)
         starNode.size = size
@@ -324,7 +320,12 @@ extension StarScene {
         starNode.physicsBody = SKPhysicsBody(texture: starNode.texture!, size: starNode.size)
         starNode.physicsBody?.affectedByGravity = true
         
-        let colors = record.contents?.map{ $0.category.color } ?? [DColor.emptyColor]
+        var colors: [Color] = RecordContentType.allCases.compactMap {
+            record.records[$0]?.category.color
+        }
+        if colors.isEmpty {
+            colors = [DColor.emptyColor]
+        }
         addGradientColor(node: starNode, colors: colors)
         addHighligerTexture(node: starNode, size: size)
         addInnerShadowTexture(node: starNode, size: size)

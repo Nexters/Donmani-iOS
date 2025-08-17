@@ -54,22 +54,12 @@ extension StatisticsView {
         VStack(alignment: .leading, spacing: 16) {
             DText("\(flag.title) 소비 \(flag == .good ? store.goodTotalCount : store.badTotalCount)")
                 .style(.b1, .bold, .gray99)
-            if flag == .good {
-                ForEach(store.sortedGoodRecordIndex, id: \.self) { i in
-                    CategoryRatioView(
-                        flag: .good,
-                        category: i,
-                        ratio: store.goodRecordRatio[i, default: 0.0]
-                    )
-                }
-            } else {
-                ForEach(store.sortedBadRecordIndex, id: \.self) { i in
-                    CategoryRatioView(
-                        flag: .bad,
-                        category: i,
-                        ratio: store.badRecordRatio[i, default: 0.0]
-                    )
-                }
+            ForEach(RecordCategory.cases(type: flag), id: \.self) { category in
+                CategoryRatioView(
+                    flag: flag,
+                    category: category,
+                    ratio: store.recordRatio[category, default: 0.0]
+                )
             }
         }
         .padding(.s5)
@@ -80,9 +70,9 @@ extension StatisticsView {
         .padding(.horizontal, .defaultLayoutPadding)
     }
     
-    func CategoryRatioView<T: CategoryProtocol>(
+    func CategoryRatioView(
         flag: RecordContentType,
-        category: T,
+        category: RecordCategory,
         ratio: CGFloat
     ) -> some View {
         HStack {

@@ -1,5 +1,5 @@
 //
-//  CoinScene.swift
+//  StarBottleScene.swift
 //  Donmani
 //
 //  Created by 문종식 on 1/30/25.
@@ -9,15 +9,20 @@ import UIKit
 import SpriteKit
 import DesignSystem
 
-final class StarScene: SKScene {
+final class StarBottleScene: SKScene {
     
-    var nodeSet: Set<String> = []
+    var nodeSet: Set<Day> = []
     var ground: SKSpriteNode?
-    var currentByeoltongType: DImageAsset = .rewardBottleDefaultShape
+    var bottleShape: BottleShape = .default
     
-    init(size: CGSize, currentByeoltongType: DImageAsset) {
+    init(size: CGSize, bottleShape: BottleShape) {
         super.init(size: size)
-        self.currentByeoltongType = currentByeoltongType
+        self.bottleShape = bottleShape
+        self.addGroundNodeWithStarBottleShape(
+            width: size.width,
+            height: size.height,
+            shape: bottleShape
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -35,6 +40,7 @@ final class StarScene: SKScene {
         self.physicsWorld.gravity = CGVector(dx: 0.0, dy: 0.0)
     }
     
+    
     public func setGravity(dx: Double, dy: Double) {
         let v = 30.0
         let limit = 10
@@ -48,10 +54,12 @@ final class StarScene: SKScene {
     }
     
     deinit {
-//        print("Deinitialize Star Bottle Scene")
+#if DEBUG
+        print("Deinitialize Star Bottle Scene")
+#endif
     }
 }
 
-extension StarScene: SKPhysicsContactDelegate {
+extension StarBottleScene: SKPhysicsContactDelegate {
     
 }

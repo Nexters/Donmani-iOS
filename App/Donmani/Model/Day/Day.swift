@@ -47,6 +47,10 @@ struct Day {
     }
 }
 
+extension Day: Hashable {
+    
+}
+
 extension Day: Equatable, Comparable {
     static func < (lhs: Day, rhs: Day) -> Bool {
         if lhs.year < lhs.year { return true }
@@ -90,5 +94,19 @@ extension Day {
     private static var yesterdayComponents: DateComponents {
         let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())
         return Calendar.current.dateComponents([.day, .month, .year], from: yesterday ?? Date())
+    }
+    
+    public static func lastDaysOfMonths(year: Int) -> [Int: Int] {
+        var result: [Int:Int] = [:]
+        for month in 1...12 {
+            var days: Int = (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) ? 29 : 28
+            if month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12 {
+                days = 31
+            } else if month == 4 || month == 6 || month == 9 || month == 11 {
+                days = 30
+            }
+            result[month] = days
+        }
+        return result
     }
 }
