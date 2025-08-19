@@ -11,10 +11,12 @@ struct FeedbackCard {
     let content: String
     let prefix: String
 
-    static let previewData: FeedbackCard = {
-        let category = RecordCategory(GoodCategory.happiness)
-        let title = "최대 12자 타이틀"
-        let content = "나만 아는 행복이었던 것 같아,\n그래서 더 소중해 💛"
-        return FeedbackCard(category: category, title: title, content: content, prefix: "오늘은")
-    }()
+    static var previewData: FeedbackCard {
+        FeedbackCard(
+            category: .happiness,
+            title: "최대 12자 타이틀",
+            content: "나만 아는 행복이었던 것 같아,\n그래서 더 소중해 💛",
+            prefix: "오늘은"
+        )
+    }
 }

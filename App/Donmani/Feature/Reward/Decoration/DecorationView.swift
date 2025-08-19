@@ -94,9 +94,8 @@ struct DecorationView: View {
                             
                             ZStack {
                                 StarBottleView(
-                                    size: .screenWidth * 0.7,
                                     records: store.monthlyRecords,
-                                    backgroundShape: $store.byeoltongShapeType
+                                    decorationItems: store.selectedDecorationItem
                                 )
                                 .aspectRatio(0.8, contentMode: .fit)
                                 .frame(width: .screenWidth * 0.7)
@@ -316,7 +315,7 @@ struct DecorationView: View {
             selectedCategory: .background
         )
         var state = MainStateFactory().makeDecorationState(context: context)
-        state.monthlyRecords = Record.previewData
+        state.monthlyRecords = []
         let store = MainStoreFactory().makeDecorationStore(state: state)
         return DecorationView(store: store)
     }()

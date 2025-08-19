@@ -24,7 +24,7 @@ struct RecordEntryPointStore {
     
     // MARK: - State
     @ObservableState
-    struct State: Equatable {
+    struct State {
         var isCompleteToday: Bool
         var isCompleteYesterday: Bool
         
@@ -136,13 +136,16 @@ struct RecordEntryPointStore {
         
         case binding(BindingAction<State>)
         case delegate(Delegate)
-        enum Delegate: Equatable {
+        enum Delegate {
             // Record Writing
             case pushRecordWritingView(RecordContentType)
             case pushRecordWritingViewWith(RecordContent)
             case popToMainView
         }
     }
+    
+    // MARK: - Dependency
+    @Dependency(\.recordRepository) var recordRepository
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
@@ -282,7 +285,7 @@ struct RecordEntryPointStore {
                 let stateManager = HistoryStateManager.shared
                 stateManager.addRecord(for: state.dayType)
                 
-                var gaParameter:[GA.Parameter:Any] = [.screenType:state.dayType]
+                var gaParameter:[GA.Parameter: Any] = [.screenType:state.dayType]
                 var recordValue: String = ""
                 if let good = state.goodRecord {
                     gaParameter = [.good: good.category]
@@ -318,14 +321,16 @@ struct RecordEntryPointStore {
                 }
                 let record = Record(date: date, contents: records)
                 state.record = record
-                DataStorage.setRecord(record)
+                recordRepository.save(record)
+//                DataStorage.setRecord(record)
                 state.isError = false
                 return .run { send in
-                    let requestDTO = NetworkRequestDTOMapper.mapper(data: records)
-                    guard let _ = try? await NetworkService.DRecord().insert(date: date, recordContent: requestDTO) else {
-                        await send(.errorSave)
-                        return
-                    }
+                    recordRepository
+//                    let requestDTO = NetworkRequestDTOMapper.mapper(data: records)
+//                    guard let _ = try? await NetworkService.DRecord().insert(date: date, recordContent: requestDTO) else {
+//                        await send(.errorSave)
+//                        return
+//                    }
                 }
             case .errorSave:
                 state.isLoading = false

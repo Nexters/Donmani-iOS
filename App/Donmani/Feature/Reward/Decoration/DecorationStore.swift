@@ -68,7 +68,7 @@ struct DecorationStore {
         )
         
         var byeoltongImageType : DImageAsset {
-            let id = selectedDecorationItem[.byeoltong]?.id ?? 4
+            let id = selectedDecorationItem[.bottle]?.id ?? 4
             switch id {
             case 24:
                 return .rewardBottleBeads
@@ -89,7 +89,7 @@ struct DecorationStore {
             
             backgroundShape = .rewardBottleDefault
             byeoltongShapeType = {
-                switch (context.currentDecorationItem[.byeoltong]?.id ?? 4) {
+                switch (context.currentDecorationItem[.bottle]?.id ?? 4) {
                 case 24:
                     return .rewardBottleBeadsShape
                 case 25:
@@ -98,9 +98,11 @@ struct DecorationStore {
                     return .rewardBottleDefaultShape
                 }
             }()
-            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
-            let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
-            self.monthlyRecords = monthlyRecords
+//            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+//            let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
+//            self.monthlyRecords = monthlyRecords
+            // TODO: - 기록 context로 받기
+            self.monthlyRecords = []
             self.isPresentingGuideBottomSheet = HistoryStateManager.shared.getIsFirstDecorationEnter()
             
             let itemCount = self.decorationItem.map {
@@ -118,6 +120,8 @@ struct DecorationStore {
 //            }
         }
     }
+    
+    @Dependency(\.rewardRepository) var rewardRepository
     
     enum Action: BindableAction {
         case toggleGuideBottomSheet
@@ -181,7 +185,8 @@ struct DecorationStore {
                 HistoryStateManager.shared.setIsShownFullRewardBottmeSheet()
                 UINavigationController.isBlockSwipe = false
                 return .run { send in
-                    try await NetworkService.DReward().requestHiddenRead()
+                    let day: Day = .today
+                    rewardRepository.putHiddenRead(year: day.year, month: day.month)
                 }
                 
             case .touchRewardItemCategoryButton(let category):
@@ -195,17 +200,17 @@ struct DecorationStore {
                     return .none
                 }
                 state.selectedDecorationItem[category] = item
-                if (category == .sound) {
-                    if (item.id > 5) {
-                        let fileName = RewardResourceMapper(id: item.id, category: .sound).resource()
-                        state.isSoundOn = true
-                        SoundManager.shared.play(fileName: fileName)
-                    } else {
-                        state.isSoundOn = false
-                        SoundManager.shared.stop()
-                    }
-                }
-                if (category == .byeoltong) {
+//                if (category == .sound) {
+//                    if (item.id > 5) {
+//                        let fileName = RewardResourceMapper(id: item.id, category: .sound).resource()
+//                        state.isSoundOn = true
+//                        SoundManager.shared.play(fileName: fileName)
+//                    } else {
+//                        state.isSoundOn = false
+//                        SoundManager.shared.stop()
+//                    }
+//                }
+                if (category == .bottle) {
                     state.byeoltongShapeType = {
                         switch item.id {
                         case 24:
@@ -223,7 +228,8 @@ struct DecorationStore {
                 state.disabledSaveButton = (diffCount == 0)
                 if (item.id == 23 && !item.hiddenRead) {
                     Task {
-                        try await NetworkService.DReward().requestHiddenRead()
+                        let day: Day = .today
+                        try await rewardRepository.putHiddenRead(year: day.year, month: day.month)
                     }
                 }
                 
@@ -278,21 +284,34 @@ struct DecorationStore {
                     .reward_효과음: state.selectedDecorationItem[.sound]?.name ?? "",
                 ])
                 let item = state.selectedDecorationItem
-                DataStorage.setDecorationItem(item)
-                let soundItemId = state.selectedDecorationItem[.sound]?.id ?? 5
-                let resource = RewardResourceMapper(id: soundItemId, category: .sound).resource()
-                DataStorage.setSoundFileName(resource)
+                let day: Day = .today
+                rewardRepository.saveEquippedItems(
+                    year: day.year,
+                    month: day.month,
+                    item: item.map { (_, value) in value }
+                )
+//                let soundItemId = state.selectedDecorationItem[.sound]?.id ?? 5
+//                let resource = RewardResourceMapper(id: soundItemId, category: .sound).resource()
+//                DataStorage.setSoundFileName(resource)
 //                if SoundManager.isSoundOn {
 //                    if resource.isNotEmpty {
 //                        SoundManager.shared.play(fileName: resource)
 //                    }
 //                }
                 return .run { send in
-                    let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
-                    let year = Int(today[0]) ?? 2025
-                    let month = Int(today[1]) ?? 6
-                    let dto = NetworkRequestDTOMapper.mapper(year: year, month: month, item: item)
-                    try await NetworkService.DReward().saveDecoration(dto: dto)
+//                    let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
+                    try await rewardRepository.putSaveReward(
+                        year: day.year,
+                        month: day.month,
+                        backgroundId: item[.background]?.id ?? 0,
+                        effectId: item[.effect]?.id ?? 0,
+                        decorationId: item[.decoration]?.id ?? 0,
+                        byeoltongCaseId: item[.bottle]?.id ?? 0
+                    )
+//                    let year = Int(today[0]) ?? 2025
+//                    let month = Int(today[1]) ?? 6
+//                    let dto = NetworkRequestDTOMapper.mapper(year: year, month: month, item: item)
+//                    try await NetworkService.DReward().saveDecoration(dto: dto)
                     await send(.delegate(.pop(true)))
                 }
                 

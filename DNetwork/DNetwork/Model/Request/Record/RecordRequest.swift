@@ -5,6 +5,7 @@
 //  Created by 문종식 on 7/27/25.
 //
 
+public typealias RecordContentArgument = RecordRequest.RecordElement.RecordContent
 
 public struct RecordRequest: Encodable {
     private let userKey: String
@@ -13,7 +14,7 @@ public struct RecordRequest: Encodable {
     public init(
         userKey: String,
         date: String,
-        records: [Self.RecordContentTriple]?
+        records: [RecordContentArgument]?
     ) {
         self.userKey = userKey
         self.records = [
@@ -23,22 +24,14 @@ public struct RecordRequest: Encodable {
             )
         ]
     }
-    
-    public typealias RecordContentTriple = (flag: String, category: String, memo: String)
-    
+
     public struct RecordElement: Encodable {
         private let date: String
         private let contents: [RecordContent]?
         
-        init(date: String, contents: [RecordContentTriple]?) {
+        init(date: String, contents: [RecordContent]?) {
             self.date = date
-            self.contents = contents?.map {
-                RecordContent(
-                    flag: $0.flag,
-                    category: $0.category,
-                    memo: $0.memo
-                )
-            }
+            self.contents = contents
         }
         
         public struct RecordContent: Encodable {
@@ -46,7 +39,7 @@ public struct RecordRequest: Encodable {
             private let category: String
             private let memo: String
             
-            init(flag: String, category: String, memo: String) {
+            public init(flag: String, category: String, memo: String) {
                 self.flag = flag
                 self.category = category
                 self.memo = memo

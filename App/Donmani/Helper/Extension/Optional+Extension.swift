@@ -16,4 +16,11 @@ extension Optional {
     var isSome: Bool {
         return !isNil
     }
+    
+    func map<T>(_ action: (Wrapped) -> T?) -> T? {
+        if let value = self {
+            return action(value)
+        }
+        return nil
+    }
 }

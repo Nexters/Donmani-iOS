@@ -11,10 +11,23 @@ extension RecordRequest {
     init(userKey: String, record: Record) {
         self.init(
             userKey: userKey,
-            date: record.date,
-            records: record.contents?.map {
-                ($0.flag.rawValue, $0.category.uppercaseTitle, $0.memo)
-            }
+            date: record.day.yyyyMMdd,
+            records: [
+                record.records[.good].map { item -> RecordContentArgument in
+                    RecordContentArgument(
+                        flag: item.flag.rawValue,
+                        category: item.category.uppercaseValue,
+                        memo: item.memo
+                    )
+                },
+                record.records[.good].map { item -> RecordContentArgument in
+                    RecordContentArgument(
+                        flag: item.flag.rawValue,
+                        category: item.category.uppercaseValue,
+                        memo: item.memo
+                    )
+                },
+            ].compactMap{ $0 }
         )
     }
 }

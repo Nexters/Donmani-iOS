@@ -87,7 +87,7 @@ struct RecordContentView: View {
     RecordContentView(
         record: RecordContent(
             flag: .bad,
-            category: RecordCategory(BadCategory.greed),
+            category: .greed,
             memo: "하하 망했어요"
         )
     )

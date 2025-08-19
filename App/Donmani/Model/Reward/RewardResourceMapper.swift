@@ -29,7 +29,7 @@ struct RewardResourceMapper {
             rewardResource = RewardEffectResource(rawValue: id)
         case .decoration:
             rewardResource = RewardDecorationResource(rawValue: id)
-        case .byeoltong:
+        case .bottle:
             if isPreview {
                 rewardResource = RewardIconBottleResource(rawValue: id)
             } else {
@@ -50,7 +50,7 @@ struct RewardResourceMapper {
             rewardResource = RewardEffectResource(rawValue: id)
         case .decoration:
             rewardResource = RewardDecorationResource(rawValue: id)
-        case .byeoltong:
+        case .bottle:
             rewardResource = RewardBottleResource(rawValue: id)
         case .sound:
             rewardResource = RewardSoundResource(rawValue: id)
