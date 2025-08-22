@@ -12,7 +12,8 @@ import ComposableArchitecture
 struct RootStore {
     @Dependency(\.mainStoreFactory) var storeFactory
     @Dependency(\.mainStateFactory) var stateFactory
-    let recordRepository = RecordRepository()
+    @Dependency(\.recordRepository) var recordRepository
+    
     var today: Day {
         .today
     }

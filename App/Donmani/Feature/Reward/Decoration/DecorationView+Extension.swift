@@ -55,7 +55,7 @@ extension DecorationView{
     func ItemGridImage(reward: Reward) -> some View {
         let mapper = RewardResourceMapper(id: reward.id, category: reward.category)
         var image = mapper.image().image
-        if reward.category == .byeoltong {
+        if reward.category == .bottle {
             image = mapper.image(isPreview: true).image
         }
         return Group {
@@ -112,30 +112,30 @@ extension DecorationView{
             .padding(.vertical, 50)
     }
     
-    func EqualizerButton() -> some View {
-        VStack {
-            Spacer()
-            HStack {
-                Button {
-                    store.send(.touchEqualizerButton)
-                } label: {
-                    Group {
-                        if store.isSoundOn {
-                            LottieView(animation: store.lottieAnimation)
-                                .playing(loopMode: .loop)
-                        } else {
-                            LottieView(animation: store.lottieAnimation)
-                                .paused()
-                                .opacity(0.2)
-                        }
-                    }
-                    .frame(width: .s3, height: .s3)
-                }
-                .frame(width: .s3, height: .s3)
-                .padding(.s4)
-                Spacer()
-            }
-        }
-        .padding(.bottom, .screenHeight * 0.4)
-    }
+//    func EqualizerButton() -> some View {
+//        VStack {
+//            Spacer()
+//            HStack {
+//                Button {
+//                    store.send(.touchEqualizerButton)
+//                } label: {
+//                    Group {
+//                        if store.isSoundOn {
+//                            LottieView(animation: store.lottieAnimation)
+//                                .playing(loopMode: .loop)
+//                        } else {
+//                            LottieView(animation: store.lottieAnimation)
+//                                .paused()
+//                                .opacity(0.2)
+//                        }
+//                    }
+//                    .frame(width: .s3, height: .s3)
+//                }
+//                .frame(width: .s3, height: .s3)
+//                .padding(.s4)
+//                Spacer()
+//            }
+//        }
+//        .padding(.bottom, .screenHeight * 0.4)
+//    }
 }

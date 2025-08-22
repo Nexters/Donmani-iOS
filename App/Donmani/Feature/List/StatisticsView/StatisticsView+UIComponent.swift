@@ -77,7 +77,8 @@ extension StatisticsView {
     ) -> some View {
         HStack {
             HStack(spacing: 12) {
-                category.miniSticker
+                category
+                    .miniImage
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: .s1, height: .s1)

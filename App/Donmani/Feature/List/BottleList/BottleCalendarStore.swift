@@ -45,7 +45,7 @@ struct BottleCalendarStore {
         case fetchMonthlyRecord(Int, Int)
         case delegate(Delegate)
         enum Delegate {
-            case pushMonthlyBottleView(Int, Int, [Reward])
+            case pushMonthlyBottleView(Day, [Record], [Reward])
         }
     }
     
@@ -81,7 +81,7 @@ struct BottleCalendarStore {
                     let monthlyRecordState = try await recordRepository.getMonthlyRecordList(year: year, month: month)
                     let records = monthlyRecordState.records ?? []
                     recordRepository.saveRecords(records)
-                    await send(.delegate(.pushMonthlyBottleView(year, month, monthlyRecordState.saveItems)))
+                    await send(.delegate(.pushMonthlyBottleView(Day(year: year, month: month), records, monthlyRecordState.saveItems)))
                 }
                 
             case .delegate:

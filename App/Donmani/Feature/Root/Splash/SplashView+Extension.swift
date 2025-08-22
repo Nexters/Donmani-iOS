@@ -54,7 +54,7 @@ extension SplashView {
             month: date.month
         )
         if let records = monthlyRecordState.records {
-            await recordRepository.saveRecords(records)
+            recordRepository.saveRecords(records)
         }
     }
     
@@ -65,7 +65,7 @@ extension SplashView {
             year: today.year,
             month: today.month
         )
-        await rewardRepository.saveEquippedItems(
+        rewardRepository.saveEquippedItems(
             year: today.year,
             month: today.month,
             items: equippedItems
@@ -75,7 +75,7 @@ extension SplashView {
     private func downloadRewardData() async throws {
         let reward = try await rewardRepository.getUserRewardItem()
         for (_, items) in reward {
-            await rewardRepository.saveRewards(items: items)
+            rewardRepository.saveRewards(items: items)
         }
     }
     
@@ -83,10 +83,10 @@ extension SplashView {
         Task {
             let infoDictionaryKey = "CFBundleShortVersionString"
             let appVersion = (Bundle.main.infoDictionary?[infoDictionaryKey] as? String) ?? "0.0"
-            let updateInfo = try await NetworkService.Version().fetchAppVersionFromServer()
+            let updateInfo = try await appVersionRepository.getAppVersion()
             let isLatestVersion = VersionManager().isLastestVersion(store: updateInfo.latestVersion, current: appVersion)
             self.isLatestVersion = isLatestVersion
-            if updateInfo.forcedUpdateYn == "Y" {
+            if updateInfo.isUpdateRequired {
                 if !isLatestVersion {
                     return
                 }

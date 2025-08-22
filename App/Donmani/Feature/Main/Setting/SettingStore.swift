@@ -29,6 +29,7 @@ struct SettingStore {
     // MARK: - Action
     enum Action: BindableAction {
         case touchDecorationButton
+        case updateUserName(String)
         
         case binding(BindingAction<State>)
         case delegate(Delegate)
@@ -55,6 +56,10 @@ struct SettingStore {
                     )
                     await send(.delegate(.pushDecoration(decorationItem, currentDecorationItem)))
                 }
+                
+            case .updateUserName(let userName):
+                state.userName = userName
+                
             default:
                 return .none
             }

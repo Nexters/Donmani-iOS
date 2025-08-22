@@ -75,12 +75,12 @@ extension RecordCategory {
         DColor(self.assetName.convertUppercaseFirstChar + "Color").color
     }
     
-    var sticker: Image {
+    var image: Image {
         let name = self.assetName.convertUppercaseFirstChar + "Sticker"
         return DImage(name).image
     }
     
-    var miniSticker: Image {
+    var miniImage: Image {
         let name = self.assetName.convertUppercaseFirstChar + "MiniSticker"
         return DImage(name).image
     }

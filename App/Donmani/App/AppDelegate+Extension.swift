@@ -14,7 +14,7 @@ extension AppDelegate: MessagingDelegate {
         if let fcmToken {
             Task {
                 @Dependency(\.settings) var settings
-                let userRepository = UserRespository()
+                @Dependency(\.userRepository) var userRepository
                 let updatedToken = try await userRepository.postUpdateToken(token: fcmToken)
                 settings.firebaseToken = updatedToken
                 print("FCM Token:", updatedToken)

@@ -89,7 +89,8 @@ extension MainNavigationStore {
         case .rewardStart(let feedbackInfo):
             let context = RewardStartStore.Context(
                 recordCount: feedbackInfo.totalCount,
-                isNotOpened: feedbackInfo.isNotOpened
+                isNotOpened: feedbackInfo.isNotOpened,
+                userName: userRepository.getUserName()
             )
             let initialState = stateFactory.makeRewardStartState(context: context)
             state.path.append(.rewardStart(initialState))

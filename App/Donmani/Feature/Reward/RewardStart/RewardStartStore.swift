@@ -14,16 +14,16 @@ struct RewardStartStore {
     struct Context {
         let recordCount: Int
         let isNotOpened: Bool
-//        let isFirstOpened: Bool
+        let userName: String
         
         init(
             recordCount: Int,
-            isNotOpened: Bool
-//            isFirstOpened: Bool
+            isNotOpened: Bool,
+            userName: String
         ) {
             self.recordCount = recordCount
             self.isNotOpened = isNotOpened
-//            self.isFirstOpened = isFirstOpened
+            self.userName = userName
         }
     }
     
@@ -42,7 +42,7 @@ struct RewardStartStore {
         var isPresentingGuideBottomSheet: Bool = false
         var enabledWriteRecord = false
         
-        var lastRecordCategory: RecordCategory = .init(GoodCategory.flex)
+        var lastRecordCategory: RecordCategory = .flex
         
         var feedbackCard: FeedbackCard?
         var dayTitle = "요즘"
@@ -60,7 +60,7 @@ struct RewardStartStore {
         
         init(context: Context) {
             self.recordCount = context.recordCount
-            self.userName = DataStorage.getUserName()
+            self.userName = context.userName
             
             if (context.recordCount >= 12) {
                 if (context.isNotOpened) {

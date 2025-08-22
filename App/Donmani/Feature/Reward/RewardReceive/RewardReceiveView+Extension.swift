@@ -143,7 +143,7 @@ extension RewardReceiveView {
     func RewardItemListCardView(item: Reward) -> some View {
         let mapper = RewardResourceMapper(id: item.id, category: item.category)
         var image = mapper.image().image
-        if item.category == .byeoltong {
+        if item.category == .bottle {
             image = mapper.image(isPreview: true).image
         }
         let size = CGFloat.screenWidth * (8/15)

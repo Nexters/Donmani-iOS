@@ -41,9 +41,11 @@ struct MonthlyStarBottleStore {
     
     // MARK: - Action
     enum Action {
+        case didTapStarBottle
+        
         case delegate(Delegate)
         enum Delegate {
-            case pushRecordListView(Int, Int)
+            case pushRecordListView(Day, [Record])
         }
     }
     
@@ -51,6 +53,13 @@ struct MonthlyStarBottleStore {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
+            case .didTapStarBottle:
+                let day = state.day
+                let records = state.records
+                return .run { send in
+                    await send(.delegate(.pushRecordListView(day, records)))
+                }
+                
             case .delegate:
                 return .none
             }

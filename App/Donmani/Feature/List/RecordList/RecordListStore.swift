@@ -66,7 +66,7 @@ struct RecordListStore {
         enum Delegate {
             case pushBottleCalendarView(RecordCountSummary)
             case pushRecordEntryPointView
-            case pushStatisticsView(Int, Int)
+            case pushStatisticsView(Day, [Record])
         }
     }
     
@@ -90,10 +90,13 @@ struct RecordListStore {
                     }
                 }
             case .pushStatisticsView:
-                let year = state.day.year
-                let month = state.day.month
+                let day = state.day
                 return .run { send in
-                    await send(.delegate(.pushStatisticsView(year, month)))
+                    let records = try await recordRepository.getMonthlyRecordList(
+                        year: day.year,
+                        month: day.month
+                    ).records ?? []
+                    await send(.delegate(.pushStatisticsView(day, records)))
                 }
             
             case .pushBottleCalendarView:

@@ -139,7 +139,7 @@ struct RewardStartView: View {
 
 #Preview {
     {
-        let context = RewardStartStore.Context(recordCount: 2, isNotOpened: true)
+        let context = RewardStartStore.Context(recordCount: 2, isNotOpened: true, userName: "")
         let state = MainStateFactory().makeRewardStartState(context: context)
         let store = MainStoreFactory().makeRewardStartStore(state: state)
         return RewardStartView(store: store)
@@ -148,7 +148,7 @@ struct RewardStartView: View {
 
 #Preview {
     {
-        let context = RewardStartStore.Context(recordCount: 1, isNotOpened: true)
+        let context = RewardStartStore.Context(recordCount: 1, isNotOpened: true, userName: "")
         let state = MainStateFactory().makeRewardStartState(context: context)
         let store = MainStoreFactory().makeRewardStartStore(state: state)
         return RewardStartView(store: store)
@@ -157,7 +157,7 @@ struct RewardStartView: View {
 
 #Preview {
     {
-        let context = RewardStartStore.Context(recordCount: 0, isNotOpened: false)
+        let context = RewardStartStore.Context(recordCount: 0, isNotOpened: false, userName: "")
         let state = MainStateFactory().makeRewardStartState(context: context)
         let store = MainStoreFactory().makeRewardStartStore(state: state)
         return RewardStartView(store: store)

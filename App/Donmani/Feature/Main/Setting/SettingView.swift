@@ -62,7 +62,7 @@ struct SettingView: View {
     @FocusState var isFocusToTextField: Bool
     
     @Dependency(\.rewardRepository) var rewardRepository
-    @Dependency(\.userRepository) var userRepository
+    @Dependency(\.userUseCase) var userUseCase
     
     let pattern = "^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9\\s]+$"
     var isSaveEnable: Bool {
@@ -130,7 +130,7 @@ struct SettingView: View {
                             MenuButton(type: .notice) {
                                 GA.Click(event: .settingNotice).send()
                                 Task {
-                                    try await userRepository.putNoticeStatus()
+                                    try await userUseCase.updateNoticeReadStatus()
                                     isNoticeNotRead = false
                                     isPresentingNoticeView.toggle()
                                 }
@@ -184,8 +184,8 @@ struct SettingView: View {
                         isNotificationEnabled = (status == .authorized)
                     }
                     Task {
-                        isNoticeNotRead = !(try await userRepository.getNoticeStatus())
-                        isDecorationNotRead = (try await userRepository.getRewardStatus())
+                        isNoticeNotRead = !(try await userUseCase.getNoticeReadStatus())
+                        isDecorationNotRead = (try await userUseCase.getRewardReadStatus())
                     }
                     GA.View(event: .setting).send()
                 }
