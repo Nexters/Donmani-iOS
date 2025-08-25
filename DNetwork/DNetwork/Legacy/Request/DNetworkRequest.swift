@@ -18,15 +18,15 @@ struct DNetworkRequest {
     
     func createURL(
         _ path: APIPath,
-        _ addtionalPaths: [String]?,
+        _ additionalPaths: [String]?,
         _ parameters: [String: Any]?
     ) throws -> URL {
         guard var url = URL(string: apiBaseURL) else {
             throw NetworkError.invalidURLString
         }
         url.add(paths: [path.rawValue])
-        if let addtionalPaths {
-            url.add(paths: addtionalPaths)
+        if let additionalPaths {
+            url.add(paths: additionalPaths)
         }
         if let parameters {
             url = try url.addQueryItems(parameters: parameters)
@@ -34,7 +34,7 @@ struct DNetworkRequest {
         return url
     }
     
-    func createURLReqeust(method: HTTPMethod, url: URL) -> URLRequest {
+    func createURLRequest(method: HTTPMethod, url: URL) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.setValue("application/json;charset=UTF-8", forHTTPHeaderField: "accept")
@@ -107,17 +107,17 @@ extension DNetworkRequest {
     func getData(
         url: URL
     ) async throws -> Data {
-        let request = createURLReqeust(method: .GET, url: url)
+        let request = createURLRequest(method: .GET, url: url)
         return try await runData(request: request)
     }
     
     public func get<R: Decodable>(
         urlString: String,
-        addtionalPath: [String] = [],
+        additionalPath: [String] = [],
         parameters: [String: Any]? = nil
     ) async throws -> R {
         var url = try createURL(baseURL: urlString)
-        url.add(paths: addtionalPath)
+        url.add(paths: additionalPath)
         if let parameters {
             url = try url.addQueryItems(parameters: parameters)
         }
@@ -127,18 +127,18 @@ extension DNetworkRequest {
     func get<R: Decodable>(
         url: URL
     ) async throws -> R {
-        let request = createURLReqeust(method: .GET, url: url)
+        let request = createURLRequest(method: .GET, url: url)
         return try await run(request: request)
     }
     
     public func get<R: Decodable>(
         path: APIPath,
-        addtionalPath: [String] = [],
+        additionalPath: [String] = [],
         parameters: [String: Any]? = nil
     ) async throws -> R {
         var url = try createURL(baseURL: DURL.api.urlString)
         url.add(paths: [path.rawValue])
-        url.add(paths: addtionalPath)
+        url.add(paths: additionalPath)
         if let parameters {
             url = try url.addQueryItems(parameters: parameters)
         }
@@ -150,11 +150,11 @@ extension DNetworkRequest {
 extension DNetworkRequest {
     public func post<T: Encodable, R: Decodable>(
         urlString: String,
-        addtionalPath: [String] = [],
+        additionalPath: [String] = [],
         bodyData: T?
     ) async throws -> R {
         var url = try createURL(baseURL: urlString)
-        url.add(paths: addtionalPath)
+        url.add(paths: additionalPath)
         return try await post(url: url, bodyData: bodyData)
     }
     
@@ -162,7 +162,7 @@ extension DNetworkRequest {
         url: URL,
         bodyData: T?
     ) async throws -> R {
-        var request = createURLReqeust(method: .POST, url: url)
+        var request = createURLRequest(method: .POST, url: url)
         if let bodyData {
             guard let body = try? JSONEncoder().encode(bodyData) else {
                 throw NetworkError.encodingFailed
@@ -174,12 +174,12 @@ extension DNetworkRequest {
     
     public func post<T: Encodable, R: Decodable>(
         path: APIPath,
-        addtionalPath: [String] = [],
+        additionalPath: [String] = [],
         bodyData: T?
     ) async throws -> R {
         var url = try createURL(baseURL: DURL.api.urlString)
         url.add(paths: [path.rawValue])
-        url.add(paths: addtionalPath)
+        url.add(paths: additionalPath)
         return try await post(url: url, bodyData: bodyData)
     }
 }
@@ -189,11 +189,11 @@ extension DNetworkRequest {
 extension DNetworkRequest {
     public func put<T: Encodable, R: Decodable>(
         urlString: String,
-        addtionalPath: [String] = [],
+        additionalPath: [String] = [],
         bodyData: T?
     ) async throws -> R {
         var url = try createURL(baseURL: urlString)
-        url.add(paths: addtionalPath)
+        url.add(paths: additionalPath)
         return try await put(url: url, bodyData: bodyData)
     }
     
@@ -201,7 +201,7 @@ extension DNetworkRequest {
         url: URL,
         bodyData: T?
     ) async throws -> R {
-        var request = createURLReqeust(method: .PUT, url: url)
+        var request = createURLRequest(method: .PUT, url: url)
         if let bodyData {
             guard let body = try? JSONEncoder().encode(bodyData) else {
                 throw NetworkError.encodingFailed
@@ -213,12 +213,12 @@ extension DNetworkRequest {
     
     public func put<T: Encodable, R: Decodable>(
         path: APIPath,
-        addtionalPath: [String] = [],
+        additionalPath: [String] = [],
         bodyData: T?
     ) async throws -> R {
         var url = try createURL(baseURL: DURL.api.urlString)
         url.add(paths: [path.rawValue])
-        url.add(paths: addtionalPath)
+        url.add(paths: additionalPath)
         return try await put(url: url, bodyData: bodyData)
     }
 }

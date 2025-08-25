@@ -18,7 +18,7 @@ public extension DNetworkService {
         public func register(token: String) async throws -> String {
             let response: String = try await request.post(
                 urlString: DURL.api.urlString,
-                addtionalPath: [userKey, "token"],
+                additionalPath: [userKey, "token"],
                 bodyData: token
             )
             return response

@@ -13,6 +13,5 @@ public enum APIPath: String {
     case feedback
     case reward
     case none
-    
 }
 

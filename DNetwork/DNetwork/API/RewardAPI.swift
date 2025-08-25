@@ -14,7 +14,7 @@ public struct RewardAPI {
     public func getUserRewardItem(userKey: String) async throws -> UserRewardItemResponse {
         let result: DResponse<UserRewardItemResponse> = try await request.get(
             path: .reward,
-            addtionalPaths: ["edit", userKey]
+            additionalPaths: ["edit", userKey]
         )
         guard let data = result.responseData else {
             throw NetworkError.noData
@@ -26,7 +26,7 @@ public struct RewardAPI {
     public func getNotOpenRewardCount(userKey: String) async throws -> Int {
         let result: DResponse<Int> = try await request.get(
             path: .reward,
-            addtionalPaths: ["not-open", userKey]
+            additionalPaths: ["not-open", userKey]
         )
         guard let data = result.responseData else {
             throw NetworkError.noData
@@ -38,7 +38,7 @@ public struct RewardAPI {
     public func getMonthlyRewardItem(userKey: String, year: Int, month: Int) async throws -> [RewardItemResponse] {
         let result: DResponse<[RewardItemResponse]> = try await request.get(
             path: .reward,
-            addtionalPaths: [userKey],
+            additionalPaths: [userKey],
             parameters: [
                 "year": year,
                 "month": month
@@ -54,7 +54,7 @@ public struct RewardAPI {
     public func putHiddenRead(userKey: String, year: Int, month: Int) async throws {
         let _: EmptyResponse = try await request.put(
             path: .reward,
-            addtionalPaths: ["hidden-read"],
+            additionalPaths: ["hidden-read"],
             bodyData: HiddenReadRequest(
                 userKey: userKey,
                 year: year,
@@ -67,7 +67,7 @@ public struct RewardAPI {
     public func putOpenReward(userKey: String) async throws -> [RewardItemResponse] {
         let result: DResponse<[RewardItemResponse]> = try await request.put(
             path: .reward,
-            addtionalPaths: ["open", userKey],
+            additionalPaths: ["open", userKey],
             bodyData: EmptyRequest()
         )
         guard let data = result.responseData else {

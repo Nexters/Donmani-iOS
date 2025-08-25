@@ -44,7 +44,7 @@ public extension DNetworkService {
         public func fetchMonthlyRecordCount(year: Int) async throws -> SummaryDTO {
             let response: SummaryDTO = try await self.request.get(
                 path: .expenses,
-                addtionalPath: ["summary", userKey],
+                additionalPath: ["summary", userKey],
                 parameters: ["year": year]
             )
             return response
@@ -54,7 +54,7 @@ public extension DNetworkService {
         public func fetchMonthlyStatistics(year: Int, month: Int) async throws -> StatisticsDTO {
             let response: StatisticsDTO = try await self.request.get(
                 path: .expenses,
-                addtionalPath: ["statistics", userKey],
+                additionalPath: ["statistics", userKey],
                 parameters: ["year": year, "month": month]
             )
             return response
@@ -64,7 +64,7 @@ public extension DNetworkService {
         public func fetchRecordList(year: Int, month: Int) async throws -> RecordResponseDTO {
             let responseData: DResponse<RecordResponseDTO> = try await self.request.get(
                 path: .expenses,
-                addtionalPath: ["list", userKey],
+                additionalPath: ["list", userKey],
                 parameters: ["year": year, "month": month]
             )
             guard let data = responseData.responseData else {
@@ -77,7 +77,7 @@ public extension DNetworkService {
         public func fetchCategoryCount(year: Int, month: Int) async throws -> CategoryCountDTO {
             let response: CategoryCountDTO = try await self.request.get(
                 path: .expenses,
-                addtionalPath: ["category-statistics", userKey],
+                additionalPath: ["category-statistics", userKey],
                 parameters: ["year": year, "month": month]
             )
             return response
@@ -87,7 +87,7 @@ public extension DNetworkService {
         public func fetchRecordCalendar(year: Int, month: Int) async throws -> RecordResponseDTO {
             let responseData: DResponse<RecordResponseDTO> = try await self.request.get(
                 path: .expenses,
-                addtionalPath: ["list", userKey],
+                additionalPath: ["list", userKey],
                 parameters: ["year": year, "month": month]
             )
             guard let data = responseData.responseData else {

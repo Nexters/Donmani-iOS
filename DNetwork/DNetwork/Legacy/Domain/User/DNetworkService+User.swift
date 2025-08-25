@@ -19,7 +19,7 @@ public extension DNetworkService {
             let bodyData = UserRequestDTO(userKey: userKey)
             let response: DResponse<UserResigterDTO> = try await self.request.post(
                 path: .user,
-                addtionalPath: ["register"],
+                additionalPath: ["register"],
                 bodyData: bodyData
             )
             guard let data = response.responseData?.userName else {
@@ -32,7 +32,7 @@ public extension DNetworkService {
             let bodyData = UserRequestDTO(userKey: userKey, newUserName: name)
             let response: DResponse<UserUpdateDTO> = try await self.request.post(
                 path: .user,
-                addtionalPath: ["update"],
+                additionalPath: ["update"],
                 bodyData: bodyData
             )
             guard let data = response.responseData?.updatedUserName else {
@@ -44,7 +44,7 @@ public extension DNetworkService {
         public func fetchNoticeStatus() async throws -> Bool {
             let response: [String:Bool] = try await self.request.get(
                 path: .notice,
-                addtionalPath: ["status", userKey]
+                additionalPath: ["status", userKey]
             )
             guard let data = response["read"] else {
                 throw NetworkError.noData
@@ -55,7 +55,7 @@ public extension DNetworkService {
         public func updateNoticeStatus() async throws {
             let _: DResponse<Data> = try await self.request.put(
                 path: .notice,
-                addtionalPath: ["status", userKey],
+                additionalPath: ["status", userKey],
                 bodyData: Data()
             )
         }
@@ -63,7 +63,7 @@ public extension DNetworkService {
         public func fetchRewardStatus() async throws -> Bool {
             let response: [String: Bool] = try await self.request.get(
                 path: .reward,
-                addtionalPath: ["status", userKey]
+                additionalPath: ["status", userKey]
             )
             guard let data = response["checked"] else {
                 throw NetworkError.noData
@@ -74,7 +74,7 @@ public extension DNetworkService {
         public func updateRewardStatus() async throws {
             let _: DResponse<Data> = try await self.request.put(
                 path: .reward,
-                addtionalPath: ["status", userKey],
+                additionalPath: ["status", userKey],
                 bodyData: Data()
             )
         }

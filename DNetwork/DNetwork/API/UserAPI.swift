@@ -14,7 +14,7 @@ public struct UserAPI {
     public func postRegisterUser(userKey: String) async throws -> UserResponse {
         let result: ResponseWrapper<UserResponse> = try await request.post(
             path: .user,
-            addtionalPaths: ["register"],
+            additionalPaths: ["register"],
             bodyData: ["userKey": userKey]
         )
         guard let data = result.responseData else {
@@ -27,7 +27,7 @@ public struct UserAPI {
     public func postUpdateUser(userKey: String, newUserName: String) async throws -> UserUpdateResponse {
         let result: ResponseWrapper<UserUpdateResponse> = try await request.post(
             path: .user,
-            addtionalPaths: ["register"],
+            additionalPaths: ["register"],
             bodyData: [
                 "userKey": userKey,
                 "newUserName": newUserName
@@ -43,7 +43,7 @@ public struct UserAPI {
     public func postUpdateToken(userKey: String, token: String) async throws -> String {
         try await request.post(
             path: nil,
-            addtionalPaths: [userKey, "token"],
+            additionalPaths: [userKey, "token"],
             bodyData: token
         )
     }
@@ -52,7 +52,7 @@ public struct UserAPI {
     public func putLastLogin(userKey: String) async throws {
         let result: ResponseWrapper<EmptyResponse> = try await request.get(
             path: .user,
-            addtionalPaths: ["last-login", userKey]
+            additionalPaths: ["last-login", userKey]
         )
         guard let _ = result.responseData else {
             throw NetworkError.noData
@@ -63,7 +63,7 @@ public struct UserAPI {
     public func putNoticeStatus(userKey: String) async throws {
         let _: EmptyResponse = try await request.put(
             path: .notice,
-            addtionalPaths: ["status", userKey]
+            additionalPaths: ["status", userKey]
         )
     }
     
@@ -71,7 +71,7 @@ public struct UserAPI {
     public func getNoticeStatus(userKey: String) async throws -> NoticeStatusResponse {
         let result: ResponseWrapper<NoticeStatusResponse> = try await request.get(
             path: .notice,
-            addtionalPaths: ["status", userKey]
+            additionalPaths: ["status", userKey]
         )
         guard let data = result.responseData else {
             throw NetworkError.noData
@@ -83,7 +83,7 @@ public struct UserAPI {
     public func putRewardStatus(userKey: String) async throws {
         let _: EmptyResponse = try await request.put(
             path: .reward,
-            addtionalPaths: ["status", userKey]
+            additionalPaths: ["status", userKey]
         )
     }
     
@@ -91,7 +91,7 @@ public struct UserAPI {
     public func getRewardStatus(userKey: String) async throws -> RewardStatusResponse {
         let result: ResponseWrapper<RewardStatusResponse> = try await request.get(
             path: .reward,
-            addtionalPaths: ["status", userKey]
+            additionalPaths: ["status", userKey]
         )
         guard let data = result.responseData else {
             throw NetworkError.noData

@@ -14,7 +14,7 @@ public struct FeedbackAPI {
     public func getFeedbackState(userKey: String) async throws -> FeedbackStateResponse {
         let result: DResponse<FeedbackStateResponse> = try await request.get(
             path: .feedback,
-            addtionalPaths: [userKey]
+            additionalPaths: [userKey]
         )
         guard let data = result.responseData else {
             throw NetworkError.noData
@@ -26,7 +26,7 @@ public struct FeedbackAPI {
     public func getFeedbackCard(userKey: String) async throws -> FeedbackCardResponse {
         let result: DResponse<FeedbackCardResponse> = try await request.get(
             path: .feedback,
-            addtionalPaths: ["content", userKey]
+            additionalPaths: ["content", userKey]
         )
         guard let data = result.responseData else {
             throw NetworkError.noData

@@ -14,7 +14,7 @@ public struct NetworkRequest {
     
     func createURL(
         _ path: APIPath?,
-        _ addtionalPaths: [String]?,
+        _ additionalPaths: [String]?,
         _ parameters: [String: Any]? = nil
     ) throws -> URL {
         guard var url = URL(string: apiBaseURL) else {
@@ -23,8 +23,8 @@ public struct NetworkRequest {
         if let path {
             url.add(paths: [path.rawValue])
         }
-        if let addtionalPaths {
-            url.add(paths: addtionalPaths)
+        if let additionalPaths {
+            url.add(paths: additionalPaths)
         }
         if let parameters {
             url = try url.addQueryItems(parameters: parameters)
@@ -34,14 +34,14 @@ public struct NetworkRequest {
     
     func createURL(
         _ urlString: String,
-        _ addtionalPaths: [String]?,
+        _ additionalPaths: [String]?,
         _ parameters: [String: Any]? = nil
     ) throws -> URL {
         guard var url = URL(string: urlString) else {
             throw NetworkError.invalidURLString
         }
-        if let addtionalPaths {
-            url.add(paths: addtionalPaths)
+        if let additionalPaths {
+            url.add(paths: additionalPaths)
         }
         if let parameters {
             url = try url.addQueryItems(parameters: parameters)
@@ -49,7 +49,7 @@ public struct NetworkRequest {
         return url
     }
     
-    func createURLReqeust(
+    func createURLRequest(
         method: HTTPMethod,
         url: URL
     ) -> URLRequest {
@@ -60,12 +60,12 @@ public struct NetworkRequest {
         return request
     }
     
-    func createURLReqeust<T: Encodable>(
+    func createURLRequest<T: Encodable>(
         method: HTTPMethod,
         url: URL,
         bodyData: T?
     ) throws -> URLRequest {
-        var request = createURLReqeust(method: method, url: url)
+        var request = createURLRequest(method: method, url: url)
         if let bodyData {
             guard let body = try? JSONEncoder().encode(bodyData) else {
                 throw NetworkError.encodingFailed
@@ -90,6 +90,8 @@ public struct NetworkRequest {
         }
 #if DEBUG
         if let debugString = String(data: data, encoding: .utf8) {
+            print("")
+            print(request.url?.absoluteString)
             print(debugString)
         }
 #endif

@@ -19,7 +19,7 @@ public struct RecordAPI {
     public func getMonthlyRecordList(userKey: String, year: Int, month: Int) async throws -> MonthlyRecordResponse {
         let result: DResponse<MonthlyRecordResponse> = try await request.get(
             path: .expenses,
-            addtionalPaths: ["list", userKey],
+            additionalPaths: ["list", userKey],
             parameters: [
                 "year": year,
                 "month": month
@@ -35,7 +35,7 @@ public struct RecordAPI {
     public func getMonthlyRecordCalendar(userKey: String, year: Int, month: Int) async throws -> MonthlyRecordResponse {
         let result: DResponse<MonthlyRecordResponse> = try await request.get(
             path: .expenses,
-            addtionalPaths: ["calendar", userKey],
+            additionalPaths: ["calendar", userKey],
             parameters: [
                 "year": year,
                 "month": month
@@ -51,7 +51,7 @@ public struct RecordAPI {
     public func getMonthlyRecordStatistics(userKey: String, year: Int, month: Int) async throws -> StatisticsResponse {
         let result: DResponse<StatisticsResponse> = try await request.get(
             path: .expenses,
-            addtionalPaths: ["statistics", userKey],
+            additionalPaths: ["statistics", userKey],
             parameters: [
                 "year": year,
                 "month": month
@@ -67,7 +67,7 @@ public struct RecordAPI {
     public func getMonthlyCategorySatistics(userKey: String, year: Int, month: Int) async throws -> CategoryStatisticsResponse {
         let result: DResponse<CategoryStatisticsResponse> = try await request.get(
             path: .expenses,
-            addtionalPaths: ["category-statistics", userKey],
+            additionalPaths: ["category-statistics", userKey],
             parameters: [
                 "year": year,
                 "month": month
@@ -83,7 +83,7 @@ public struct RecordAPI {
     public func getYearlyRecordSummary(userKey: String, year: Int) async throws -> SummaryResponse {
         let result: DResponse<SummaryResponse> = try await request.get(
             path: .expenses,
-            addtionalPaths: ["summary", userKey],
+            additionalPaths: ["summary", userKey],
             parameters: ["year": year]
         )
         guard let data = result.responseData else {
