@@ -35,7 +35,7 @@ struct MainNavigationView: View {
                 RecordWritingView(store: store) { recordContent in
                     navigationStore.send(.completeWriteRecordContent(recordContent))
                 }
-            
+                
                 // List
             case .monthlyRecordList(let store):
                 RecordListView(store: store)
@@ -70,9 +70,17 @@ struct MainNavigationView: View {
 }
 
 #Preview {
-    {
-        let state = MainStateFactory().makeMainNavigationState()
-        let store = MainStoreFactory().makeMainNavigationStore(state: state)
-        return MainNavigationView(store: store)
-    }()
+    MainNavigationView(
+        store: MainStoreFactory().makeMainNavigationStore(
+            state: MainStateFactory().makeMainNavigationState(
+                mainState: MainStateFactory().makeMainState(
+                    context: MainStore.Context(
+                        records: [],
+                        hasRecord: (today: true, yesterday: false),
+                        decorationItem: [:]
+                    )
+                )
+            )
+        )
+    )
 }

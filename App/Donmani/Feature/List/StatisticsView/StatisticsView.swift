@@ -22,7 +22,7 @@ struct StatisticsView: View {
                 ZStack {
                     HStack {
                         Spacer()
-                        DText("\(store.yearMonth.year)년 \(store.yearMonth.month)월 기록 통계")
+                        DText("\(store.day.year)년 \(store.day.month)월 기록 통계")
                             .style(.b1, .semibold, .white)
                         Spacer()
                     }

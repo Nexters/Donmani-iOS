@@ -37,7 +37,7 @@ struct RecordView: View {
     RecordView(
         record: RecordContent(
             flag: .good,
-            category: RecordCategory(GoodCategory.flex),
+            category: .flex,
             memo: "아이맥 일시불 가보자고"
         )
     )

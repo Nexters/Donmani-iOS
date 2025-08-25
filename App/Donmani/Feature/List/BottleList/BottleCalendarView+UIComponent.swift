@@ -87,7 +87,7 @@ extension BottleCalendarView {
                         HStack(alignment: .bottom,spacing: 0) {
                             DText("\(count)")
                                 .style(.b2, .semibold, .gray80)
-                            DText("/\(store.endOfDay[month, default: 0])")
+                            DText("/\(store.lastDaysOfMonths[month, default: 0])")
                                 .style(.b3, .semibold, .deepBlue80)
                         }
                     }

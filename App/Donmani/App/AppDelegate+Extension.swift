@@ -7,15 +7,18 @@
 
 import UIKit
 import FirebaseMessaging
+import ComposableArchitecture
 
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         if let fcmToken {
-            HistoryStateManager.shared.setFirebaseToken(token: fcmToken)
             Task {
-                try await NetworkService.FCM().register(token: fcmToken)
+                @Dependency(\.settings) var settings
+                @Dependency(\.userRepository) var userRepository
+                let updatedToken = try await userRepository.postUpdateToken(token: fcmToken)
+                settings.firebaseToken = updatedToken
+                print("FCM Token:", updatedToken)
             }
-            print("FCM Token:", fcmToken)
         }
     }
 }

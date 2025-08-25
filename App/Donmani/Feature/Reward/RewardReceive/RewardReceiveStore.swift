@@ -60,6 +60,8 @@ struct RewardReceiveStore {
         }
     }
     
+    @Dependency(\.rewardRepository) var rewardRepository
+    
     enum Action: BindableAction {
         case touchNextButton
         
@@ -89,32 +91,24 @@ struct RewardReceiveStore {
                 if state.rewardItems.isEmpty {
                     return .run { send in
                         GA.Click(event: .rewardReceivedButton).send()
-                        let rewardDTO = try await NetworkService.DReward().reqeustRewardOpen()
-                        let rewardItems: [Reward] = NetworkDTOMapper.mapper(dto: rewardDTO)
-                        await send(.receiveRewardItems(rewardItems))
+                        let rewards = try await rewardRepository.putOpenReward()
+                        await send(.receiveRewardItems(rewards))
                     }
                 } else {
                     GA.Click(event: .customizeRewardButton).send()
                     let category: RewardItemCategory = state.rewardItems.last?.category ?? .background
                     return .run { send in
-                        let dto = try await NetworkService.DReward().reqeustRewardItem()
-                        var decorationItem = NetworkDTOMapper.mapper(dto: dto)
-                        for reward in (decorationItem[.effect] ?? []) {
-                            if let effect = DownloadManager.Effect(rawValue: reward.id),
-                               let contentUrl = reward.jsonUrl {
-                                let data = try await NetworkService.DReward().downloadData(from: contentUrl)
-                                let name = RewardResourceMapper(id: reward.id, category: .effect).resource()
-                                try DataStorage.saveJsonFile(data: data, name: name)
-                            }
-                        }
-                        DataStorage.setInventory(decorationItem)
-                        let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
-                        let year = Int(today[0]) ?? 2025
-                        let month = Int(today[1]) ?? 6
-                        decorationItem = DataStorage.getInventory()
-                        let infoDto = try await NetworkService.DReward().reqeustDecorationInfo(year: year, month: month)
-                        let currentDecorationItem = NetworkDTOMapper.mapper(dto: infoDto)
-                        await send(.delegate(.pushDecorationView(decorationItem, currentDecorationItem, category)))
+                        let today: Day = .today
+                        let decorationItem = try await rewardRepository.getUserRewardItem()
+                        let currentDecorationItem = try await rewardRepository.getMonthlyRewardItem(
+                            year: today.year,
+                            month: today.month
+                        )
+                        await send(.delegate(.pushDecorationView(
+                            decorationItem,
+                            currentDecorationItem,
+                            category
+                        )))
                     }
                 }
                 

@@ -17,9 +17,8 @@ struct MainNavigationStore {
         var mainState: MainStore.State
         var path = StackState<MainNavigationStore.Path.State>()
         
-        init() {
-            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
-            self.mainState = MainStore.State(today: today)
+        init(mainState: MainStore.State) {
+            self.mainState = mainState
         }
     }
     
@@ -38,17 +37,17 @@ struct MainNavigationStore {
         
         case push(Destination)
         enum Destination {
-            case setting
+            case setting(String)
             
             // Record
             case record
             case recordWriting(RecordContentType, RecordContent?)
             
             // List
-            case monthlyRecordList(Int, Int, Bool)
+            case monthlyRecordList(Day, [Record], Bool)
             case bottleCalendar(RecordCountSummary)
-            case statistics(Int, Int)
-            case monthlyStarBottle(Int, Int, [Reward])
+            case statistics(Day, [Record])
+            case monthlyStarBottle(Day, [Record], [Reward])
             
             // Reward
             case rewardStart(FeedbackInfo)
@@ -58,6 +57,9 @@ struct MainNavigationStore {
     }
     
     @Dependency(\.mainStateFactory) var stateFactory
+    @Dependency(\.userRepository) var userRepository
+    @Dependency(\.recordRepository) var recordRepository
+    @Dependency(\.feedbackRepository) var feedbackRepository
     
     var body: some ReducerOf<Self> {
         Scope(
@@ -73,7 +75,8 @@ struct MainNavigationStore {
                 switch mainAction {
                 case .pushSettingView:
                     return .run { send in
-                        await send(.push(.setting))
+                        let userName = userRepository.getUserName()
+                        await send(.push(.setting(userName)))
                     }
                     
                 case .pushRecordEntryPointView:
@@ -83,10 +86,13 @@ struct MainNavigationStore {
                     
                 case .pushRecordListView:
                     return .run { send in
-                        let dateManager = DateManager.shared
-                        let dayString = dateManager.getFormattedDate(for: .today)
-                        let day = Day(yyyymmdd: dayString)
-                        await send(.push(.monthlyRecordList(day.year, day.month, true)))
+                        let today: Day = .today
+                        let monthlyRecordState = try await recordRepository.getMonthlyRecordList(
+                            year: today.year,
+                            month: today.month
+                        )
+                        let records = monthlyRecordState.records ?? []
+                        await send(.push(.monthlyRecordList(.today, records, true)))
                     }
                     
                 case .pushBottleCalendarView(let recordCountSummary):
@@ -96,10 +102,7 @@ struct MainNavigationStore {
                     
                 case .pushRewardStartView:
                     return .run { send in
-                        guard let dto = try await NetworkService.DFeedback().fetchFeedbackInfo() else {
-                            return
-                        }
-                        let feedbackInfo = NetworkDTOMapper.mapper(dto: dto)
+                        let feedbackInfo = try await feedbackRepository.getFeedbackState()
                         await send(.push(.rewardStart(feedbackInfo)))
                     }
                 }

@@ -49,7 +49,7 @@ extension MainView {
         ) { dismissSheet in
             VStack(alignment: .center, spacing: .s3) {
                 VStack(spacing: 8) {
-                    DText("\(store.month)월 별통이가 열렸어요!")
+                    DText("\(store.day.month)월 별통이가 열렸어요!")
                         .style(.h1, .bold, .gray99)
                     
                     DText("매 월 1일에 새로운 별통이가 열려요")
@@ -72,8 +72,7 @@ extension MainView {
                     dismissSheet {
                         Task {
                             store.send(.dismissNewStarBottleView)
-                            let response = try await NetworkService.DRecord().fetchMonthlyRecordCount(year: 2025)
-                            let result = NetworkDTOMapper.mapper(dto: response)
+                            let result = try await recordRepository.getYearlyRecordSummary(year: 2025)
                             UINavigationController.isBlockSwipe = false
                             store.send(.delegate(.pushBottleCalendarView(result)))
                         }

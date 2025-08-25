@@ -16,164 +16,197 @@ struct DecorationView: View {
     
     var body: some View {
         ZStack {
+            StarBottleView(
+                records: store.monthlyRecords,
+                decorationItems: store.selectedDecorationItem
+            )
+            
             VStack {
                 ZStack {
-                    if let backgroud = store.selectedDecorationItem[.background] {
-                        Color.clear
-                            .ignoresSafeArea()
-                            .background {
-                                RewardResourceMapper(
-                                    id: backgroud.id,
-                                    category: .background
-                                )
-                                .image(isPreview: true)
-                                .image
-                                .resizable()
-                                .scaledToFill() 
-                                .ignoresSafeArea()
-                                .padding(-5)
-                            }
-                    }
-                    
-                    if let effect = store.selectedDecorationItem[.effect] {
-                        let lottieName = RewardResourceMapper(id: effect.id, category: .effect).resource()
-                        if !lottieName.isEmpty {
-                            GeometryReader { proxy in
-                                DLottieView(
-                                    name: lottieName,
-                                    loopMode: .loop
-                                )
-                                .frame(
-                                    width: proxy.size.width,
-                                    height: .screenHeight
-                                )
-                                .ignoresSafeArea()
-                            }
-                            .allowsHitTesting(false)
-                        }
-                    }
-                    
-                    VStack(alignment: .center, spacing: 0) {
-                        // Navigation Bar
-                        ZStack {
-                            HStack {
-                                Spacer()
-                                DText("꾸미기")
-                                    .style(.b1, .semibold, .white)
-                                Spacer()
-                            }
-                            HStack {
-                                DNavigationBarButton(.leftArrow) {
-                                    store.send(.touchBackButton)
-                                }
-                                Spacer()
-                                Button {
-                                    store.send(.touchSaveButton)
-                                } label: {
-                                    DText("완료")
-                                        .style(.b1, .semibold,
-                                               store.disabledSaveButton
-                                               ? .white.opacity(0.4)
-                                               : .white
-                                        )
-                                        .frame(height: .s3)
-                                }
-                                .disabled(store.disabledSaveButton)
-                            }
-                        }
-                        .frame(height: .navigationBarHeight)
-                        .padding(.horizontal, .defaultLayoutPadding)
-                        
+                    HStack {
                         Spacer()
-                        
-                        ZStack {
-                            DImage(.byeoltongBackground).image
-                                .resizable()
-                                .frame(width: .screenWidth * 0.8)
-                                .aspectRatio(0.8, contentMode: .fit)
-                            
-                            ZStack {
-                                StarBottleView(
-                                    size: .screenWidth * 0.7,
-                                    records: store.monthlyRecords,
-                                    backgroundShape: $store.byeoltongShapeType
-                                )
-                                .aspectRatio(0.8, contentMode: .fit)
-                                .frame(width: .screenWidth * 0.7)
-                                
-                                DImage(store.byeoltongImageType).image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: .screenWidth * 0.7)
-                            }
-                        }
-                        .padding(.vertical, .defaultLayoutPadding * 2)
-                        .overlay {
-                            if let decoration = store.selectedDecorationItem[.decoration] {
-                                let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
-                                if !lottieName.isEmpty {
-                                    if decoration.id == 23 {
-                                        VStack {
-                                            HStack {
-                                                DImage(.rewardDecorationSpaceVacance)
-                                                    .image
-                                                    .resizable()
-                                                    .aspectRatio(0.67, contentMode: .fit)
-                                                    .frame(height: .screenWidth * 0.27)
-                                                    .offset(
-                                                        x: (store.byeoltongShapeType == .rewardBottleDefaultShape
-                                                            ||
-                                                            store.byeoltongShapeType == .rewardBottleFuzzyShape)
-                                                        ? .screenWidth * 0.15
-                                                        : 0,
-                                                        y: store.byeoltongShapeType == .rewardBottleDefaultShape
-                                                        ? -25
-                                                        : (store.byeoltongShapeType == .rewardBottleFuzzyShape
-                                                        ? +20
-                                                        : -20)
-                                                    )
-                                            }
-                                            Spacer()
-                                        }
-                                    } else {
-                                        if decoration.id == 20 {
-                                            VStack {
-                                                Spacer()
-                                                HStack {
-                                                    Spacer()
-                                                    DLottieView(
-                                                        name: lottieName,
-                                                        loopMode: .loop
-                                                    )
-                                                    .frame(width: 80, height: 80)
-                                                }
-                                            }
-                                            .allowsHitTesting(false)
-                                        } else {
-                                            VStack {
-                                                HStack {
-                                                    DLottieView(
-                                                        name: lottieName,
-                                                        loopMode: .loop
-                                                    )
-                                                    .frame(width: 80, height: 80)
-                                                    Spacer()
-                                                }
-                                                Spacer()
-                                            }
-                                            .allowsHitTesting(false)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
+                        DText("꾸미기")
+                            .style(.b1, .semibold, .white)
                         Spacer()
                     }
-                    
-
+                    HStack {
+                        DNavigationBarButton(.leftArrow) {
+                            store.send(.touchBackButton)
+                        }
+                        Spacer()
+                        Button {
+                            store.send(.touchSaveButton)
+                        } label: {
+                            DText("완료")
+                                .style(.b1, .semibold,
+                                       store.disabledSaveButton
+                                       ? .white.opacity(0.4)
+                                       : .white
+                                )
+                                .frame(height: .s3)
+                        }
+                        .disabled(store.disabledSaveButton)
+                    }
                 }
-                .frame(width: .screenWidth)
+                .frame(height: .navigationBarHeight)
+                .padding(.horizontal, .defaultLayoutPadding)
+                
+//                ZStack {
+//                    if let backgroud = store.selectedDecorationItem[.background] {
+//                        Color.clear
+//                            .ignoresSafeArea()
+//                            .background {
+//                                RewardResourceMapper(
+//                                    id: backgroud.id,
+//                                    category: .background
+//                                )
+//                                .image(isPreview: true)
+//                                .image
+//                                .resizable()
+//                                .scaledToFill() 
+//                                .ignoresSafeArea()
+//                                .padding(-5)
+//                            }
+//                    }
+                    
+//                    if let effect = store.selectedDecorationItem[.effect] {
+//                        let lottieName = RewardResourceMapper(id: effect.id, category: .effect).resource()
+//                        if !lottieName.isEmpty {
+//                            GeometryReader { proxy in
+//                                DLottieView(
+//                                    name: lottieName,
+//                                    loopMode: .loop
+//                                )
+//                                .frame(
+//                                    width: proxy.size.width,
+//                                    height: .screenHeight
+//                                )
+//                                .ignoresSafeArea()
+//                            }
+//                            .allowsHitTesting(false)
+//                        }
+//                    }
+                    
+//                    VStack(alignment: .center, spacing: 0) {
+                        // Navigation Bar
+//                        ZStack {
+//                            HStack {
+//                                Spacer()
+//                                DText("꾸미기")
+//                                    .style(.b1, .semibold, .white)
+//                                Spacer()
+//                            }
+//                            HStack {
+//                                DNavigationBarButton(.leftArrow) {
+//                                    store.send(.touchBackButton)
+//                                }
+//                                Spacer()
+//                                Button {
+//                                    store.send(.touchSaveButton)
+//                                } label: {
+//                                    DText("완료")
+//                                        .style(.b1, .semibold,
+//                                               store.disabledSaveButton
+//                                               ? .white.opacity(0.4)
+//                                               : .white
+//                                        )
+//                                        .frame(height: .s3)
+//                                }
+//                                .disabled(store.disabledSaveButton)
+//                            }
+//                        }
+//                        .frame(height: .navigationBarHeight)
+//                        .padding(.horizontal, .defaultLayoutPadding)
+                        
+//                        Spacer()
+//                        
+//                        ZStack {
+//                            DImage(.byeoltongBackground).image
+//                                .resizable()
+//                                .frame(width: .screenWidth * 0.8)
+//                                .aspectRatio(0.8, contentMode: .fit)
+//                            
+//                            ZStack {
+//                                StarBottleView(
+//                                    records: store.monthlyRecords,
+//                                    decorationItems: store.selectedDecorationItem
+//                                )
+//                                .aspectRatio(0.8, contentMode: .fit)
+//                                .frame(width: .screenWidth * 0.7)
+//                                
+//                                DImage(store.byeoltongImageType).image
+//                                    .resizable()
+//                                    .scaledToFit()
+//                                    .frame(width: .screenWidth * 0.7)
+//                            }
+//                        }
+//                        .padding(.vertical, .defaultLayoutPadding * 2)
+//                        .overlay {
+//                            if let decoration = store.selectedDecorationItem[.decoration] {
+//                                let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
+//                                if !lottieName.isEmpty {
+//                                    if decoration.id == 23 {
+//                                        VStack {
+//                                            HStack {
+//                                                DImage(.rewardDecorationSpaceVacance)
+//                                                    .image
+//                                                    .resizable()
+//                                                    .aspectRatio(0.67, contentMode: .fit)
+//                                                    .frame(height: .screenWidth * 0.27)
+//                                                    .offset(
+//                                                        x: (store.byeoltongShapeType == .rewardBottleDefaultShape
+//                                                            ||
+//                                                            store.byeoltongShapeType == .rewardBottleFuzzyShape)
+//                                                        ? .screenWidth * 0.15
+//                                                        : 0,
+//                                                        y: store.byeoltongShapeType == .rewardBottleDefaultShape
+//                                                        ? -25
+//                                                        : (store.byeoltongShapeType == .rewardBottleFuzzyShape
+//                                                        ? +20
+//                                                        : -20)
+//                                                    )
+//                                            }
+//                                            Spacer()
+//                                        }
+//                                    } else {
+//                                        if decoration.id == 20 {
+//                                            VStack {
+//                                                Spacer()
+//                                                HStack {
+//                                                    Spacer()
+//                                                    DLottieView(
+//                                                        name: lottieName,
+//                                                        loopMode: .loop
+//                                                    )
+//                                                    .frame(width: 80, height: 80)
+//                                                }
+//                                            }
+//                                            .allowsHitTesting(false)
+//                                        } else {
+//                                            VStack {
+//                                                HStack {
+//                                                    DLottieView(
+//                                                        name: lottieName,
+//                                                        loopMode: .loop
+//                                                    )
+//                                                    .frame(width: 80, height: 80)
+//                                                    Spacer()
+//                                                }
+//                                                Spacer()
+//                                            }
+//                                            .allowsHitTesting(false)
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+                        
+//                        Spacer()
+//                    }
+//                    
+//
+//                }
+//                .frame(width: .screenWidth)
                 
                 VStack {
                     HStack(spacing: .s4) {
@@ -205,24 +238,11 @@ struct DecorationView: View {
                     } else {
                         ItemGridView(itemCategory: store.selectedRewardItemCategory)
                         Spacer()
-//                        if store.selectedRewardItemCategory == .sound {
-//                            HStack{
-//                                DText("・휴대폰을 흔들면 효과음이 들려요 🎹")
-//                                    .style(.b2, .medium, .deepBlue90)
-//                                Spacer()
-//                            }
-//                            .padding(.horizontal, .defaultLayoutPadding)
-//                            .padding(.bottom, .defaultLayoutPadding)
-//                        }
                     }
                 }
                 .frame(height: .screenHeight * 0.4)
                 .background(DColor(.deepBlue60).color)
             }
-            
-//            if store.selectedRewardItemCategory == .sound {
-//                EqualizerButton()
-//            }
             
             if store.isPresentingGuideBottomSheet {
                 DecorationGuideBottomSheet()
@@ -316,7 +336,7 @@ struct DecorationView: View {
             selectedCategory: .background
         )
         var state = MainStateFactory().makeDecorationState(context: context)
-        state.monthlyRecords = Record.previewData
+        state.monthlyRecords = []
         let store = MainStoreFactory().makeDecorationStore(state: state)
         return DecorationView(store: store)
     }()

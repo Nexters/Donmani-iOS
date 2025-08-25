@@ -41,7 +41,9 @@ struct RecordContentView: View {
             HStack(spacing: 12) {
                 VStack {
                     ZStack {
-                        record.category.image
+                        record
+                            .category
+                            .image
                             .resizable()
                             .aspectRatio(1, contentMode: .fit)
                         VStack {
@@ -87,7 +89,7 @@ struct RecordContentView: View {
     RecordContentView(
         record: RecordContent(
             flag: .bad,
-            category: RecordCategory(BadCategory.greed),
+            category: .greed,
             memo: "하하 망했어요"
         )
     )

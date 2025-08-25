@@ -21,7 +21,7 @@ public extension DNetworkService {
         public func fetchAppVersionFromServer() async throws -> VersionDTO {
             let response: DResponse<VersionDTO> = try await self.request.get(
                 path: .appVersion,
-                addtionalPath: ["iOS"]
+                additionalPath: ["iOS"]
             )
             guard let data = response.responseData else {
                 throw NetworkError.noData

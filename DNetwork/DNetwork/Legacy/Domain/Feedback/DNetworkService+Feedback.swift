@@ -18,7 +18,7 @@ public extension DNetworkService {
         public func receiveFeedbackCard() async throws -> FeedbackCardDTO? {
             let response: DResponse<FeedbackCardDTO> = try await self.request.get(
                 path: .feedback,
-                addtionalPath: ["content", userKey]
+                additionalPath: ["content", userKey]
             )
             return response.responseData
         }
@@ -26,7 +26,7 @@ public extension DNetworkService {
         public func fetchFeedbackInfo() async throws -> FeedbackInfoDTO? {
             let response: DResponse<FeedbackInfoDTO> = try await self.request.get(
                 path: .feedback,
-                addtionalPath: [userKey]
+                additionalPath: [userKey]
             )
             return response.responseData
         }

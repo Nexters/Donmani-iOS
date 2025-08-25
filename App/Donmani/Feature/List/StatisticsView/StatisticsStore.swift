@@ -12,89 +12,50 @@ import ComposableArchitecture
 struct StatisticsStore {
 
     struct Context {
-        let year: Int
-        let month: Int
-        init(year: Int, month: Int) {
-            self.year = year
-            self.month = month
+        let day: Day
+        let records: [Record]
+        init(day: Day, records: [Record]) {
+            self.day = day
+            self.records = records
         }
     }
     
     // MARK: - State
     @ObservableState
     struct State {
-        var goodRecord: [GoodCategory: Int] = [:]
-        var goodRecordRatio: [GoodCategory: CGFloat] = [:]
+        let day: Day
+        let records: [Record]
+
+        var recordRatio: [RecordCategory: CGFloat] = [:]
         var goodTotalCount: Int = 0
-        
-        var badRecord: [BadCategory: Int] = [:]
-        var badRecordRatio: [BadCategory: CGFloat] = [:]
         var badTotalCount: Int = 0
-        
-        let yearMonth: (year: Int, month: Int)
-        var records: [Record]
-        
         var isPresentingProposeFunctionView = false
         
-        var sortedGoodRecordIndex: [GoodCategory] {
-            let allCases = GoodCategory.allCases
-            return (0..<9).sorted { i, j in
-                if goodRecord[allCases[i], default: 0] == goodRecord[allCases[j], default: 0] {
-                    return i < j
-                }
-                return goodRecord[allCases[i], default: 0] > goodRecord[allCases[j], default: 0]
-            }.map {
-                allCases[$0]
-            }
-        }
-        
-        var sortedBadRecordIndex: [BadCategory] {
-            let allCases = BadCategory.allCases
-            return (0..<9).sorted { i, j in
-                if badRecord[allCases[i], default: 0] == badRecord[allCases[j], default: 0] {
-                    return i < j
-                }
-                return badRecord[allCases[i], default: 0] > badRecord[allCases[j], default: 0]
-            }.map {
-                allCases[$0]
-            }
-        }
-        
         init(context: Context) {
-            let year = context.year
-            let month = context.month
-            self.yearMonth = (year % 100, month)
-            let key = "\(year + 2000)-\(String(format: "%02d", month))"
-            self.records = (DataStorage.getRecord(yearMonth: key) ?? [])
-            for record in records {
-                if let contents = record.contents {
-                    for content in contents {
-                        if content.flag == .good {
-                            if let c: GoodCategory = content.category.getInstance() {
-                                if c == .none {
-                                    continue
-                                }
-                                self.goodTotalCount += 1
-                                self.goodRecord[c, default: 0] += 1
-                            }
-                        } else {
-                            if let c: BadCategory = content.category.getInstance() {
-                                if c == .none {
-                                    continue
-                                }
-                                self.badTotalCount += 1
-                                self.badRecord[c, default: 0] += 1
-                            }
-                        }
-                    }
+            self.day = context.day
+            self.records = context.records
+            var goodRecordCount: [RecordCategory: Int] = [:]
+            var badRecordCount: [RecordCategory: Int] = [:]
+            let count = self.records.reduce(into: (goodCount: 0, badCount: 0)) { count, item in
+                if let goodRecord = item.records[.good] {
+                    goodRecordCount[goodRecord.category, default: 0] += 1
+                    count.goodCount += 1
+                }
+                
+                if let badRecord = item.records[.bad]{
+                    badRecordCount[badRecord.category, default: 0] += 1
+                    count.badCount += 1
                 }
             }
-            for item in goodRecord {
-                goodRecordRatio[item.key] = CGFloat(item.value) / CGFloat(goodTotalCount)
+            self.goodTotalCount = count.goodCount
+            self.badTotalCount = count.badCount
+            
+            for item in goodRecordCount {
+                recordRatio[item.key] = CGFloat(item.value) / CGFloat(goodTotalCount)
             }
             
-            for item in badRecord {
-                badRecordRatio[item.key] = CGFloat(item.value) / CGFloat(badTotalCount)
+            for item in badRecordCount {
+                recordRatio[item.key] = CGFloat(item.value) / CGFloat(badTotalCount)
             }
         }
     }

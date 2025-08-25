@@ -1,5 +1,5 @@
 //
-//  RecordIntegrateView.swift
+//  RecordCardView.swift
 //  Donmani
 //
 //  Created by 문종식 on 2/16/25.
@@ -9,16 +9,27 @@ import SwiftUI
 import DesignSystem
 
 
-struct RecordIntegrateView: View {
-    let goodRecord: RecordContent
-    let badRecord: RecordContent
+struct RecordCardView: View {
+    let goodRecord: RecordContent?
+    let badRecord: RecordContent?
     
     let goodAction: (() -> Void)?
     let badAction: (() -> Void)?
     
+    var backgroundColors: [Color] {
+        var colors: [Color] = []
+        if let goodRecord {
+            colors.append(goodRecord.category.color)
+        }
+        if let badRecord {
+            colors.append(badRecord.category.color)
+        }
+        return colors
+    }
+    
     init(
-        goodRecord: RecordContent,
-        badRecord: RecordContent,
+        goodRecord: RecordContent? = nil,
+        badRecord: RecordContent? = nil,
         goodAction: (() -> Void)? = nil,
         badAction: (() -> Void)? = nil
     ) {
@@ -30,19 +41,23 @@ struct RecordIntegrateView: View {
     
     var body: some View {
         VStack {
-            Button {
-                goodAction?()
-            } label: {
-                RecordContentView(record: goodRecord, isEditable: goodAction != nil)
+            if let goodRecord {
+                Button {
+                    goodAction?()
+                } label: {
+                    RecordContentView(record: goodRecord, isEditable: goodAction != nil)
+                }
+                .allowsHitTesting(goodAction != nil)
             }
-            .allowsHitTesting(goodAction != nil)
             
-            Button {
-                badAction?()
-            } label: {
-                RecordContentView(record: badRecord, isEditable: badAction != nil)
+            if let badRecord {
+                Button {
+                    badAction?()
+                } label: {
+                    RecordContentView(record: badRecord, isEditable: badAction != nil)
+                }
+                .allowsHitTesting(badAction != nil)
             }
-            .allowsHitTesting(badAction != nil)
         }
         .background(
             ZStack {
@@ -52,12 +67,9 @@ struct RecordIntegrateView: View {
                 )
                 .fill(
                     LinearGradient(
-                        colors: [
-                            goodRecord.category.color,
-                            badRecord.category.color
-                        ]
-                        , startPoint: .topLeading
-                        , endPoint: .bottomTrailing
+                        colors: backgroundColors,
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
                     )
                     .opacity(0.5)
                 )

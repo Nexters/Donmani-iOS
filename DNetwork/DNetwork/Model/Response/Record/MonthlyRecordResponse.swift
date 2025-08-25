@@ -8,7 +8,7 @@
 public struct MonthlyRecordResponse: Decodable {
     public let userKey: String
     public let records: [RecordResponse]?
-    public let saveItems: [RewardItemDTO]
+    public let saveItems: [RewardItemResponse]
     public let hasNotOpenedRewards: Bool
     public let totalExpensesCount: Int
 }

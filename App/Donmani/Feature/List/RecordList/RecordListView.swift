@@ -21,7 +21,7 @@ struct RecordListView: View {
                 ZStack {
                     HStack {
                         Spacer()
-                        DText("\(store.yearMonth.year)년 \(store.yearMonth.month)월 기록")
+                        DText("\(store.day.year)년 \(store.day.month)월 기록")
                             .style(.b1, .semibold, .white)
                         Spacer()
                     }
@@ -40,7 +40,7 @@ struct RecordListView: View {
                 .frame(height: .navigationBarHeight)
                 .padding(.horizontal, .defaultLayoutPadding)
                 
-                if store.record.isEmpty {
+                if store.records.isEmpty {
                     ZStack {
                         VStack {
                             SimpleStatisticsView()
@@ -57,7 +57,7 @@ struct RecordListView: View {
                 }
             }
             
-            if store.isPresentingBottleCalendarToopTipView {
+            if store.isPresentingBottleCalendarToolTipView {
                 BottleCalendarToopTipView()
             }
             
@@ -67,7 +67,7 @@ struct RecordListView: View {
             GA.View(event: .recordhistory).send()
         }
         .onDisappear {
-            if store.record.count > 0 {
+            if store.records.count > 0 {
                 let id = store.dateSet.count - 1
                 DispatchQueue.global().async {
                     GA.Impression(event: .recordhistory).send(parameters: [.recordID: id])
@@ -76,7 +76,8 @@ struct RecordListView: View {
         }
     }
     
-    func convertDateTitle(_ dateString: String) -> String? {
+    func convertDateTitle(_ day: Day) -> String? {
+        let dateString = "\(day.year)-\(day.month)-\(day.day)"
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         dateFormatter.locale = Locale(identifier: "ko_KR")
@@ -96,7 +97,7 @@ struct RecordListView: View {
 
 #Preview {
     {
-        let context = RecordListStore.Context(year: 2025, month: 4, false)
+        let context = RecordListStore.Context(day: .today, records: [], false)
         let state = MainStateFactory().makeMonthlyRecordListState(context: context)
         let store = MainStoreFactory().makeMonthlyRecordListStore(state: state)
         return RecordListView(store: store)

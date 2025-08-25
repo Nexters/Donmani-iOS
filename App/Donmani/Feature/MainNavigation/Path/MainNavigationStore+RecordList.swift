@@ -23,9 +23,9 @@ extension MainNavigationStore {
             return .run { send in
                 await send(.push(.bottleCalendar(result)))
             }
-        case  .pushStatisticsView(let year, let month):
+        case  .pushStatisticsView(let day, let records):
             return .run { send in
-                await send(.push(.statistics(year, month)))
+                await send(.push(.statistics(day, records)))
             }
         }
     }

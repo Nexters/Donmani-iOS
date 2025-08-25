@@ -65,7 +65,7 @@ extension RecordEntryPointView {
     
     func RecordEmptyConfirmView() -> some View {
         BottomSheetView(
-            closeAction: { store.send(.dismissEmtpyRecordBottomSheet) }
+            closeAction: { store.send(.dismissEmptyRecordBottomSheet) }
         ) { dismissSheet in
             VStack(alignment: .leading, spacing: .s3) {
                 VStack(alignment: .leading, spacing: 12) {
@@ -79,7 +79,7 @@ extension RecordEntryPointView {
                 HStack(spacing: 10) {
                     Button {
                         dismissSheet {
-                            store.send(.dismissEmtpyRecordBottomSheet)
+                            store.send(.dismissEmptyRecordBottomSheet)
                         }
                     } label: {
                         ZStack {

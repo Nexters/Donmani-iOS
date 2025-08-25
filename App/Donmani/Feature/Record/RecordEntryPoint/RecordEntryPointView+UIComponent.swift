@@ -160,7 +160,7 @@ extension RecordEntryPointView {
                 EmptyRecordView()
             } else {
                 if let goodRecord = store.goodRecord, let badRecord = store.badRecord {
-                    RecordIntegrateView(
+                    RecordCardView(
                         goodRecord: goodRecord,
                         badRecord: badRecord,
                         goodAction: {

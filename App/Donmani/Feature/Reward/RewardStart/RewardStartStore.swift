@@ -14,16 +14,16 @@ struct RewardStartStore {
     struct Context {
         let recordCount: Int
         let isNotOpened: Bool
-//        let isFirstOpened: Bool
+        let userName: String
         
         init(
             recordCount: Int,
-            isNotOpened: Bool
-//            isFirstOpened: Bool
+            isNotOpened: Bool,
+            userName: String
         ) {
             self.recordCount = recordCount
             self.isNotOpened = isNotOpened
-//            self.isFirstOpened = isFirstOpened
+            self.userName = userName
         }
     }
     
@@ -42,7 +42,7 @@ struct RewardStartStore {
         var isPresentingGuideBottomSheet: Bool = false
         var enabledWriteRecord = false
         
-        var lastRecordCategory: RecordCategory = .init(GoodCategory.flex)
+        var lastRecordCategory: RecordCategory = .flex
         
         var feedbackCard: FeedbackCard?
         var dayTitle = "요즘"
@@ -60,7 +60,7 @@ struct RewardStartStore {
         
         init(context: Context) {
             self.recordCount = context.recordCount
-            self.userName = DataStorage.getUserName()
+            self.userName = context.userName
             
             if (context.recordCount >= 12) {
                 if (context.isNotOpened) {
@@ -119,6 +119,9 @@ struct RewardStartStore {
         }
     }
     
+    @Dependency(\.rewardRepository) var rewardRepository
+    @Dependency(\.feedbackRepository) var feedbackRepository
+    
     var body: some ReducerOf<Self> {
         BindingReducer()
         Reduce { state, action in
@@ -159,7 +162,7 @@ struct RewardStartStore {
                         GA.Click(event: .rewardFeedbackButton).send()
                         UINavigationController.isBlockSwipe = true
                         return .run { send in
-                            let count = try await NetworkService.DReward().fetchRewardNotOpenCount()
+                            let count = try await rewardRepository.getNotOpenRewardCount()
                             await send(.delegate(.pushRewardReceiveView(count)))
                         }
                     }
@@ -178,33 +181,20 @@ struct RewardStartStore {
             case .touchDecorationButton:
                 GA.Click(event: .customizeRewardButton).send()
                 return .run { send in
-                    let dto = try await NetworkService.DReward().reqeustRewardItem()
-                    var decorationItem = NetworkDTOMapper.mapper(dto: dto)
-                    for reward in (decorationItem[.effect] ?? []) {
-                        if let effect = DownloadManager.Effect(rawValue: reward.id),
-                           let contentUrl = reward.jsonUrl {
-                            let data = try await NetworkService.DReward().downloadData(from: contentUrl)
-                            let name = RewardResourceMapper(id: reward.id, category: .effect).resource()
-                            try DataStorage.saveJsonFile(data: data, name: name)
-                        }
-                    }
-                    DataStorage.setInventory(decorationItem)
-                    let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
-                    let year = Int(today[0]) ?? 2025
-                    let month = Int(today[1]) ?? 6
-                    decorationItem = DataStorage.getInventory()
-                    let infoDto = try await NetworkService.DReward().reqeustDecorationInfo(year: year, month: month)
-                    let currentDecorationItem = NetworkDTOMapper.mapper(dto: infoDto)
+                    let decorationItem = try await rewardRepository.getUserRewardItem()
+                    rewardRepository.saveRewards(items: decorationItem)
+                    let today: Day = .today
+                    let currentDecorationItem = try await rewardRepository.getMonthlyRewardItem(
+                        year: today.year,
+                        month: today.month
+                    )
                     await send(.delegate(.pushDecorationView(decorationItem, currentDecorationItem, .background)))
                 }
                 
             case .requestFeedbackCard:
                 return .run { send in
                     try await Task.sleep(nanoseconds: .nanosecondsPerSecond / 2)
-                    guard let feedbackCardDTO = try? await NetworkService.DFeedback().receiveFeedbackCard() else {
-                        return
-                    }
-                    let feedbackCard = NetworkDTOMapper.mapper(dto: feedbackCardDTO)
+                    let feedbackCard = try await feedbackRepository.getFeedbackCard()
                     await send(.receivedFeedbackCard(feedbackCard))
                 }
             case .receivedFeedbackCard(let feedbackCard):

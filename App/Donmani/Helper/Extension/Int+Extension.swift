@@ -9,4 +9,8 @@ extension Int {
     var isZero: Bool {
         self == 0
     }
+    
+    var twoDigitString: String {
+        String(format: "%02d", self)
+    }
 }

@@ -47,6 +47,8 @@ class NotificationManager {
     }
     
     deinit {
-//        print("Deinit NotificationManager")
+#if DEBUG
+        print("\(#function) \(Self.self)")
+#endif
     }
 }

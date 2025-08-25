@@ -23,36 +23,27 @@ struct RecordWritingStore {
     
     // MARK: - State
     @ObservableState
-    struct State: Equatable {
-        var category: [RecordCategory]
+    struct State {
+        let type: RecordContentType
+        let category: [RecordCategory]
         
         var sticker: Image
         var textCount: Int = 0
         
         var isSaveEnabled: Bool = false
         var recordContent: RecordContent?
-        
-        var type: RecordContentType
         var selectedCategory: RecordCategory?
         var savedCategory: RecordCategory?
         var text: String = ""
         var isPresentingSelectCategory: Bool = false
         var isPresentingCancel: Bool = false
-        var isPresendTextGuide: Bool = false
+        var isPresentingTextGuide: Bool = false
         var isFocusToTextField: Bool = false
         
         let dayTitle: String
 
         init(context: Context) {
             self.type = context.type
-            var tempCategory: [RecordCategory]
-            switch context.type {
-            case .good:
-                tempCategory = GoodCategory.allCases.map { RecordCategory($0) }
-            case .bad:
-                tempCategory = BadCategory.allCases.map { RecordCategory($0) }
-            }
-            
             let stateManager = HistoryStateManager.shared.getState()
             let isCompleteToday = stateManager[.today, default: false]
             let isCompleteYesterday = stateManager[.yesterday, default: false]
@@ -64,8 +55,10 @@ struct RecordWritingStore {
                 self.dayTitle = "오늘"
             }
             
-            _ = tempCategory.popLast()
-            self.category = tempCategory
+            self.category = switch context.type {
+            case .good: RecordCategory.goodCategory
+            case .bad: RecordCategory.badCategory
+            }
             self.recordContent = context.content
             self.selectedCategory = context.content?.category
             self.savedCategory = context.content?.category
@@ -146,8 +139,8 @@ struct RecordWritingStore {
                 UINavigationController.isBlockSwipe = state.isBlockSwipe()
                 
             case .showTextLengthGuide:
-                if (!state.isPresendTextGuide) {
-                    state.isPresendTextGuide = true
+                if (!state.isPresentingTextGuide) {
+                    state.isPresentingTextGuide = true
                     return .run { send in
                         try await Task.sleep(nanoseconds: 3_000_000_000)
                         await send(
@@ -158,7 +151,7 @@ struct RecordWritingStore {
                 }
                 
             case .hideTextLengthGuide:
-                state.isPresendTextGuide = false
+                state.isPresentingTextGuide = false
                 
             case .completeWrite(let text):
                 UIApplication.shared.endEditing()
@@ -174,41 +167,29 @@ struct RecordWritingStore {
                 state.isPresentingCancel = true
                 
             case .dismissCancelRecordBottomSheet(let isContinue):
-                var gaParameter: [GA.Parameter: Any] = [.screenType: state.dayTitle]
-                if let savedCategory = state.savedCategory {
-                    switch state.type {
-                    case .good:
-                        gaParameter[.good] = (savedCategory.getInstance() as GoodCategory?)?.title ?? "Good"
-                    case .bad:
-                        gaParameter[.bad] = (savedCategory.getInstance() as BadCategory?)?.title ?? "Bad"
-                    }
-                }
-                let gaEvent: GA.Click.Event = isContinue ? .recordContinueButton : .recordBackButton
-                GA.Click(event: gaEvent).send(parameters: gaParameter)
+                let gaParameter: [GA.Parameter: Any] = [
+                    .screenType: state.dayTitle,
+                    state.type.gaParameter: state.savedCategory?.title ?? ""
+                ]
+                GA.Click(
+                    event: isContinue ? .recordContinueButton : .recordBackButton
+                ).send(parameters: gaParameter)
                 state.isFocusToTextField = true
                 state.isPresentingCancel = false
                 UINavigationController.isBlockSwipe = state.isBlockSwipe()
 
             case .sendCancelGAEvent:
-                var parameters: [GA.Parameter: Any] = [.referrer: "기록작성"]
-                if let savedCategory = state.savedCategory {
-                    switch state.type {
-                    case .good:
-                        parameters[.good] = (savedCategory.getInstance() as GoodCategory?)?.title ?? "Good"
-                    case .bad:
-                        parameters[.bad] = (savedCategory.getInstance() as BadCategory?)?.title ?? "Bad"
-                    }
-                }
+                let parameters: [GA.Parameter: Any] = [
+                    .referrer: "기록작성",
+                    state.type.gaParameter: state.savedCategory?.title ?? ""
+                ]
                 GA.View(event: .recordmainBackBottomsheet).send(parameters: parameters)
                 
             case .touchWriteNextTime:
-                var parameters: [GA.Parameter: Any] = [.screenType: state.dayTitle]
-                switch state.type {
-                case .good:
-                    parameters[.good] = (state.savedCategory?.getInstance() as GoodCategory?)?.title ?? "Good"
-                case .bad:
-                    parameters[.bad] = (state.savedCategory?.getInstance() as BadCategory?)?.title ?? "Bad"
-                }
+                let parameters: [GA.Parameter: Any] = [
+                    .screenType: state.dayTitle,
+                    state.type.gaParameter: state.savedCategory?.title ?? ""
+                ]
                 GA.Click(event: .recordNexttimeButton).send(parameters: parameters)
             
             default:

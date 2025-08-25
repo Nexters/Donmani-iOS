@@ -12,9 +12,7 @@ struct RootView: View {
     @Bindable var store: StoreOf<RootStore>
     
     init() {
-        self.store = Store(
-            initialState: RootStore.State()
-        ) {
+        self.store = Store(initialState: RootStore.State()) {
             RootStore()
         }
     }

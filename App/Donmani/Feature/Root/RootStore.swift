@@ -12,6 +12,11 @@ import ComposableArchitecture
 struct RootStore {
     @Dependency(\.mainStoreFactory) var storeFactory
     @Dependency(\.mainStateFactory) var stateFactory
+    @Dependency(\.recordRepository) var recordRepository
+    
+    var today: Day {
+        .today
+    }
     
     enum MainRoute {
         case main
@@ -22,6 +27,14 @@ struct RootStore {
         case splash
         case onboarding
         case main(StoreOf<MainNavigationStore>)
+        
+        var id: String {
+            switch self {
+            case .splash:       "splash"
+            case .onboarding:   "onboarding"
+            case .main(_):      "main"
+            }
+        }
     }
     
     @ObservableState
@@ -32,6 +45,9 @@ struct RootStore {
     enum Action {
         case completeSplash
         case completeOnboarding(MainRoute)
+        
+        case presentRecordEntryPointView
+        case presentMainView(StoreOf<MainNavigationStore>)
     }
     
     var body: some ReducerOf<Self> {
@@ -47,31 +63,65 @@ struct RootStore {
                 }
                 
             case .completeOnboarding(let mainRoute):
-                var isRequestNotificationPermission = true
-                var mainNavigationState = stateFactory.makeMainNavigationState()
-                if mainRoute == .record {
-                    let isComplete = HistoryStateManager.shared.getState()
-                    let today = isComplete[.today, default: false]
-                    let yesterday = isComplete[.yesterday, default: false]
-                    if (!today || !yesterday) {
-                        let context = RecordEntryPointStore.Context(today: today, yesterday: yesterday)
-                        let state = stateFactory.makeRecordEntryPointState(context: context)
-                        mainNavigationState.path.append(.record(state))
-                        isRequestNotificationPermission = false
+                return .run { @MainActor send in
+                    UINavigationController.isBlockSwipe = false
+                    if mainRoute == .record {
+                        send(.presentRecordEntryPointView)
+                        return
+                    }
+                    
+                    let day: Day = .today
+                    let monthlyRecordState = try await recordRepository.getMonthlyRecordList(year: day.year, month: day.month)
+                    let hasTodayRecord = recordRepository.load(date: .today).isSome
+                    let hasYesterdayRecord = recordRepository.load(date: .yesterday).isSome
+                    
+                    let mainContext = MainStore.Context(
+                        records: monthlyRecordState.records ?? [],
+                        hasRecord: (hasTodayRecord, hasYesterdayRecord),
+                        decorationItem: monthlyRecordState.decorationItem
+                    )
+                    let mainState = stateFactory.makeMainState(context: mainContext)
+                    let mainNavigationState = stateFactory.makeMainNavigationState(mainState: mainState)
+                    let mainNavigationStore = storeFactory.makeMainNavigationStore(state: mainNavigationState)
+                    send(.presentMainView(mainNavigationStore))
+                    
+                    try await Task.sleep(nanoseconds: .nanosecondsPerSecond)
+                    await NotificationManager().checkNotificationPermission()
+                }
+                
+            case .presentRecordEntryPointView:
+                return .run { @MainActor send in
+                    let day: Day = .today
+                    let monthlyRecordState = try await recordRepository.getMonthlyRecordList(year: day.year, month: day.month)
+                    let hasTodayRecord = recordRepository.load(date: .today).isSome
+                    let hasYesterdayRecord = recordRepository.load(date: .yesterday).isSome
+                    
+                    let mainContext = MainStore.Context(
+                        records: monthlyRecordState.records ?? [],
+                        hasRecord: (hasTodayRecord, hasYesterdayRecord),
+                        decorationItem: monthlyRecordState.decorationItem
+                    )
+                    let mainState = stateFactory.makeMainState(context: mainContext)
+                    var mainNavigationState = stateFactory.makeMainNavigationState(mainState: mainState)
+                    
+                    if !(hasTodayRecord && hasYesterdayRecord) {
+                        let context = RecordEntryPointStore.Context(
+                            today: hasTodayRecord,
+                            yesterday: hasYesterdayRecord
+                        )
+                        let recordEntryPointState = stateFactory.makeRecordEntryPointState(context: context)
+                        mainNavigationState.path.append(.record(recordEntryPointState))
                         mainNavigationState.mainState.starBottleOpacity = 0.0
                     } else {
                         mainNavigationState.mainState.isPresentingAlreadyWrite = true
                     }
+                    let mainNavigationStore = storeFactory.makeMainNavigationStore(state: mainNavigationState)
+                    send(.presentMainView(mainNavigationStore))
                 }
-                let mainNavigationStore = storeFactory.makeMainNavigationStore(state: mainNavigationState)
-                UINavigationController.isBlockSwipe = false
-                state.route = .main(mainNavigationStore)
-                if isRequestNotificationPermission {
-                    return .run { _ in
-                        try await Task.sleep(nanoseconds: .nanosecondsPerSecond)
-                        await NotificationManager().checkNotificationPermission()
-                    }
-                }
+                
+                
+            case .presentMainView(let store):
+                state.route = .main(store)
             }
             
             return .none

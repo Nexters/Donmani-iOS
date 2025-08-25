@@ -13,16 +13,18 @@ public struct NetworkRequest {
     public init() { }
     
     func createURL(
-        _ path: APIPath,
-        _ addtionalPaths: [String]?,
+        _ path: APIPath?,
+        _ additionalPaths: [String]?,
         _ parameters: [String: Any]? = nil
     ) throws -> URL {
         guard var url = URL(string: apiBaseURL) else {
             throw NetworkError.invalidURLString
         }
-        url.add(paths: [path.rawValue])
-        if let addtionalPaths {
-            url.add(paths: addtionalPaths)
+        if let path {
+            url.add(paths: [path.rawValue])
+        }
+        if let additionalPaths {
+            url.add(paths: additionalPaths)
         }
         if let parameters {
             url = try url.addQueryItems(parameters: parameters)
@@ -30,7 +32,24 @@ public struct NetworkRequest {
         return url
     }
     
-    func createURLReqeust(
+    func createURL(
+        _ urlString: String,
+        _ additionalPaths: [String]?,
+        _ parameters: [String: Any]? = nil
+    ) throws -> URL {
+        guard var url = URL(string: urlString) else {
+            throw NetworkError.invalidURLString
+        }
+        if let additionalPaths {
+            url.add(paths: additionalPaths)
+        }
+        if let parameters {
+            url = try url.addQueryItems(parameters: parameters)
+        }
+        return url
+    }
+    
+    func createURLRequest(
         method: HTTPMethod,
         url: URL
     ) -> URLRequest {
@@ -41,12 +60,12 @@ public struct NetworkRequest {
         return request
     }
     
-    func createURLReqeust<T: Encodable>(
+    func createURLRequest<T: Encodable>(
         method: HTTPMethod,
         url: URL,
         bodyData: T?
     ) throws -> URLRequest {
-        var request = createURLReqeust(method: method, url: url)
+        var request = createURLRequest(method: method, url: url)
         if let bodyData {
             guard let body = try? JSONEncoder().encode(bodyData) else {
                 throw NetworkError.encodingFailed
@@ -71,6 +90,8 @@ public struct NetworkRequest {
         }
 #if DEBUG
         if let debugString = String(data: data, encoding: .utf8) {
+            print("")
+            print(request.url?.absoluteString)
             print(debugString)
         }
 #endif
@@ -89,6 +110,18 @@ public struct NetworkRequest {
         if stateCode >= 400 {
             throw NetworkError.serverError(statusCode: stateCode)
         }
+    }
+    
+    /// Request with Raw URL String
+    func run(dataRequest: URLRequest) async throws -> Data {
+        guard let (data, response) = try? await URLSession.shared.data(for: dataRequest) else {
+            throw NetworkError.requestFailed
+        }
+        let stateCode = (response as? HTTPURLResponse)?.statusCode ?? 500
+        if stateCode >= 400 {
+            throw NetworkError.serverError(statusCode: stateCode)
+        }
+        return data
     }
 }
 

@@ -11,12 +11,12 @@ import ComposableArchitecture
 @Reducer
 struct RecordListStore {
     struct Context {
-        let year: Int
-        let month: Int
+        let day: Day
+        let records: [Record]
         let isShowNavigationButton: Bool
-        init(year: Int, month: Int, _ isShowNavigationButton: Bool = true) {
-            self.year = year
-            self.month = month
+        init(day: Day, records: [Record], _ isShowNavigationButton: Bool = true) {
+            self.day = day
+            self.records = records
             self.isShowNavigationButton = isShowNavigationButton
         }
     }
@@ -24,77 +24,62 @@ struct RecordListStore {
     // MARK: - State
     @ObservableState
     struct State {
-        let record: [Record]
-        let yearMonth: (year: Int, month: Int)
+        let records: [Record]
+        let day: Day
         let isShowNavigationButton: Bool
         let goodCount: Int
         let badCount: Int
         let progressPoint: CGFloat
-        var isPresentingBottleCalendarToopTipView: Bool = false
-        var dateSet: Set<String>
+        var isPresentingBottleCalendarToolTipView: Bool = false
+        var dateSet: Set<Day>
         
         init(context: Context) {
-            self.yearMonth = (context.year % 100, context.month)
-            let key = "\(context.year)-\(String(format: "%02d", context.month))"
-            self.record = (DataStorage.getRecord(yearMonth: key) ?? []).sorted {
-                $0.date > $1.date
+            self.records = context.records
+            self.day = context.day
+            
+            let count = self.records.reduce(into: (goodCount: 0, badCount: 0)) { count, item in
+                count.goodCount += (item.records[.good].isSome ? 1 : 0)
+                count.badCount += (item.records[.bad].isSome ? 1 : 0)
             }
-            let count = self.record.reduce(into: (0,0)) { count, item in
-                if let contents = item.contents {
-                    for c in contents {
-                        if c.flag == .good {
-                            if let c: GoodCategory = c.category.getInstance() {
-                                if c == .none {
-                                    continue
-                                }
-                                count.0 += 1
-                            }
-                        } else {
-                            if let c: BadCategory = c.category.getInstance() {
-                                if c == .none {
-                                    continue
-                                }
-                                count.1 += 1
-                            }
-                        }
-                    }
-                }
-            }
-            self.goodCount = count.0
-            self.badCount = count.1
+            self.goodCount = count.goodCount
+            self.badCount = count.badCount
             self.isShowNavigationButton = context.isShowNavigationButton
             if (count.0 + count.1) > 0 {
                 self.progressPoint = CGFloat(count.0) / CGFloat(count.0 + count.1)
             } else {
                 self.progressPoint = -1
             }
-            self.isPresentingBottleCalendarToopTipView = (HistoryStateManager.shared.getIsShownBottleCalendarToopTip() == nil)
+            self.isPresentingBottleCalendarToolTipView = (HistoryStateManager.shared.getIsShownBottleCalendarToopTip() == nil)
             self.dateSet = []
         }
     }
     
     // MARK: - Action
     enum Action {
-        case closeBottleCalendarToopTip
+        case closeBottleCalendarToolTip
         case touchStatisticsView(Bool)
         case pushStatisticsView
         case pushBottleCalendarView
-        case addAppearCardView(String)
+        case addAppearCardView(Day?)
         
         case delegate(Delegate)
         enum Delegate {
             case pushBottleCalendarView(RecordCountSummary)
             case pushRecordEntryPointView
-            case pushStatisticsView(Int, Int)
+            case pushStatisticsView(Day, [Record])
         }
     }
+    
+    
+    // MARK: - Dependency
+    @Dependency(\.recordRepository) var recordRepository
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .closeBottleCalendarToopTip:
-                state.isPresentingBottleCalendarToopTipView = false
+            case .closeBottleCalendarToolTip:
+                state.isPresentingBottleCalendarToolTipView = false
                 HistoryStateManager.shared.setIsShownBottleCalendarToopTip()
             case .touchStatisticsView(let isEmpty):
                 let value = isEmpty ? "no_record" : "has_record"
@@ -105,25 +90,31 @@ struct RecordListStore {
                     }
                 }
             case .pushStatisticsView:
-                let year = state.yearMonth.year
-                let month = state.yearMonth.month
+                let day = state.day
                 return .run { send in
-                    await send(.delegate(.pushStatisticsView(year, month)))
+                    let records = try await recordRepository.getMonthlyRecordList(
+                        year: day.year,
+                        month: day.month
+                    ).records ?? []
+                    await send(.delegate(.pushStatisticsView(day, records)))
                 }
             
             case .pushBottleCalendarView:
                 GA.Click(event: .listButton).send()
                 return .run { send in
-                    let response = try await NetworkService.DRecord().fetchMonthlyRecordCount(year: 2025)
-                    let result = NetworkDTOMapper.mapper(dto: response)
+                    let result = try await recordRepository.getYearlyRecordSummary(year: 2025)
                     await send(.delegate(.pushBottleCalendarView(result)))
                 }
                 
-            case .addAppearCardView(let date):
-                state.dateSet.insert(date)
+            case .addAppearCardView(let day):
+                if let day {
+                    state.dateSet.insert(day)
+                } else {
+                    //
+                }
 
             case .delegate(.pushBottleCalendarView(_)):
-                state.isPresentingBottleCalendarToopTipView = false
+                state.isPresentingBottleCalendarToolTipView = false
                 HistoryStateManager.shared.setIsShownBottleCalendarToopTip()
             case .delegate:
                 break

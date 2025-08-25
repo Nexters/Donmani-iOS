@@ -25,7 +25,7 @@ extension RecordListView {
                     DText("별통이만 모아볼 수 있어요!")
                         .style(.b3, .semibold, .white)
                     Button {
-                        store.send(.closeBottleCalendarToopTip)
+                        store.send(.closeBottleCalendarToolTip)
                     } label: {
                         DImage(.close).image
                             .resizable()
@@ -66,32 +66,24 @@ extension RecordListView {
                     store.send(.touchStatisticsView(false))
                 }
             LazyVStack {
-                ForEach(store.record, id: \.date) { record in
+                List(store.records, id: \.day) { record in
                     VStack {
                         HStack {
-                            DText(convertDateTitle(record.date) ?? "")
+                            DText(convertDateTitle(record.day) ?? "")
                                 .style(.b2, .medium, .gray95)
                             Spacer()
                         }
-                        if let contents = record.contents {
-                            if contents.count > 1 {
-                                RecordIntegrateView(
-                                    goodRecord: contents[0],
-                                    badRecord: contents[1]
-                                )
-                            } else {
-                                RecordView(
-                                    record: contents[0],
-                                    isEditable: false
-                                )
-                            }
-                            
-                        } else {
+                        if record.records.isEmpty {
                             EmptyRecordView()
+                        } else {
+                            RecordCardView(
+                                goodRecord: record.records[.good],
+                                badRecord: record.records[.bad]
+                            )
                         }
                     }
                     .onAppear {
-                        store.send(.addAppearCardView(record.date))
+                        store.send(.addAppearCardView(record.day))
                     }
                     .padding(.bottom, 60)
                 }
@@ -99,7 +91,7 @@ extension RecordListView {
                 Spacer()
                     .frame(height: 0.5)
                     .onAppear {
-                        store.send(.addAppearCardView("END_OF_SCROLL"))
+                        store.send(.addAppearCardView(nil))
                     }
             }
             .padding(.top, 40)
@@ -114,7 +106,7 @@ extension RecordListView {
             .overlay {
                 VStack(alignment: .leading, spacing: .s5)  {
                     HStack {
-                        DText("\(store.yearMonth.month)월 기록 통계")
+                        DText("\(store.day.month)월 기록 통계")
                             .style(.b1, .semibold, .gray99)
                         if store.progressPoint > -1 {
                             DImage(.rightArrow).image

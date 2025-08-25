@@ -22,7 +22,6 @@ public struct VersionManager {
             if storeNum == currentNum {
                 continue
             }
-            
             if storeNum > currentNum {
                 return false
             }

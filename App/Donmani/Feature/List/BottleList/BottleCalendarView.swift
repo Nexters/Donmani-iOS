@@ -46,8 +46,8 @@ struct BottleCalendarView: View {
             VStack {
                 Spacer()
                 TextGuideView()
-                    .opacity(store.isPresendTextGuide ? 1 : 0)
-                    .offset(x: 0, y: store.isPresendTextGuide ? 0 : 4)
+                    .opacity(store.isPresentTextGuide ? 1 : 0)
+                    .offset(x: 0, y: store.isPresentTextGuide ? 0 : 4)
                     .padding(.bottom, .s4 * 2)
             }
         }

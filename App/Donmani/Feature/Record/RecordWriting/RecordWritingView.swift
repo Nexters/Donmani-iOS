@@ -105,7 +105,6 @@ struct RecordWritingView: View {
                                     animation: .linear(duration: 0.5)
                                 )
                             }
-//                            UINavigationController.swipeNavigationPopIsEnabled = (editingText == store.text)
                         }
                         .bind($store.isFocusToTextField, to: $isFocusToTextField)
                         .bind($store.text, to: $editingText)
@@ -145,8 +144,8 @@ struct RecordWritingView: View {
             }
             
             TextGuideView()
-                .opacity(store.isPresendTextGuide ? 1 : 0)
-                .offset(x: 0, y: store.isPresendTextGuide ? 0 : 4)
+                .opacity(store.isPresentingTextGuide ? 1 : 0)
+                .offset(x: 0, y: store.isPresentingTextGuide ? 0 : 4)
             
             if store.isPresentingSelectCategory {
                 SelectCategoryView()

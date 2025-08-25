@@ -75,7 +75,7 @@ struct OnboardingStore {
     }
     
     // MARK: - Dependency
-    
+    @Dependency(\.settings) var settings
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
@@ -94,7 +94,7 @@ struct OnboardingStore {
                 state.isPresentingEndOnboardingView = true
                 
             case .touchEndOnboarding:
-                HistoryStateManager.shared.setOnboardingState()
+                settings.shouldShowOnboarding = false
                 
             case .binding(\.pageIndex):
                 state.step = state.pageIndex < 4 ? .page : .final
