@@ -72,8 +72,8 @@ struct RootStore {
                     
                     let day: Day = .today
                     let monthlyRecordState = try await recordRepository.getMonthlyRecordList(year: day.year, month: day.month)
-                    let hasTodayRecord = await recordRepository.load(date: .today).isSome
-                    let hasYesterdayRecord = await recordRepository.load(date: .yesterday).isSome
+                    let hasTodayRecord = recordRepository.load(date: .today).isSome
+                    let hasYesterdayRecord = recordRepository.load(date: .yesterday).isSome
                     
                     let mainContext = MainStore.Context(
                         records: monthlyRecordState.records ?? [],
@@ -93,8 +93,8 @@ struct RootStore {
                 return .run { @MainActor send in
                     let day: Day = .today
                     let monthlyRecordState = try await recordRepository.getMonthlyRecordList(year: day.year, month: day.month)
-                    let hasTodayRecord = await recordRepository.load(date: .today).isSome
-                    let hasYesterdayRecord = await recordRepository.load(date: .yesterday).isSome
+                    let hasTodayRecord = recordRepository.load(date: .today).isSome
+                    let hasYesterdayRecord = recordRepository.load(date: .yesterday).isSome
                     
                     let mainContext = MainStore.Context(
                         records: monthlyRecordState.records ?? [],

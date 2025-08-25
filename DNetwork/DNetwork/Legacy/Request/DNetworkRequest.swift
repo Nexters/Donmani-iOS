@@ -101,7 +101,7 @@ extension DNetworkRequest {
     public func getData(
         urlString: String
     ) async throws -> Data {
-        var url = try createURL(baseURL: urlString)
+        let url = try createURL(baseURL: urlString)
         return try await getData(url: url)
     }
     func getData(

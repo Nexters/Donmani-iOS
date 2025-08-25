@@ -80,6 +80,7 @@ struct MainView: View {
                 }
                 .padding(.vertical, 16 + 70)
             }
+            
             if store.isPresentingNewStarBottle {
                 NewStarBottleView()
             }
@@ -117,15 +118,19 @@ struct MainView: View {
 }
 
 #Preview {
-    {
-        let context = MainStore.Context(
-            records: [],
-            hasRecord: (true, true),
-            decorationItem: [:]
-        )
-        var state = MainStore.State(context: context)
-        return MainView(store: Store(initialState: state) { MainStore() } )
-    }()
+    MainView(
+        store: Store(
+            initialState: MainStateFactory().makeMainState(
+                context: MainStore.Context(
+                    records: [],
+                    hasRecord: (true, true),
+                    decorationItem: [:]
+                )
+            )
+        ) {
+            MainStore()
+        }
+    )
 }
 
 //                Spacer(minLength: 86)

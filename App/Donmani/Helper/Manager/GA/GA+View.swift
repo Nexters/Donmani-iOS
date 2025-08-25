@@ -38,24 +38,9 @@ extension GA {
         }
         
         var eventName: String {
-            var value = "V_"
             switch event {
-                //            case .main:
-                //                value += "main"
-                //            case .recordmain:
-                //                value += "recordmain"
             case .recordmainBackBottomsheet:
-                return value + "recordmain_back_bottomsheet"
-                //            case .confirm:
-                //                value += "confirm"
-                //            case .recordhistory:
-                //                value += "recordhistory"
-                //            case .insight:
-                //                value += "insight"
-                //            case .customize:
-                //                value += "customize"
-                //            }
-                //            return value
+                return "V_recordmain_back_bottomsheet"
             default:
                 return AnalyticsEventScreenView
             }
@@ -63,32 +48,19 @@ extension GA {
         
         var screen: GA.Screen? {
             switch event {
-            case .onboarding:
-                return .onboarding
-            case .main:
-                return .main
-            case .setting:
-                return .setting
-            case .recordmain:
-                return .recordmain
-            case .recordmainBackBottomsheet:
-                return .recordmain
-            case .confirm:
-                return .confirm
-            case .record:
-                return .record
-            case .recordhistory:
-                return .recordhistory
-            case .insight:
-                return .insight
-            case .reward:
-                return .reward
-            case .received:
-                return .received
-            case .feedback:
-                return .feedback
-            case .customize:
-                return .customize
+            case .onboarding:                   .onboarding
+            case .main:                         .main
+            case .setting:                      .setting
+            case .recordmain:                   .recordmain
+            case .recordmainBackBottomsheet:    .recordmain
+            case .confirm:                      .confirm
+            case .record:                       .record
+            case .recordhistory:                .recordhistory
+            case .insight:                      .insight
+            case .reward:                       .reward
+            case .received:                     .received
+            case .feedback:                     .feedback
+            case .customize:                    .customize
             }
         }
         

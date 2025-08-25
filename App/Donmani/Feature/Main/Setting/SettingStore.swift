@@ -61,8 +61,9 @@ struct SettingStore {
                 state.userName = userName
                 
             default:
-                return .none
+                break
             }
+            return .none
         }
     }
 }

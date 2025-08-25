@@ -12,6 +12,7 @@ protocol RewardRepository {
     func saveEquippedItems(year: Int, month: Int, items: [Reward])
     func loadEquippedItems(year: Int, month: Int) -> [RewardItemCategory: Reward]
     func saveReward(item: Reward)
+    func saveRewards(items: [RewardItemCategory: [Reward]])
     func saveRewards(items: [Reward])
     func getUserRewardItem() async throws -> [RewardItemCategory: [Reward]]
     func getNotOpenRewardCount() async throws -> Int
@@ -60,7 +61,12 @@ struct DefaultRewardRepository: RewardRepository {
         rewardDataSource.saveReward(item: item)
     }
     
-    /// 리워드 아이템 리스트를 저장합니다.
+    /// 리워드 아이템 리스트를 저장합니다.([RewardItemCategory: [Reward]])
+    func saveRewards(items: [RewardItemCategory: [Reward]]) {
+        items.forEach { item in rewardDataSource.saveRewards(items: item.value) }
+    }
+    
+    /// 리워드 아이템 리스트를 저장합니다.([Reward])
     func saveRewards(items: [Reward]) {
         rewardDataSource.saveRewards(items: items)
     }

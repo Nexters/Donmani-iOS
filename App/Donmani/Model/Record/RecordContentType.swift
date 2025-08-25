@@ -11,19 +11,22 @@ enum RecordContentType: String, Equatable, CaseIterable {
     
     var title: String {
         switch self {
-        case .good:
-            return "행복"
-        case .bad:
-            return "후회"
+        case .good: "행복"
+        case .bad:  "후회"
         }
     }
     
     var selectTitle: String {
         switch self {
-        case .good:
-            return "행복했"
-        case .bad:
-            return "후회됐"
+        case .good: "행복했"
+        case .bad:  "후회됐"
+        }
+    }
+    
+    var gaParameter: GA.Parameter {
+        switch self {
+        case .good: .good
+        case .bad:  .bad
         }
     }
     
