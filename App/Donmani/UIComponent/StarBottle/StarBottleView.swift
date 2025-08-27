@@ -31,7 +31,7 @@ struct StarBottleView: View {
     @State var backgroundData: Data?
     @State var effectData: Data?
     @State var decorationData: Data?
-    @State var bottleData: Data?
+    @State var bottleRewardId: Int?
     @State var bottleShape: BottleShape
     
     func fetchUI() {
@@ -56,13 +56,17 @@ struct StarBottleView: View {
             return rewardDataUseCase.loadData(from: decorationReward)
         }()
         
-        bottleData = {
-            guard let decorationReward = decorationItems[.bottle] else {
-                return Data()
-            }
-            return rewardDataUseCase.loadData(from: decorationReward)
-        }()
+        bottleRewardId = decorationItems[.bottle]?.id
         bottleShape = BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
+        
+        for i in 0..<records.count {
+            starBottleScene.createInitStarNode(
+                width: Self.width,
+                height: Self.height,
+                record: records[i],
+                index: i
+            )
+        }
     }
     
     init(
@@ -71,14 +75,14 @@ struct StarBottleView: View {
     ) {
         self.records = records
         self.decorationItems = decorationItems
+        self.bottleShape = BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
         self.starBottleScene = StarBottleScene(
             size: .init(
                 width: Self.width,
                 height: Self.height
             ),
-            bottleShape: .default
+            bottleShape: BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
         )
-        bottleShape = BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
     }
     
     var body: some View {
@@ -131,12 +135,17 @@ struct StarBottleView: View {
                 )
                 .frame(width: Self.width, height: Self.height)
                 
-                if let bottleData,
-                   let image = UIImage(data: bottleData) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .frame(width: .screenWidth * 0.8)
-                        .aspectRatio(0.8, contentMode: .fit)
+                if let bottleRewardId {
+                    RewardResourceMapper(
+                        id: bottleRewardId,
+                        category: .bottle
+                    )
+                    .image()
+                    .image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: .screenWidth * 0.8)
+                    .aspectRatio(0.8, contentMode: .fit)
                 }
             }
             

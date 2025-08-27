@@ -15,11 +15,6 @@ struct MainView: View {
     
     var body: some View {
         ZStack {
-            StarBottleView(
-                records: store.records,
-                decorationItems: store.decorationItem
-            )
-            
             VStack {
                 VStack(spacing: .s1) {
                     HStack {
@@ -32,7 +27,7 @@ struct MainView: View {
                             store.send(.touchRewardButton)
                         }
                     }
-                    .padding(.vertical, .s5)
+                    .padding(.bottom, .s5)
                     HStack {
                         Spacer()
                         DText(store.userName)
@@ -108,6 +103,13 @@ struct MainView: View {
                 Color.black.opacity(0.1)
                     .ignoresSafeArea()
             }
+        }
+        .background {
+            StarBottleView(
+                records: store.records,
+                decorationItems: store.decorationItem
+            )
+            .ignoresSafeArea(.container)
         }
         .onAppear {
             store.send(.onAppear)

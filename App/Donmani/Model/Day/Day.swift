@@ -48,7 +48,11 @@ struct Day {
 }
 
 extension Day: Hashable {
-    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(year)
+        hasher.combine(month)
+        hasher.combine(day)
+    }
 }
 
 extension Day: Equatable, Comparable {

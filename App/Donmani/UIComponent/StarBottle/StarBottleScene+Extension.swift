@@ -27,7 +27,7 @@ extension StarBottleScene {
         node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.size)
         node.physicsBody?.isDynamic = false
         node.position = CGPoint(x: size.width / 2, y: size.height / 2)
-        node.alpha = 0.0
+        node.alpha = 1.0
         addChild(node)
     }
     
@@ -309,10 +309,10 @@ extension StarBottleScene {
         position: CGPoint,
         record: Record
     ) {
-        if nodeSet.contains(record.day) {
+        if nodeSet.contains(record.day.yyyyMMdd.description) {
             return
         }
-        nodeSet.insert(record.day)
+        nodeSet.insert(record.day.yyyyMMdd.description)
         let size = CGSize(width: starSize - 5, height: starSize - 5)
         let starNode = SKSpriteNode(texture: Self.starShapeTexture)
         starNode.size = size

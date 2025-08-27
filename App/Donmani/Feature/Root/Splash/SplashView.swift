@@ -15,6 +15,8 @@ struct SplashView: View {
     @Dependency(\.recordRepository) var recordRepository
     @Dependency(\.rewardRepository) var rewardRepository
     @Dependency(\.appVersionRepository) var appVersionRepository
+    @Dependency(\.fileRepository) var fileRepository
+    
     @State var isLatestVersion: Bool = true
     let completeHandler: (() -> Void)?
     

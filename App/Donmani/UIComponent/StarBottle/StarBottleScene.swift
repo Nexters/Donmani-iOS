@@ -11,7 +11,7 @@ import DesignSystem
 
 final class StarBottleScene: SKScene {
     
-    var nodeSet: Set<Day> = []
+    var nodeSet: Set<String> = []
     var ground: SKSpriteNode?
     var bottleShape: BottleShape = .default
     
