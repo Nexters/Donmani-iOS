@@ -91,7 +91,7 @@ public struct NetworkRequest {
 #if DEBUG
         if let debugString = String(data: data, encoding: .utf8) {
             print("")
-            print(request.url?.absoluteString)
+            print(request.url?.absoluteString as Any)
             print(debugString)
         }
 #endif

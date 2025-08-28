@@ -16,26 +16,23 @@ struct MainView: View {
     var body: some View {
         ZStack {
             VStack {
-                VStack(spacing: .s1) {
-                    HStack {
+                DNavigationBar(
+                    leading: {
                         AccessoryButton(asset: .setting) {
                             GA.Click(event: .mainSettingButton).send()
                             store.send(.delegate(.pushSettingView))
                         }
-                        Spacer()
+                    },
+                    title: {
+                        DText(store.userName)
+                            .style(.h1, .bold, .gray95)
+                    },
+                    trailing: {
                         AccessoryButton(asset: .reward) {
                             store.send(.touchRewardButton)
                         }
                     }
-                    .padding(.bottom, .s5)
-                    HStack {
-                        Spacer()
-                        DText(store.userName)
-                            .style(.h1, .bold, .gray95)
-                        Spacer()
-                    }
-                }
-                .padding(.horizontal, .defaultLayoutPadding)
+                )
                 
                 Spacer()
                 

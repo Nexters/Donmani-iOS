@@ -144,7 +144,7 @@ struct StarBottleView: View {
                     .image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: .screenWidth * 0.8)
+                    .frame(width: Self.width)
                     .aspectRatio(0.8, contentMode: .fit)
                 }
             }

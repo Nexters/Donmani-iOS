@@ -327,7 +327,7 @@ extension StarBottleScene {
             colors = [DColor.emptyColor]
         }
         addGradientColor(node: starNode, colors: colors)
-        addHighligerTexture(node: starNode, size: size)
+        addHighlightTexture(node: starNode, size: size)
         addInnerShadowTexture(node: starNode, size: size)
         starNode.zPosition = 2
         addChild(starNode)
@@ -348,7 +348,7 @@ extension StarBottleScene {
         }
     }
     
-    func addHighligerTexture(node: SKSpriteNode, size: CGSize) {
+    func addHighlightTexture(node: SKSpriteNode, size: CGSize) {
         let starDoubleHighlighterTexture = SKSpriteNode(texture: Self.starDoubleHighlighterTexture)
         starDoubleHighlighterTexture.zPosition = 2
         starDoubleHighlighterTexture.size = size

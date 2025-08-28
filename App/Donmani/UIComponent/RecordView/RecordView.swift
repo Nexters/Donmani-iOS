@@ -9,13 +9,7 @@ import SwiftUI
 
 struct RecordView: View {
     let record: RecordContent
-//    let action: (() -> Void)?
     let isEditable: Bool
-    
-//    init(record: RecordContent, action: (() -> Void)? = nil) {
-//        self.record = record
-//        self.action = action
-//    }
     
     init(
         record: RecordContent,

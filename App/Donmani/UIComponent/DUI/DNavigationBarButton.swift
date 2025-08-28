@@ -29,7 +29,6 @@ struct DNavigationBarButton: View {
         self.action = action
     }
     
-    
     var body: some View {
         Button {
             action()
