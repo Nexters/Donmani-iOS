@@ -14,9 +14,9 @@ struct DNavigationBar<Leading: View, Title: View, Trailing: View>: View {
     private let trailing: () -> Trailing
     
     init(
-        @ViewBuilder leading: @escaping () -> Leading,
-        @ViewBuilder title: @escaping () -> Title,
-        @ViewBuilder trailing: @escaping () -> Trailing
+        @ViewBuilder leading: @escaping () -> Leading = { Spacer() },
+        @ViewBuilder title: @escaping () -> Title = { Spacer() },
+        @ViewBuilder trailing: @escaping () -> Trailing = { Spacer() }
     ) {
         self.leading = leading
         self.title = title
@@ -24,19 +24,20 @@ struct DNavigationBar<Leading: View, Title: View, Trailing: View>: View {
     }
     
     var body: some View {
-        VStack(spacing: .s1) {
+        ZStack {
             HStack {
                 leading()
                 Spacer()
                 trailing()
             }
-            .padding(.vertical, .s5)
             HStack {
                 Spacer()
                 title()
                 Spacer()
             }
         }
+        .frame(height: .s3)
+        .padding(.vertical, .s5)
         .padding(.horizontal, .defaultLayoutPadding)
     }
 }
