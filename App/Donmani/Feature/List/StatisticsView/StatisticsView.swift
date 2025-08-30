@@ -16,25 +16,18 @@ struct StatisticsView: View {
     
     var body: some View {
         ZStack {
-            BackgroundView()
             VStack(alignment: .center,spacing: 0) {
-                // Navigation Bar
-                ZStack {
-                    HStack {
-                        Spacer()
-                        DText("\(store.day.year)년 \(store.day.month)월 기록 통계")
-                            .style(.b1, .semibold, .white)
-                        Spacer()
-                    }
-                    HStack {
+                DNavigationBar(
+                    leading: {
                         DNavigationBarButton(.leftArrow) {
                             dismiss()
                         }
-                        Spacer()
+                    },
+                    title: {
+                        DText("\(store.day.year)년 \(store.day.month)월 기록 통계")
+                            .style(.b1, .semibold, .white)
                     }
-                }
-                .frame(height: .navigationBarHeight)
-                .padding(.horizontal, .defaultLayoutPadding)
+                )
                 
                 ScrollView {
                     VStack(spacing: .s3) {
@@ -49,7 +42,11 @@ struct StatisticsView: View {
                             }
                     }
                 }
+                .ignoresSafeArea(edges: .bottom)
             }
+        }
+        .background {
+            BackgroundView()
         }
         .sheet(isPresented: $store.isPresentingProposeFunctionView) {
             // Propose Function WebView

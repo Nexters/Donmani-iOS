@@ -9,16 +9,15 @@ import SwiftUI
 import DesignSystem
 
 extension RecordEntryPointView {
-    // 오늘/내일 토글
+    /// `어제 | 오늘` 토글
     func DayToggle() -> some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 12) {
             Button {
                 store.send(.touchDayTypeToggleButton)
             } label: {
                 DText("어제")
                     .style(.b2, .semibold, store.dayType == .today ? DColor(.deepBlue80).color : DColor.accessoryButton)
             }
-            .padding(12)
             
             DText("|")
                 .style(.b2, .regular, .deepBlue80)
@@ -29,10 +28,9 @@ extension RecordEntryPointView {
                 DText("오늘")
                     .style(.b2, .semibold, store.dayType == .today ? DColor.accessoryButton : DColor(.deepBlue80).color)
             }
-            .padding(12)
         }
+        .padding(.vertical, 12)
     }
-    
     
     func RecordWritingButton(
         type: RecordContentType

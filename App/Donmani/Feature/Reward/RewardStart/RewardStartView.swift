@@ -16,31 +16,17 @@ struct RewardStartView: View {
     
     var body: some View {
         ZStack {
-            ZStack {
-                Color.clear
-                    .ignoresSafeArea()
-                    .background {
-                        RewardBackground()
-                    }
-                    .padding(-10)
-            }
-            
             VStack(alignment: .leading, spacing: 0) {
-                // Navigation Bar
-                ZStack {
-                    HStack {
+                DNavigationBar(
+                    leading: {
                         DNavigationBarButton(.leftArrow) {
                             dismiss()
                         }
-                        Spacer()
                     }
-                }
-                .frame(height: .navigationBarHeight)
-                .padding(.horizontal, .defaultLayoutPadding)
+                )
                 
                 ZStack {
                     FeedbackStartView()
-                    
                     if let feedbackCard = store.feedbackCard {
                         VStack {
                             FeedbackTitleView(feedbackCard: feedbackCard)
@@ -123,6 +109,11 @@ struct RewardStartView: View {
             GA.View(event: .received).send()
         }
         .navigationBarBackButtonHidden()
+        .background {
+            RewardBackground()
+                .ignoresSafeArea()
+                .padding(-10)
+        }
     }
     
     func RewardBackground() -> some View {

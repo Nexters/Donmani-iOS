@@ -15,37 +15,18 @@ struct MonthlyStarBottleView: View {
     
     var body: some View {
         ZStack {
-            if store.records.isEmpty {
-                DImage(.lockedStarBottle).image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding(.horizontal, 38)
-            } else {
-                StarBottleView(
-                    records: store.records,
-                    decorationItems: store.decorationItem
-                )
-            }
-            // Navigation Bar
             VStack(alignment: .center, spacing: 0) {
-                VStack(spacing: .s1) {
-                    ZStack {
-                        HStack {
-                            Spacer()
-                            DText("\(store.day.year % 100)년 \(store.day.month)월")
-                                .style(.b1, .semibold, .white)
-                            Spacer()
+                DNavigationBar(
+                    leading: {
+                        DNavigationBarButton(.leftArrow) {
+                            dismiss()
                         }
-                        HStack {
-                            DNavigationBarButton(.leftArrow) {
-                                dismiss()
-                            }
-                            Spacer()
-                        }
+                    },
+                    title: {
+                        DText("\(store.day.year % 100)년 \(store.day.month)월")
+                            .style(.b1, .semibold, .white)
                     }
-                    .frame(height: .navigationBarHeight)
-                    .padding(.horizontal, .defaultLayoutPadding)
-                }
+                )
                 
                 ZStack {
                     if store.records.isEmpty {
@@ -55,13 +36,15 @@ struct MonthlyStarBottleView: View {
                         }
                         .padding(.horizontal, .defaultLayoutPadding)
                     }
-                    
                 }
             }
         }
         .navigationBarBackButtonHidden()
-        .onAppear {
-            //            store.send(.playBackgroundMusic)
+        .background {
+            StarBottleView(
+                records: store.records,
+                decorationItems: store.decorationItem
+            )
         }
     }
 }
@@ -92,8 +75,6 @@ struct MonthlyStarBottleView: View {
     }()
 }
 
-
-
 //            if let backgroud = store.backgroundResource {
 //                Color.clear
 //                    .ignoresSafeArea()
@@ -119,7 +100,6 @@ struct MonthlyStarBottleView: View {
 //                    .aspectRatio(contentMode: .fit)
 //                    .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
 //            }
-
 //            if let effect = store.decorationItem[.effect] {
 //                let lottieName = RewardResourceMapper(
 //                    id: effect.id, category: .effect
@@ -139,7 +119,6 @@ struct MonthlyStarBottleView: View {
 //                    .allowsHitTesting(false)
 //                }
 //            }
-
 //            if let decoration = store.decorationItem[.decoration] {
 //                let lottieName = RewardResourceMapper(id: decoration.id, category: .decoration).resource()
 //                if !lottieName.isEmpty {

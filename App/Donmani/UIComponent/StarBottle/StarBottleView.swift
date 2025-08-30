@@ -20,6 +20,7 @@ struct StarBottleView: View {
     }
     
     let motionManager = MotionManager()
+    private let onTapGesture: (() -> Void)?
     
     @State private var starBottleScene: StarBottleScene
     @State var opacity: CGFloat = 0.0
@@ -71,7 +72,8 @@ struct StarBottleView: View {
     
     init(
         records: [Record],
-        decorationItems: [RewardItemCategory: Reward]
+        decorationItems: [RewardItemCategory: Reward],
+        onTapGesture: (() -> Void)? = nil
     ) {
         self.records = records
         self.decorationItems = decorationItems
@@ -83,6 +85,7 @@ struct StarBottleView: View {
             ),
             bottleShape: BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
         )
+        self.onTapGesture = onTapGesture
     }
     
     var body: some View {
@@ -146,6 +149,14 @@ struct StarBottleView: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: Self.width)
                     .aspectRatio(0.8, contentMode: .fit)
+                    .onTapGesture {
+                        onTapGesture?()
+                    }
+                } else {
+                    DImage(.lockedStarBottle).image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.horizontal, 38)
                 }
             }
             

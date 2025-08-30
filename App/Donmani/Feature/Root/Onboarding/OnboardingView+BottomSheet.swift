@@ -24,7 +24,7 @@ extension OnboardingView {
                         .aspectRatio(contentMode: .fit)
                     DButton(title: "확인했어요") {
                         store.send(.touchEndOnboarding)
-                        completeHandler?(store.startViewtype)
+                        completeHandler?(store.startViewType)
                     }
                 }
             }

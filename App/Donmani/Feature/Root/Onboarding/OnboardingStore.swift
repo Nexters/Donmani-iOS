@@ -23,7 +23,7 @@ struct OnboardingStore {
         var step: Step = .cover
         var pageIndex = 0
         var isPresentingEndOnboardingView = false
-        var startViewtype: RootStore.MainRoute = .main
+        var startViewType: RootStore.MainRoute = .main
         
         let guidePageCount = 5
         
@@ -90,7 +90,7 @@ struct OnboardingStore {
                 state.step = state.pageIndex < 4 ? .page : .final
                 
             case .touchFinalButton(let type):
-                state.startViewtype = type
+                state.startViewType = type
                 state.isPresentingEndOnboardingView = true
                 
             case .touchEndOnboarding:

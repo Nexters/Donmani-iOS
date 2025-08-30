@@ -89,16 +89,22 @@ public struct NetworkRequest {
             return tempResponse as! R
         }
 #if DEBUG
-        if let debugString = String(data: data, encoding: .utf8) {
-            print("")
-            print(request.url?.absoluteString as Any)
-            print(debugString)
+        if let object = try? JSONSerialization.jsonObject(with: data) {
+            if JSONSerialization.isValidJSONObject(object) {
+                let data = (try? JSONSerialization.data(
+                    withJSONObject: object,
+                    options: [.prettyPrinted, .sortedKeys]
+                )) ?? Data()
+                print(String(decoding: data, as: UTF8.self))
+            }
         }
 #endif
-        guard let returnData = try? JSONDecoder().decode(R.self, from: data) else {
+        do {
+            return try JSONDecoder().decode(R.self, from: data)
+        } catch(let e) {
+            print("\(e): \(e.localizedDescription)")
             throw NetworkError.decodingFailed
         }
-        return returnData
     }
     
     /// Request with Empty Response

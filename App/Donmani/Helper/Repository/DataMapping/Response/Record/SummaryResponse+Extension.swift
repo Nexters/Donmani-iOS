@@ -14,7 +14,8 @@ extension SummaryResponse {
             monthlyRecords: self.monthlyRecords.reduce(
                 into: [Int: RecordCountSummary.Month]()
             ) { result, element in
-                result[element.key] = RecordCountSummary.Month(
+                guard let month = Int(element.key) else { return }
+                result[month] = RecordCountSummary.Month(
                     recordCount: element.value.recordCount,
                     totalDaysInMonth: element.value.totalDaysInMonth
                 )

@@ -19,13 +19,13 @@ struct MainView: View {
                 VStack(spacing: .s1) {
                     DNavigationBar(
                         leading: {
-                            AccessoryButton(asset: .setting) {
+                            DNavigationBarButton(.setting) {
                                 GA.Click(event: .mainSettingButton).send()
                                 store.send(.delegate(.pushSettingView))
                             }
                         },
                         trailing: {
-                            AccessoryButton(asset: .reward) {
+                            DNavigationBarButton(.reward) {
                                 store.send(.touchRewardButton)
                             }
                         }
@@ -105,7 +105,10 @@ struct MainView: View {
             StarBottleView(
                 records: store.records,
                 decorationItems: store.decorationItem
-            )
+            ) {
+                GA.Click(event: .mainRecordArchiveButton).send()
+                store.send(.delegate(.pushRecordListView))
+            }
             .ignoresSafeArea(.container)
         }
         .onAppear {
