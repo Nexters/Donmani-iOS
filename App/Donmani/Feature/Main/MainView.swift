@@ -60,7 +60,7 @@ struct MainView: View {
             }
             .padding(.bottom, .s5)
             
-            if store.canWriteRecord && store.isPresentingRecordYesterdayToopTip {
+            if store.canWriteRecord && store.isPresentingRecordYesterdayToolTip {
                 VStack {
                     Spacer()
                     HStack {

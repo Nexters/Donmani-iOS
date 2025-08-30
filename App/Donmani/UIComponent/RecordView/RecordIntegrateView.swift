@@ -33,7 +33,7 @@ struct RecordCardView: View {
         goodAction: (() -> Void)? = nil,
         badAction: (() -> Void)? = nil
     ) {
-       self.goodRecord = goodRecord
+        self.goodRecord = goodRecord
         self.badRecord = badRecord
         self.goodAction = goodAction
         self.badAction = badAction

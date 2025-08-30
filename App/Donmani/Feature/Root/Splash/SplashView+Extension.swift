@@ -31,9 +31,9 @@ extension SplashView {
     
     private func fetchUserData() async throws {
         let user = try await userRepository.registerUser()
-//        if user.new {
+        if user.new {
             settings.shouldShowOnboarding = true
-//        }
+        }
     }
     
     private func fetchRecordData() async throws {

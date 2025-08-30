@@ -28,7 +28,7 @@ struct MainStore {
         /// 기록 작성 가능 여부
         var canWriteRecord: Bool
 
-        var isPresentingRecordYesterdayToopTip: Bool = false
+        var isPresentingRecordYesterdayToolTip: Bool = false
         var isPresentingAlreadyWrite: Bool = false
         var isPresentingNewStarBottle: Bool = false
         var isPresentingRewardToolTipView: Bool = false
@@ -110,7 +110,6 @@ struct MainStore {
     @Dependency(\.writeRecordUseCase) var writeRecordUseCase
     @Dependency(\.loadRewardUseCase) var loadRewardUseCase
     
-    
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
         BindingReducer()
@@ -127,7 +126,7 @@ struct MainStore {
                 }
                  
             case .closePopover:
-                state.isPresentingRecordYesterdayToopTip = false
+                state.isPresentingRecordYesterdayToolTip = false
                 HistoryStateManager.shared.setLastYesterdayToopTipDay()
                 
             case .checkPopover:
@@ -137,9 +136,9 @@ struct MainStore {
                     if let dateString = historyManager.getLastYesterdayToopTipDay() {
                         let lastDay = Day(yyyymmdd: dateString)
                         let today: Day = .today
-                        state.isPresentingRecordYesterdayToopTip = today > lastDay
+                        state.isPresentingRecordYesterdayToolTip = today > lastDay
                     } else {
-                        state.isPresentingRecordYesterdayToopTip = true
+                        state.isPresentingRecordYesterdayToolTip = true
                     }
                 }
                 
@@ -157,7 +156,7 @@ struct MainStore {
                 state.shakeCount += 1
                 state.yOffset = state.shakeCount % 2 == 0 ? 10 : 0
                 return .run { send in
-                    try await Task.sleep(nanoseconds: 500_000_000)
+                    try await Task.sleep(nanoseconds: .nanosecondsPerSecond / 2)
                     await send(.shakeTwice, animation: .linear(duration: 0.5))
                 }
             
