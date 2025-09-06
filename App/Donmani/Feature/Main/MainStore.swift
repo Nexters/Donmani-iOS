@@ -49,27 +49,12 @@ struct MainStore {
             self.canWriteRecord = !(context.hasRecord.today && context.hasRecord.yesterday)
             
             if (day.day == 1) {
-                // TODO: - 1일에 표시하는 Bottom Sheet
+                self.isPresentingNewStarBottle = true
             }
             
             // TODO: - 리워드 툴팁 표시
             isPresentingRewardToolTipView = HistoryStateManager.shared.getIsPresentingRewardToolTipView()
         }
-        
-//        mutating func appendNewRecord(record: Record) {
-//            records.append(record)
-//            let historyStateManager = HistoryStateManager.shared
-//            let state = historyStateManager.getState()
-//            let isCompleteToday = state[.today, default: false]
-//            let isCompleteYesterday = state[.yesterday, default: false]
-//            canWriteRecord = !(isCompleteToday && isCompleteYesterday)
-//            isNewStar += 1
-//            let itemCount = DataStorage.getInventory().reduce(into: 0) { result, items in
-//                result += items.value.count
-//            }
-//            isPresentingRewardToolTipView = !(itemCount > 15)
-//            HistoryStateManager.shared.setIsPresentingRewardToolTipView(false)
-//        }
     }
     
     // MARK: - Action

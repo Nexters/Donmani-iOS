@@ -37,15 +37,47 @@ struct MonthlyStarBottleView: View {
                         .padding(.horizontal, .defaultLayoutPadding)
                     }
                 }
+                
+                Spacer()
             }
         }
         .navigationBarBackButtonHidden()
         .background {
-            StarBottleView(
-                records: store.records,
-                decorationItems: store.decorationItem
-            )
+            if store.records.isEmpty {
+                EmptyStarBottleView()
+            } else {
+                StarBottleView(
+                    records: store.records,
+                    decorationItems: store.decorationItem
+                )
+                .ignoresSafeArea(.container)
+            }
         }
+    }
+}
+
+struct EmptyStarBottleView: View {
+    var body: some View {
+        ZStack {
+            BackgroundView(colors: [
+                DColor.backgroundTop,
+                DColor.backgroundBottom,
+            ])
+            
+            DImage(.mainBackgroundStar)
+                .image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
+            
+            DImage(.lockedStarBottle)
+                .image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(.top, 10)
+                .padding(.horizontal, 38)
+        }
+        .ignoresSafeArea(.container)
     }
 }
 
