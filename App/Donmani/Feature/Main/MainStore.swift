@@ -40,6 +40,7 @@ struct MainStore {
         var yOffset: CGFloat = 0
         var shakeCount = 0
         var isNewStar = 0
+        var starBottleAction: StarBottleAction = .none
         
         init(context: MainStore.Context) {
             self.day = .today
@@ -55,7 +56,7 @@ struct MainStore {
             isPresentingRewardToolTipView = HistoryStateManager.shared.getIsPresentingRewardToolTipView()
         }
         
-        mutating func appendNewRecord(record: Record) {
+//        mutating func appendNewRecord(record: Record) {
 //            records.append(record)
 //            let historyStateManager = HistoryStateManager.shared
 //            let state = historyStateManager.getState()
@@ -68,7 +69,7 @@ struct MainStore {
 //            }
 //            isPresentingRewardToolTipView = !(itemCount > 15)
 //            HistoryStateManager.shared.setIsPresentingRewardToolTipView(false)
-        }
+//        }
     }
     
     // MARK: - Action

@@ -11,28 +11,30 @@ protocol WriteRecordUseCase {
     func canWriteRecord() -> Bool
 }
 
-struct DefaultWriteRecordUseCase: WriteRecordUseCase {
-    let recordDataSource: RecordDataSource
+struct DefaultWriteRecordUseCase {
+    let recordRepository: RecordRepository
     
-    init(recordDataSource: RecordDataSource) {
-        self.recordDataSource = recordDataSource
+    init(recordRepository: RecordRepository) {
+        self.recordRepository = recordRepository
     }
     
+    private func hasRecord(on day: Day) -> Bool {
+        recordRepository.load(date: day).isSome
+    }
+}
+
+extension DefaultWriteRecordUseCase: WriteRecordUseCase {
     func canWriteRecord() -> Bool {
-        var day: Day = .today
-        let hasTodayRecord = recordDataSource.load(year: day.year, month: day.month, day: day.day).isSome
-        day = .yesterday
-        let hasYesterdayRecord = recordDataSource.load(year: day.year, month: day.month, day: day.day).isSome
-        return hasTodayRecord || hasYesterdayRecord
+        !(hasRecord(on: .today) && hasRecord(on: .yesterday))
     }
 }
 
 extension DependencyValues {
     private enum WriteRecordUseCaseKey: DependencyKey {
         static let liveValue: WriteRecordUseCase = {
-            @Dependency(\.recordDataSource) var recordDataSource
+            @Dependency(\.recordRepository) var recordRepository
             return DefaultWriteRecordUseCase(
-                recordDataSource: recordDataSource
+                recordRepository: recordRepository
             )
         }()
     }

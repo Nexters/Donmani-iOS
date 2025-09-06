@@ -28,6 +28,7 @@ struct MainNavigationStore {
         
         case completeWriteRecordContent(RecordContent)
         case completeWriteRecord(Record)
+        case _updateMainStatePresentingRewardToolTipFlag(Bool)
         
         case requestAppStoreReview
         case requestNotificationPermission
@@ -59,7 +60,9 @@ struct MainNavigationStore {
     @Dependency(\.mainStateFactory) var stateFactory
     @Dependency(\.userRepository) var userRepository
     @Dependency(\.recordRepository) var recordRepository
+    @Dependency(\.rewardRepository) var rewardRepository
     @Dependency(\.feedbackRepository) var feedbackRepository
+    @Dependency(\.settings) var settings
     
     var body: some ReducerOf<Self> {
         Scope(
@@ -131,7 +134,26 @@ struct MainNavigationStore {
                 }
                 UINavigationController.isBlockSwipe = false
                 state.path.removeAll()
-                state.mainState.appendNewRecord(record: record)
+                var mainState = state.mainState
+                mainState.records.append(record)
+                let hasTodayRecord = recordRepository.load(date: .today).isSome
+                let hasYesterdayRecord = recordRepository.load(date: .yesterday).isSome
+                mainState.canWriteRecord = !(hasTodayRecord && hasYesterdayRecord)
+                mainState.isNewStar += 1
+                mainState.starBottleAction = .addNewStar(record)
+                state.mainState = mainState
+                return .run { send in
+                    let items = try await rewardRepository.getUserRewardItem()
+                    let itemCount = items.reduce(into: 0) { result, items in
+                        result += items.value.count
+                    }
+                    await send(._updateMainStatePresentingRewardToolTipFlag(!(itemCount>15)))
+                }
+                
+            case ._updateMainStatePresentingRewardToolTipFlag(let flag):
+                var mainState = state.mainState
+                mainState.isPresentingRewardToolTipView = flag
+                state.mainState = mainState
                 
             case .requestAppStoreReview:
                 return .run { _ in

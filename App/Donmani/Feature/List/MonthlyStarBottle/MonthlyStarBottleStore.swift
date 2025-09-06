@@ -25,7 +25,7 @@ struct MonthlyStarBottleStore {
     @ObservableState
     struct State {
         let day: Day
-        let records: [Record]
+        var records: [Record]
         let decorationItem: [RewardItemCategory: Reward]
         
         init(context: Context) {
@@ -40,7 +40,8 @@ struct MonthlyStarBottleStore {
     }
     
     // MARK: - Action
-    enum Action {
+    enum Action: BindableAction {
+        case binding(BindingAction<State>)
         case didTapStarBottle
         
         case delegate(Delegate)
@@ -51,6 +52,7 @@ struct MonthlyStarBottleStore {
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
+        BindingReducer()
         Reduce { state, action in
             switch action {
             case .didTapStarBottle:
@@ -61,6 +63,8 @@ struct MonthlyStarBottleStore {
                 }
                 
             case .delegate:
+                return .none
+            default:
                 return .none
             }
         }

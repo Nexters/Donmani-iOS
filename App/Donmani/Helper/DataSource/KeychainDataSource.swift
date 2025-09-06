@@ -33,6 +33,7 @@ struct DefaultKeychainDataSource: KeychainDataSource {
     private let debugUUID = "6B788207-4A6A-4B54-A44F-C23853918C09"
     
     /// Keychain에서 UUID 가져오기 (없으면 새로 생성 후 저장)
+    // TODO: - 배포 전 확인하기
     public func generateUUID() -> String {
         save(to: .uuid, value: debugUUID)
         if let uuid = load(from: .uuid) {

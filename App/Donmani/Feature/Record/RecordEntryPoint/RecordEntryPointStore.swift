@@ -328,9 +328,10 @@ struct RecordEntryPointStore {
                 state.record = record
                 recordRepository.save(record)
                 state.isError = false
-                return .run { send in
-                    try await recordRepository.postRecord(record: record)
-                }
+                // TODO:
+//                return .run { send in
+//                    try await recordRepository.postRecord(record: record)
+//                }
                 
             case .startTimer:
                 let isBlockSwipe = !(state.goodRecord == nil && state.badRecord == nil)

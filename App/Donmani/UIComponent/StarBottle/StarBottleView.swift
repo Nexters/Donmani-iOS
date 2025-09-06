@@ -10,6 +10,11 @@ import SpriteKit
 import DesignSystem
 import ComposableArchitecture
 
+enum StarBottleAction: Equatable {
+    case addNewStar(Record)
+    case none
+}
+
 struct StarBottleView: View {
     static var width: CGFloat {
         .screenWidth - (38 * 2)
@@ -21,6 +26,8 @@ struct StarBottleView: View {
     
     let motionManager = MotionManager()
     private let onTapGesture: (() -> Void)?
+    
+    @Binding private var starBottleAction: StarBottleAction
     
     @State private var starBottleScene: StarBottleScene
     @State var opacity: CGFloat = 0.0
@@ -73,10 +80,12 @@ struct StarBottleView: View {
     init(
         records: [Record],
         decorationItems: [RewardItemCategory: Reward],
+        starBottleAction: Binding<StarBottleAction> = .constant(.none),
         onTapGesture: (() -> Void)? = nil
     ) {
         self.records = records
         self.decorationItems = decorationItems
+        self._starBottleAction = starBottleAction
         self.bottleShape = BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
         self.starBottleScene = StarBottleScene(
             size: .init(
@@ -167,17 +176,29 @@ struct StarBottleView: View {
                 starBottleScene.setGravity(dx: dx, dy: -dy)
             }
         }
-        .onChange(of: records) { (old, new) in
-            if let record = records.last {
+        //        .onChange(of: records) { (old, new) in
+        //            if let record = records.last {
+        //                starBottleScene.createNewStarNode(
+        //                    width: Self.width,
+        //                    height: Self.height,
+        //                    record: record
+        //                )
+        //            }
+        //        }
+        .onDisappear {
+            //            motionManager.stopGyros()
+        }
+        .onChange(of: starBottleAction) { (_, action) in
+            switch action {
+            case .addNewStar(let record):
                 starBottleScene.createNewStarNode(
                     width: Self.width,
                     height: Self.height,
                     record: record
                 )
+            case .none:
+                break
             }
-        }
-        .onDisappear {
-            //            motionManager.stopGyros()
         }
         .onChange(of: bottleShape) { _, newValue in
             starBottleScene.nodeSet.removeAll()

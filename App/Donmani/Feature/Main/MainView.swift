@@ -104,7 +104,8 @@ struct MainView: View {
         .background {
             StarBottleView(
                 records: store.records,
-                decorationItems: store.decorationItem
+                decorationItems: store.decorationItem,
+                starBottleAction: $store.starBottleAction
             ) {
                 GA.Click(event: .mainRecordArchiveButton).send()
                 store.send(.delegate(.pushRecordListView))

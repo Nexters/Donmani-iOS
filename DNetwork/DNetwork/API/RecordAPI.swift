@@ -64,7 +64,7 @@ public struct RecordAPI {
     }
     
     /// 월간 카테고리별 기록 수
-    public func getMonthlyCategorySatistics(userKey: String, year: Int, month: Int) async throws -> CategoryStatisticsResponse {
+    public func getMonthlyCategoryStatistics(userKey: String, year: Int, month: Int) async throws -> CategoryStatisticsResponse {
         let result: DResponse<CategoryStatisticsResponse> = try await request.get(
             path: .expenses,
             additionalPaths: ["category-statistics", userKey],
