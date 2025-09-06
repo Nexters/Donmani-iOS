@@ -34,13 +34,16 @@ struct StatisticsView: View {
                         TopBannerView()
                         CategoryStatisticsView(flag: .good)
                             .onAppear {
-                                GA.Impression(event: .insight).send(parameters: [.good: "Good"])
+                                GA.Impression(event: .insight)
+                                    .send(parameters: [.good: "Good"])
                             }
                         CategoryStatisticsView(flag: .bad)
                             .onAppear {
-                                GA.Impression(event: .insight).send(parameters: [.bad: "Bad"])
+                                GA.Impression(event: .insight)
+                                    .send(parameters: [.bad: "Bad"])
                             }
                     }
+                    .padding(.bottom, 40)
                 }
                 .ignoresSafeArea(edges: .bottom)
             }
