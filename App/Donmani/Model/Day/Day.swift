@@ -48,21 +48,25 @@ struct Day {
 }
 
 extension Day: Hashable {
-    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(year)
+        hasher.combine(month)
+        hasher.combine(day)
+    }
 }
 
 extension Day: Equatable, Comparable {
     static func < (lhs: Day, rhs: Day) -> Bool {
-        if lhs.year < lhs.year { return true }
-        if lhs.month < lhs.month { return true }
-        if lhs.day < lhs.day { return true }
+        if lhs.year < rhs.year { return true }
+        if lhs.month < rhs.month { return true }
+        if lhs.day < rhs.day { return true }
         return false
     }
     
     static func == (lhs: Day, rhs: Day) -> Bool {
-        if lhs.year != lhs.year { return false }
-        if lhs.month != lhs.month { return false }
-        if lhs.day != lhs.day { return false }
+        if lhs.year != rhs.year { return false }
+        if lhs.month != rhs.month { return false }
+        if lhs.day != rhs.day { return false }
         return true
     }
 }

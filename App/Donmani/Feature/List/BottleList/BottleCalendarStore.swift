@@ -16,15 +16,14 @@ struct BottleCalendarStore {
         var isPresentingTopBanner: Bool
         var isPresentTextGuide: Bool = false
         
-        var starCount: [Int:Int] = [:]
-        var starCountSort: [(Int,Int)] = []
+        var starCount: [Int: Int] = [:]
+        var starCountSort: [(Int, Int)] = []
         var lastDaysOfMonths: [Int: Int] {
             Day.lastDaysOfMonths(year: Day.today.year)
         }
         
         init(context: RecordCountSummary) {
             self.isPresentingTopBanner = HistoryStateManager.shared.getMonthlyBottleGuide()
-            self.starCountSort = self.starCount.sorted { $0.key < $1.key }
             let today: Day = .today
             for month in (3...12) { // Only in 2025
                 self.starCount[month] = context.monthlyRecords[month]?.recordCount ?? -1
@@ -34,6 +33,7 @@ struct BottleCalendarStore {
                     }
                 }
             }
+            self.starCountSort = self.starCount.sorted { $0.key < $1.key }
         }
     }
     

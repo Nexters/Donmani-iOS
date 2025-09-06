@@ -13,11 +13,11 @@ struct RecordListStore {
     struct Context {
         let day: Day
         let records: [Record]
-        let isShowNavigationButton: Bool
-        init(day: Day, records: [Record], _ isShowNavigationButton: Bool = true) {
+        let isShowBottleCalendarNavigationButton: Bool
+        init(day: Day, records: [Record], _ isShowBottleCalendarNavigationButton: Bool = true) {
             self.day = day
             self.records = records
-            self.isShowNavigationButton = isShowNavigationButton
+            self.isShowBottleCalendarNavigationButton = isShowBottleCalendarNavigationButton
         }
     }
     
@@ -26,7 +26,7 @@ struct RecordListStore {
     struct State {
         let records: [Record]
         let day: Day
-        let isShowNavigationButton: Bool
+        let isShowBottleCalendarNavigationButton: Bool
         let goodCount: Int
         let badCount: Int
         let progressPoint: CGFloat
@@ -43,7 +43,7 @@ struct RecordListStore {
             }
             self.goodCount = count.goodCount
             self.badCount = count.badCount
-            self.isShowNavigationButton = context.isShowNavigationButton
+            self.isShowBottleCalendarNavigationButton = context.isShowBottleCalendarNavigationButton
             if (count.0 + count.1) > 0 {
                 self.progressPoint = CGFloat(count.0) / CGFloat(count.0 + count.1)
             } else {

@@ -15,30 +15,25 @@ struct RecordListView: View {
     
     var body: some View {
         ZStack {
-            BackgroundView()
             VStack(alignment: .center, spacing: 0) {
-                // Navigation Bar
-                ZStack {
-                    HStack {
-                        Spacer()
-                        DText("\(store.day.year)년 \(store.day.month)월 기록")
-                            .style(.b1, .semibold, .white)
-                        Spacer()
-                    }
-                    HStack {
+                DNavigationBar(
+                    leading: {
                         DNavigationBarButton(.leftArrow) {
                             dismiss()
                         }
-                        Spacer()
-                        if store.isShowNavigationButton {
+                    },
+                    title: {
+                        DText("\(store.day.year)년 \(store.day.month)월 기록")
+                            .style(.b1, .semibold, .white)
+                    },
+                    trailing: {
+                        if store.isShowBottleCalendarNavigationButton {
                             DNavigationBarButton(.bottleIcon) {
                                 store.send(.pushBottleCalendarView)
                             }
                         }
                     }
-                }
-                .frame(height: .navigationBarHeight)
-                .padding(.horizontal, .defaultLayoutPadding)
+                )
                 
                 if store.records.isEmpty {
                     ZStack {
@@ -63,6 +58,9 @@ struct RecordListView: View {
             
         }
         .navigationBarBackButtonHidden()
+        .background {
+            BackgroundView()
+        }
         .onAppear {
             GA.View(event: .recordhistory).send()
         }

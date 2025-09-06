@@ -309,10 +309,10 @@ extension StarBottleScene {
         position: CGPoint,
         record: Record
     ) {
-        if nodeSet.contains(record.day) {
+        if nodeSet.contains(record.day.yyyyMMdd.description) {
             return
         }
-        nodeSet.insert(record.day)
+        nodeSet.insert(record.day.yyyyMMdd.description)
         let size = CGSize(width: starSize - 5, height: starSize - 5)
         let starNode = SKSpriteNode(texture: Self.starShapeTexture)
         starNode.size = size
@@ -327,7 +327,7 @@ extension StarBottleScene {
             colors = [DColor.emptyColor]
         }
         addGradientColor(node: starNode, colors: colors)
-        addHighligerTexture(node: starNode, size: size)
+        addHighlightTexture(node: starNode, size: size)
         addInnerShadowTexture(node: starNode, size: size)
         starNode.zPosition = 2
         addChild(starNode)
@@ -348,7 +348,7 @@ extension StarBottleScene {
         }
     }
     
-    func addHighligerTexture(node: SKSpriteNode, size: CGSize) {
+    func addHighlightTexture(node: SKSpriteNode, size: CGSize) {
         let starDoubleHighlighterTexture = SKSpriteNode(texture: Self.starDoubleHighlighterTexture)
         starDoubleHighlighterTexture.zPosition = 2
         starDoubleHighlighterTexture.size = size

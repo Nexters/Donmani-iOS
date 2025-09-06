@@ -29,3 +29,9 @@ extension Record: Hashable {
         hasher.combine(day)
     }
 }
+
+extension Record: Identifiable {
+    var id: String {
+        day.yyyyMMdd
+    }
+}

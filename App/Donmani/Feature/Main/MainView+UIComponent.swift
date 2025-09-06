@@ -9,20 +9,20 @@ import SwiftUI
 import DesignSystem
 
 extension MainView {
-    func AccessoryButton(
-        asset: DImageAsset,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button {
-            action()
-        } label: {
-            DImage(asset).image
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: .s3)
-        }
-        .frame(width: .s3, height: .s3)
-    }
+//    func AccessoryButton(
+//        asset: DImageAsset,
+//        action: @escaping () -> Void
+//    ) -> some View {
+//        Button {
+//            action()
+//        } label: {
+//            DImage(asset).image
+//                .resizable()
+//                .aspectRatio(contentMode: .fit)
+//                .frame(width: .s3)
+//        }
+//        .frame(width: .s3, height: .s3)
+//    }
     
     func RecordButton() -> some View {
         Button {

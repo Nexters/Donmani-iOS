@@ -16,7 +16,6 @@ struct RewardReceiveView: View {
     
     var body: some View {
         ZStack {
-            BackgroundView()
             VStack(alignment: .center, spacing: 0) {
                 // Navigation Bar
                 ZStack {
@@ -54,6 +53,9 @@ struct RewardReceiveView: View {
             GA.View(event: .reward).send()
         }
         .navigationBarBackButtonHidden()
+        .background {
+            BackgroundView()
+        }
     }
 }
 

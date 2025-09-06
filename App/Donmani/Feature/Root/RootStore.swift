@@ -13,6 +13,7 @@ struct RootStore {
     @Dependency(\.mainStoreFactory) var storeFactory
     @Dependency(\.mainStateFactory) var stateFactory
     @Dependency(\.recordRepository) var recordRepository
+    @Dependency(\.settings) var settings
     
     var today: Day {
         .today
@@ -54,7 +55,7 @@ struct RootStore {
         Reduce { state, action in
             switch action {
             case .completeSplash:
-                if HistoryStateManager.shared.getOnboardingState() {
+                if settings.shouldShowOnboarding {
                     state.route = .onboarding
                 } else {
                     return .run { send in

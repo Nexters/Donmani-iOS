@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DesignSystem
 import ComposableArchitecture
 
 struct RootView: View {
@@ -19,26 +20,35 @@ struct RootView: View {
     
     var body: some View {
         ZStack {
-            SplashView {
-                store.send(.completeSplash)
-            }
-            .id("splash")
             switch store.route {
             case .onboarding:
                 OnboardingView { confirmType in
                     store.send(.completeOnboarding(confirmType))
                 }
-                .id("onboarding")
+                .id(store.route.id)
                 
-            case .main(let store):
-                MainNavigationView(store: store)
-                    .transition(.move(edge: .trailing))
-                    .id("main")
+            case .main(let mainStore):
+                MainNavigationView(
+                    store: mainStore
+                )
+                .transition(.move(edge: .trailing))
+                .id(store.route.id)
+                
             case .splash:
-                Spacer()
+                SplashView {
+                    store.send(.completeSplash)
+                }
+                .transition(.opacity)
+                .id(store.route.id)
             }
         }
         .animation(.smooth, value: store.route)
+        .background {
+            BackgroundView(colors: [
+                DColor.backgroundTop,
+                DColor.backgroundBottom,
+            ])
+        }
     }
 }
 

@@ -15,32 +15,24 @@ struct MainView: View {
     
     var body: some View {
         ZStack {
-            StarBottleView(
-                records: store.records,
-                decorationItems: store.decorationItem
-            )
-            
             VStack {
                 VStack(spacing: .s1) {
-                    HStack {
-                        AccessoryButton(asset: .setting) {
-                            GA.Click(event: .mainSettingButton).send()
-                            store.send(.delegate(.pushSettingView))
+                    DNavigationBar(
+                        leading: {
+                            DNavigationBarButton(.setting) {
+                                GA.Click(event: .mainSettingButton).send()
+                                store.send(.delegate(.pushSettingView))
+                            }
+                        },
+                        trailing: {
+                            DNavigationBarButton(.reward) {
+                                store.send(.touchRewardButton)
+                            }
                         }
-                        Spacer()
-                        AccessoryButton(asset: .reward) {
-                            store.send(.touchRewardButton)
-                        }
-                    }
-                    .padding(.vertical, .s5)
-                    HStack {
-                        Spacer()
-                        DText(store.userName)
-                            .style(.h1, .bold, .gray95)
-                        Spacer()
-                    }
+                    )
+                    DText(store.userName)
+                        .style(.h1, .bold, .gray95)
                 }
-                .padding(.horizontal, .defaultLayoutPadding)
                 
                 Spacer()
                 
@@ -68,7 +60,7 @@ struct MainView: View {
             }
             .padding(.bottom, .s5)
             
-            if store.canWriteRecord && store.isPresentingRecordYesterdayToopTip {
+            if store.canWriteRecord && store.isPresentingRecordYesterdayToolTip {
                 VStack {
                     Spacer()
                     HStack {
@@ -108,6 +100,17 @@ struct MainView: View {
                 Color.black.opacity(0.1)
                     .ignoresSafeArea()
             }
+        }
+        .background {
+            StarBottleView(
+                records: store.records,
+                decorationItems: store.decorationItem,
+                starBottleAction: $store.starBottleAction
+            ) {
+                GA.Click(event: .mainRecordArchiveButton).send()
+                store.send(.delegate(.pushRecordListView))
+            }
+            .ignoresSafeArea(.container)
         }
         .onAppear {
             store.send(.onAppear)

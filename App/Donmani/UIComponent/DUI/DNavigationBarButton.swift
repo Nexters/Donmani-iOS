@@ -29,7 +29,6 @@ struct DNavigationBarButton: View {
         self.action = action
     }
     
-    
     var body: some View {
         Button {
             action()
@@ -38,13 +37,14 @@ struct DNavigationBarButton: View {
                 DImage(icon).image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: .s3)
+                    .frame(width: .s3)
             }
             if let text {
                 DText(text)
                     .style(.b1, .semibold, .deepBlue99)
-                    .frame(height: .s3)
+                    .frame(width: .s3)
             }
         }
+        .frame(width: .s3, height: .s3)
     }
 }

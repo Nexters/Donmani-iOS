@@ -7,7 +7,7 @@
 
 public struct SummaryResponse: Decodable {
     public let year: Int
-    public let monthlyRecords: [Int: Self.MonthlyInfo]
+    public let monthlyRecords: [String: Self.MonthlyInfo]
     
     public struct MonthlyInfo: Decodable {
         public let recordCount: Int

@@ -24,8 +24,6 @@ struct OnboardingView: View {
     
     var body: some View {
         ZStack {
-            DColor(.deepBlue20).color
-                .ignoresSafeArea()
             switch store.step {
             case .cover:
                 coverStepView
@@ -35,6 +33,10 @@ struct OnboardingView: View {
         }
         .onAppear {
             GA.View(event: .onboarding).send()
+        }
+        .background {
+            DColor(.deepBlue20).color
+                .ignoresSafeArea()
         }
     }
 }

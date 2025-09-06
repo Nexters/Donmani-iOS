@@ -64,7 +64,7 @@ public struct RecordAPI {
     }
     
     /// 월간 카테고리별 기록 수
-    public func getMonthlyCategorySatistics(userKey: String, year: Int, month: Int) async throws -> CategoryStatisticsResponse {
+    public func getMonthlyCategoryStatistics(userKey: String, year: Int, month: Int) async throws -> CategoryStatisticsResponse {
         let result: DResponse<CategoryStatisticsResponse> = try await request.get(
             path: .expenses,
             additionalPaths: ["category-statistics", userKey],
@@ -81,14 +81,11 @@ public struct RecordAPI {
     
     // 연간 기록(별통이 달력)
     public func getYearlyRecordSummary(userKey: String, year: Int) async throws -> SummaryResponse {
-        let result: DResponse<SummaryResponse> = try await request.get(
+        let result: SummaryResponse = try await request.get(
             path: .expenses,
             additionalPaths: ["summary", userKey],
             parameters: ["year": year]
         )
-        guard let data = result.responseData else {
-            throw NetworkError.noData
-        }
-        return data
+        return result
     }
 }

@@ -10,6 +10,11 @@ import SpriteKit
 import DesignSystem
 import ComposableArchitecture
 
+enum StarBottleAction: Equatable {
+    case addNewStar(Record)
+    case none
+}
+
 struct StarBottleView: View {
     static var width: CGFloat {
         .screenWidth - (38 * 2)
@@ -20,6 +25,9 @@ struct StarBottleView: View {
     }
     
     let motionManager = MotionManager()
+    private let onTapGesture: (() -> Void)?
+    
+    @Binding private var starBottleAction: StarBottleAction
     
     @State private var starBottleScene: StarBottleScene
     @State var opacity: CGFloat = 0.0
@@ -31,7 +39,7 @@ struct StarBottleView: View {
     @State var backgroundData: Data?
     @State var effectData: Data?
     @State var decorationData: Data?
-    @State var bottleData: Data?
+    @State var bottleRewardId: Int?
     @State var bottleShape: BottleShape
     
     func fetchUI() {
@@ -56,29 +64,37 @@ struct StarBottleView: View {
             return rewardDataUseCase.loadData(from: decorationReward)
         }()
         
-        bottleData = {
-            guard let decorationReward = decorationItems[.bottle] else {
-                return Data()
-            }
-            return rewardDataUseCase.loadData(from: decorationReward)
-        }()
+        bottleRewardId = decorationItems[.bottle]?.id
         bottleShape = BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
+        
+        for i in 0..<records.count {
+            starBottleScene.createInitStarNode(
+                width: Self.width,
+                height: Self.height,
+                record: records[i],
+                index: i
+            )
+        }
     }
     
     init(
         records: [Record],
-        decorationItems: [RewardItemCategory: Reward]
+        decorationItems: [RewardItemCategory: Reward],
+        starBottleAction: Binding<StarBottleAction> = .constant(.none),
+        onTapGesture: (() -> Void)? = nil
     ) {
         self.records = records
         self.decorationItems = decorationItems
+        self._starBottleAction = starBottleAction
+        self.bottleShape = BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
         self.starBottleScene = StarBottleScene(
             size: .init(
                 width: Self.width,
                 height: Self.height
             ),
-            bottleShape: .default
+            bottleShape: BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
         )
-        bottleShape = BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
+        self.onTapGesture = onTapGesture
     }
     
     var body: some View {
@@ -115,30 +131,47 @@ struct StarBottleView: View {
                 }
                 .allowsHitTesting(false)
             }
-            
-            ZStack {
-                DImage(.byeoltongBackground).image
-                    .resizable()
-                    .frame(width: Self.width + 20)
-                    .aspectRatio(0.8, contentMode: .fit)
-                
-                SpriteView(
-                    scene: starBottleScene,
-                    options: [
-                        .allowsTransparency,
-                        .ignoresSiblingOrder,
-                    ]
-                )
-                .frame(width: Self.width, height: Self.height)
-                
-                if let bottleData,
-                   let image = UIImage(data: bottleData) {
-                    Image(uiImage: image)
+            VStack {
+                Spacer()
+                ZStack {
+                    DImage(.byeoltongBackground).image
                         .resizable()
-                        .frame(width: .screenWidth * 0.8)
+                        .frame(width: Self.width + 20)
                         .aspectRatio(0.8, contentMode: .fit)
+                    
+                    SpriteView(
+                        scene: starBottleScene,
+                        options: [
+                            .allowsTransparency,
+                            .ignoresSiblingOrder,
+                        ]
+                    )
+                    .frame(width: Self.width, height: Self.height)
+                    
+                    if let bottleRewardId {
+                        RewardResourceMapper(
+                            id: bottleRewardId,
+                            category: .bottle
+                        )
+                        .image()
+                        .image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: Self.width)
+                        .aspectRatio(0.8, contentMode: .fit)
+                        .onTapGesture {
+                            onTapGesture?()
+                        }
+                    } else {
+                        DImage(.lockedStarBottle).image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .padding(.horizontal, 38)
+                    }
                 }
+                .padding(.bottom, 70 + 52 + .s5)
             }
+            
             
         }
         .onAppear {
@@ -147,17 +180,20 @@ struct StarBottleView: View {
                 starBottleScene.setGravity(dx: dx, dy: -dy)
             }
         }
-        .onChange(of: records) { (old, new) in
-            if let record = records.last {
+        .onDisappear {
+            //            motionManager.stopGyros()
+        }
+        .onChange(of: starBottleAction) { (_, action) in
+            switch action {
+            case .addNewStar(let record):
                 starBottleScene.createNewStarNode(
                     width: Self.width,
                     height: Self.height,
                     record: record
                 )
+            case .none:
+                break
             }
-        }
-        .onDisappear {
-            //            motionManager.stopGyros()
         }
         .onChange(of: bottleShape) { _, newValue in
             starBottleScene.nodeSet.removeAll()

@@ -39,16 +39,16 @@ extension SplashView {
     private func fetchRecordData() async throws {
         let today = Day.today
         if today.day == 1 {
-            async let yesterdayTask: Void = fetchRecrodData(at: .yesterday)
-            async let todayTask: Void = fetchRecrodData(at: .today)
+            async let yesterdayTask: Void = fetchRecordData(at: .yesterday)
+            async let todayTask: Void = fetchRecordData(at: .today)
             try await yesterdayTask
             try await todayTask
         } else {
-            _ = try await fetchRecrodData(at: .today)
+            _ = try await fetchRecordData(at: .today)
         }
     }
     
-    private func fetchRecrodData(at date: Day) async throws {
+    private func fetchRecordData(at date: Day) async throws {
         let monthlyRecordState = try await recordRepository.getMonthlyRecordList(
             year: date.year,
             month: date.month
@@ -57,7 +57,6 @@ extension SplashView {
             recordRepository.saveRecords(records)
         }
     }
-    
     
     private func fetchRewardData() async throws {
         let today = Day.today
@@ -76,6 +75,9 @@ extension SplashView {
         let reward = try await rewardRepository.getUserRewardItem()
         for (_, items) in reward {
             rewardRepository.saveRewards(items: items)
+            for item in items {
+                try await fileRepository.saveRewardData(from: item)
+            }
         }
     }
     

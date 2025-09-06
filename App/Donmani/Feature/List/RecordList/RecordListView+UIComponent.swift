@@ -65,8 +65,13 @@ extension RecordListView {
                 .onTapGesture {
                     store.send(.touchStatisticsView(false))
                 }
+                .onAppear {
+                    store.records.forEach {
+                        print($0.day)
+                    }
+                }
             LazyVStack {
-                List(store.records, id: \.day) { record in
+                ForEach(store.records, id: \.day.day) { record in
                     VStack {
                         HStack {
                             DText(convertDateTitle(record.day) ?? "")
@@ -80,10 +85,13 @@ extension RecordListView {
                                 goodRecord: record.records[.good],
                                 badRecord: record.records[.bad]
                             )
+                            .onAppear {
+                                print(record.day)
+                            }
                         }
                     }
                     .onAppear {
-                        store.send(.addAppearCardView(record.day))
+//                        store.send(.addAppearCardView(record.day))
                     }
                     .padding(.bottom, 60)
                 }
@@ -91,7 +99,7 @@ extension RecordListView {
                 Spacer()
                     .frame(height: 0.5)
                     .onAppear {
-                        store.send(.addAppearCardView(nil))
+//                        store.send(.addAppearCardView(nil))
                     }
             }
             .padding(.top, 40)

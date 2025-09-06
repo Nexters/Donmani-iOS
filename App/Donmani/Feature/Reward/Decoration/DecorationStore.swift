@@ -105,7 +105,8 @@ struct DecorationStore {
             self.monthlyRecords = []
             self.isPresentingGuideBottomSheet = HistoryStateManager.shared.getIsFirstDecorationEnter()
             
-            let itemCount = self.decorationItem.map {
+//            let itemCount =
+            self.decorationItem.forEach {
                 if ($0.key == .decoration) {
                     for item in $0.value {
                         if (item.hidden && !item.hiddenRead) {
@@ -113,15 +114,17 @@ struct DecorationStore {
                         }
                     }
                 }
-                return $0.value.count
-            }.reduce(0,+)
+//                return $0.value.count
+            }
+//            .reduce(0,+)
 //            if itemCount >= 16 {
-//                self.isPresentingFinalBottomSheet = HistoryStateManager.shared.getIsShownFullRewardBottmeSheet()
+//                self.isPresentingFinalBottomSheet = true
 //            }
         }
     }
     
     @Dependency(\.rewardRepository) var rewardRepository
+    @Dependency(\.settings) var settings
     
     enum Action: BindableAction {
         case toggleGuideBottomSheet

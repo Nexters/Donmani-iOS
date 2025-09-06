@@ -23,82 +23,76 @@ struct RecordEntryPointView: View {
     }
     
     var body: some View {
-        
         ZStack {
-            BackgroundView()
-            if store.isReadyToSave {
-                ZStack {
-                    Color.black.opacity(0.6)
-                        .ignoresSafeArea()
-                }
-                .padding(-1)
-            }
-            VStack(
-                alignment: .center,
-                spacing: .defaultLayoutPadding
-            ) {
-                // Navigation Bar
-                HStack {
-                    DNavigationBarButton(.leftArrow) {
-                        if (
-                            store.isCheckedEmptyRecord
-                            || store.goodRecord != nil
-                            || store.badRecord != nil
-                        ) {
-                            store.send(.showCancelRecordBottomSheet)
-                        } else {
-                            dismiss()
+            VStack(spacing: 0) {
+                DNavigationBar(
+                    leading: {
+                        DNavigationBarButton(.leftArrow) {
+                            if (
+                                store.isCheckedEmptyRecord
+                                || store.goodRecord != nil
+                                || store.badRecord != nil
+                            ) {
+                                store.send(.showCancelRecordBottomSheet)
+                            } else {
+                                dismiss()
+                            }
+                        }
+                    },
+                    trailing: {
+                        if (store.isPresentingDayToggle) {
+                            DayToggle()
                         }
                     }
-                    Spacer()
-                    if (store.isPresentingDayToggle) {
-                        DayToggle()
-                    }
-                }
-                .frame(height: .navigationBarHeight)
+                )
                 .opacity(store.isReadyToSave ? 0 : 1)
-                
-                ScrollView {
-                    DText(store.isReadyToSave ? "저장하면 수정할 수 없어요!" : store.title)
-                        .style(.h1, .bold, .white)
-                        .padding(.bottom, 40)
-                    
-                    // 기록 버튼
-                    VStack(
-                        alignment: .leading,
-                        spacing: .defaultLayoutPadding
-                    ) {
-                        RecordArea()
-                        if !store.isReadyToSave {
-                            EmptyRecordArea()
+
+                VStack(
+                    alignment: .center,
+                    spacing: .defaultLayoutPadding
+                ) {
+                    ScrollView {
+                        DText(store.isReadyToSave ? "저장하면 수정할 수 없어요!" : store.title)
+                            .style(.h1, .bold, .white)
+                            .padding(.bottom, 40)
+                        
+                        // 기록 버튼
+                        VStack(
+                            alignment: .leading,
+                            spacing: .defaultLayoutPadding
+                        ) {
+                            RecordArea()
+                            if !store.isReadyToSave {
+                                EmptyRecordArea()
+                            }
+                            Spacer()
                         }
                         Spacer()
                     }
                     Spacer()
-                }
-                Spacer()
-                // 저장
-                VStack(spacing: 0) {
-                    if !store.isReadyToSave || store.isFullWriting {
-                        RecordGuideText()
-                    } else {
-                        RecordIsNotFullText()
-                    }
-                    
-                    if store.isReadyToSave {
-                        ReadyToSaveButton()
-                    } else {
-                        DButton(
-                            title: "저장하기",
-                            isEnabled: store.isSaveEnabled
-                        ) {
-                            store.send(.readyToSave)
+                    // 저장
+                    VStack(spacing: 0) {
+                        if !store.isReadyToSave || store.isFullWriting {
+                            RecordGuideText()
+                        } else {
+                            RecordIsNotFullText()
                         }
-                        .padding(.vertical, 8)
+                        
+                        if store.isReadyToSave {
+                            ReadyToSaveButton()
+                        } else {
+                            DButton(
+                                title: "저장하기",
+                                isEnabled: store.isSaveEnabled
+                            ) {
+                                store.send(.readyToSave)
+                            }
+                            .padding(.vertical, 8)
+                        }
                     }
                 }
+                .padding(.horizontal, .defaultLayoutPadding)
             }
-            .padding(.horizontal, .defaultLayoutPadding)
             
             if store.isPresentingRecordEmpty {
                 RecordEmptyConfirmView()
@@ -113,6 +107,16 @@ struct RecordEntryPointView: View {
             
             if store.isLoading {
                 Color.black.opacity(0.1)
+            }
+        }
+        .background {
+            ZStack {
+                BackgroundView()
+                if store.isReadyToSave {
+                    Color.black.opacity(0.6)
+                        .ignoresSafeArea()
+                        .padding(-1)
+                }
             }
         }
         .onAppear {

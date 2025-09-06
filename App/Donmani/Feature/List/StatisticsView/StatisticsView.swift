@@ -16,40 +16,40 @@ struct StatisticsView: View {
     
     var body: some View {
         ZStack {
-            BackgroundView()
             VStack(alignment: .center,spacing: 0) {
-                // Navigation Bar
-                ZStack {
-                    HStack {
-                        Spacer()
-                        DText("\(store.day.year)년 \(store.day.month)월 기록 통계")
-                            .style(.b1, .semibold, .white)
-                        Spacer()
-                    }
-                    HStack {
+                DNavigationBar(
+                    leading: {
                         DNavigationBarButton(.leftArrow) {
                             dismiss()
                         }
-                        Spacer()
+                    },
+                    title: {
+                        DText("\(store.day.year)년 \(store.day.month)월 기록 통계")
+                            .style(.b1, .semibold, .white)
                     }
-                }
-                .frame(height: .navigationBarHeight)
-                .padding(.horizontal, .defaultLayoutPadding)
+                )
                 
                 ScrollView {
                     VStack(spacing: .s3) {
                         TopBannerView()
                         CategoryStatisticsView(flag: .good)
                             .onAppear {
-                                GA.Impression(event: .insight).send(parameters: [.good: "Good"])
+                                GA.Impression(event: .insight)
+                                    .send(parameters: [.good: "Good"])
                             }
                         CategoryStatisticsView(flag: .bad)
                             .onAppear {
-                                GA.Impression(event: .insight).send(parameters: [.bad: "Bad"])
+                                GA.Impression(event: .insight)
+                                    .send(parameters: [.bad: "Bad"])
                             }
                     }
+                    .padding(.bottom, 40)
                 }
+                .ignoresSafeArea(edges: .bottom)
             }
+        }
+        .background {
+            BackgroundView()
         }
         .sheet(isPresented: $store.isPresentingProposeFunctionView) {
             // Propose Function WebView

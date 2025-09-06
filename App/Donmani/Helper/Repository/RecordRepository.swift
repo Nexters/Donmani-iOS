@@ -17,7 +17,7 @@ protocol RecordRepository {
     func getMonthlyRecordList(year: Int, month: Int) async throws -> MonthlyRecordState
     func getMonthlyRecordCalendar(year: Int, month: Int) async throws -> MonthlyRecordState
     func getMonthlyRecordStatistics(year: Int, month: Int) async throws -> RecordStatistics
-    func getMonthlyCategorySatistics(year: Int, month: Int) async throws -> CategoryStatistics
+    func getMonthlyCategoryStatistics(year: Int, month: Int) async throws -> CategoryStatistics
     func getYearlyRecordSummary(year: Int) async throws -> RecordCountSummary
 }
 
@@ -48,7 +48,11 @@ struct DefaultRecordRepository: RecordRepository {
     
     /// 기록을 불러옵니다.
     func load(date: Day) -> Record? {
-        recordDataSource.load(year: date.year, month: date.month, day: date.day)
+        recordDataSource.load(
+            year: date.year,
+            month: date.month,
+            day: date.day
+        )
     }
     
     /// 기록 리스트를 저장합니다.
@@ -98,8 +102,8 @@ struct DefaultRecordRepository: RecordRepository {
     }
     
     /// 월간 카테고리별 기록 수
-    func getMonthlyCategorySatistics(year: Int, month: Int) async throws -> CategoryStatistics {
-        try await dataSource.getMonthlyCategorySatistics(
+    func getMonthlyCategoryStatistics(year: Int, month: Int) async throws -> CategoryStatistics {
+        try await dataSource.getMonthlyCategoryStatistics(
             userKey: userKey,
             year: year,
             month: month

@@ -6,5 +6,5 @@
 //
 
 extension UInt64 {
-    static let nanosecondsPerSecond: UInt64 = 1_000_000_000
+    static let nanosecondsPerSecond: Self = 1_000_000_000
 }

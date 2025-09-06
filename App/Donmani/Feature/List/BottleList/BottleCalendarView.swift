@@ -15,25 +15,18 @@ struct BottleCalendarView: View {
     
     var body: some View {
         ZStack {
-            BackgroundView()
             VStack(alignment: .center,spacing: 0) {
-                // Navigation Bar
-                ZStack {
-                    HStack {
-                        Spacer()
-                        DText("별통이 모아보기")
-                            .style(.b1, .semibold, .white)
-                        Spacer()
-                    }
-                    HStack {
+                DNavigationBar(
+                    leading: {
                         DNavigationBarButton(.leftArrow) {
                             dismiss()
                         }
-                        Spacer()
+                    },
+                    title: {
+                        DText("별통이 모아보기")
+                            .style(.b1, .semibold, .white)
                     }
-                }
-                .frame(height: .navigationBarHeight)
-                .padding(.horizontal, .defaultLayoutPadding)
+                )
                 
                 ScrollView {
                     if store.isPresentingTopBanner {
@@ -42,6 +35,7 @@ struct BottleCalendarView: View {
                     MonthlyBottleGridView()
                         .padding(.top, 16)
                 }
+                .ignoresSafeArea(edges: .bottom)
             }
             VStack {
                 Spacer()
@@ -52,6 +46,9 @@ struct BottleCalendarView: View {
             }
         }
         .navigationBarBackButtonHidden()
+        .background {
+            BackgroundView()
+        }
     }
 }
 

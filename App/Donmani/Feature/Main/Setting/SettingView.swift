@@ -75,20 +75,18 @@ struct SettingView: View {
         ZStack {
             ScrollView {
                 ZStack {
-                    //                BackgroundView()
                     VStack(alignment: .center, spacing: .defaultLayoutPadding) {
-                        ZStack {
-                            HStack {
+                        DNavigationBar(
+                            leading: {
                                 DNavigationBarButton(.leftArrow) {
                                     dismiss()
                                 }
-                                Spacer()
+                            },
+                            title: {
+                                DText("설정")
+                                    .style(.b1, .semibold, .white)
                             }
-                            .padding(.horizontal, .defaultLayoutPadding)
-                            DText("설정")
-                                .style(.b1, .semibold, .white)
-                        }
-                        .padding(.vertical, 14)
+                        )
                         
                         VStack(alignment: .center, spacing: 12) {
                             DImage(.profile).image
