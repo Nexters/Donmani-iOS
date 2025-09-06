@@ -27,7 +27,7 @@ struct RecordListView: View {
                             .style(.b1, .semibold, .white)
                     },
                     trailing: {
-                        if store.isShowNavigationButton {
+                        if store.isShowBottleCalendarNavigationButton {
                             DNavigationBarButton(.bottleIcon) {
                                 store.send(.pushBottleCalendarView)
                             }

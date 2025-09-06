@@ -131,43 +131,47 @@ struct StarBottleView: View {
                 }
                 .allowsHitTesting(false)
             }
-            
-            ZStack {
-                DImage(.byeoltongBackground).image
-                    .resizable()
-                    .frame(width: Self.width + 20)
-                    .aspectRatio(0.8, contentMode: .fit)
-                
-                SpriteView(
-                    scene: starBottleScene,
-                    options: [
-                        .allowsTransparency,
-                        .ignoresSiblingOrder,
-                    ]
-                )
-                .frame(width: Self.width, height: Self.height)
-                
-                if let bottleRewardId {
-                    RewardResourceMapper(
-                        id: bottleRewardId,
-                        category: .bottle
+            VStack {
+                Spacer()
+                ZStack {
+                    DImage(.byeoltongBackground).image
+                        .resizable()
+                        .frame(width: Self.width + 20)
+                        .aspectRatio(0.8, contentMode: .fit)
+                    
+                    SpriteView(
+                        scene: starBottleScene,
+                        options: [
+                            .allowsTransparency,
+                            .ignoresSiblingOrder,
+                        ]
                     )
-                    .image()
-                    .image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: Self.width)
-                    .aspectRatio(0.8, contentMode: .fit)
-                    .onTapGesture {
-                        onTapGesture?()
-                    }
-                } else {
-                    DImage(.lockedStarBottle).image
+                    .frame(width: Self.width, height: Self.height)
+                    
+                    if let bottleRewardId {
+                        RewardResourceMapper(
+                            id: bottleRewardId,
+                            category: .bottle
+                        )
+                        .image()
+                        .image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .padding(.horizontal, 38)
+                        .frame(width: Self.width)
+                        .aspectRatio(0.8, contentMode: .fit)
+                        .onTapGesture {
+                            onTapGesture?()
+                        }
+                    } else {
+                        DImage(.lockedStarBottle).image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .padding(.horizontal, 38)
+                    }
                 }
+                .padding(.bottom, 70 + 52 + .s5)
             }
+            
             
         }
         .onAppear {
@@ -176,15 +180,6 @@ struct StarBottleView: View {
                 starBottleScene.setGravity(dx: dx, dy: -dy)
             }
         }
-        //        .onChange(of: records) { (old, new) in
-        //            if let record = records.last {
-        //                starBottleScene.createNewStarNode(
-        //                    width: Self.width,
-        //                    height: Self.height,
-        //                    record: record
-        //                )
-        //            }
-        //        }
         .onDisappear {
             //            motionManager.stopGyros()
         }

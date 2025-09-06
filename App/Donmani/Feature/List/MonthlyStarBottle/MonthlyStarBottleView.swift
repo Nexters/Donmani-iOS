@@ -49,7 +49,9 @@ struct MonthlyStarBottleView: View {
                 StarBottleView(
                     records: store.records,
                     decorationItems: store.decorationItem
-                )
+                ) {
+                    store.send(.didTapStarBottle)
+                }
                 .ignoresSafeArea(.container)
             }
         }
