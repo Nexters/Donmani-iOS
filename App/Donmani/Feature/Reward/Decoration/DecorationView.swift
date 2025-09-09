@@ -17,33 +17,42 @@ struct DecorationView: View {
     var body: some View {
         ZStack {
             VStack {
-                DNavigationBar(
-                    leading: {
-                        DNavigationBarButton(.leftArrow) {
-                            store.send(.touchBackButton)
+                VStack {
+                    DNavigationBar(
+                        leading: {
+                            DNavigationBarButton(.leftArrow) {
+                                store.send(.touchBackButton)
+                            }
+                        },
+                        title: {
+                            DText("꾸미기")
+                                .style(.b1, .semibold, .white)
+                        },
+                        trailing: {
+                            Button {
+                                store.send(.touchSaveButton)
+                            } label: {
+                                DText("완료")
+                                    .style(.b1, .semibold,
+                                           store.disabledSaveButton
+                                           ? .white.opacity(0.4)
+                                           : .white
+                                    )
+                                    .frame(height: .s3)
+                            }
+                            .disabled(store.disabledSaveButton)
                         }
-                    },
-                    title: {
-                        DText("꾸미기")
-                            .style(.b1, .semibold, .white)
-                    },
-                    trailing: {
-                        Button {
-                            store.send(.touchSaveButton)
-                        } label: {
-                            DText("완료")
-                                .style(.b1, .semibold,
-                                       store.disabledSaveButton
-                                       ? .white.opacity(0.4)
-                                       : .white
-                                )
-                                .frame(height: .s3)
-                        }
-                        .disabled(store.disabledSaveButton)
-                    }
-                )
-                
-                Spacer()
+                    )
+                    Spacer()
+                }
+                .background {
+                    StarBottleView(
+                        records: store.monthlyRecords,
+                        decorationItems: store.selectedDecorationItem,
+                        viewType: .decoration
+                    )
+                    .frame(height: .screenHeight * 0.6)
+                }
                 
                 VStack {
                     HStack(spacing: .s4) {
@@ -149,12 +158,9 @@ struct DecorationView: View {
             store.send(.toggleGuideBottomSheet)
         }
         .navigationBarBackButtonHidden()
-        .background {
-            StarBottleView(
-                records: store.monthlyRecords,
-                decorationItems: store.selectedDecorationItem
-            )
-        }
+        //        .background {
+        //
+        //        }
     }
 }
 
@@ -174,6 +180,7 @@ struct DecorationView: View {
             }
         }
         let context = DecorationStore.Context(
+            records: [],
             decorationItem: decorationItem,
             currentDecorationItem: [],
             selectedCategory: .background

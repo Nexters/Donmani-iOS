@@ -12,21 +12,22 @@ import SwiftUI
 
 @Reducer
 struct DecorationStore {
-    
     struct Context {
+        let records: [Record]
         let decorationItem: [RewardItemCategory : [Reward]]
-        var currentDecorationItem: [RewardItemCategory : Reward]
+        let currentDecorationItem: [RewardItemCategory : Reward]
         let selectedCategory: RewardItemCategory
         
         init(
+            records: [Record],
             decorationItem: [RewardItemCategory : [Reward]],
             currentDecorationItem: [Reward],
             selectedCategory: RewardItemCategory
         ) {
+            self.records = records
             self.decorationItem = decorationItem
-            self.currentDecorationItem = [:]
-            for reward in currentDecorationItem {
-                self.currentDecorationItem[reward.category] = reward
+            self.currentDecorationItem = currentDecorationItem.reduce(into: [:]) { result, item in
+                result[item.category] = item
             }
             self.selectedCategory = selectedCategory
         }
@@ -86,6 +87,7 @@ struct DecorationStore {
             self.selectedDecorationItem = context.currentDecorationItem
             self.previousDecorationItem = context.currentDecorationItem
             self.selectedRewardItemCategory = context.selectedCategory
+            self.monthlyRecords = context.records
             
             backgroundShape = .rewardBottleDefault
             byeoltongShapeType = {
@@ -102,7 +104,7 @@ struct DecorationStore {
 //            let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
 //            self.monthlyRecords = monthlyRecords
             // TODO: - 기록 context로 받기
-            self.monthlyRecords = []
+            
             self.isPresentingGuideBottomSheet = HistoryStateManager.shared.getIsFirstDecorationEnter()
             
 //            let itemCount =

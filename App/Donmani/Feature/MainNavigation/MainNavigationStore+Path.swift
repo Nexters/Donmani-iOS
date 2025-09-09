@@ -100,8 +100,9 @@ extension MainNavigationStore {
             let initialState = stateFactory.makeRewardReceiveState(context: context)
             state.path.append(.rewardReceive(initialState))
             
-        case .decoration(let decorationItem, let currentDecorationItem, let category):
+        case .decoration(let records, let decorationItem, let currentDecorationItem, let category):
             let context = DecorationStore.Context(
+                records: records,
                 decorationItem: decorationItem,
                 currentDecorationItem: currentDecorationItem,
                 selectedCategory: category

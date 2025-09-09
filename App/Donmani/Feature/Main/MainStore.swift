@@ -15,6 +15,7 @@ struct MainStore {
         let records: [Record]
         let hasRecord: (today: Bool, yesterday: Bool)
         let decorationItem: [RewardItemCategory: Reward]
+        let isPresentingNewStarBottle: Bool
     }
     
     // MARK: - State
@@ -31,7 +32,7 @@ struct MainStore {
         var isPresentingRecordYesterdayToolTip: Bool = false
         var isPresentingAlreadyWrite: Bool = false
         var isPresentingNewStarBottle: Bool = false
-        var isPresentingRewardToolTipView: Bool = false
+        var isPresentingRewardToolTipView: Bool
         var isSaveSuccess: Bool = false
         var isPresentingSaveSuccessToastView: Bool = false
         var isRequestNotificationPermission: Bool = true
@@ -47,10 +48,7 @@ struct MainStore {
             self.records = context.records
             self.decorationItem = context.decorationItem
             self.canWriteRecord = !(context.hasRecord.today && context.hasRecord.yesterday)
-            
-            if (day.day == 1) {
-                self.isPresentingNewStarBottle = true
-            }
+            self.isPresentingNewStarBottle = context.isPresentingNewStarBottle
             
             // TODO: - 리워드 툴팁 표시
             isPresentingRewardToolTipView = HistoryStateManager.shared.getIsPresentingRewardToolTipView()

@@ -115,10 +115,11 @@ struct RewardStartStore {
         enum Delegate {
             case pushRewardReceiveView(Int)
             case pushRecordEntryPointView
-            case pushDecorationView([RewardItemCategory: [Reward]], [Reward], RewardItemCategory)
+            case pushDecorationView([Record], [RewardItemCategory: [Reward]], [Reward], RewardItemCategory)
         }
     }
     
+    @Dependency(\.recordRepository) var recordRepository
     @Dependency(\.rewardRepository) var rewardRepository
     @Dependency(\.feedbackRepository) var feedbackRepository
     
@@ -181,14 +182,13 @@ struct RewardStartStore {
             case .touchDecorationButton:
                 GA.Click(event: .customizeRewardButton).send()
                 return .run { send in
-                    let decorationItem = try await rewardRepository.getUserRewardItem()
-                    rewardRepository.saveRewards(items: decorationItem)
                     let today: Day = .today
-                    let currentDecorationItem = try await rewardRepository.getMonthlyRewardItem(
-                        year: today.year,
-                        month: today.month
-                    )
-                    await send(.delegate(.pushDecorationView(decorationItem, currentDecorationItem, .background)))
+                    async let decorationItemTask = rewardRepository.getUserRewardItem()
+                    async let currentDecorationItemTask = rewardRepository.getMonthlyRewardItem(year: today.year, month: today.month)
+                    async let recordsTask = recordRepository.loadRecords(year: today.year, month: today.month)
+                    let (decorationItem, currentDecorationItem, records) = try await (decorationItemTask, currentDecorationItemTask, recordsTask)
+                    rewardRepository.saveRewards(items: decorationItem)
+                    await send(.delegate(.pushDecorationView(records ?? [], decorationItem, currentDecorationItem, .background)))
                 }
                 
             case .requestFeedbackCard:

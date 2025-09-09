@@ -15,6 +15,11 @@ enum StarBottleAction: Equatable {
     case none
 }
 
+enum StarBottleViewType {
+    case `default`
+    case decoration
+}
+
 struct StarBottleView: View {
     static var width: CGFloat {
         .screenWidth - (38 * 2)
@@ -24,7 +29,17 @@ struct StarBottleView: View {
         width * 1.25
     }
     
+    var width: CGFloat {
+        .screenWidth - (38 * 2) - (self.viewType == .decoration ? 100 : 0)
+    }
+    
+    var height: CGFloat {
+        width * 1.25
+    }
+    
     let motionManager = MotionManager()
+    let viewType: StarBottleViewType
+    
     private let onTapGesture: (() -> Void)?
     
     @Binding private var starBottleAction: StarBottleAction
@@ -80,11 +95,13 @@ struct StarBottleView: View {
     init(
         records: [Record],
         decorationItems: [RewardItemCategory: Reward],
+        viewType: StarBottleViewType = .default,
         starBottleAction: Binding<StarBottleAction> = .constant(.none),
         onTapGesture: (() -> Void)? = nil
     ) {
         self.records = records
         self.decorationItems = decorationItems
+        self.viewType = viewType
         self._starBottleAction = starBottleAction
         self.bottleShape = BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
         self.starBottleScene = StarBottleScene(
@@ -112,6 +129,7 @@ struct StarBottleView: View {
                     DColor.backgroundBottom,
                 ])
             }
+            
             DImage(.mainBackgroundStar).image
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -136,7 +154,7 @@ struct StarBottleView: View {
                 ZStack {
                     DImage(.byeoltongBackground).image
                         .resizable()
-                        .frame(width: Self.width + 20)
+                        .frame(width: width + 20)
                         .aspectRatio(0.8, contentMode: .fit)
                     
                     SpriteView(
@@ -146,7 +164,7 @@ struct StarBottleView: View {
                             .ignoresSiblingOrder,
                         ]
                     )
-                    .frame(width: Self.width, height: Self.height)
+                    .frame(width: width, height: height)
                     
                     if let bottleRewardId {
                         RewardResourceMapper(
@@ -156,8 +174,7 @@ struct StarBottleView: View {
                         .image()
                         .image
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: Self.width)
+                        .frame(width: width)
                         .aspectRatio(0.8, contentMode: .fit)
                         .onTapGesture {
                             onTapGesture?()
@@ -169,7 +186,7 @@ struct StarBottleView: View {
                             .padding(.horizontal, 38)
                     }
                 }
-                .padding(.bottom, 70 + 52 + .s5)
+                .padding(.bottom, viewType == .decoration ? 50 : (70 + 52 + .s5))
             }
             
             

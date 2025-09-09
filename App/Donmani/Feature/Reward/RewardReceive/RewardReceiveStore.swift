@@ -60,6 +60,7 @@ struct RewardReceiveStore {
         }
     }
     
+    @Dependency(\.recordRepository) var recordRepository
     @Dependency(\.rewardRepository) var rewardRepository
     
     enum Action: BindableAction {
@@ -78,7 +79,7 @@ struct RewardReceiveStore {
         
         case delegate(Delegate)
         enum Delegate {
-            case pushDecorationView([RewardItemCategory: [Reward]], [Reward], RewardItemCategory)
+            case pushDecorationView([Record], [RewardItemCategory: [Reward]], [Reward], RewardItemCategory)
             case popToRoot
         }
     }
@@ -99,16 +100,11 @@ struct RewardReceiveStore {
                     let category: RewardItemCategory = state.rewardItems.last?.category ?? .background
                     return .run { send in
                         let today: Day = .today
-                        let decorationItem = try await rewardRepository.getUserRewardItem()
-                        let currentDecorationItem = try await rewardRepository.getMonthlyRewardItem(
-                            year: today.year,
-                            month: today.month
-                        )
-                        await send(.delegate(.pushDecorationView(
-                            decorationItem,
-                            currentDecorationItem,
-                            category
-                        )))
+                        async let decorationItemTask = rewardRepository.getUserRewardItem()
+                        async let currentDecorationItemTask = rewardRepository.getMonthlyRewardItem(year: today.year, month: today.month)
+                        async let recordsTask = recordRepository.loadRecords(year: today.year, month: today.month)
+                        let (decorationItem, currentDecorationItem, records) = try await (decorationItemTask, currentDecorationItemTask, recordsTask)
+                        await send(.delegate(.pushDecorationView(records ?? [], decorationItem, currentDecorationItem, category)))
                     }
                 }
                 
