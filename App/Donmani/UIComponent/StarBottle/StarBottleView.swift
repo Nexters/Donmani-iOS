@@ -12,6 +12,12 @@ import ComposableArchitecture
 
 enum StarBottleAction: Equatable {
     case addNewStar(Record)
+    
+    case changeBackgroundItem(Data)
+    case changeEffectItem(Data)
+    case changeDecorationItem(Int, String)
+    case changeBottleItem(Int, BottleShape)
+    
     case none
 }
 
@@ -53,7 +59,8 @@ struct StarBottleView: View {
     
     @State var backgroundData: Data?
     @State var effectData: Data?
-    @State var decorationData: Data?
+    @State var decorationName: String?
+    @State var decorationId: Int?
     @State var bottleRewardId: Int?
     @State var bottleShape: BottleShape
     
@@ -72,12 +79,12 @@ struct StarBottleView: View {
             return rewardDataUseCase.loadData(from: effectReward)
         }()
         
-        decorationData = {
-            guard let decorationReward = decorationItems[.decoration] else {
-                return Data()
-            }
-            return rewardDataUseCase.loadData(from: decorationReward)
-        }()
+//        decorationData = {
+//            guard let decorationReward = decorationItems[.decoration] else {
+//                return Data()
+//            }
+//            return rewardDataUseCase.loadData(from: decorationReward)
+//        }()
         
         bottleRewardId = decorationItems[.bottle]?.id
         bottleShape = BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
@@ -179,17 +186,69 @@ struct StarBottleView: View {
                         .onTapGesture {
                             onTapGesture?()
                         }
+                        .overlay {
+                            if let decorationName, let decorationId {
+                                if decorationId == 20 { // 둥둥배
+                                    VStack {
+                                        Spacer()
+                                        HStack {
+                                            Spacer()
+                                            DLottieView(
+                                                name: decorationName,
+                                                loopMode: .loop
+                                            )
+                                            .frame(width: 80, height: 80)
+                                        }
+                                    }
+                                    .allowsHitTesting(false)
+                                    .offset(
+                                        x: viewType == .decoration ? (Self.width/6) : 0,
+                                        y: viewType == .decoration ? (Self.width/8) : (Self.width/5)
+                                    )
+                                } else if decorationId == 23 { // 우주바캉스 토비
+                                    Spacer()
+                //                    VStack {
+                //                        HStack {
+                //                            DLottieView(
+                //                                data: decorationData,
+                //                                loopMode: .loop
+                //                            )
+                //                            .frame(width: 80, height: 80)
+                //                            Spacer()
+                //                        }
+                //                        Spacer()
+                //                    }
+                //                    .allowsHitTesting(false)
+                //                    .padding(.top, 140)
+                //                    .padding(.leading, .defaultLayoutPadding)
+                                } else { // 토비호, 몽글몽글 열기구, 달베개
+                                    VStack {
+                                        HStack {
+                                            DLottieView(
+                                                name: decorationName,
+                                                loopMode: .loop
+                                            )
+                                            .frame(width: 80, height: 80)
+                                            Spacer()
+                                        }
+                                        Spacer()
+                                    }
+                                    .allowsHitTesting(false)
+                                    .offset(x: -(Self.width/6), y: -(Self.width/6))
+                                }
+                            }
+                        }
                     } else {
                         DImage(.lockedStarBottle).image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .padding(.horizontal, 38)
                     }
+                    
                 }
-                .padding(.bottom, viewType == .decoration ? 50 : (70 + 52 + .s5))
+                .padding(.bottom, viewType == .decoration ? 70 : (70 + 52 + .s5))
+                
             }
-            
-            
         }
         .onAppear {
             fetchUI()
@@ -208,6 +267,16 @@ struct StarBottleView: View {
                     height: Self.height,
                     record: record
                 )
+            case .changeBackgroundItem(let data):
+                backgroundData = data
+            case .changeEffectItem(let data):
+                effectData = data
+            case .changeDecorationItem(let id, let name):
+                decorationId = id
+                decorationName = name
+            case .changeBottleItem(let id, let bottleShape):
+                bottleRewardId = id
+                self.bottleShape = bottleShape
             case .none:
                 break
             }

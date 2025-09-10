@@ -76,7 +76,10 @@ struct MainStore {
         
         enum Update {
             case fetchUserName(String)
-            case fetchDecorationItems([RewardItemCategory: Reward])
+            case changeBackgroundItem(Data)
+            case changeEffectItem(Data)
+            case changeDecorationItem(Int, String)
+            case changeBottleShapeItem(Int, BottleShape)
             case fetchWriteRecordButtonState(Bool)
         }
         
@@ -93,6 +96,7 @@ struct MainStore {
     @Dependency(\.userUseCase) var userUseCase
     @Dependency(\.writeRecordUseCase) var writeRecordUseCase
     @Dependency(\.loadRewardUseCase) var loadRewardUseCase
+    @Dependency(\.fileRepository) var fileRepository
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
@@ -104,7 +108,26 @@ struct MainStore {
                 return .run { send in
                     await send(.update(.fetchUserName(userUseCase.userName)))
                     let items = loadRewardUseCase.loadTodayDecorationItems()
-                    await send(.update(.fetchDecorationItems(items)))
+                    for (category, item) in items {
+                        switch category {
+                        case .background:
+                            let data = try fileRepository.loadRewardData(from: item, resourceType: .image)
+                            await send(.update(.changeBackgroundItem(data)))
+                        case .effect:
+                            let data = try fileRepository.loadRewardData(from: item, resourceType: .json)
+                            await send(.update(.changeEffectItem(data)))
+                        case .decoration:
+                            let name = RewardResourceMapper(
+                                id: item.id,
+                                category: .decoration
+                            ).resource()
+                            await send(.update(.changeDecorationItem(item.id, name)))
+                        case .bottle:
+                            await send(.update(.changeBottleShapeItem(item.id, BottleShape(id: item.id))))
+                        case .sound:
+                            break
+                        }
+                    }
                     let canWriteRecord = writeRecordUseCase.canWriteRecord()
                     await send(.update(.fetchWriteRecordButtonState(canWriteRecord)))
                 }
@@ -163,8 +186,14 @@ struct MainStore {
                 switch update {
                 case .fetchUserName(let userName):
                     state.userName = userName
-                case .fetchDecorationItems(let item):
-                    state.decorationItem = item
+                case .changeBackgroundItem(let data):
+                    state.starBottleAction = .changeBackgroundItem(data)
+                case .changeEffectItem(let data):
+                    state.starBottleAction = .changeEffectItem(data)
+                case .changeDecorationItem(let id, let name):
+                    state.starBottleAction = .changeDecorationItem(id, name)
+                case .changeBottleShapeItem(let id, let bottleShape):
+                    state.starBottleAction = .changeBottleItem(id, bottleShape)
                 case .fetchWriteRecordButtonState(let canWriteRecord):
                     state.canWriteRecord = canWriteRecord
                 }

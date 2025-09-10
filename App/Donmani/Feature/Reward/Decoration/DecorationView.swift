@@ -49,7 +49,8 @@ struct DecorationView: View {
                     StarBottleView(
                         records: store.monthlyRecords,
                         decorationItems: store.selectedDecorationItem,
-                        viewType: .decoration
+                        viewType: .decoration,
+                        starBottleAction: $store.starBottleAction
                     )
                     .frame(height: .screenHeight * 0.6)
                 }
@@ -155,12 +156,10 @@ struct DecorationView: View {
             }
         }
         .onAppear {
+            store.send(.onAppear)
             store.send(.toggleGuideBottomSheet)
         }
         .navigationBarBackButtonHidden()
-        //        .background {
-        //
-        //        }
     }
 }
 

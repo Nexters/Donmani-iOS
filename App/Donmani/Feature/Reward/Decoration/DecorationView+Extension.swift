@@ -111,31 +111,4 @@ extension DecorationView{
             .scaledToFit()
             .padding(.vertical, 50)
     }
-    
-//    func EqualizerButton() -> some View {
-//        VStack {
-//            Spacer()
-//            HStack {
-//                Button {
-//                    store.send(.touchEqualizerButton)
-//                } label: {
-//                    Group {
-//                        if store.isSoundOn {
-//                            LottieView(animation: store.lottieAnimation)
-//                                .playing(loopMode: .loop)
-//                        } else {
-//                            LottieView(animation: store.lottieAnimation)
-//                                .paused()
-//                                .opacity(0.2)
-//                        }
-//                    }
-//                    .frame(width: .s3, height: .s3)
-//                }
-//                .frame(width: .s3, height: .s3)
-//                .padding(.s4)
-//                Spacer()
-//            }
-//        }
-//        .padding(.bottom, .screenHeight * 0.4)
-//    }
 }
