@@ -75,11 +75,20 @@ struct RootStore {
                     let monthlyRecordState = try await recordRepository.getMonthlyRecordList(year: day.year, month: day.month)
                     let hasTodayRecord = recordRepository.load(date: .today).isSome
                     let hasYesterdayRecord = recordRepository.load(date: .yesterday).isSome
+                    let lastNewBottleGuideDay = Day(yyyymmdd: settings.lastNewBottleGuideDay)
+                    var isPresentingNewStarBottle = false
+                    if day > lastNewBottleGuideDay {
+                        if (day.month != lastNewBottleGuideDay.month || day.year != lastNewBottleGuideDay.year) {
+                            isPresentingNewStarBottle = true
+                            settings.lastNewBottleGuideDay = day.yyyyMMdd
+                        }
+                    }
                     
                     let mainContext = MainStore.Context(
                         records: monthlyRecordState.records ?? [],
                         hasRecord: (hasTodayRecord, hasYesterdayRecord),
-                        decorationItem: monthlyRecordState.decorationItem
+                        decorationItem: monthlyRecordState.decorationItem,
+                        isPresentingNewStarBottle: isPresentingNewStarBottle
                     )
                     let mainState = stateFactory.makeMainState(context: mainContext)
                     let mainNavigationState = stateFactory.makeMainNavigationState(mainState: mainState)
@@ -96,11 +105,19 @@ struct RootStore {
                     let monthlyRecordState = try await recordRepository.getMonthlyRecordList(year: day.year, month: day.month)
                     let hasTodayRecord = recordRepository.load(date: .today).isSome
                     let hasYesterdayRecord = recordRepository.load(date: .yesterday).isSome
-                    
+                    let lastNewBottleGuideDay = Day(yyyymmdd: settings.lastNewBottleGuideDay)
+                    var isPresentingNewStarBottle = false
+                    if day > lastNewBottleGuideDay {
+                        if (day.month != lastNewBottleGuideDay.month || day.year != lastNewBottleGuideDay.year) {
+                            isPresentingNewStarBottle = true
+                            settings.lastNewBottleGuideDay = day.yyyyMMdd
+                        }
+                    }
                     let mainContext = MainStore.Context(
                         records: monthlyRecordState.records ?? [],
                         hasRecord: (hasTodayRecord, hasYesterdayRecord),
-                        decorationItem: monthlyRecordState.decorationItem
+                        decorationItem: monthlyRecordState.decorationItem,
+                        isPresentingNewStarBottle: isPresentingNewStarBottle
                     )
                     let mainState = stateFactory.makeMainState(context: mainContext)
                     var mainNavigationState = stateFactory.makeMainNavigationState(mainState: mainState)

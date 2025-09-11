@@ -34,12 +34,13 @@ struct SettingStore {
         case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate {
-            case pushDecoration([RewardItemCategory: [Reward]], [Reward])
+            case pushDecoration([Record], [RewardItemCategory: [Reward]], [Reward])
         }
     }
     
     // MARK: - Dependency
     @Dependency(\.rewardRepository) var rewardRepository
+    @Dependency(\.recordRepository) var recordRepository
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
@@ -49,12 +50,12 @@ struct SettingStore {
             case .touchDecorationButton:
                 GA.Click(event: .settingCustomize).send()
                 return .run { send in
-                    let decorationItem = try await self.rewardRepository.getUserRewardItem()
-                    let currentDecorationItem = try await self.rewardRepository.getMonthlyRewardItem(
-                        year: Day.today.year,
-                        month: Day.today.month
-                    )
-                    await send(.delegate(.pushDecoration(decorationItem, currentDecorationItem)))
+                    let day: Day = .today
+                    let records = recordRepository.loadRecords(year: day.year, month: day.month)
+                    async let decorationItemTask = rewardRepository.getUserRewardItem()
+                    async let currentDecorationItemTask = rewardRepository.getMonthlyRewardItem(year: day.year, month: day.month )
+                    let (decorationItem, currentDecorationItem) = try await (decorationItemTask, currentDecorationItemTask)
+                    await send(.delegate(.pushDecoration(records ?? [], decorationItem, currentDecorationItem)))
                 }
                 
             case .updateUserName(let userName):

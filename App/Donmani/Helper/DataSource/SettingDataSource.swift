@@ -75,8 +75,8 @@ struct SettingDataSource {
         /// 꾸미기 저장 완료 안내 Alert 표시 여부: Bool
         case shouldShowDecorationSaveAlert
         
-        // 매월 1일인지에 대한 여부 -> 다른 객체로 위임
-        // private let isFirstDayOfMonth = "IS_FIRST_DAY_OF_MONTH"
+        /// 새 별통이 오픈 안내 날짜(YYYY-MM-DD): String
+        case lastNewBottleGuideDay
         
         // 메인 페이지 내 어제 기록 유도 툴팁 표시 여부 -> 다른 객체로 위임
         // private let shouldShowYesterdayRecordToopTip = "LAST_YESTERDAY_TOOP_TIP_DAY"
@@ -147,6 +147,10 @@ struct SettingDataSource {
     /// 꾸미기 저장 완료 안내 Alert 표시 여부: Bool
     @UserDefault(key: .shouldShowDecorationSaveAlert, defaultValue: true)
     static var shouldShowDecorationSaveAlert: Bool
+    
+    /// 새 별통이 열림 안내 표시 날짜
+    @UserDefault(key: .lastNewBottleGuideDay, defaultValue: "0000-00-00")
+    static var lastNewBottleGuideDay: String
 }
 
 extension DependencyValues {

@@ -127,7 +127,8 @@ struct MainView: View {
                 context: MainStore.Context(
                     records: [],
                     hasRecord: (true, true),
-                    decorationItem: [:]
+                    decorationItem: [:],
+                    isPresentingNewStarBottle: false
                 )
             )
         ) {

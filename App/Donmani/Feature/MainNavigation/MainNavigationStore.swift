@@ -53,7 +53,7 @@ struct MainNavigationStore {
             // Reward
             case rewardStart(FeedbackInfo)
             case rewardReceive(Int)
-            case decoration([RewardItemCategory : [Reward]], [Reward], RewardItemCategory)
+            case decoration([Record], [RewardItemCategory : [Reward]], [Reward], RewardItemCategory)
         }
     }
     

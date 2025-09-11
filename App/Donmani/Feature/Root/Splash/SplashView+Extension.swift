@@ -76,7 +76,12 @@ extension SplashView {
         for (_, items) in reward {
             rewardRepository.saveRewards(items: items)
             for item in items {
-                try await fileRepository.saveRewardData(from: item)
+                do {
+                    try await fileRepository.saveRewardData(from: item)
+                    print("Download Success: \(item.name)")
+                } catch(let e) {
+                    print("Download Fail: \(item.name). with \(e)")
+                }
             }
         }
     }

@@ -12,21 +12,22 @@ import SwiftUI
 
 @Reducer
 struct DecorationStore {
-    
     struct Context {
+        let records: [Record]
         let decorationItem: [RewardItemCategory : [Reward]]
-        var currentDecorationItem: [RewardItemCategory : Reward]
+        let currentDecorationItem: [RewardItemCategory : Reward]
         let selectedCategory: RewardItemCategory
         
         init(
+            records: [Record],
             decorationItem: [RewardItemCategory : [Reward]],
             currentDecorationItem: [Reward],
             selectedCategory: RewardItemCategory
         ) {
+            self.records = records
             self.decorationItem = decorationItem
-            self.currentDecorationItem = [:]
-            for reward in currentDecorationItem {
-                self.currentDecorationItem[reward.category] = reward
+            self.currentDecorationItem = currentDecorationItem.reduce(into: [:]) { result, item in
+                result[item.category] = item
             }
             self.selectedCategory = selectedCategory
         }
@@ -45,6 +46,7 @@ struct DecorationStore {
         var backgroundShape: DImageAsset
         
         var disabledSaveButton = true
+        var starBottleAction: StarBottleAction = .none
         
         var itemList: [Reward] {
             decorationItem[selectedRewardItemCategory, default: []]
@@ -86,6 +88,7 @@ struct DecorationStore {
             self.selectedDecorationItem = context.currentDecorationItem
             self.previousDecorationItem = context.currentDecorationItem
             self.selectedRewardItemCategory = context.selectedCategory
+            self.monthlyRecords = context.records
             
             backgroundShape = .rewardBottleDefault
             byeoltongShapeType = {
@@ -102,7 +105,7 @@ struct DecorationStore {
 //            let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
 //            self.monthlyRecords = monthlyRecords
             // TODO: - 기록 context로 받기
-            self.monthlyRecords = []
+            
             self.isPresentingGuideBottomSheet = HistoryStateManager.shared.getIsFirstDecorationEnter()
             
 //            let itemCount =
@@ -124,9 +127,12 @@ struct DecorationStore {
     }
     
     @Dependency(\.rewardRepository) var rewardRepository
+    @Dependency(\.fileRepository) var fileRepository
     @Dependency(\.settings) var settings
     
     enum Action: BindableAction {
+        case onAppear
+        
         case toggleGuideBottomSheet
         case touchGuideBottomSheetButton
         case touchFinalBottomSheetButton
@@ -140,6 +146,13 @@ struct DecorationStore {
         case cancelSave
         case saveDecorationItem
         
+        
+        case changeItem(RewardItemCategory, Reward)
+        case changeBackgroundItem(Data)
+        case changeEffectItem(Data)
+        case changeDecorationItem(Int, String)
+        case changeBottleShapeItem(Int, BottleShape)
+        
         case binding(BindingAction<State>)
         case delegate(Delegate)
         enum Delegate {
@@ -151,6 +164,14 @@ struct DecorationStore {
         BindingReducer()
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                let previousDecorationItem = state.previousDecorationItem
+                return .run { send in
+                    for (category, item) in previousDecorationItem {
+                        await send(.changeItem(category, item))
+                    }
+                }
+                
             case .toggleGuideBottomSheet:
                 GA.View(event: .customize).send()
                 if HistoryStateManager.shared.getIsFirstDecorationEnter() {
@@ -196,18 +217,18 @@ struct DecorationStore {
                     return .none
                 }
                 state.selectedDecorationItem[category] = item
-                if (category == .bottle) {
-                    state.byeoltongShapeType = {
-                        switch item.id {
-                        case 24:
-                            return .rewardBottleBeadsShape
-                        case 25:
-                            return .rewardBottleFuzzyShape
-                        default:
-                            return .rewardBottleDefaultShape
-                        }
-                    }()
-                }
+//                if (category == .bottle) {
+//                    state.byeoltongShapeType = {
+//                        switch item.id {
+//                        case 24:
+//                            return .rewardBottleBeadsShape
+//                        case 25:
+//                            return .rewardBottleFuzzyShape
+//                        default:
+//                            return .rewardBottleDefaultShape
+//                        }
+//                    }()
+//                }
                 let diffCount = state.previousDecorationItem.compactMap { (key, item) in
                     (state.selectedDecorationItem[key]?.id ?? 0) == (item.id) ? nil : 0
                 }.count
@@ -217,6 +238,9 @@ struct DecorationStore {
                         let day: Day = .today
                         try await rewardRepository.putHiddenRead(year: day.year, month: day.month)
                     }
+                }
+                return .run { send in
+                    await send(.changeItem(category, item))
                 }
                 
             case .touchBackButton:
@@ -265,6 +289,36 @@ struct DecorationStore {
                     await send(.delegate(.pop(true)))
                 }
                 
+            case .changeItem(let category, let item):
+                return .run { send in
+                    switch category {
+                    case .background:
+                        let data = try fileRepository.loadRewardData(from: item, resourceType: .image)
+                        await send(.changeBackgroundItem(data))
+                    case .effect:
+                        let data = try fileRepository.loadRewardData(from: item, resourceType: .json)
+                        await send(.changeEffectItem(data))
+                    case .decoration:
+//                        let data = try fileRepository.loadRewardData(from: item, resourceType: .json)
+                        let name = RewardResourceMapper(
+                            id: item.id,
+                            category: .decoration
+                        ).resource()
+                        await send(.changeDecorationItem(item.id, name))
+                    case .bottle:
+                        await send(.changeBottleShapeItem(item.id, BottleShape(id: item.id)))
+                    case .sound:
+                        break
+                    }
+                }
+            case .changeBackgroundItem(let data):
+                state.starBottleAction = .changeBackgroundItem(data)
+            case .changeEffectItem(let data):
+                state.starBottleAction = .changeEffectItem(data)
+            case .changeDecorationItem(let id, let name):
+                state.starBottleAction = .changeDecorationItem(id, name)
+            case .changeBottleShapeItem(let id, let bottleShape):
+                state.starBottleAction = .changeBottleItem(id, bottleShape)
             default:
                 break
             }

@@ -22,6 +22,7 @@ struct Day {
         self.day = day
     }
     
+    /// YYYY-MM-DD 형식의 문자열로 초기화
     init(yyyymmdd: String) {
         let split = yyyymmdd.components(separatedBy: "-").map(Int.init)
         self.day = split[2] ?? 1
@@ -29,6 +30,7 @@ struct Day {
         self.year = split[0] ?? 1
     }
     
+    /// YY-MM-DD 형식의 문자열로 초기화
     init(yymmdd: String) {
         let split = yymmdd.components(separatedBy: "-").map(Int.init)
         self.day = split[2] ?? 1
@@ -42,6 +44,7 @@ struct Day {
         self.year = 2025
     }
     
+    /// YYYY-MM-DD
     var yyyyMMdd: String {
         "\(year)-\(month.twoDigitString)-\(day.twoDigitString)"
     }
