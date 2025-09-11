@@ -89,13 +89,10 @@ public struct UserAPI {
     
     /// 새 리워드 아이템 확인 상태 조회
     public func getRewardStatus(userKey: String) async throws -> RewardStatusResponse {
-        let result: ResponseWrapper<RewardStatusResponse> = try await request.get(
+        let result: RewardStatusResponse = try await request.get(
             path: .reward,
             additionalPaths: ["status", userKey]
         )
-        guard let data = result.responseData else {
-            throw NetworkError.noData
-        }
-        return data
+        return result
     }
 }

@@ -270,9 +270,6 @@ struct SettingView: View {
                     if type == .notification {
                         DToggle(isOn: $isNotificationEnabled)
                     }
-//                    if type == .sound {
-//                        DToggle(isOn: $store.isBackgroundSoundOn)
-//                    }
                 }
                 .padding(.horizontal, .defaultLayoutPadding)
             }

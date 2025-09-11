@@ -77,7 +77,8 @@ struct MainNavigationView: View {
                     context: MainStore.Context(
                         records: [],
                         hasRecord: (today: true, yesterday: false),
-                        decorationItem: [:]
+                        decorationItem: [:],
+                        isPresentingNewStarBottle: false
                     )
                 )
             )
