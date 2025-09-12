@@ -105,9 +105,10 @@ struct MainStore {
             switch action {
             case .onAppear:
                 GA.View(event: .main).send()
+                let items = loadRewardUseCase.loadTodayDecorationItems()
+                state.decorationItem = items
                 return .run { send in
                     await send(.update(.fetchUserName(userUseCase.userName)))
-                    let items = loadRewardUseCase.loadTodayDecorationItems()
                     for (category, item) in items {
                         switch category {
                         case .background:

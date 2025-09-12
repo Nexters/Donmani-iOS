@@ -47,6 +47,7 @@ struct DecorationStore {
         
         var disabledSaveButton = true
         var starBottleAction: StarBottleAction = .none
+        var toastType: ToastType = .none
         
         var itemList: [Reward] {
             decorationItem[selectedRewardItemCategory, default: []]
@@ -145,7 +146,7 @@ struct DecorationStore {
         case touchSaveButton
         case cancelSave
         case saveDecorationItem
-        
+        case showSaveSuccessToast
         
         case changeItem(RewardItemCategory, Reward)
         case changeBackgroundItem(Data)
@@ -286,6 +287,12 @@ struct DecorationStore {
                         decorationId: item[.decoration]?.id ?? 0,
                         byeoltongCaseId: item[.bottle]?.id ?? 0
                     )
+                    await send(.showSaveSuccessToast)
+                }
+            
+            case .showSaveSuccessToast:
+                state.toastType = .successSaveDecoration
+                return .run { send in
                     await send(.delegate(.pop(true)))
                 }
                 

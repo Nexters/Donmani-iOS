@@ -54,8 +54,6 @@ struct SettingView: View {
     @State var isPresentingEditNameView = false
     @State var isSaveEnabled = true
     @State var editUserName: String = ""
-    @State var isPresentingLengthGuideToastView = false
-    @State var isPresentingSymbolGuideToastView = false
     @State var isNotificationEnabled = false
     @State var isNoticeNotRead = false
     @State var isDecorationNotRead = false
@@ -210,22 +208,6 @@ struct SettingView: View {
                         UINavigationController.isBlockSwipe = false
                     }
             }
-            
-//            VStack {
-//                ToastView(title: "최대로 작성했어요")
-//                    .padding(.top, 40)
-//                    .padding(40)
-//                Spacer()
-//            }
-//            .opacity(isPresentingLengthGuideToastView ? 1 : 0)
-            
-//            VStack {
-//                ToastView(title: "특수문자는 입력할 수 없어요")
-//                    .padding(.top, 40)
-//                    .padding(40)
-//                Spacer()
-//            }
-//            .opacity(isPresentingSymbolGuideToastView ? 1 : 0)
         }
         .ignoresSafeArea(.keyboard)
     }

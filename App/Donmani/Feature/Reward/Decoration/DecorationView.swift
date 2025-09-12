@@ -11,6 +11,7 @@ import DesignSystem
 import Lottie
 
 struct DecorationView: View {
+    @EnvironmentObject var toastManager: ToastManager
     @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<DecorationStore>
     
@@ -154,6 +155,9 @@ struct DecorationView: View {
                     .padding(.defaultLayoutPadding)
                 }
             }
+        }
+        .onChange(of: store.toastType) { _, type in
+            toastManager.show(type)
         }
         .onAppear {
             store.send(.onAppear)
