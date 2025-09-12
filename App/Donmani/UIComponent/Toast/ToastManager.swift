@@ -11,7 +11,7 @@ final class ToastManager: ObservableObject {
     @Published var type: ToastType = .none
     
     func show(_ type: ToastType) {
-        if (self.type == type) { return }
+        if (self.type == type || type == .none) { return }
         Task { @MainActor in
             withAnimation(.linear(duration: 0.5)) { [weak self] in
                 self?.type = type

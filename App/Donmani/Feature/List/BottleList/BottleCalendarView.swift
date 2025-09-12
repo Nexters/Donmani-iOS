@@ -10,6 +10,7 @@ import ComposableArchitecture
 import DesignSystem
 
 struct BottleCalendarView: View {
+    @EnvironmentObject private var toastManager: ToastManager
     @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<BottleCalendarStore>
     
@@ -37,13 +38,10 @@ struct BottleCalendarView: View {
                 }
                 .ignoresSafeArea(edges: .bottom)
             }
-            VStack {
-                Spacer()
-                TextGuideView()
-                    .opacity(store.isPresentTextGuide ? 1 : 0)
-                    .offset(x: 0, y: store.isPresentTextGuide ? 0 : 4)
-                    .padding(.bottom, .s4 * 2)
-            }
+        }
+        .onChange(of: store.toastType) { _, type in
+            toastManager.show(type)
+            store.send(.completeShowToast)
         }
         .navigationBarBackButtonHidden()
         .background {

@@ -22,13 +22,15 @@ struct BottleCalendarStore {
             Day.lastDaysOfMonths(year: Day.today.year)
         }
         
+        var toastType: ToastType = .none
+        
         init(context: RecordCountSummary) {
             self.isPresentingTopBanner = HistoryStateManager.shared.getMonthlyBottleGuide()
             let today: Day = .today
             for month in (3...12) { // Only in 2025
                 self.starCount[month] = context.monthlyRecords[month]?.recordCount ?? -1
                 if self.starCount[month, default: -1] == -1 {
-                    if month <= today.month{
+                    if month <= today.month {
                         self.starCount[month] = 0
                     }
                 }
@@ -41,7 +43,8 @@ struct BottleCalendarStore {
     enum Action {
         case closeTopBanner
         case showEmptyBottleToast
-        case dismissEmptyBottleToast
+        case completeShowToast
+        
         case fetchMonthlyRecord(Int, Int)
         case delegate(Delegate)
         enum Delegate {
@@ -59,22 +62,12 @@ struct BottleCalendarStore {
             case .closeTopBanner:
                 state.isPresentingTopBanner = false
                 HistoryStateManager.shared.setMonthlyBottleGuide()
-                return .none
                 
             case .showEmptyBottleToast:
-                if (state.isPresentTextGuide) {
-                    return .none
-                }
-                state.isPresentTextGuide = true
-                return .run { send in
-                    try await Task.sleep(nanoseconds: .nanosecondsPerSecond * 3)
-                    await send(.dismissEmptyBottleToast, animation: .linear(duration: 0.5)
-                    )
-                }
+                state.toastType = .emptyRecordMonth
                 
-            case .dismissEmptyBottleToast:
-                state.isPresentTextGuide = false
-                return .none
+            case .completeShowToast:
+                state.toastType = .none
                 
             case .fetchMonthlyRecord(let year, let month):
                 return .run { send in
@@ -85,8 +78,9 @@ struct BottleCalendarStore {
                 }
                 
             case .delegate:
-                return .none
+                break
             }
+            return .none
         }
     }
 }

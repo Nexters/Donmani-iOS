@@ -11,7 +11,7 @@ import DesignSystem
 import Lottie
 
 struct DecorationView: View {
-    @EnvironmentObject var toastManager: ToastManager
+    @EnvironmentObject private var toastManager: ToastManager
     @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<DecorationStore>
     

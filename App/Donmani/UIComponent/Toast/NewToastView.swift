@@ -9,7 +9,7 @@ import SwiftUI
 import DesignSystem
 
 struct NewToastView: View {
-    @EnvironmentObject var toastManager: ToastManager
+    @EnvironmentObject private var toastManager: ToastManager
     
     var body: some View {
         ZStack {

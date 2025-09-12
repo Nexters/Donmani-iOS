@@ -96,19 +96,4 @@ extension BottleCalendarView {
                 .style(.b2, .semibold, (count > -1) ? .gray99 : .deepBlue80)
         }
     }
-    
-    func TextGuideView() -> some View {
-        HStack(spacing: 8) {
-            DImage(.warning).image
-                .resizable()
-                .frame(width: .s3, height: .s3)
-            DText("앗! 이달은 기록이 없어요")
-                .style(.b2, .bold, .white)
-        }
-        .padding(.s5)
-        .background {
-            Capsule(style: .continuous)
-                .fill(DColor.textGuide.opacity(0.9))
-        }
-    }
 }
