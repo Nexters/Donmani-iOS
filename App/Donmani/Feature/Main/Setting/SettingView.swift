@@ -40,6 +40,7 @@ struct SettingView: View {
         }
     }
     
+    @EnvironmentObject var toastManager: ToastManager
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dismiss) private var dismiss
     @StateObject var keyboard = KeyboardResponder()
@@ -210,21 +211,21 @@ struct SettingView: View {
                     }
             }
             
-            VStack {
-                ToastView(title: "최대로 작성했어요")
-                    .padding(.top, 40)
-                    .padding(40)
-                Spacer()
-            }
-            .opacity(isPresentingLengthGuideToastView ? 1 : 0)
+//            VStack {
+//                ToastView(title: "최대로 작성했어요")
+//                    .padding(.top, 40)
+//                    .padding(40)
+//                Spacer()
+//            }
+//            .opacity(isPresentingLengthGuideToastView ? 1 : 0)
             
-            VStack {
-                ToastView(title: "특수문자는 입력할 수 없어요")
-                    .padding(.top, 40)
-                    .padding(40)
-                Spacer()
-            }
-            .opacity(isPresentingSymbolGuideToastView ? 1 : 0)
+//            VStack {
+//                ToastView(title: "특수문자는 입력할 수 없어요")
+//                    .padding(.top, 40)
+//                    .padding(40)
+//                Spacer()
+//            }
+//            .opacity(isPresentingSymbolGuideToastView ? 1 : 0)
         }
         .ignoresSafeArea(.keyboard)
     }

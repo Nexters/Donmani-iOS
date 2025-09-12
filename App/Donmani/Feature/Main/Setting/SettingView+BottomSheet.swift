@@ -73,35 +73,43 @@ extension SettingView {
                                 return
                             }
                             if !isValidCharacter {
-                                if !(isPresentingSymbolGuideToastView || isPresentingLengthGuideToastView) {
-                                    withAnimation(.linear(duration: 0.5)) {
-                                        isPresentingSymbolGuideToastView = true
-                                    } completion: {
-                                        Task(priority: .low) {
-                                            try await Task.sleep(nanoseconds: 3_000_000_000)
-                                            withAnimation(.linear(duration: 0.5)) {
-                                                isPresentingSymbolGuideToastView = false
-                                            }
-                                        }
-                                    }
-                                }
+                                toastManager.show(.specialCharactersNotAllowed)
+//                                if (toastManager.type == .none) {
+////                                if !(isPresentingSymbolGuideToastView || isPresentingLengthGuideToastView) {
+//                                    withAnimation(.linear(duration: 0.5)) {
+//                                        toastManager.type = .specialCharactersNotAllowed
+////                                        isPresentingSymbolGuideToastView = true
+//                                    } completion: {
+//                                        Task(priority: .low) {
+//                                            try await Task.sleep(nanoseconds: 3_000_000_000)
+//                                            withAnimation(.linear(duration: 0.5)) {
+//                                                toastManager.type = .none
+////                                                isPresentingSymbolGuideToastView = false
+//                                            }
+//                                        }
+//                                    }
+//                                }
                                 
                                 editUserName = oldValue
                                 return
                             }
                             if newValue.count > 12 {
-                                if !(isPresentingSymbolGuideToastView || isPresentingLengthGuideToastView) {
-                                    withAnimation(.linear(duration: 0.5)) {
-                                        isPresentingLengthGuideToastView = true
-                                    } completion: {
-                                        Task(priority: .low) {
-                                            try await Task.sleep(nanoseconds: 3_000_000_000)
-                                            withAnimation(.linear(duration: 0.5)) {
-                                                isPresentingLengthGuideToastView = false
-                                            }
-                                        }
-                                    }
-                                }
+                                toastManager.show(.maxNicknameLengthExceeded)
+//                                if (toastManager.type == .none) {
+////                                if !(isPresentingSymbolGuideToastView || isPresentingLengthGuideToastView) {
+//                                    withAnimation(.linear(duration: 0.5)) {
+//                                        toastManager.type = .maxNicknameLengthExceeded
+////                                        isPresentingLengthGuideToastView = true
+//                                    } completion: {
+//                                        Task(priority: .low) {
+//                                            try await Task.sleep(nanoseconds: 3_000_000_000)
+//                                            withAnimation(.linear(duration: 0.5)) {
+//                                                toastManager.type = .none
+////                                                isPresentingLengthGuideToastView = false
+//                                            }
+//                                        }
+//                                    }
+//                                }
                                 editUserName = oldValue
                             }
                         }

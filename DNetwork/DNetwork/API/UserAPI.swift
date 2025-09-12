@@ -27,7 +27,7 @@ public struct UserAPI {
     public func postUpdateUser(userKey: String, newUserName: String) async throws -> UserUpdateResponse {
         let result: ResponseWrapper<UserUpdateResponse> = try await request.post(
             path: .user,
-            additionalPaths: ["register"],
+            additionalPaths: ["update"],
             bodyData: [
                 "userKey": userKey,
                 "newUserName": newUserName

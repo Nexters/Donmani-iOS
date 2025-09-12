@@ -82,7 +82,7 @@ struct MainView: View {
             }
             
             if store.isPresentingRewardToolTipView {
-                RewardToopTipView()
+                RewardToolTipView()
             }
             
             VStack {
