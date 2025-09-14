@@ -48,7 +48,8 @@ struct MonthlyStarBottleView: View {
             } else {
                 StarBottleView(
                     records: store.records,
-                    decorationItems: store.decorationItem
+                    decorationData: store.decorationData,
+                    starBottleAction: $store.starBottleAction
                 ) {
                     store.send(.didTapStarBottle)
                 }
@@ -88,20 +89,28 @@ struct EmptyStarBottleView: View {
         let context = MonthlyStarBottleStore.Context(
             day: .today,
             records: [],
-            items: [
-                Reward(
-                    id: 22,
-                    name: "",
-                    imageUrl: nil,
-                    jsonUrl: nil,
-                    soundUrl: nil,
-                    thumbnailUrl: nil,
-                    category: .decoration,
-                    newAcquiredFlag: false,
-                    hidden: false,
-                    resourceType: .image
-                )
-            ]
+//            items: [
+//                Reward(
+//                    id: 22,
+//                    name: "",
+//                    imageUrl: nil,
+//                    jsonUrl: nil,
+//                    soundUrl: nil,
+//                    thumbnailUrl: nil,
+//                    category: .decoration,
+//                    newAcquiredFlag: false,
+//                    hidden: false,
+//                    resourceType: .image
+//                )
+//            ],
+            decorationData: DecorationData(
+                backgroundRewardData: nil,
+                effectRewardData: nil,
+                decorationRewardName: nil,
+                decorationRewardId: nil,
+                bottleRewardId: nil,
+                bottleShape: .default
+            )
         )
         let state = MainStateFactory().makeMonthlyStarBottleState(context: context)
         let store = MainStoreFactory().makeMonthlyStarBottleStore(state: state)

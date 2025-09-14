@@ -17,12 +17,14 @@ struct DecorationStore {
         let decorationItem: [RewardItemCategory : [Reward]]
         let currentDecorationItem: [RewardItemCategory : Reward]
         let selectedCategory: RewardItemCategory
+        let decorationData: DecorationData
         
         init(
             records: [Record],
             decorationItem: [RewardItemCategory : [Reward]],
             currentDecorationItem: [Reward],
-            selectedCategory: RewardItemCategory
+            selectedCategory: RewardItemCategory,
+            decorationData: DecorationData
         ) {
             self.records = records
             self.decorationItem = decorationItem
@@ -30,6 +32,7 @@ struct DecorationStore {
                 result[item.category] = item
             }
             self.selectedCategory = selectedCategory
+            self.decorationData = decorationData
         }
     }
     
@@ -43,6 +46,7 @@ struct DecorationStore {
         var decorationItem: [RewardItemCategory : [Reward]]
         var selectedDecorationItem: [RewardItemCategory : Reward]
         var previousDecorationItem: [RewardItemCategory : Reward]
+        var decorationData: DecorationData
         var backgroundShape: DImageAsset
         
         var disabledSaveButton = true
@@ -90,7 +94,7 @@ struct DecorationStore {
             self.previousDecorationItem = context.currentDecorationItem
             self.selectedRewardItemCategory = context.selectedCategory
             self.monthlyRecords = context.records
-            
+            self.decorationData = context.decorationData
             backgroundShape = .rewardBottleDefault
             byeoltongShapeType = {
                 switch (context.currentDecorationItem[.bottle]?.id ?? 4) {
@@ -108,7 +112,6 @@ struct DecorationStore {
             // TODO: - 기록 context로 받기
             
             self.isPresentingGuideBottomSheet = HistoryStateManager.shared.getIsFirstDecorationEnter()
-            
 //            let itemCount =
             self.decorationItem.forEach {
                 if ($0.key == .decoration) {
@@ -166,12 +169,13 @@ struct DecorationStore {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                let previousDecorationItem = state.previousDecorationItem
-                return .run { send in
-                    for (category, item) in previousDecorationItem {
-                        await send(.changeItem(category, item))
-                    }
-                }
+                break
+//                let previousDecorationItem = state.previousDecorationItem
+//                return .run { send in
+//                    for (category, item) in previousDecorationItem {
+//                        await send(.changeItem(category, item))
+//                    }
+//                }
                 
             case .toggleGuideBottomSheet:
                 GA.View(event: .customize).send()

@@ -26,6 +26,24 @@ enum StarBottleViewType {
     case decoration
 }
 
+struct DecorationData {
+    let backgroundRewardData: Data?
+    let effectRewardData: Data?
+    let decorationRewardName: String?
+    let decorationRewardId: Int?
+    let bottleRewardId: Int?
+    let bottleShape: BottleShape
+    
+    init(backgroundRewardData: Data?, effectRewardData: Data?, decorationRewardName: String?, decorationRewardId: Int?, bottleRewardId: Int?, bottleShape: BottleShape) {
+        self.backgroundRewardData = backgroundRewardData
+        self.effectRewardData = effectRewardData
+        self.decorationRewardName = decorationRewardName
+        self.decorationRewardId = decorationRewardId
+        self.bottleRewardId = bottleRewardId
+        self.bottleShape = bottleShape
+    }
+}
+
 struct StarBottleView: View {
     static var width: CGFloat {
         .screenWidth - (38 * 2)
@@ -36,7 +54,7 @@ struct StarBottleView: View {
     }
     
     var width: CGFloat {
-        .screenWidth - (38 * 2) - (self.viewType == .decoration ? 100 : 0)
+        .screenWidth - (38 * 2) - (self.viewType == .decoration ? 90 : 0)
     }
     
     var height: CGFloat {
@@ -46,6 +64,29 @@ struct StarBottleView: View {
     let motionManager = MotionManager()
     let viewType: StarBottleViewType
     
+    var spaceVacanceItemOffset: CGPoint {
+        let offsetY: CGFloat = switch bottleShape {
+        case .bead:
+            -.screenWidth * 0.21 * 0.4
+        case .heart:
+            viewType == .decoration ? -.screenWidth * 0.21 * 0.3 : -.screenWidth * 0.21 * 0.1
+        case .default:
+            -.screenWidth * 0.21 * 0.8
+        }
+        let offsetX: CGFloat = switch bottleShape {
+        case .bead:
+            0
+        case .heart:
+            viewType == .decoration ? .screenWidth * 0.21 * 0.7 : .screenWidth * 0.21
+        case .default:
+            viewType == .decoration ? .screenWidth * 0.21 * 0.6 : .screenWidth * 0.21 * 0.8
+        }
+        return CGPoint(
+            x: offsetX,
+            y: offsetY
+        )
+    }
+    
     private let onTapGesture: (() -> Void)?
     
     @Binding private var starBottleAction: StarBottleAction
@@ -53,42 +94,17 @@ struct StarBottleView: View {
     @State private var starBottleScene: StarBottleScene
     @State var opacity: CGFloat = 0.0
     @State private var records: [Record]
-    @State private var decorationItems: [RewardItemCategory: Reward]
     
     @Dependency(\.rewardDataUseCase) var rewardDataUseCase
     
-    @State var backgroundData: Data?
-    @State var effectData: Data?
-    @State var decorationName: String?
-    @State var decorationId: Int?
+    @State var backgroundRewardData: Data?
+    @State var effectRewardData: Data?
+    @State var decorationRewardName: String?
+    @State var decorationRewardId: Int?
     @State var bottleRewardId: Int?
     @State var bottleShape: BottleShape
     
     func fetchUI() {
-        backgroundData = {
-            guard let backgroundReward = decorationItems[.background] else {
-                return nil
-            }
-            return rewardDataUseCase.loadData(from: backgroundReward)
-        }()
-        
-        effectData = {
-            guard let effectReward = decorationItems[.effect] else {
-                return Data()
-            }
-            return rewardDataUseCase.loadData(from: effectReward)
-        }()
-        
-//        decorationData = {
-//            guard let decorationReward = decorationItems[.decoration] else {
-//                return Data()
-//            }
-//            return rewardDataUseCase.loadData(from: decorationReward)
-//        }()
-        
-        bottleRewardId = decorationItems[.bottle]?.id
-        bottleShape = BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
-        
         for i in 0..<records.count {
             starBottleScene.createInitStarNode(
                 width: Self.width,
@@ -101,30 +117,35 @@ struct StarBottleView: View {
     
     init(
         records: [Record],
-        decorationItems: [RewardItemCategory: Reward],
+        decorationData: DecorationData,
         viewType: StarBottleViewType = .default,
         starBottleAction: Binding<StarBottleAction> = .constant(.none),
         onTapGesture: (() -> Void)? = nil
     ) {
         self.records = records
-        self.decorationItems = decorationItems
         self.viewType = viewType
         self._starBottleAction = starBottleAction
-        self.bottleShape = BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
         self.starBottleScene = StarBottleScene(
             size: .init(
                 width: Self.width,
                 height: Self.height
             ),
-            bottleShape: BottleShape(id: decorationItems[.bottle]?.id ?? .zero)
+            bottleShape: decorationData.bottleShape
         )
+        self.backgroundRewardData = decorationData.backgroundRewardData
+        self.effectRewardData = decorationData.effectRewardData
+        self.decorationRewardName = decorationData.decorationRewardName
+        self.decorationRewardId = decorationData.decorationRewardId
+        self.bottleRewardId = decorationData.bottleRewardId
+        self.bottleShape = decorationData.bottleShape
+        
         self.onTapGesture = onTapGesture
     }
     
     var body: some View {
         ZStack {
-            if let backgroundData,
-               let image = UIImage(data: backgroundData) {
+            if let backgroundRewardData,
+               let image = UIImage(data: backgroundRewardData) {
                 Image(uiImage: image)
                     .resizable()
                     .ignoresSafeArea()
@@ -142,10 +163,10 @@ struct StarBottleView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
             
-            if let effectData {
+            if let effectRewardData {
                 GeometryReader { proxy in
                     DLottieView(
-                        data: effectData,
+                        data: effectRewardData,
                         loopMode: .loop
                     )
                     .frame(
@@ -187,14 +208,14 @@ struct StarBottleView: View {
                             onTapGesture?()
                         }
                         .overlay {
-                            if let decorationName, let decorationId {
-                                if decorationId == 20 { // 둥둥배
+                            if let decorationRewardName, let decorationRewardId {
+                                if decorationRewardId == 20 { // 둥둥배
                                     VStack {
                                         Spacer()
                                         HStack {
                                             Spacer()
                                             DLottieView(
-                                                name: decorationName,
+                                                name: decorationRewardName,
                                                 loopMode: .loop
                                             )
                                             .frame(width: 80, height: 80)
@@ -205,27 +226,26 @@ struct StarBottleView: View {
                                         x: viewType == .decoration ? (Self.width/6) : 0,
                                         y: viewType == .decoration ? (Self.width/8) : (Self.width/5)
                                     )
-                                } else if decorationId == 23 { // 우주바캉스 토비
-                                    Spacer()
-                //                    VStack {
-                //                        HStack {
-                //                            DLottieView(
-                //                                data: decorationData,
-                //                                loopMode: .loop
-                //                            )
-                //                            .frame(width: 80, height: 80)
-                //                            Spacer()
-                //                        }
-                //                        Spacer()
-                //                    }
-                //                    .allowsHitTesting(false)
-                //                    .padding(.top, 140)
-                //                    .padding(.leading, .defaultLayoutPadding)
+                                } else if decorationRewardId == 23 { // 우주바캉스 토비
+                                    VStack {
+                                        HStack {
+                                            DImage(.rewardDecorationSpaceVacance)
+                                                .image
+                                                .resizable()
+                                                .aspectRatio(0.67, contentMode: .fit)
+                                                .frame(height: .screenWidth * 0.27)
+                                                .offset(
+                                                    x: spaceVacanceItemOffset.x,
+                                                    y: spaceVacanceItemOffset.y
+                                                )
+                                        }
+                                        Spacer()
+                                    }
                                 } else { // 토비호, 몽글몽글 열기구, 달베개
                                     VStack {
                                         HStack {
                                             DLottieView(
-                                                name: decorationName,
+                                                name: decorationRewardName,
                                                 loopMode: .loop
                                             )
                                             .frame(width: 80, height: 80)
@@ -234,7 +254,10 @@ struct StarBottleView: View {
                                         Spacer()
                                     }
                                     .allowsHitTesting(false)
-                                    .offset(x: -(Self.width/6), y: -(Self.width/6))
+                                    .offset(
+                                        x: viewType == .decoration ? -(Self.width/5) : -(Self.width/10),
+                                        y: viewType == .decoration ? -(Self.width/10) : -(Self.width/5)
+                                    )
                                 }
                             }
                         }
@@ -268,12 +291,12 @@ struct StarBottleView: View {
                     record: record
                 )
             case .changeBackgroundItem(let data):
-                backgroundData = data
+                backgroundRewardData = data
             case .changeEffectItem(let data):
-                effectData = data
+                effectRewardData = data
             case .changeDecorationItem(let id, let name):
-                decorationId = id
-                decorationName = name
+                decorationRewardId = id
+                decorationRewardName = name
             case .changeBottleItem(let id, let bottleShape):
                 bottleRewardId = id
                 self.bottleShape = bottleShape

@@ -49,7 +49,7 @@ struct DecorationView: View {
                 .background {
                     StarBottleView(
                         records: store.monthlyRecords,
-                        decorationItems: store.selectedDecorationItem,
+                        decorationData: store.decorationData,
                         viewType: .decoration,
                         starBottleAction: $store.starBottleAction
                     )
@@ -186,7 +186,15 @@ struct DecorationView: View {
             records: [],
             decorationItem: decorationItem,
             currentDecorationItem: [],
-            selectedCategory: .background
+            selectedCategory: .background,
+            decorationData: DecorationData(
+                backgroundRewardData: nil,
+                effectRewardData: nil,
+                decorationRewardName: nil,
+                decorationRewardId: nil,
+                bottleRewardId: nil,
+                bottleShape: .bead
+            )
         )
         var state = MainStateFactory().makeDecorationState(context: context)
         state.monthlyRecords = []

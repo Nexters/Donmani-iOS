@@ -14,8 +14,9 @@ struct MainStore {
     struct Context {
         let records: [Record]
         let hasRecord: (today: Bool, yesterday: Bool)
-        let decorationItem: [RewardItemCategory: Reward]
+//        let decorationItem: [RewardItemCategory: Reward]
         let isPresentingNewStarBottle: Bool
+        let decorationData: DecorationData
     }
     
     // MARK: - State
@@ -24,7 +25,8 @@ struct MainStore {
         var userName: String = ""
         var day: Day
         var records: [Record]
-        var decorationItem: [RewardItemCategory: Reward]
+//        var decorationItem: [RewardItemCategory: Reward]
+        var decorationData: DecorationData
  
         /// 기록 작성 가능 여부
         var canWriteRecord: Bool
@@ -46,7 +48,8 @@ struct MainStore {
         init(context: MainStore.Context) {
             self.day = .today
             self.records = context.records
-            self.decorationItem = context.decorationItem
+//            self.decorationItem = context.decorationItem
+            self.decorationData = context.decorationData
             self.canWriteRecord = !(context.hasRecord.today && context.hasRecord.yesterday)
             self.isPresentingNewStarBottle = context.isPresentingNewStarBottle
             
@@ -60,6 +63,7 @@ struct MainStore {
         case binding(BindingAction<State>)
         
         case onAppear
+        case fetchRewardItem(DecorationData)
         
         case closePopover
         case checkPopover
@@ -73,14 +77,11 @@ struct MainStore {
         case delegate(Delegate)
         
         case update(Update)
-        
         enum Update {
-            case fetchUserName(String)
             case changeBackgroundItem(Data)
             case changeEffectItem(Data)
             case changeDecorationItem(Int, String)
             case changeBottleShapeItem(Int, BottleShape)
-            case fetchWriteRecordButtonState(Bool)
         }
         
         enum Delegate {
@@ -97,6 +98,7 @@ struct MainStore {
     @Dependency(\.writeRecordUseCase) var writeRecordUseCase
     @Dependency(\.loadRewardUseCase) var loadRewardUseCase
     @Dependency(\.fileRepository) var fileRepository
+    @Dependency(\.rewardRepository) var rewardRepository
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
@@ -105,10 +107,34 @@ struct MainStore {
             switch action {
             case .onAppear:
                 GA.View(event: .main).send()
-                let items = loadRewardUseCase.loadTodayDecorationItems()
-                state.decorationItem = items
+//                let items = loadRewardUseCase.loadTodayDecorationItems()
+//                state.decorationItem = items
+                state.userName = userUseCase.userName
+                state.canWriteRecord = writeRecordUseCase.canWriteRecord()
+//                return .run { send in
+//                    let day: Day = .today
+//                    let items = rewardRepository.loadEquippedItems(year: day.year, month: day.month)
+
+//                }
                 return .run { send in
-                    await send(.update(.fetchUserName(userUseCase.userName)))
+                    let day: Day = .today
+                    let items = rewardRepository.loadEquippedItems(year: day.year, month: day.month)
+                    let backgroundRewardData: Data? = items[.background].map { try? fileRepository.loadRewardData(from: $0, resourceType: .image) }
+                    let effectRewardData: Data? = items[.effect].map { try? fileRepository.loadRewardData(from: $0, resourceType: .json) }
+                    let decorationRewardName: String? = items[.decoration].map { RewardResourceMapper(id: $0.id, category: .decoration).resource() }
+                    let decorationRewardId: Int? = items[.decoration]?.id
+                    let bottleRewardId: Int? = items[.bottle].map { $0.id }
+                    let bottleShape: BottleShape = bottleRewardId.map { BottleShape(id: $0) } ?? .default
+                    let decorationData = DecorationData(
+                        backgroundRewardData: backgroundRewardData,
+                        effectRewardData: effectRewardData,
+                        decorationRewardName: decorationRewardName,
+                        decorationRewardId: decorationRewardId,
+                        bottleRewardId: bottleRewardId,
+                        bottleShape: bottleShape
+                    )
+                    await send(.fetchRewardItem(decorationData))
+                    
                     for (category, item) in items {
                         switch category {
                         case .background:
@@ -129,10 +155,14 @@ struct MainStore {
                             break
                         }
                     }
-                    let canWriteRecord = writeRecordUseCase.canWriteRecord()
-                    await send(.update(.fetchWriteRecordButtonState(canWriteRecord)))
                 }
-                 
+//                    let canWriteRecord =
+//                    await send(.update(.fetchWriteRecordButtonState(canWriteRecord)))
+//                }
+                
+            case .fetchRewardItem(let decorationData):
+                state.decorationData = decorationData
+                
             case .closePopover:
                 state.isPresentingRecordYesterdayToolTip = false
                 HistoryStateManager.shared.setLastYesterdayToopTipDay()
@@ -185,8 +215,6 @@ struct MainStore {
                 // 화면 업데이트 Action
             case .update(let update):
                 switch update {
-                case .fetchUserName(let userName):
-                    state.userName = userName
                 case .changeBackgroundItem(let data):
                     state.starBottleAction = .changeBackgroundItem(data)
                 case .changeEffectItem(let data):
@@ -195,8 +223,6 @@ struct MainStore {
                     state.starBottleAction = .changeDecorationItem(id, name)
                 case .changeBottleShapeItem(let id, let bottleShape):
                     state.starBottleAction = .changeBottleItem(id, bottleShape)
-                case .fetchWriteRecordButtonState(let canWriteRecord):
-                    state.canWriteRecord = canWriteRecord
                 }
                 
             default:

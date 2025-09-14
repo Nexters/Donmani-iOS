@@ -20,7 +20,7 @@ extension RecordRequest {
                         memo: item.memo
                     )
                 },
-                record.records[.good].map { item -> RecordContentArgument in
+                record.records[.bad].map { item -> RecordContentArgument in
                     RecordContentArgument(
                         flag: item.flag.rawValue,
                         category: item.category.uppercaseValue,

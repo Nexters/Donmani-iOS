@@ -77,8 +77,16 @@ struct MainNavigationView: View {
                     context: MainStore.Context(
                         records: [],
                         hasRecord: (today: true, yesterday: false),
-                        decorationItem: [:],
-                        isPresentingNewStarBottle: false
+//                        decorationItem: [:],
+                        isPresentingNewStarBottle: false,
+                        decorationData: DecorationData(
+                            backgroundRewardData: nil,
+                            effectRewardData: nil,
+                            decorationRewardName: nil,
+                            decorationRewardId: nil,
+                            bottleRewardId: nil,
+                            bottleShape: .default
+                        )
                     )
                 )
             )

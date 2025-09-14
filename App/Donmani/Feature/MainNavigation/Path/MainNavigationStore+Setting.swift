@@ -16,7 +16,8 @@ extension MainNavigationStore {
         switch action {
         case .pushDecoration(let records, let decorationItem, let currentDecorationItem):
             return .run { send in
-                await send(.push(.decoration(records, decorationItem, currentDecorationItem, .background)))
+                let decorationData = convertDecorationData(rewards: currentDecorationItem)
+                await send(.push(.decoration(records, decorationItem, currentDecorationItem, .background, decorationData)))
             }
         }
     }

@@ -51,6 +51,8 @@ struct RootStore {
         case presentMainView(StoreOf<MainNavigationStore>)
     }
     
+    @Dependency(\.fileRepository) var fileRepository
+    
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
@@ -87,8 +89,9 @@ struct RootStore {
                     let mainContext = MainStore.Context(
                         records: monthlyRecordState.records ?? [],
                         hasRecord: (hasTodayRecord, hasYesterdayRecord),
-                        decorationItem: monthlyRecordState.decorationItem,
-                        isPresentingNewStarBottle: isPresentingNewStarBottle
+//                        decorationItem: monthlyRecordState.decorationItem,
+                        isPresentingNewStarBottle: isPresentingNewStarBottle,
+                        decorationData: convertDecorationData(items: monthlyRecordState.decorationItem)
                     )
                     let mainState = stateFactory.makeMainState(context: mainContext)
                     let mainNavigationState = stateFactory.makeMainNavigationState(mainState: mainState)
@@ -116,8 +119,9 @@ struct RootStore {
                     let mainContext = MainStore.Context(
                         records: monthlyRecordState.records ?? [],
                         hasRecord: (hasTodayRecord, hasYesterdayRecord),
-                        decorationItem: monthlyRecordState.decorationItem,
-                        isPresentingNewStarBottle: isPresentingNewStarBottle
+//                        decorationItem: monthlyRecordState.decorationItem,
+                        isPresentingNewStarBottle: isPresentingNewStarBottle,
+                        decorationData: convertDecorationData(items: monthlyRecordState.decorationItem)
                     )
                     let mainState = stateFactory.makeMainState(context: mainContext)
                     var mainNavigationState = stateFactory.makeMainNavigationState(mainState: mainState)
@@ -144,5 +148,22 @@ struct RootStore {
             
             return .none
         }
+    }
+    
+    func convertDecorationData(items: [RewardItemCategory: Reward]) -> DecorationData {
+        let backgroundRewardData: Data? = items[.background].map { try? fileRepository.loadRewardData(from: $0, resourceType: .image) }
+        let effectRewardData: Data? = items[.effect].map { try? fileRepository.loadRewardData(from: $0, resourceType: .json) }
+        let decorationRewardName: String? = items[.decoration].map { RewardResourceMapper(id: $0.id, category: .decoration).resource() }
+        let decorationRewardId: Int? = items[.decoration]?.id
+        let bottleRewardId: Int? = items[.bottle].map { $0.id }
+        let bottleShape: BottleShape = bottleRewardId.map { BottleShape(id: $0) } ?? .default
+        return DecorationData(
+            backgroundRewardData: backgroundRewardData,
+            effectRewardData: effectRewardData,
+            decorationRewardName: decorationRewardName,
+            decorationRewardId: decorationRewardId,
+            bottleRewardId: bottleRewardId,
+            bottleShape: bottleShape
+        )
     }
 }
