@@ -20,35 +20,40 @@ struct RootView: View {
     
     var body: some View {
         ZStack {
-            switch store.route {
-            case .onboarding:
-                OnboardingView { confirmType in
-                    store.send(.completeOnboarding(confirmType))
+            ZStack {
+                switch store.route {
+                case .onboarding:
+                    OnboardingView { confirmType in
+                        store.send(.completeOnboarding(confirmType))
+                    }
+                    .id(store.route.id)
+                    
+                case .main(let mainStore):
+                    MainNavigationView(
+                        store: mainStore
+                    )
+                    .transition(.move(edge: .trailing))
+                    .id(store.route.id)
+                    
+                case .splash:
+                    SplashView {
+                        store.send(.completeSplash)
+                    }
+                    .transition(.opacity)
+                    .id(store.route.id)
                 }
-                .id(store.route.id)
-                
-            case .main(let mainStore):
-                MainNavigationView(
-                    store: mainStore
-                )
-                .transition(.move(edge: .trailing))
-                .id(store.route.id)
-                
-            case .splash:
-                SplashView {
-                    store.send(.completeSplash)
-                }
-                .transition(.opacity)
-                .id(store.route.id)
             }
+            .animation(.smooth, value: store.route)
+            .background {
+                BackgroundView(colors: [
+                    DColor.backgroundTop,
+                    DColor.backgroundBottom,
+                ])
+            }
+            
+            NewToastView()
         }
-        .animation(.smooth, value: store.route)
-        .background {
-            BackgroundView(colors: [
-                DColor.backgroundTop,
-                DColor.backgroundBottom,
-            ])
-        }
+        
     }
 }
 

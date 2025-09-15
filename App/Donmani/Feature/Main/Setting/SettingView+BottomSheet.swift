@@ -73,35 +73,10 @@ extension SettingView {
                                 return
                             }
                             if !isValidCharacter {
-                                if !(isPresentingSymbolGuideToastView || isPresentingLengthGuideToastView) {
-                                    withAnimation(.linear(duration: 0.5)) {
-                                        isPresentingSymbolGuideToastView = true
-                                    } completion: {
-                                        Task(priority: .low) {
-                                            try await Task.sleep(nanoseconds: 3_000_000_000)
-                                            withAnimation(.linear(duration: 0.5)) {
-                                                isPresentingSymbolGuideToastView = false
-                                            }
-                                        }
-                                    }
-                                }
-                                
+                                toastManager.show(.specialCharactersNotAllowed)
                                 editUserName = oldValue
-                                return
-                            }
-                            if newValue.count > 12 {
-                                if !(isPresentingSymbolGuideToastView || isPresentingLengthGuideToastView) {
-                                    withAnimation(.linear(duration: 0.5)) {
-                                        isPresentingLengthGuideToastView = true
-                                    } completion: {
-                                        Task(priority: .low) {
-                                            try await Task.sleep(nanoseconds: 3_000_000_000)
-                                            withAnimation(.linear(duration: 0.5)) {
-                                                isPresentingLengthGuideToastView = false
-                                            }
-                                        }
-                                    }
-                                }
+                            } else if newValue.count > 12 {
+                                toastManager.show(.maxNicknameLengthExceeded)
                                 editUserName = oldValue
                             }
                         }

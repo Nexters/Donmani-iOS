@@ -24,7 +24,8 @@ extension MainNavigationStore {
             }
         case .pushDecorationView(let records, let decorationItem, let currentDecorationItem, let category):
             return .run { send in
-                await send(.push(.decoration(records, decorationItem, currentDecorationItem, category)))
+                let decorationData = convertDecorationData(rewards: currentDecorationItem)
+                await send(.push(.decoration(records, decorationItem, currentDecorationItem, category, decorationData)))
             }
         }
     }

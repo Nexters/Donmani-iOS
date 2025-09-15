@@ -9,21 +9,6 @@ import SwiftUI
 import DesignSystem
 
 extension MainView {
-//    func AccessoryButton(
-//        asset: DImageAsset,
-//        action: @escaping () -> Void
-//    ) -> some View {
-//        Button {
-//            action()
-//        } label: {
-//            DImage(asset).image
-//                .resizable()
-//                .aspectRatio(contentMode: .fit)
-//                .frame(width: .s3)
-//        }
-//        .frame(width: .s3, height: .s3)
-//    }
-    
     func RecordButton() -> some View {
         Button {
             GA.Click(event: .mainRecordButton).send()
@@ -73,7 +58,7 @@ extension MainView {
         }
     }
     
-    func RewardToopTipView() -> some View {
+    func RewardToolTipView() -> some View {
         VStack(spacing: 0) {
             HStack {
                 Spacer()

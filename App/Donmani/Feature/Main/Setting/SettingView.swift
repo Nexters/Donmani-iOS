@@ -23,23 +23,24 @@ struct SettingView: View {
         var title: String {
             switch self {
             case .decoration:
-                return "꾸미기"
+                "꾸미기"
             case .sound:
-                return "별통이 효과음"
+                "별통이 효과음"
             case .notification:
-                return "앱 푸시 알림"
+                "앱 푸시 알림"
             case .notice:
-                return "공지사항"
+                "공지사항"
             case .recordGuide:
-                return "별별소 기록 규칙"
+                "별별소 기록 규칙"
             case .feedback:
-                return "별별소에게 부탁하기"
+                "별별소에게 부탁하기"
             case .privacyPolicy:
-                return "개인정보 처리방침"
+                "개인정보 처리방침"
             }
         }
     }
     
+    @EnvironmentObject var toastManager: ToastManager
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dismiss) private var dismiss
     @StateObject var keyboard = KeyboardResponder()
@@ -53,8 +54,6 @@ struct SettingView: View {
     @State var isPresentingEditNameView = false
     @State var isSaveEnabled = true
     @State var editUserName: String = ""
-    @State var isPresentingLengthGuideToastView = false
-    @State var isPresentingSymbolGuideToastView = false
     @State var isNotificationEnabled = false
     @State var isNoticeNotRead = false
     @State var isDecorationNotRead = false
@@ -209,22 +208,6 @@ struct SettingView: View {
                         UINavigationController.isBlockSwipe = false
                     }
             }
-            
-            VStack {
-                ToastView(title: "최대로 작성했어요")
-                    .padding(.top, 40)
-                    .padding(40)
-                Spacer()
-            }
-            .opacity(isPresentingLengthGuideToastView ? 1 : 0)
-            
-            VStack {
-                ToastView(title: "특수문자는 입력할 수 없어요")
-                    .padding(.top, 40)
-                    .padding(40)
-                Spacer()
-            }
-            .opacity(isPresentingSymbolGuideToastView ? 1 : 0)
         }
         .ignoresSafeArea(.keyboard)
     }

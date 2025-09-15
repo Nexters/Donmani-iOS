@@ -53,7 +53,7 @@ struct MainNavigationStore {
             // Reward
             case rewardStart(FeedbackInfo)
             case rewardReceive(Int)
-            case decoration([Record], [RewardItemCategory : [Reward]], [Reward], RewardItemCategory)
+            case decoration([Record], [RewardItemCategory : [Reward]], [Reward], RewardItemCategory, DecorationData)
         }
     }
     
@@ -62,6 +62,7 @@ struct MainNavigationStore {
     @Dependency(\.recordRepository) var recordRepository
     @Dependency(\.rewardRepository) var rewardRepository
     @Dependency(\.feedbackRepository) var feedbackRepository
+    @Dependency(\.fileRepository) var fileRepository
     @Dependency(\.settings) var settings
     
     var body: some ReducerOf<Self> {

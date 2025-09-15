@@ -27,7 +27,7 @@ public struct UserAPI {
     public func postUpdateUser(userKey: String, newUserName: String) async throws -> UserUpdateResponse {
         let result: ResponseWrapper<UserUpdateResponse> = try await request.post(
             path: .user,
-            additionalPaths: ["register"],
+            additionalPaths: ["update"],
             bodyData: [
                 "userKey": userKey,
                 "newUserName": newUserName
@@ -69,14 +69,10 @@ public struct UserAPI {
     
     /// 공지사항 확인 상태 조회
     public func getNoticeStatus(userKey: String) async throws -> NoticeStatusResponse {
-        let result: ResponseWrapper<NoticeStatusResponse> = try await request.get(
+        try await request.get(
             path: .notice,
             additionalPaths: ["status", userKey]
         )
-        guard let data = result.responseData else {
-            throw NetworkError.noData
-        }
-        return data
     }
     
     /// 새 리워드 아이템 확인 상태 업데이트
@@ -89,10 +85,9 @@ public struct UserAPI {
     
     /// 새 리워드 아이템 확인 상태 조회
     public func getRewardStatus(userKey: String) async throws -> RewardStatusResponse {
-        let result: RewardStatusResponse = try await request.get(
+        try await request.get(
             path: .reward,
             additionalPaths: ["status", userKey]
         )
-        return result
     }
 }

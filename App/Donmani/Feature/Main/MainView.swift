@@ -58,7 +58,7 @@ struct MainView: View {
                     }
                 }
             }
-            .padding(.bottom, .s5)
+            .padding(.bottom, .s3)
             
             if store.canWriteRecord && store.isPresentingRecordYesterdayToolTip {
                 VStack {
@@ -82,7 +82,7 @@ struct MainView: View {
             }
             
             if store.isPresentingRewardToolTipView {
-                RewardToopTipView()
+                RewardToolTipView()
             }
             
             VStack {
@@ -104,7 +104,7 @@ struct MainView: View {
         .background {
             StarBottleView(
                 records: store.records,
-                decorationItems: store.decorationItem,
+                decorationData: store.decorationData,
                 starBottleAction: $store.starBottleAction
             ) {
                 GA.Click(event: .mainRecordArchiveButton).send()
@@ -127,8 +127,16 @@ struct MainView: View {
                 context: MainStore.Context(
                     records: [],
                     hasRecord: (true, true),
-                    decorationItem: [:],
-                    isPresentingNewStarBottle: false
+//                    decorationItem: [:],
+                    isPresentingNewStarBottle: false,
+                    decorationData: DecorationData(
+                        backgroundRewardData: nil,
+                        effectRewardData: nil,
+                        decorationRewardName: nil,
+                        decorationRewardId: nil,
+                        bottleRewardId: nil,
+                        bottleShape: .default
+                    )
                 )
             )
         ) {

@@ -17,12 +17,14 @@ struct DecorationStore {
         let decorationItem: [RewardItemCategory : [Reward]]
         let currentDecorationItem: [RewardItemCategory : Reward]
         let selectedCategory: RewardItemCategory
+        let decorationData: DecorationData
         
         init(
             records: [Record],
             decorationItem: [RewardItemCategory : [Reward]],
             currentDecorationItem: [Reward],
-            selectedCategory: RewardItemCategory
+            selectedCategory: RewardItemCategory,
+            decorationData: DecorationData
         ) {
             self.records = records
             self.decorationItem = decorationItem
@@ -30,6 +32,7 @@ struct DecorationStore {
                 result[item.category] = item
             }
             self.selectedCategory = selectedCategory
+            self.decorationData = decorationData
         }
     }
     
@@ -43,10 +46,12 @@ struct DecorationStore {
         var decorationItem: [RewardItemCategory : [Reward]]
         var selectedDecorationItem: [RewardItemCategory : Reward]
         var previousDecorationItem: [RewardItemCategory : Reward]
+        var decorationData: DecorationData
         var backgroundShape: DImageAsset
         
         var disabledSaveButton = true
         var starBottleAction: StarBottleAction = .none
+        var toastType: ToastType = .none
         
         var itemList: [Reward] {
             decorationItem[selectedRewardItemCategory, default: []]
@@ -89,7 +94,7 @@ struct DecorationStore {
             self.previousDecorationItem = context.currentDecorationItem
             self.selectedRewardItemCategory = context.selectedCategory
             self.monthlyRecords = context.records
-            
+            self.decorationData = context.decorationData
             backgroundShape = .rewardBottleDefault
             byeoltongShapeType = {
                 switch (context.currentDecorationItem[.bottle]?.id ?? 4) {
@@ -101,14 +106,7 @@ struct DecorationStore {
                     return .rewardBottleDefaultShape
                 }
             }()
-//            let today = DateManager.shared.getFormattedDate(for: .today).components(separatedBy: "-")
-//            let monthlyRecords = DataStorage.getRecord(yearMonth: "\(today[0])-\(today[1])") ?? []
-//            self.monthlyRecords = monthlyRecords
-            // TODO: - 기록 context로 받기
-            
             self.isPresentingGuideBottomSheet = HistoryStateManager.shared.getIsFirstDecorationEnter()
-            
-//            let itemCount =
             self.decorationItem.forEach {
                 if ($0.key == .decoration) {
                     for item in $0.value {
@@ -117,12 +115,7 @@ struct DecorationStore {
                         }
                     }
                 }
-//                return $0.value.count
             }
-//            .reduce(0,+)
-//            if itemCount >= 16 {
-//                self.isPresentingFinalBottomSheet = true
-//            }
         }
     }
     
@@ -131,21 +124,18 @@ struct DecorationStore {
     @Dependency(\.settings) var settings
     
     enum Action: BindableAction {
-        case onAppear
-        
         case toggleGuideBottomSheet
         case touchGuideBottomSheetButton
         case touchFinalBottomSheetButton
         
         case touchRewardItemCategoryButton(RewardItemCategory)
         case touchRewardItem(RewardItemCategory, Reward)
-//        case touchEqualizerButton
-        
+
         case touchBackButton
         case touchSaveButton
         case cancelSave
         case saveDecorationItem
-        
+        case showSaveSuccessToast
         
         case changeItem(RewardItemCategory, Reward)
         case changeBackgroundItem(Data)
@@ -164,14 +154,6 @@ struct DecorationStore {
         BindingReducer()
         Reduce { state, action in
             switch action {
-            case .onAppear:
-                let previousDecorationItem = state.previousDecorationItem
-                return .run { send in
-                    for (category, item) in previousDecorationItem {
-                        await send(.changeItem(category, item))
-                    }
-                }
-                
             case .toggleGuideBottomSheet:
                 GA.View(event: .customize).send()
                 if HistoryStateManager.shared.getIsFirstDecorationEnter() {
@@ -181,16 +163,6 @@ struct DecorationStore {
                         UINavigationController.isBlockSwipe = false
                     }
                 }
-//                var count = 0
-//                for (_, value) in state.decorationItem {
-//                    count += value.count
-//                }
-//                if (count >= 17) {
-//                    if !HistoryStateManager.shared.getIsShownFullRewardBottmeSheet() {
-//                        HistoryStateManager.shared.setIsShownFullRewardBottmeSheet()
-//                        state.isPresentingFinalBottomSheet = !state.isPresentingFinalBottomSheet
-//                    }
-//                }
                 
             case .touchGuideBottomSheetButton:
                 return .run { send in
@@ -217,18 +189,6 @@ struct DecorationStore {
                     return .none
                 }
                 state.selectedDecorationItem[category] = item
-//                if (category == .bottle) {
-//                    state.byeoltongShapeType = {
-//                        switch item.id {
-//                        case 24:
-//                            return .rewardBottleBeadsShape
-//                        case 25:
-//                            return .rewardBottleFuzzyShape
-//                        default:
-//                            return .rewardBottleDefaultShape
-//                        }
-//                    }()
-//                }
                 let diffCount = state.previousDecorationItem.compactMap { (key, item) in
                     (state.selectedDecorationItem[key]?.id ?? 0) == (item.id) ? nil : 0
                 }.count
@@ -286,6 +246,12 @@ struct DecorationStore {
                         decorationId: item[.decoration]?.id ?? 0,
                         byeoltongCaseId: item[.bottle]?.id ?? 0
                     )
+                    await send(.showSaveSuccessToast)
+                }
+            
+            case .showSaveSuccessToast:
+                state.toastType = .successSaveDecoration
+                return .run { send in
                     await send(.delegate(.pop(true)))
                 }
                 
@@ -299,7 +265,6 @@ struct DecorationStore {
                         let data = try fileRepository.loadRewardData(from: item, resourceType: .json)
                         await send(.changeEffectItem(data))
                     case .decoration:
-//                        let data = try fileRepository.loadRewardData(from: item, resourceType: .json)
                         let name = RewardResourceMapper(
                             id: item.id,
                             category: .decoration
@@ -311,6 +276,7 @@ struct DecorationStore {
                         break
                     }
                 }
+                
             case .changeBackgroundItem(let data):
                 state.starBottleAction = .changeBackgroundItem(data)
             case .changeEffectItem(let data):

@@ -74,6 +74,26 @@ extension Day: Equatable, Comparable {
     }
 }
 
+extension Day {
+    var dateString: String {
+        let dateString = "\(year)-\(month)-\(day)"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.timeZone = TimeZone.current
+        
+        guard let date = dateFormatter.date(from: dateString) else {
+            return ""
+        }
+        
+        let koreanFormatter = DateFormatter()
+        koreanFormatter.dateFormat = "M월 d일 EEE요일"
+        koreanFormatter.locale = Locale(identifier: "ko_KR")
+        
+        return koreanFormatter.string(from: date)
+    }
+}
+
 // Static
 extension Day {
     static var today: Day {

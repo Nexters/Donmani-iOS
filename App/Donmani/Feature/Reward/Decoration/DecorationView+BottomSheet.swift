@@ -49,6 +49,7 @@ extension DecorationView {
     
     func DecorationFullBottomSheet() -> some View {
         BottomSheetView(
+            isActiveClose: false,
             addCancelButton: false,
             closeAction: {
                 

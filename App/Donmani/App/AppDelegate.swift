@@ -9,8 +9,12 @@ import UIKit
 import DesignSystem
 import FirebaseCore
 import FirebaseMessaging
+import ComposableArchitecture
 
 class AppDelegate: NSObject, UIApplicationDelegate {
+    @Dependency(\.settings) var settings
+    @Dependency(\.userRepository) var userRepository
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
         // Load DesignSystem Resource

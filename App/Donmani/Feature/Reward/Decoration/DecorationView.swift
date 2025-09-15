@@ -11,6 +11,7 @@ import DesignSystem
 import Lottie
 
 struct DecorationView: View {
+    @EnvironmentObject private var toastManager: ToastManager
     @Environment(\.dismiss) private var dismiss
     @Bindable var store: StoreOf<DecorationStore>
     
@@ -48,7 +49,7 @@ struct DecorationView: View {
                 .background {
                     StarBottleView(
                         records: store.monthlyRecords,
-                        decorationItems: store.selectedDecorationItem,
+                        decorationData: store.decorationData,
                         viewType: .decoration,
                         starBottleAction: $store.starBottleAction
                     )
@@ -155,8 +156,10 @@ struct DecorationView: View {
                 }
             }
         }
+        .onChange(of: store.toastType) { _, type in
+            toastManager.show(type)
+        }
         .onAppear {
-            store.send(.onAppear)
             store.send(.toggleGuideBottomSheet)
         }
         .navigationBarBackButtonHidden()
@@ -182,7 +185,15 @@ struct DecorationView: View {
             records: [],
             decorationItem: decorationItem,
             currentDecorationItem: [],
-            selectedCategory: .background
+            selectedCategory: .background,
+            decorationData: DecorationData(
+                backgroundRewardData: nil,
+                effectRewardData: nil,
+                decorationRewardName: nil,
+                decorationRewardId: nil,
+                bottleRewardId: nil,
+                bottleShape: .bead
+            )
         )
         var state = MainStateFactory().makeDecorationState(context: context)
         state.monthlyRecords = []

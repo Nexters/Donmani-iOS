@@ -13,7 +13,7 @@ struct BottleCalendarStore {
     // MARK: - State
     @ObservableState
     struct State {
-        var isPresentingTopBanner: Bool
+        var isPresentingTopBanner: Bool = false
         var isPresentTextGuide: Bool = false
         
         var starCount: [Int: Int] = [:]
@@ -22,13 +22,14 @@ struct BottleCalendarStore {
             Day.lastDaysOfMonths(year: Day.today.year)
         }
         
+        var toastType: ToastType = .none
+        
         init(context: RecordCountSummary) {
-            self.isPresentingTopBanner = HistoryStateManager.shared.getMonthlyBottleGuide()
             let today: Day = .today
             for month in (3...12) { // Only in 2025
                 self.starCount[month] = context.monthlyRecords[month]?.recordCount ?? -1
                 if self.starCount[month, default: -1] == -1 {
-                    if month <= today.month{
+                    if month <= today.month {
                         self.starCount[month] = 0
                     }
                 }
@@ -39,9 +40,11 @@ struct BottleCalendarStore {
     
     // MARK: - Action
     enum Action {
+        case onAppear
         case closeTopBanner
         case showEmptyBottleToast
-        case dismissEmptyBottleToast
+        case completeShowToast
+        
         case fetchMonthlyRecord(Int, Int)
         case delegate(Delegate)
         enum Delegate {
@@ -50,31 +53,25 @@ struct BottleCalendarStore {
     }
     
     // MARK: - Dependency
+    @Dependency(\.settings) var settings
     @Dependency(\.recordRepository) var recordRepository
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.isPresentingTopBanner = settings.shouldShowBottleCalendarTopBanner
+                
             case .closeTopBanner:
                 state.isPresentingTopBanner = false
-                HistoryStateManager.shared.setMonthlyBottleGuide()
-                return .none
+                settings.shouldShowBottleCalendarTopBanner = false
                 
             case .showEmptyBottleToast:
-                if (state.isPresentTextGuide) {
-                    return .none
-                }
-                state.isPresentTextGuide = true
-                return .run { send in
-                    try await Task.sleep(nanoseconds: .nanosecondsPerSecond * 3)
-                    await send(.dismissEmptyBottleToast, animation: .linear(duration: 0.5)
-                    )
-                }
+                state.toastType = .emptyRecordMonth
                 
-            case .dismissEmptyBottleToast:
-                state.isPresentTextGuide = false
-                return .none
+            case .completeShowToast:
+                state.toastType = .none
                 
             case .fetchMonthlyRecord(let year, let month):
                 return .run { send in
@@ -84,9 +81,10 @@ struct BottleCalendarStore {
                     await send(.delegate(.pushMonthlyBottleView(Day(year: year, month: month), records, monthlyRecordState.saveItems)))
                 }
                 
-            case .delegate:
-                return .none
+            default:
+                break
             }
+            return .none
         }
     }
 }

@@ -13,11 +13,12 @@ struct MonthlyStarBottleStore {
     struct Context {
         let day: Day
         let records: [Record]
-        let items: [Reward]
-        init(day: Day, records: [Record], items: [Reward]) {
+        let decorationData: DecorationData
+        
+        init(day: Day, records: [Record], decorationData: DecorationData) {
             self.day = day
             self.records = records
-            self.items = items
+            self.decorationData = decorationData
         }
     }
     
@@ -25,17 +26,14 @@ struct MonthlyStarBottleStore {
     @ObservableState
     struct State {
         let day: Day
-        var records: [Record]
-        let decorationItem: [RewardItemCategory: Reward]
+        let records: [Record]
+        let decorationData: DecorationData
+        var starBottleAction: StarBottleAction = .none
         
         init(context: Context) {
             self.day = context.day
             self.records = context.records
-            var items: [RewardItemCategory: Reward] = [:]
-            for item in context.items {
-                items[item.category] = item
-            }
-            self.decorationItem = items
+            self.decorationData = context.decorationData
         }
     }
     
@@ -50,6 +48,8 @@ struct MonthlyStarBottleStore {
         }
     }
     
+    @Dependency(\.fileRepository) var fileRepository
+    
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
         BindingReducer()
@@ -61,12 +61,11 @@ struct MonthlyStarBottleStore {
                 return .run { send in
                     await send(.delegate(.pushRecordListView(day, records)))
                 }
-                
-            case .delegate:
-                return .none
+            
             default:
-                return .none
+                break
             }
+            return .none
         }
     }
 }

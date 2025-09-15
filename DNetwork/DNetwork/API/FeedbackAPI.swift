@@ -12,7 +12,7 @@ public struct FeedbackAPI {
     
     /// 피드백 상태(미확인 리워드, 첫 오픈 여부, 리워드 개수)
     public func getFeedbackState(userKey: String) async throws -> FeedbackStateResponse {
-        let result: DResponse<FeedbackStateResponse> = try await request.get(
+        let result: ResponseWrapper<FeedbackStateResponse> = try await request.get(
             path: .feedback,
             additionalPaths: [userKey]
         )
@@ -24,7 +24,7 @@ public struct FeedbackAPI {
     
     /// 피드백 카드 정보
     public func getFeedbackCard(userKey: String) async throws -> FeedbackCardResponse {
-        let result: DResponse<FeedbackCardResponse> = try await request.get(
+        let result: ResponseWrapper<FeedbackCardResponse> = try await request.get(
             path: .feedback,
             additionalPaths: ["content", userKey]
         )
