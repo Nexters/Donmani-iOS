@@ -12,7 +12,7 @@ public struct RewardAPI {
     
     /// 사용자의 리워드 아이템 조회
     public func getUserRewardItem(userKey: String) async throws -> UserRewardItemResponse {
-        let result: DResponse<UserRewardItemResponse> = try await request.get(
+        let result: ResponseWrapper<UserRewardItemResponse> = try await request.get(
             path: .reward,
             additionalPaths: ["edit", userKey]
         )
@@ -24,7 +24,7 @@ public struct RewardAPI {
     
     /// 열지 않은 리워드 개수 조회
     public func getNotOpenRewardCount(userKey: String) async throws -> Int {
-        let result: DResponse<Int> = try await request.get(
+        let result: ResponseWrapper<Int> = try await request.get(
             path: .reward,
             additionalPaths: ["not-open", userKey]
         )
@@ -36,7 +36,7 @@ public struct RewardAPI {
     
     /// 월별 착용아이템 조회
     public func getMonthlyRewardItem(userKey: String, year: Int, month: Int) async throws -> [RewardItemResponse] {
-        let result: DResponse<[RewardItemResponse]> = try await request.get(
+        let result: ResponseWrapper<[RewardItemResponse]> = try await request.get(
             path: .reward,
             additionalPaths: [userKey],
             parameters: [
@@ -65,7 +65,7 @@ public struct RewardAPI {
     
     /// 리워드 아이템 오픈
     public func putOpenReward(userKey: String) async throws -> [RewardItemResponse] {
-        let result: DResponse<[RewardItemResponse]> = try await request.put(
+        let result: ResponseWrapper<[RewardItemResponse]> = try await request.put(
             path: .reward,
             additionalPaths: ["open", userKey],
             bodyData: EmptyRequest()
@@ -77,16 +77,7 @@ public struct RewardAPI {
     }
     
     /// 월별 리워드 아이템 저장
-    public func putSaveReward(
-        bodyData: RewardSaveRequest
-//        userKey: String,
-//        year: Int,
-//        month: Int,
-//        backgroundId: Int,
-//        effectId: Int,
-//        decorationId: Int,
-//        byeoltongCaseId: Int
-    ) async throws {
+    public func putSaveReward(bodyData: RewardSaveRequest) async throws {
         let _: EmptyResponse = try await request.put(
             path: .reward,
             bodyData: bodyData

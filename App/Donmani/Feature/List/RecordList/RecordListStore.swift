@@ -81,6 +81,7 @@ struct RecordListStore {
             case .closeBottleCalendarToolTip:
                 state.isPresentingBottleCalendarToolTipView = false
                 HistoryStateManager.shared.setIsShownBottleCalendarToopTip()
+                
             case .touchStatisticsView(let isEmpty):
                 let value = isEmpty ? "no_record" : "has_record"
                 GA.Click(event: .insightButton).send(parameters: [.recordStatus: value])
@@ -89,6 +90,7 @@ struct RecordListStore {
                         await send(.pushStatisticsView)
                     }
                 }
+                
             case .pushStatisticsView:
                 let day = state.day
                 return .run { send in
@@ -110,13 +112,17 @@ struct RecordListStore {
                 if let day {
                     state.dateSet.insert(day)
                 } else {
-                    //
+                    // TODO
                 }
+                
+            case .delegate(.pushRecordEntryPointView):
+                GA.Click(event: .recordhistoryRecordButton).send()
 
             case .delegate(.pushBottleCalendarView(_)):
                 state.isPresentingBottleCalendarToolTipView = false
                 HistoryStateManager.shared.setIsShownBottleCalendarToopTip()
-            case .delegate:
+                
+            default:
                 break
             }
             return .none

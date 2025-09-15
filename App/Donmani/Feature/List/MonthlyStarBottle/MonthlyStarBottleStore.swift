@@ -13,13 +13,11 @@ struct MonthlyStarBottleStore {
     struct Context {
         let day: Day
         let records: [Record]
-//        let items: [Reward]
         let decorationData: DecorationData
         
         init(day: Day, records: [Record], decorationData: DecorationData) {
             self.day = day
             self.records = records
-//            self.items = items
             self.decorationData = decorationData
         }
     }
@@ -28,20 +26,14 @@ struct MonthlyStarBottleStore {
     @ObservableState
     struct State {
         let day: Day
-//        let decorationItem: [RewardItemCategory: Reward]
         let records: [Record]
-        var starBottleAction: StarBottleAction = .none
         let decorationData: DecorationData
+        var starBottleAction: StarBottleAction = .none
         
         init(context: Context) {
             self.day = context.day
             self.records = context.records
-//            var items: [RewardItemCategory: Reward] = [:]
-//            for item in context.items {
-//                items[item.category] = item
-//            }
             self.decorationData = context.decorationData
-//            self.decorationItem = items
         }
     }
     

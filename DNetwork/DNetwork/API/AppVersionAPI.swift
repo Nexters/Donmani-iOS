@@ -12,7 +12,7 @@ public struct AppVersionAPI {
     
     /// 앱 버전 정보 요청
     public func getAppVersion() async throws -> AppVersionResponse {
-        let result: DResponse<AppVersionResponse> = try await request.get(
+        let result: ResponseWrapper<AppVersionResponse> = try await request.get(
             path: .appVersion,
             additionalPaths: ["iOS"]
         )

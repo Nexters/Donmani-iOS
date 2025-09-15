@@ -89,7 +89,6 @@ struct RootStore {
                     let mainContext = MainStore.Context(
                         records: monthlyRecordState.records ?? [],
                         hasRecord: (hasTodayRecord, hasYesterdayRecord),
-//                        decorationItem: monthlyRecordState.decorationItem,
                         isPresentingNewStarBottle: isPresentingNewStarBottle,
                         decorationData: convertDecorationData(items: monthlyRecordState.decorationItem)
                     )
@@ -119,7 +118,6 @@ struct RootStore {
                     let mainContext = MainStore.Context(
                         records: monthlyRecordState.records ?? [],
                         hasRecord: (hasTodayRecord, hasYesterdayRecord),
-//                        decorationItem: monthlyRecordState.decorationItem,
                         isPresentingNewStarBottle: isPresentingNewStarBottle,
                         decorationData: convertDecorationData(items: monthlyRecordState.decorationItem)
                     )

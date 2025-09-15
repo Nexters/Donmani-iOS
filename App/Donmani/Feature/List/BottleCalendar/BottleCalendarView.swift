@@ -39,6 +39,9 @@ struct BottleCalendarView: View {
                 .ignoresSafeArea(edges: .bottom)
             }
         }
+        .onAppear {
+            store.send(.onAppear)
+        }
         .onChange(of: store.toastType) { _, type in
             toastManager.show(type)
             store.send(.completeShowToast)

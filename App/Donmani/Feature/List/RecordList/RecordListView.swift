@@ -38,22 +38,22 @@ struct RecordListView: View {
                 if store.records.isEmpty {
                     ZStack {
                         VStack {
-                            SimpleStatisticsView()
+                            SimpleStatisticsView(store: store)
                                 .padding(.top, .s5)
                                 .onTapGesture {
                                     store.send(.touchStatisticsView(true))
                                 }
                             Spacer()
                         }
-                        EmptyGuideView()
+                        EmptyGuideView(store: store)
                     }
                 } else {
-                    RecordScrollView()
+                    RecordScrollView(store: store)
                 }
             }
             
             if store.isPresentingBottleCalendarToolTipView {
-                BottleCalendarToopTipView()
+                BottleCalendarToolTipView(store: store)
             }
             
         }
@@ -72,24 +72,6 @@ struct RecordListView: View {
                 }
             }
         }
-    }
-    
-    func convertDateTitle(_ day: Day) -> String? {
-        let dateString = "\(day.year)-\(day.month)-\(day.day)"
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.locale = Locale(identifier: "ko_KR")
-        dateFormatter.timeZone = TimeZone.current
-        
-        guard let date = dateFormatter.date(from: dateString) else {
-            return nil
-        }
-        
-        let koreanFormatter = DateFormatter()
-        koreanFormatter.dateFormat = "M월 d일 EEE요일"
-        koreanFormatter.locale = Locale(identifier: "ko_KR")
-        
-        return koreanFormatter.string(from: date)
     }
 }
 

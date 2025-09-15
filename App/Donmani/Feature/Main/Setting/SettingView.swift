@@ -23,19 +23,19 @@ struct SettingView: View {
         var title: String {
             switch self {
             case .decoration:
-                return "꾸미기"
+                "꾸미기"
             case .sound:
-                return "별통이 효과음"
+                "별통이 효과음"
             case .notification:
-                return "앱 푸시 알림"
+                "앱 푸시 알림"
             case .notice:
-                return "공지사항"
+                "공지사항"
             case .recordGuide:
-                return "별별소 기록 규칙"
+                "별별소 기록 규칙"
             case .feedback:
-                return "별별소에게 부탁하기"
+                "별별소에게 부탁하기"
             case .privacyPolicy:
-                return "개인정보 처리방침"
+                "개인정보 처리방침"
             }
         }
     }

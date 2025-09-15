@@ -156,9 +156,6 @@ struct MainStore {
                         }
                     }
                 }
-//                    let canWriteRecord =
-//                    await send(.update(.fetchWriteRecordButtonState(canWriteRecord)))
-//                }
                 
             case .fetchRewardItem(let decorationData):
                 state.decorationData = decorationData

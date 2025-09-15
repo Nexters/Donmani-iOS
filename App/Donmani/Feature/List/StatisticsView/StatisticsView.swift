@@ -52,7 +52,6 @@ struct StatisticsView: View {
             BackgroundView()
         }
         .sheet(isPresented: $store.isPresentingProposeFunctionView) {
-            // Propose Function WebView
             InnerWebView(urlString: DURL.proposeFunction.urlString)
         }
         .onAppear {

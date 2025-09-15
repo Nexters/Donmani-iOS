@@ -17,7 +17,7 @@ public struct RecordAPI {
     
     /// 월별 기록 정보(리스트)
     public func getMonthlyRecordList(userKey: String, year: Int, month: Int) async throws -> MonthlyRecordResponse {
-        let result: DResponse<MonthlyRecordResponse> = try await request.get(
+        let result: ResponseWrapper<MonthlyRecordResponse> = try await request.get(
             path: .expenses,
             additionalPaths: ["list", userKey],
             parameters: [
@@ -33,7 +33,7 @@ public struct RecordAPI {
     
     /// 월별 기록 정보(캘린더)
     public func getMonthlyRecordCalendar(userKey: String, year: Int, month: Int) async throws -> MonthlyRecordResponse {
-        let result: DResponse<MonthlyRecordResponse> = try await request.get(
+        let result: ResponseWrapper<MonthlyRecordResponse> = try await request.get(
             path: .expenses,
             additionalPaths: ["calendar", userKey],
             parameters: [
@@ -49,7 +49,7 @@ public struct RecordAPI {
     
     /// 월별 행복/후회 기록 개수 통계
     public func getMonthlyRecordStatistics(userKey: String, year: Int, month: Int) async throws -> StatisticsResponse {
-        let result: DResponse<StatisticsResponse> = try await request.get(
+        let result: ResponseWrapper<StatisticsResponse> = try await request.get(
             path: .expenses,
             additionalPaths: ["statistics", userKey],
             parameters: [
@@ -65,7 +65,7 @@ public struct RecordAPI {
     
     /// 월간 카테고리별 기록 수
     public func getMonthlyCategoryStatistics(userKey: String, year: Int, month: Int) async throws -> CategoryStatisticsResponse {
-        let result: DResponse<CategoryStatisticsResponse> = try await request.get(
+        let result: ResponseWrapper<CategoryStatisticsResponse> = try await request.get(
             path: .expenses,
             additionalPaths: ["category-statistics", userKey],
             parameters: [

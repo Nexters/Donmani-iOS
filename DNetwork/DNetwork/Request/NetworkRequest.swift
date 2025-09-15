@@ -84,10 +84,6 @@ public struct NetworkRequest {
         if stateCode >= 400 {
             throw NetworkError.serverError(statusCode: stateCode)
         }
-        if data.count == 0 {
-            let tempResponse = DResponse(statusCode: 200, responseMessage: "Success", responseData: Data())
-            return tempResponse as! R
-        }
 #if DEBUG
         if let object = try? JSONSerialization.jsonObject(with: data) {
             if JSONSerialization.isValidJSONObject(object) {

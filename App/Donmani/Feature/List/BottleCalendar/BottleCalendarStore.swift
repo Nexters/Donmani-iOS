@@ -13,7 +13,7 @@ struct BottleCalendarStore {
     // MARK: - State
     @ObservableState
     struct State {
-        var isPresentingTopBanner: Bool
+        var isPresentingTopBanner: Bool = false
         var isPresentTextGuide: Bool = false
         
         var starCount: [Int: Int] = [:]
@@ -25,7 +25,6 @@ struct BottleCalendarStore {
         var toastType: ToastType = .none
         
         init(context: RecordCountSummary) {
-            self.isPresentingTopBanner = HistoryStateManager.shared.getMonthlyBottleGuide()
             let today: Day = .today
             for month in (3...12) { // Only in 2025
                 self.starCount[month] = context.monthlyRecords[month]?.recordCount ?? -1
@@ -41,6 +40,7 @@ struct BottleCalendarStore {
     
     // MARK: - Action
     enum Action {
+        case onAppear
         case closeTopBanner
         case showEmptyBottleToast
         case completeShowToast
@@ -53,15 +53,19 @@ struct BottleCalendarStore {
     }
     
     // MARK: - Dependency
+    @Dependency(\.settings) var settings
     @Dependency(\.recordRepository) var recordRepository
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.isPresentingTopBanner = settings.shouldShowBottleCalendarTopBanner
+                
             case .closeTopBanner:
                 state.isPresentingTopBanner = false
-                HistoryStateManager.shared.setMonthlyBottleGuide()
+                settings.shouldShowBottleCalendarTopBanner = false
                 
             case .showEmptyBottleToast:
                 state.toastType = .emptyRecordMonth
@@ -77,7 +81,7 @@ struct BottleCalendarStore {
                     await send(.delegate(.pushMonthlyBottleView(Day(year: year, month: month), records, monthlyRecordState.saveItems)))
                 }
                 
-            case .delegate:
+            default:
                 break
             }
             return .none
