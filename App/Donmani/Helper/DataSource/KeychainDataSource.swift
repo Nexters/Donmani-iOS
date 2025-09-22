@@ -40,7 +40,7 @@ struct DefaultKeychainDataSource: KeychainDataSource {
             return uuid
         }
         return debugUUID
-//        let newUUID = UUID().uuidString
+//        let newUUID = load(from: .uuid) ?? UUID().uuidString
 //        save(to: .uuid, value: newUUID)
 //        return newUUID
     }

@@ -51,7 +51,7 @@ struct RootView: View {
                 ])
             }
             
-            NewToastView()
+            ToastView()
         }
         
     }

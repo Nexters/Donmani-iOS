@@ -45,10 +45,4 @@ class NotificationManager {
             UIApplication.shared.unregisterForRemoteNotifications()
         }
     }
-    
-    deinit {
-#if DEBUG
-        print("\(#function) \(Self.self)")
-#endif
-    }
 }

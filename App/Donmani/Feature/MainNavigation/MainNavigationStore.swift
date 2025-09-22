@@ -41,7 +41,7 @@ struct MainNavigationStore {
             case setting(String)
             
             // Record
-            case record
+            case record(Bool, Bool) // Today, Yesterday
             case recordWriting(RecordContentType, RecordContent?)
             
             // List
@@ -85,7 +85,9 @@ struct MainNavigationStore {
                     
                 case .pushRecordEntryPointView:
                     return .run { send in
-                        await send(.push(.record))
+                        let hasTodayRecord = recordRepository.load(date: .today).isSome
+                        let hasYesterdayRecord = recordRepository.load(date: .yesterday).isSome
+                        await send(.push(.record(hasTodayRecord, hasYesterdayRecord)))
                     }
                     
                 case .pushRecordListView:

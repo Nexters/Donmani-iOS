@@ -52,11 +52,8 @@ extension MainNavigationStore {
             state.path.append(.setting(initialState))
             
             // Record
-        case .record:
-            let isComplete = HistoryStateManager.shared.getState()
-            let today = isComplete[.today, default: false]
-            let yesterday = isComplete[.yesterday, default: false]
-            let context = RecordEntryPointStore.Context(today: today, yesterday: yesterday)
+        case .record(let hasTodayRecord, let hasYesterdayRecord):
+            let context = RecordEntryPointStore.Context(today: hasTodayRecord, yesterday: hasYesterdayRecord)
             let initialState = stateFactory.makeRecordEntryPointState(context: context)
             state.path.append(.record(initialState))
             

@@ -24,6 +24,17 @@ extension MainView {
             }
         }
         .frame(width: 70, height: 70)
+        .overlay {
+            if store.canWriteRecord && store.isPresentingRecordYesterdayToolTip {
+                VStack {
+                    RecordYesterdayViewToolTip()
+                        .frame(width: .screenWidth)
+                    Spacer()
+                    //                .padding(.vertical, 16 + 70)
+                }
+                .offset(y: -(8 + 35))
+            }
+        }
     }
     
     func RecordYesterdayViewToolTip() -> some View {

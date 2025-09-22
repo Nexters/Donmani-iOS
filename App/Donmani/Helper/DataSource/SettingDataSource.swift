@@ -84,9 +84,6 @@ struct SettingDataSource {
         // 메인 페이지 내 선물 받기 툴팁 표시 여부 -> 다른 객체로 위임
         // private let isPresentingRewardToolTipView = "PRESENTING_REWARD_TOOL_TIP_VIEW"
         
-        // 꾸미기 페이지 내 히든 아이템 바텀시트 여부 -> 다른 객체로 위임
-        // case shouldShowHiddenRewardBottmSheet
-        
         var value: String {
             self.rawValue
         }

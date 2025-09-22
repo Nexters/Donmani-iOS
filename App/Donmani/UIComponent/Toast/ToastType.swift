@@ -29,25 +29,39 @@ enum ToastType {
         }
     }
     
-    var position: ToastPosition {
+    var position: ToastPosition? {
         switch self {
         case .maxNicknameLengthExceeded, .specialCharactersNotAllowed, .emptyRecordMonth:
                 .bottom
         case .successSaveDecoration:
                 .top
         case .none:
-                .top
+                nil
         }
     }
     
-    var icon: DImageAsset {
+    var icon: DImageAsset? {
         switch self {
         case .maxNicknameLengthExceeded, .specialCharactersNotAllowed, .emptyRecordMonth:
                 .warning
         case .successSaveDecoration:
                 .success
         case .none:
-                .success
+                nil
+        }
+    }
+    
+    var opacity: CGFloat {
+        switch self {
+        case .none: 0
+        default: 1
+        }
+    }
+    
+    var offset: CGFloat {
+        switch self {
+        case .none: 0
+        default: -4
         }
     }
 }
