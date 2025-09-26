@@ -55,14 +55,6 @@
 - 12개 기록을 모두 작성하면 특별한 선물이 기다리고 있어요!
 ```
 
-## Expectations
-
-- Strabismus is diagnosed in early age.
-- Provides an easy tool who cares and worries whether his or her child has a strabismus or not.
-- Records and tracks recovery process after surgery.
-
-<br>
-
 ## 📚 Tech Stacks
 
 - SwiftUI
@@ -70,8 +62,6 @@
 - TCA
 - DI
 - Clean Architecture
-
-<br>
 
 ## 🔐 License
 - [MIT License](./LICENSE)
