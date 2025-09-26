@@ -69,7 +69,7 @@ extension RewardStartView {
     func FeedbackCardView(feedbackCard: FeedbackCard) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: .s1, style: .circular)
-                .fill((feedbackCard.category?.color ?? DColor.emptyColor).opacity(0.5))
+                .fill((feedbackCard.category?.color ?? DColor.empty).opacity(0.5))
             RoundedRectangle(
                 cornerRadius: .s1,
                 style: .continuous

@@ -16,7 +16,7 @@ extension MainView {
         } label: {
             ZStack {
                 Circle()
-                    .fill(DColor(.pupleBlue70).color)
+                    .fill(DColor(.purpleBlue70).color)
                 DImage(.plus).image
                     .resizable()
                     .aspectRatio(contentMode: .fit)

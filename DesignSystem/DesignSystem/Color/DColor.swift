@@ -8,23 +8,24 @@
 import SwiftUI
 
 public struct DColor {
-    public static let accessoryButton: Color = Color("AccessoryButton", bundle: .designSystem)
-    public static let backgroundTop: Color = Color("BackgroundTop", bundle: .designSystem)
-    public static let backgroundBottom: Color = Color("BackgroundBottom", bundle: .designSystem)
+    public static let accessoryButton = Color("accessoryButton", bundle: .designSystem)
+    public static let backgroundTop = Color("backgroundTop", bundle: .designSystem)
+    public static let backgroundBottom = Color("backgroundBottom", bundle: .designSystem)
     
-    public static let textGuide: Color = Color("TextGuide", bundle: .designSystem)
-    public static let noticeColor: Color = Color("NoticeColor", bundle: .designSystem) 
-    public static let emptyColor: Color = Color("EmptyColor", bundle: .designSystem)
+    public static let textGuide = Color("textGuide", bundle: .designSystem)
+    public static let notice = Color("noticeDot", bundle: .designSystem)
+    public static let empty = Color("empty", bundle: .designSystem)
     
-    public static let mainToolTipBackgroundColor: Color = Color("MainToolTipBackgroundColor", bundle: .designSystem)
+    public static let mainToolTipBackground = Color("mainToolTipBackground", bundle: .designSystem)
     
     public var type: DColorType = .deepBlue50
     public var name: String? = nil
     
     public var color: Color {
-        let name = self.name ?? ("\(type.name)\(type.brightness)")
+        let name = self.name ?? ("\(type.name)_\(type.brightness)")
         return Color(name, bundle: .designSystem)
     }
+    
     public var uiColor: UIColor {
         UIColor(color)
     }

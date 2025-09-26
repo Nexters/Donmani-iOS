@@ -144,8 +144,8 @@ extension RecordListView {
                                 .fill(
                                     LinearGradient(
                                         stops: [
-                                            .init(color: DColor(.pupleBlue70).color, location: store.progressPoint),
-                                            .init(color: DColor(.pupleBlue99).color, location: store.progressPoint)
+                                            .init(color: DColor(.purpleBlue70).color, location: store.progressPoint),
+                                            .init(color: DColor(.purpleBlue99).color, location: store.progressPoint)
                                         ],
                                         startPoint: .leading,
                                         endPoint: .trailing
@@ -158,14 +158,14 @@ extension RecordListView {
                         VStack(alignment: .leading, spacing: 4) {
                             HStack(spacing: 8) {
                                 Circle()
-                                    .fill(DColor(.pupleBlue70).color)
+                                    .fill(DColor(.purpleBlue70).color)
                                     .frame(width: 6, height: 6)
                                 DText("행복 \(store.goodCount)개")
                                     .style(.b2, .medium, .deepBlue99)
                             }
                             HStack(spacing: 8) {
                                 Circle()
-                                    .fill(DColor(.pupleBlue99).color)
+                                    .fill(DColor(.purpleBlue99).color)
                                     .frame(width: 6, height: 6)
                                 DText("후회 \(store.badCount)개")
                                     .style(.b2, .medium, .deepBlue99)

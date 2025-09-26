@@ -60,6 +60,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C75F7BD72E86299700B5BBDE /* Exceptions for "Donmani" folder in "DonmaniTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Helper/Manager/VersionManager.swift,
+			);
+			target = C7A6A25D2D4A826D00B4CF35 /* DonmaniTests */;
+		};
 		C78151322D61225C00026BC1 /* Exceptions for "Donmani" folder in "Donmani" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -74,6 +81,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				C78151322D61225C00026BC1 /* Exceptions for "Donmani" folder in "Donmani" target */,
+				C75F7BD72E86299700B5BBDE /* Exceptions for "Donmani" folder in "DonmaniTests" target */,
 			);
 			path = Donmani;
 			sourceTree = "<group>";

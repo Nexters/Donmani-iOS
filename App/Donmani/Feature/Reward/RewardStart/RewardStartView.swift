@@ -48,10 +48,10 @@ struct RewardStartView: View {
                                     .resizable()
                                     .renderingMode(.template)
                                     .aspectRatio(contentMode: .fit)
-                                    .foregroundStyle(DColor(.pupleBlue90).color)
+                                    .foregroundStyle(DColor(.purpleBlue90).color)
                                     .frame(width: 22)
                                 DText("내일 다시 만나요!")
-                                    .style(.b2, .semibold, .pupleBlue90)
+                                    .style(.b2, .semibold, .purpleBlue90)
                             }
                         }
                     }
