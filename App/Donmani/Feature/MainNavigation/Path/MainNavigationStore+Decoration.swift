@@ -17,17 +17,16 @@ extension MainNavigationStore {
         case .pop(let isSaved):
             if isSaved {
                 state.path.removeAll()
-                state.mainState.isSaveSuccess = isSaved
-            } else {
-                if let settingID = state.path.ids.first {
-                    if case .setting(_) = state.path[id: settingID] {
-                        state.path.pop(to: settingID)
-                    } else {
-                        state.path.removeAll()
-                    }
+                break
+            }
+            if let settingID = state.path.ids.first {
+                if case .setting(_) = state.path[id: settingID] {
+                    state.path.pop(to: settingID)
+                } else {
+                    state.path.removeAll()
                 }
             }
-            return .none
         }
+        return .none
     }
 }

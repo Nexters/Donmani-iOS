@@ -62,6 +62,7 @@ struct RewardReceiveStore {
     
     @Dependency(\.recordRepository) var recordRepository
     @Dependency(\.rewardRepository) var rewardRepository
+    @Dependency(\.fileRepository) var fileRepository
     
     enum Action: BindableAction {
         case touchNextButton
@@ -93,6 +94,9 @@ struct RewardReceiveStore {
                     return .run { send in
                         GA.Click(event: .rewardReceivedButton).send()
                         let rewards = try await rewardRepository.putOpenReward()
+                        for reward in rewards {
+                            try? await fileRepository.saveRewardData(from: reward)
+                        }
                         await send(.receiveRewardItems(rewards))
                     }
                 } else {

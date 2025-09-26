@@ -138,12 +138,11 @@ struct StarBottleView: View {
                     DColor.backgroundTop,
                     DColor.backgroundBottom,
                 ])
+                DImage(.mainBackgroundStar).image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
             }
-            
-            DImage(.mainBackgroundStar).image
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
             
             if let effectRewardData {
                 GeometryReader { proxy in

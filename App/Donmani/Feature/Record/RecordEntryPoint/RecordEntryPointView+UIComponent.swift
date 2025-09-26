@@ -85,7 +85,6 @@ extension RecordEntryPointView {
                     .style(.b1, .semibold, .gray99)
                 DText("돌아가기를 누르면 기록할 수 있어요")
                     .style(.b2, .regular, .gray99)
-                
             }
             Spacer()
         }
@@ -100,7 +99,7 @@ extension RecordEntryPointView {
                 }
                 Spacer()
             }
-            if store.isPresentingPopover {
+            if store.isPresentingEmptyRecordToolTip {
                 VStack(spacing: 0) {
                     HStack {
                         Triangle()

@@ -14,7 +14,6 @@ struct MainStore {
     struct Context {
         let records: [Record]
         let hasRecord: (today: Bool, yesterday: Bool)
-//        let decorationItem: [RewardItemCategory: Reward]
         let isPresentingNewStarBottle: Bool
         let decorationData: DecorationData
     }
@@ -25,7 +24,6 @@ struct MainStore {
         var userName: String = ""
         var day: Day
         var records: [Record]
-//        var decorationItem: [RewardItemCategory: Reward]
         var decorationData: DecorationData
  
         /// 기록 작성 가능 여부
@@ -35,8 +33,6 @@ struct MainStore {
         var isPresentingAlreadyWrite: Bool = false
         var isPresentingNewStarBottle: Bool = false
         var isPresentingRewardToolTipView: Bool
-        var isSaveSuccess: Bool = false
-        var isPresentingSaveSuccessToastView: Bool = false
         var isRequestNotificationPermission: Bool = true
         var isLoading: Bool = false
         var starBottleOpacity = 1.0
@@ -44,11 +40,11 @@ struct MainStore {
         var shakeCount = 0
         var isNewStar = 0
         var starBottleAction: StarBottleAction = .none
+        var toastType: ToastType = .none
         
         init(context: MainStore.Context) {
             self.day = .today
             self.records = context.records
-//            self.decorationItem = context.decorationItem
             self.decorationData = context.decorationData
             self.canWriteRecord = !(context.hasRecord.today && context.hasRecord.yesterday)
             self.isPresentingNewStarBottle = context.isPresentingNewStarBottle
@@ -66,14 +62,12 @@ struct MainStore {
         case fetchRewardItem(DecorationData)
         
         case closePopover
-        case checkPopover
+        case checkToolTip
         case dismissNewStarBottleView
         case dismissAlreadyWrite
         case shakeTwice
         case touchRewardButton
         
-        case dismissSaveSuccessToast
-
         case delegate(Delegate)
         
         case update(Update)
@@ -96,6 +90,7 @@ struct MainStore {
     // MARK: - Dependency
     @Dependency(\.userUseCase) var userUseCase
     @Dependency(\.writeRecordUseCase) var writeRecordUseCase
+    @Dependency(\.recordRepository) var recordRepository
     @Dependency(\.loadRewardUseCase) var loadRewardUseCase
     @Dependency(\.fileRepository) var fileRepository
     @Dependency(\.rewardRepository) var rewardRepository
@@ -107,15 +102,8 @@ struct MainStore {
             switch action {
             case .onAppear:
                 GA.View(event: .main).send()
-//                let items = loadRewardUseCase.loadTodayDecorationItems()
-//                state.decorationItem = items
                 state.userName = userUseCase.userName
                 state.canWriteRecord = writeRecordUseCase.canWriteRecord()
-//                return .run { send in
-//                    let day: Day = .today
-//                    let items = rewardRepository.loadEquippedItems(year: day.year, month: day.month)
-
-//                }
                 return .run { send in
                     let day: Day = .today
                     let items = rewardRepository.loadEquippedItems(year: day.year, month: day.month)
@@ -138,11 +126,13 @@ struct MainStore {
                     for (category, item) in items {
                         switch category {
                         case .background:
-                            let data = try fileRepository.loadRewardData(from: item, resourceType: .image)
-                            await send(.update(.changeBackgroundItem(data)))
+                            if let data = try? fileRepository.loadRewardData(from: item, resourceType: .image) {
+                                await send(.update(.changeBackgroundItem(data)))
+                            }
                         case .effect:
-                            let data = try fileRepository.loadRewardData(from: item, resourceType: .json)
-                            await send(.update(.changeEffectItem(data)))
+                            if let data = try? fileRepository.loadRewardData(from: item, resourceType: .json) {
+                                await send(.update(.changeEffectItem(data)))
+                            }
                         case .decoration:
                             let name = RewardResourceMapper(
                                 id: item.id,
@@ -155,6 +145,12 @@ struct MainStore {
                             break
                         }
                     }
+                    
+                    let hasTodayRecord = recordRepository.load(date: .today).isSome
+                    let hasYesterdayRecord = recordRepository.load(date: .yesterday).isSome
+                    if (hasTodayRecord && !hasYesterdayRecord) {
+                        await send(.checkToolTip)
+                    }
                 }
                 
             case .fetchRewardItem(let decorationData):
@@ -164,21 +160,16 @@ struct MainStore {
                 state.isPresentingRecordYesterdayToolTip = false
                 HistoryStateManager.shared.setLastYesterdayToopTipDay()
                 
-            case .checkPopover:
-                let historyManager = HistoryStateManager.shared
-                let stateManager = historyManager.getState()
-                if stateManager[.today, default: false] && !stateManager[.yesterday, default: false] {
-                    if let dateString = historyManager.getLastYesterdayToopTipDay() {
-                        let lastDay = Day(yyyymmdd: dateString)
-                        let today: Day = .today
-                        state.isPresentingRecordYesterdayToolTip = today > lastDay
-                    } else {
-                        state.isPresentingRecordYesterdayToolTip = true
-                    }
-                }
+            case .checkToolTip:
+                state.isPresentingRecordYesterdayToolTip = true
                 
             case .dismissNewStarBottleView:
                 state.isPresentingNewStarBottle = false
+                UINavigationController.isBlockSwipe = false
+                return .run { send in
+                    let result = try await recordRepository.getYearlyRecordSummary(year: 2025)
+                    await send(.delegate(.pushBottleCalendarView(result)))
+                }
 
             case .dismissAlreadyWrite:
                 state.isPresentingAlreadyWrite = false
@@ -205,10 +196,6 @@ struct MainStore {
                     await send(.delegate(.pushRewardStartView))
                 }
                 
-            case .dismissSaveSuccessToast:
-                state.isSaveSuccess = false
-                state.isPresentingSaveSuccessToastView = false
-            
                 // 화면 업데이트 Action
             case .update(let update):
                 switch update {

@@ -52,12 +52,6 @@ final class StarBottleScene: SKScene {
         if dy < -limit { dy = -limit }
         self.physicsWorld.gravity = CGVector(dx: dx, dy: dy)
     }
-    
-    deinit {
-#if DEBUG
-        print("Deinitialize Star Bottle Scene")
-#endif
-    }
 }
 
 extension StarBottleScene: SKPhysicsContactDelegate {

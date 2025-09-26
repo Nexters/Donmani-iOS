@@ -91,7 +91,9 @@ public struct NetworkRequest {
                     withJSONObject: object,
                     options: [.prettyPrinted, .sortedKeys]
                 )) ?? Data()
+                print(request.url?.absoluteString ?? "")
                 print(String(decoding: data, as: UTF8.self))
+                print()
             }
         }
 #endif

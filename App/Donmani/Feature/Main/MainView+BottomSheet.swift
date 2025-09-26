@@ -70,12 +70,7 @@ extension MainView {
                 
                 Button {
                     dismissSheet {
-                        Task {
-                            store.send(.dismissNewStarBottleView)
-                            let result = try await recordRepository.getYearlyRecordSummary(year: 2025)
-                            UINavigationController.isBlockSwipe = false
-                            store.send(.delegate(.pushBottleCalendarView(result)))
-                        }
+                        store.send(.dismissNewStarBottleView)
                     }
                 } label: {
                     HStack(spacing: 4) {
@@ -93,7 +88,6 @@ extension MainView {
                 
                 DButton(title: "확인했어요") {
                     dismissSheet {
-                        UINavigationController.isBlockSwipe = false
                         store.send(.dismissNewStarBottleView)
                     }
                 }

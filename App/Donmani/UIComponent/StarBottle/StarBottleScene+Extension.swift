@@ -27,7 +27,7 @@ extension StarBottleScene {
         node.physicsBody = SKPhysicsBody(texture: node.texture!, size: node.size)
         node.physicsBody?.isDynamic = false
         node.position = CGPoint(x: size.width / 2, y: size.height / 2)
-        node.alpha = 1.0
+        node.alpha = 0.0
         addChild(node)
     }
     

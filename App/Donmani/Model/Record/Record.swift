@@ -7,13 +7,12 @@
 
 struct Record {
     let day: Day
-    var records: [RecordContentType: RecordContent]
+    let records: [RecordContentType: RecordContent]
     
     init(day: Day, records: [RecordContent]) {
         self.day = day
-        self.records = [:]
-        records.forEach { record in
-            self.records[record.flag] = record
+        self.records = records.reduce(into: [:]) { result, record in
+            result[record.flag] = record
         }
     }
 }

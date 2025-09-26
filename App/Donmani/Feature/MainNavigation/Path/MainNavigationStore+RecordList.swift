@@ -16,7 +16,9 @@ extension MainNavigationStore {
         switch action {
         case  .pushRecordEntryPointView:
             return .run { send in
-                await send(.push(.record))
+                let hasTodayRecord = recordRepository.load(date: .today).isSome
+                let hasYesterdayRecord = recordRepository.load(date: .yesterday).isSome
+                await send(.push(.record(hasTodayRecord, hasYesterdayRecord)))
             }
         
         case .pushBottleCalendarView(let result):
