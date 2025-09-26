@@ -52,7 +52,7 @@ struct SettingDataSource {
         case secondToLastRecordDay
         
         /// 기록하기 페이지 내 무소비 툴팁 표시 여부: Bool
-        case shouldShowEmptyRecordToopTip
+        case shouldShowEmptyRecordToolTip
         
         /// 별통이 달력 페이지 내 상단 배너 표시 여부: Bool
         case shouldShowBottleCalendarTopBanner
@@ -77,9 +77,6 @@ struct SettingDataSource {
         
         /// 새 별통이 오픈 안내 날짜(YYYY-MM-DD): String
         case lastNewBottleGuideDay
-        
-        // 메인 페이지 내 어제 기록 유도 툴팁 표시 여부 -> 다른 객체로 위임
-        // private let shouldShowYesterdayRecordToopTip = "LAST_YESTERDAY_TOOP_TIP_DAY"
         
         // 메인 페이지 내 선물 받기 툴팁 표시 여부 -> 다른 객체로 위임
         // private let isPresentingRewardToolTipView = "PRESENTING_REWARD_TOOL_TIP_VIEW"
@@ -114,8 +111,8 @@ struct SettingDataSource {
     static var secondToLastRecordDay: String
     
     /// 기록하기 페이지 내 무소비 툴팁 표시 여부: Bool
-    @UserDefault(key: .shouldShowEmptyRecordToopTip, defaultValue: true)
-    static var shouldShowEmptyRecordToopTip: Bool
+    @UserDefault(key: .shouldShowEmptyRecordToolTip, defaultValue: true)
+    static var shouldShowEmptyRecordToolTip: Bool
     
     /// 별통이 달력 페이지 내 상단 배너 표시 여부: Bool
     @UserDefault(key: .shouldShowBottleCalendarTopBanner, defaultValue: true)

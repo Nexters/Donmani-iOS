@@ -99,7 +99,7 @@ extension RecordEntryPointView {
                 }
                 Spacer()
             }
-            if store.isPresentingPopover {
+            if store.isPresentingEmptyRecordToolTip {
                 VStack(spacing: 0) {
                     HStack {
                         Triangle()

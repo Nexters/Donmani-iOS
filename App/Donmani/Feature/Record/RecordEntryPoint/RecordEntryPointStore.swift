@@ -70,7 +70,7 @@ struct RecordEntryPointStore {
             }
         }
         var remainingTime: Int
-        var isPresentingPopover: Bool
+        var isPresentingEmptyRecordToolTip: Bool = false
         
         var isSaveEnabled: Bool = false
         var isReadyToSave: Bool = false
@@ -80,7 +80,6 @@ struct RecordEntryPointStore {
         
         init(context: Context) {
             self.isPresentingRecordGuideView = (HistoryStateManager.shared.getGuideState() == nil)
-            self.isPresentingPopover = HistoryStateManager.shared.getEmptyRecordGuideKey()
             self.isCompleteToday = context.isCompleteToday
             self.isCompleteYesterday = context.isCompleteYesterday
             self.dayType = context.isCompleteToday ? .yesterday : .today
@@ -146,6 +145,7 @@ struct RecordEntryPointStore {
     
     // MARK: - Dependency
     @Dependency(\.recordRepository) var recordRepository
+    @Dependency(\.settings) var settings
     
     // MARK: - Reducer
     var body: some ReducerOf<Self> {
@@ -217,7 +217,7 @@ struct RecordEntryPointStore {
                 UINavigationController.isBlockSwipe = false
 
             case .touchEmptyRecordButton:
-                state.isPresentingPopover = false
+                state.isPresentingEmptyRecordToolTip = false
                 if state.isCheckedEmptyRecord {
                     state.isCheckedEmptyRecord = false
                     state.isSaveEnabled = false
@@ -229,8 +229,8 @@ struct RecordEntryPointStore {
                 }
 
             case .closePopover:
-                state.isPresentingPopover = false
-                HistoryStateManager.shared.setEmptyRecordGuideKey()
+                state.isPresentingEmptyRecordToolTip = false
+                settings.shouldShowEmptyRecordToolTip = false
                 
             case .dismissEmptyRecordBottomSheet:
                 GA.Click(event: .recordmainEmptyNoButton).send(parameters: [.screenType: state.dayTitle])
@@ -333,6 +333,7 @@ struct RecordEntryPointStore {
                 }
                 
             case .startTimer:
+                state.isPresentingEmptyRecordToolTip = settings.shouldShowEmptyRecordToolTip
                 let isBlockSwipe = !(state.goodRecord == nil && state.badRecord == nil)
                 UINavigationController.isBlockSwipe = isBlockSwipe
                 return .run { send in
