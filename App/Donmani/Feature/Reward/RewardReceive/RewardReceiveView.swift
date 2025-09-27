@@ -20,7 +20,7 @@ struct RewardReceiveView: View {
                 // Navigation Bar
                 ZStack {
                     HStack {
-                        DNavigationBarButton(.leftArrow) {
+                        DNavigationBarButton(.arrowLeft) {
                             store.send(.delegate(.popToRoot))
                         }
                         .opacity(store.isPresentingBackButton ? 1.0 : 0.0)

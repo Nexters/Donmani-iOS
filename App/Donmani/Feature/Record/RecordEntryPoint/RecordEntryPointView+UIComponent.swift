@@ -48,7 +48,7 @@ extension RecordEntryPointView {
                     DText(type.title)
                         .style(.h3, .bold, .white)
                     Spacer()
-                    DImage(.addLog).image
+                    DImage(.addRecord).image
                         .resizable()
                         .frame(width: .s1, height: .s1)
                 }
@@ -64,10 +64,10 @@ extension RecordEntryPointView {
                     .resizable()
                     .renderingMode(.template)
                     .aspectRatio(contentMode: .fit)
-                    .foregroundStyle(DColor(.pupleBlue90).color)
+                    .foregroundStyle(DColor(.purpleBlue90).color)
                     .frame(width: 22)
                 DText(store.guide)
-                    .style(.b2, .semibold, .pupleBlue90)
+                    .style(.b2, .semibold, .purpleBlue90)
                     .padding(8)
             }
     }

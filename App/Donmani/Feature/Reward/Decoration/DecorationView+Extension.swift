@@ -85,7 +85,7 @@ extension DecorationView{
                     HStack {
                         VStack {
                             Circle()
-                                .fill(DColor.noticeColor)
+                                .fill(DColor.notice)
                                 .frame(width: .s5, height: .s5)
                                 .overlay {
                                     DText("N")

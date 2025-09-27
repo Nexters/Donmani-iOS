@@ -66,17 +66,17 @@ extension BottleCalendarView {
     ) -> some View {
         VStack(alignment: .center, spacing: 4) {
             if (count == -1) {
-                DImage(.miniLockedBottle).image
+                DImage(.calendarStarBottleLock).image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 116)
             } else {
                 ZStack {
-                    DImage(.miniOpenedBottle).image
+                    DImage(.calendarStarBottleOpen).image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                     VStack(spacing: 4) {
-                        DImage(.smallStar).image
+                        DImage(.starSmall).image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: .s4, height: .s4)

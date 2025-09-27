@@ -61,7 +61,7 @@ struct BottomSheetView<Content: View>: View {
                                     Button {
                                         dismiss(nil)
                                     } label: {
-                                        DImage(.circleClose).image
+                                        DImage(.closeCircle).image
                                             .resizable()
                                             .frame(width: .s2, height: .s2)
                                     }

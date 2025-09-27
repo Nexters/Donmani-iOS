@@ -6,7 +6,6 @@
 //
 
 import Testing
-@testable import Donmani
 
 struct VersionManagerTests {
     let versionManager = VersionManager()
@@ -59,6 +58,4 @@ struct VersionManagerTests {
         let storeVersion = "1.17.3"
         #expect(versionManager.isLastestVersion(store: storeVersion, current: currentVersion) == false)
     }
-
-
 }

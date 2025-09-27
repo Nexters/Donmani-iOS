@@ -20,17 +20,17 @@ public enum DColorType {
     case deepBlue99
     
     // Secondary
-    case pupleBlue10
-    case pupleBlue20
-    case pupleBlue30
-    case pupleBlue40
-    case pupleBlue50
-    case pupleBlue60
-    case pupleBlue70
-    case pupleBlue80
-    case pupleBlue90
-    case pupleBlue95
-    case pupleBlue99
+    case purpleBlue10
+    case purpleBlue20
+    case purpleBlue30
+    case purpleBlue40
+    case purpleBlue50
+    case purpleBlue60
+    case purpleBlue70
+    case purpleBlue80
+    case purpleBlue90
+    case purpleBlue95
+    case purpleBlue99
     
     // Gray
     case gray10
@@ -48,27 +48,27 @@ public enum DColorType {
     var name: String {
         switch self {
         case .deepBlue10, .deepBlue20, .deepBlue30, .deepBlue40, .deepBlue50, .deepBlue60, .deepBlue70, .deepBlue80, .deepBlue90, .deepBlue95, .deepBlue99:
-            return "DeepBlue"
-        case .pupleBlue10, .pupleBlue20, .pupleBlue30, .pupleBlue40, .pupleBlue50, .pupleBlue60, .pupleBlue70, .pupleBlue80, .pupleBlue90, .pupleBlue95, .pupleBlue99:
-            return "PupleBlue"
+            return "deep_blue"
+        case .purpleBlue10, .purpleBlue20, .purpleBlue30, .purpleBlue40, .purpleBlue50, .purpleBlue60, .purpleBlue70, .purpleBlue80, .purpleBlue90, .purpleBlue95, .purpleBlue99:
+            return "purple_blue"
         case .gray10, .gray20, .gray30, .gray40, .gray50, .gray60, .gray70, .gray80, .gray90, .gray95, .gray99:
-            return "GrayScale"
+            return "gray"
         }
     }
     
     var brightness: Int {
         switch self {
-        case .deepBlue10, .pupleBlue10, .gray10: return 10
-        case .deepBlue20, .pupleBlue20, .gray20: return 20
-        case .deepBlue30, .pupleBlue30, .gray30: return 30
-        case .deepBlue40, .pupleBlue40, .gray40: return 40
-        case .deepBlue50, .pupleBlue50, .gray50: return 50
-        case .deepBlue60, .pupleBlue60, .gray60: return 60
-        case .deepBlue70, .pupleBlue70, .gray70: return 70
-        case .deepBlue80, .pupleBlue80, .gray80: return 80
-        case .deepBlue90, .pupleBlue90, .gray90: return 90
-        case .deepBlue95, .pupleBlue95, .gray95: return 95
-        case .deepBlue99, .pupleBlue99, .gray99: return 99
+        case .deepBlue10, .purpleBlue10, .gray10: return 10
+        case .deepBlue20, .purpleBlue20, .gray20: return 20
+        case .deepBlue30, .purpleBlue30, .gray30: return 30
+        case .deepBlue40, .purpleBlue40, .gray40: return 40
+        case .deepBlue50, .purpleBlue50, .gray50: return 50
+        case .deepBlue60, .purpleBlue60, .gray60: return 60
+        case .deepBlue70, .purpleBlue70, .gray70: return 70
+        case .deepBlue80, .purpleBlue80, .gray80: return 80
+        case .deepBlue90, .purpleBlue90, .gray90: return 90
+        case .deepBlue95, .purpleBlue95, .gray95: return 95
+        case .deepBlue99, .purpleBlue99, .gray99: return 99
         }
     }
 }

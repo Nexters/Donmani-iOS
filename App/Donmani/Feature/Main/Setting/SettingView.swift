@@ -77,7 +77,7 @@ struct SettingView: View {
                     VStack(alignment: .center, spacing: .defaultLayoutPadding) {
                         DNavigationBar(
                             leading: {
-                                DNavigationBarButton(.leftArrow) {
+                                DNavigationBarButton(.arrowLeft) {
                                     dismiss()
                                 }
                             },
@@ -226,7 +226,7 @@ struct SettingView: View {
                     if type == .notice {
                         HStack(alignment: .top) {
                             Circle()
-                                .fill(DColor.noticeColor)
+                                .fill(DColor.notice)
                                 .frame(width: 6, height: 6)
                                 .padding(.bottom, 18)
                         }
@@ -236,7 +236,7 @@ struct SettingView: View {
                     if type == .decoration {
                         HStack(alignment: .top) {
                             Circle()
-                                .fill(DColor.noticeColor)
+                                .fill(DColor.notice)
                                 .frame(width: 6, height: 6)
                                 .padding(.bottom, 18)
                         }

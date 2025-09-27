@@ -56,11 +56,11 @@ enum RecordCategory: String {
 
 extension RecordCategory {
     var uppercaseValue: String {
-        self.rawValue.uppercased()
+        rawValue.uppercased()
     }
     
     var assetName: String {
-        self.rawValue
+        rawValue
     }
     
     public var hashValue: Int {
@@ -72,17 +72,15 @@ extension RecordCategory {
     }
     
     var color: Color {
-        DColor(self.assetName.convertUppercaseFirstChar + "Color").color
+        DColor(assetName).color
     }
     
     var image: Image {
-        let name = self.assetName.convertUppercaseFirstChar + "Sticker"
-        return DImage(name).image
+        DImage(assetName).image
     }
     
-    var miniImage: Image {
-        let name = self.assetName.convertUppercaseFirstChar + "MiniSticker"
-        return DImage(name).image
+    var smallImage: Image {
+        DImage("\(assetName)_small").image
     }
 }
 

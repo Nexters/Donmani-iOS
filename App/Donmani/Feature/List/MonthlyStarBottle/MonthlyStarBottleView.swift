@@ -18,7 +18,7 @@ struct MonthlyStarBottleView: View {
             VStack(alignment: .center, spacing: 0) {
                 DNavigationBar(
                     leading: {
-                        DNavigationBarButton(.leftArrow) {
+                        DNavigationBarButton(.arrowLeft) {
                             dismiss()
                         }
                     },
@@ -67,13 +67,13 @@ struct EmptyStarBottleView: View {
                 DColor.backgroundBottom,
             ])
             
-            DImage(.mainBackgroundStar)
+            DImage(.backgroundStar)
                 .image
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
             
-            DImage(.lockedStarBottle)
+            DImage(.starBottleLock)
                 .image
                 .resizable()
                 .aspectRatio(contentMode: .fit)

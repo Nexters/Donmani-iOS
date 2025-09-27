@@ -27,7 +27,7 @@ struct RecordEntryPointView: View {
             VStack(spacing: 0) {
                 DNavigationBar(
                     leading: {
-                        DNavigationBarButton(.leftArrow) {
+                        DNavigationBarButton(.arrowLeft) {
                             if (
                                 store.isCheckedEmptyRecord
                                 || store.goodRecord != nil

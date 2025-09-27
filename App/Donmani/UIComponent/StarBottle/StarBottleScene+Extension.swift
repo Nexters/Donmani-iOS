@@ -324,7 +324,7 @@ extension StarBottleScene {
             record.records[$0]?.category.color
         }
         if colors.isEmpty {
-            colors = [DColor.emptyColor]
+            colors = [DColor.empty]
         }
         addGradientColor(node: starNode, colors: colors)
         addHighlightTexture(node: starNode, size: size)

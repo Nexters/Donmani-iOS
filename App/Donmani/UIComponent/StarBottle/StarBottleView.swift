@@ -138,7 +138,7 @@ struct StarBottleView: View {
                     DColor.backgroundTop,
                     DColor.backgroundBottom,
                 ])
-                DImage(.mainBackgroundStar).image
+                DImage(.backgroundStar).image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: .screenWidth - 2 * .defaultLayoutPadding)
@@ -161,7 +161,7 @@ struct StarBottleView: View {
             VStack {
                 Spacer()
                 ZStack {
-                    DImage(.byeoltongBackground).image
+                    DImage(.starBottleBackground).image
                         .resizable()
                         .frame(width: width + 20)
                         .aspectRatio(0.8, contentMode: .fit)
@@ -243,7 +243,7 @@ struct StarBottleView: View {
                             }
                         }
                     } else {
-                        DImage(.lockedStarBottle).image
+                        DImage(.starBottleLock).image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .padding(.horizontal, 38)
