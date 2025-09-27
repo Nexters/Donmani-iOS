@@ -76,13 +76,11 @@ extension RecordCategory {
     }
     
     var image: Image {
-        let name = self.assetName.convertUppercaseFirstChar + "Sticker"
-        return DImage(name).image
+        DImage(assetName).image
     }
     
     var miniImage: Image {
-        let name = self.assetName.convertUppercaseFirstChar + "MiniSticker"
-        return DImage(name).image
+        DImage("\(assetName)_small").image
     }
 }
 
