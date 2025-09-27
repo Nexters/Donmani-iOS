@@ -79,14 +79,14 @@ extension RewardStartView {
                 HStack {
                     Spacer()
                     HStack(alignment: .center, spacing: 10) {
-                        DImage(.smallStar)
+                        DImage(.starSmall)
                             .image
                             .resizable()
                             .frame(width: 12, height: 12)
                             .opacity(0.2)
                         DText("토비의 한마디")
                             .style(.b3, .bold, .deepBlue99)
-                        DImage(.smallStar)
+                        DImage(.starSmall)
                             .image
                             .resizable()
                             .frame(width: 12, height: 12)

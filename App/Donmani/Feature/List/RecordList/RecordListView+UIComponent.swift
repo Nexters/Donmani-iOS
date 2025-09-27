@@ -127,7 +127,7 @@ extension RecordListView {
                             DText("\(store.day.month)월 기록 통계")
                                 .style(.b1, .semibold, .gray99)
                             if store.progressPoint > -1 {
-                                DImage(.rightArrow).image
+                                DImage(.arrowRight).image
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: .s5, height: .s5)

@@ -43,7 +43,7 @@ extension RecordWritingView {
             store.send(.selectCategory(category))
         } label: {
             VStack(spacing: 4) {
-                ((isSelected && !initState) ? category.image : category.miniImage)
+                ((isSelected && !initState) ? category.image : category.smallImage)
                     .resizable()
                     .frame(width: 62, height: 62)
                     .clipShape(RoundedRectangle(cornerRadius: .s5, style: .continuous))

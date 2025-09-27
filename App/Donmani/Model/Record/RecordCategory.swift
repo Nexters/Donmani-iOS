@@ -79,7 +79,7 @@ extension RecordCategory {
         DImage(assetName).image
     }
     
-    var miniImage: Image {
+    var smallImage: Image {
         DImage("\(assetName)_small").image
     }
 }

@@ -5,60 +5,76 @@
 //  Created by 문종식 on 2/4/25.
 //
 
-import SwiftUI
-
 public enum DImageAsset: String {
-    // Image
-    case splashBackgroundStar = "SplashBackgroundStar"
-    case mainBackgroundStar = "MainBackgroundStar"
-    case tempImage = "TempImage"
-    case defaultGoodSticker = "DefaultGoodSticker"
-    case defaultBadSticker = "DefaultBadSticker"
-    case goodRecord = "GoodRecord"
-    case badRecord = "BadRecord"
-    case noneSticker = "NoneSticker"
+    case temp = "temp"
+
+    // General
+    case edit = "edit"
+    case arrowLeft = "arrow_left"
+    case arrowRight = "arrow_right"
+    case notice = "notice"
+    case backgroundStar = "background_star"
+    case close = "close"
     
-    case emptyRecord = "EmptyRecord"
-    case starBottle = "StarBottle"
-    case lockedStarBottle = "LockedStarBottle"
-    case save = "Save"
+    // Navigation Icon
+    case calendar = "navigation_icon_calendar"
+    case reward = "navigation_icon_reward"
+    case bottle = "navigation_icon_bottle"
+    case setting = "navigation_icon_setting"
     
-    case smallStar = "SmallStar"
-    case starShape = "StarShape"
-    case starSingleHighlighter = "StarSingleHighlighter"
-    case starDoubleHighlighter = "StarDoubleHighlighter"
-    case starInnerShadow = "StarInnerShadow"
-    
-    case editCategory = "EditCategory"
-    case splashLogo = "SplashLogo"
-    
-    case profile = "Profile"
-    case newStarBottle = "NewStarBottle"
-    case newStarBottleBackground = "NewStarBottleBackground"
-    
-    case miniLockedBottle = "MiniLockedBottle"
-    case miniOpenedBottle = "MiniOpenedBottle"
-    
-    // StarBottle
-    case starBottle01 = "StarBottle_01"
-    case starBottle02 = "StarBottle_02"
-    case starBottle03 = "StarBottle_03"
+    // Splash
+    case splashBackgroundStar = "splash_background_star"
+    case splashLogo = "splash_logo"
     
     // Onboarding
     case onboardingCover = "onboarding_cover"
-    case onboardingPage0 = "OnboardingPage0"
-    case onboardingPage1 = "OnboardingPage1"
-    case onboardingPage2 = "OnboardingPage2"
-    case onboardingPage3 = "OnboardingPage3"
-    case onboardingPage4 = "OnboardingPage4"
-    case onboardingEnd = "OnboardingEnd"
+    case onboardingPage0 = "onboarding_page_0"
+    case onboardingPage1 = "onboarding_page_1"
+    case onboardingPage2 = "onboarding_page_2"
+    case onboardingPage3 = "onboarding_page_3"
+    case onboardingPage4 = "onboarding_page_4"
+    case onboardingEnd = "onboarding_end"
+    
+    // Main
+    case plus = "plus"
+    
+    // StarBottle
+    case starBottleLock = "star_bottle_lock"
+    case starBottleBackground = "star_bottle_background"
+    
+    // Star
+    case starSmall = "star_small"
+    case starShape = "star_shape"
+    case starSingleHighlighter = "star_single_highlighter"
+    case starDoubleHighlighter = "star_double_highlighter"
+    case starInnerShadow = "star_inner_shadow"
+    
+    // Setting
+    case profile = "profile"
+    
+    // 매월 1일 새로운 별통이 바텀 시트 이미지
+    case newStarBottle = "new_star_bottle"
+    case newStarBottleBackground = "new_star_bottle_background"
+    
+    // Monthly 별통이
+    case calendarStarBottleLock = "calendar_star_bottle_lock"
+    case calendarStarBottleOpen = "calendar_star_bottle_open"
+    
+    // Record
+    case addRecord = "add_record"
+    case editCategory = "edit_category"
+    case goodPlaceholder = "good_placeholder"
+    case badPlaceholder = "bad_placeholder"
+    case emptyRecord = "empty_record"
+    case check = "check"
+    case uncheck = "uncheck"
     
     // Reward
-    case rewardBackground = "RewardBackground"
-    case rewardGuideBanner = "RewardGuideBanner"
-    case rewardCharacter = "RewardCharacter"
+    case rewardBackground = "reward_background"
+    case rewardGuideBanner = "reward_guide_banner"
+    case rewardCharacter = "reward_character"
     case fullRewardCharacter = "full_reward_character"
-    case decorationGuideImage = "DecorationGuideImage"
+    case decorationGuide = "decoration_guide"
     
     // Reward Item Icon
     case rewardIconBgDefault = "reward_icon_bg_default"
@@ -102,35 +118,15 @@ public enum DImageAsset: String {
     case rewardBottleBeadsShape = "reward_byeoltong_beads_shape"
     case rewardBottleDefaultShape = "reward_byeoltong_default_shape"
     case rewardBottleFuzzyShape = "reward_byeoltong_fuzzy_shape"
-    case byeoltongBackground = "byeoltong_background"
     
     case rewardDecorationSpaceVacance = "reward_decoration_space_vacance"
-   
-    // Image 16
-    case close = "Close"
     
-    // Image 20
-    case check = "Check"
-    case uncheck = "Uncheck"
+    // BottomSheet
+    case closeCircle = "close_circle"
     
-    // Image 24
-    case edit = "Edit"
-    case leftArrow = "LeftArrow"
-    case rightArrow = "RightArrow"
-    case calendar = "Calendar"
-    case setting = "Setting"
-    case reward = "Reward"
-    case bottleIcon = "BottleIcon"
-    case warning = "Warning"
-    case success = "Success"
-    case notice = "Notice"
-    
-    // Image 28
-    case plus = "Plus"
-    case circleClose = "CircleClose"
-    
-    // Image 32
-    case addLog = "AddLog"
+    // Toast
+    case warning = "toast_icon_warning"
+    case success = "toast_icon_success"
 }
 
 

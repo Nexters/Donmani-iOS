@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct DImage {
-    @usableFromInline var asset: DImageAsset = .tempImage
+    @usableFromInline var asset: DImageAsset = .temp
     @usableFromInline var assetName: String? = nil
     
     public init(_ asset: DImageAsset) {

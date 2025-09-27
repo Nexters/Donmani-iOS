@@ -21,7 +21,7 @@ struct DecorationView: View {
                 VStack {
                     DNavigationBar(
                         leading: {
-                            DNavigationBarButton(.leftArrow) {
+                            DNavigationBarButton(.arrowLeft) {
                                 store.send(.touchBackButton)
                             }
                         },

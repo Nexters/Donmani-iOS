@@ -29,7 +29,7 @@ struct RecordWritingView: View {
             VStack(spacing: 0) {
                 DNavigationBar(
                     leading: {
-                        DNavigationBarButton(.leftArrow) {
+                        DNavigationBarButton(.arrowLeft) {
                             if (editingText.count > 0) {
                                 isFocusToTextField = false
                                 store.send(.showCancelRecordBottomSheet)

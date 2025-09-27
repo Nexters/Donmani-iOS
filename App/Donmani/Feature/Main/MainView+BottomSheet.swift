@@ -77,7 +77,7 @@ extension MainView {
                         DText("지난 달 별통이 보러가기")
                             .style(.b1, .regular, .deepBlue90)
                         
-                        DImage(.rightArrow).image
+                        DImage(.arrowRight).image
                             .renderingMode(.template)
                             .resizable()
                             .foregroundStyle(DColor(.deepBlue90).color)

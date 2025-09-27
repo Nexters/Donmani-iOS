@@ -19,7 +19,7 @@ struct BottleCalendarView: View {
             VStack(alignment: .center,spacing: 0) {
                 DNavigationBar(
                     leading: {
-                        DNavigationBarButton(.leftArrow) {
+                        DNavigationBarButton(.arrowLeft) {
                             dismiss()
                         }
                     },

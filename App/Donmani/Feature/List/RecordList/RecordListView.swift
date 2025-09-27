@@ -18,7 +18,7 @@ struct RecordListView: View {
             VStack(alignment: .center, spacing: 0) {
                 DNavigationBar(
                     leading: {
-                        DNavigationBarButton(.leftArrow) {
+                        DNavigationBarButton(.arrowLeft) {
                             dismiss()
                         }
                     },
@@ -28,7 +28,7 @@ struct RecordListView: View {
                     },
                     trailing: {
                         if store.isShowBottleCalendarNavigationButton {
-                            DNavigationBarButton(.bottleIcon) {
+                            DNavigationBarButton(.bottle) {
                                 store.send(.pushBottleCalendarView)
                             }
                         }

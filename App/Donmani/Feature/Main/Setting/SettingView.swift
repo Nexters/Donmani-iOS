@@ -77,7 +77,7 @@ struct SettingView: View {
                     VStack(alignment: .center, spacing: .defaultLayoutPadding) {
                         DNavigationBar(
                             leading: {
-                                DNavigationBarButton(.leftArrow) {
+                                DNavigationBarButton(.arrowLeft) {
                                     dismiss()
                                 }
                             },

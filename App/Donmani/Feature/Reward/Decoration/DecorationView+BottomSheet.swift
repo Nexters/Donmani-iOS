@@ -32,7 +32,7 @@ extension DecorationView {
                 DText("달이 바뀌어 새로 열린 별통이는 언제든 꾸밀 수 있어요")
                     .style(.b2, .regular, .deepBlue90)
                 
-                DImage(.decorationGuideImage).image
+                DImage(.decorationGuide).image
                     .resizable()
                     .scaledToFit()
                 

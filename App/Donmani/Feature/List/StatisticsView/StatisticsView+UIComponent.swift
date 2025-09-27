@@ -31,7 +31,7 @@ extension StatisticsView {
                         DText("기능 요청하기")
                             .style(.b2, .medium, .deepBlue99)
                         
-                        DImage(.rightArrow).image
+                        DImage(.arrowRight).image
                             .renderingMode(.template)
                             .resizable()
                             .foregroundStyle(DColor(.deepBlue99).color)
@@ -78,7 +78,7 @@ extension StatisticsView {
         HStack {
             HStack(spacing: 12) {
                 category
-                    .miniImage
+                    .smallImage
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: .s1, height: .s1)

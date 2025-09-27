@@ -48,7 +48,7 @@ extension RecordEntryPointView {
                     DText(type.title)
                         .style(.h3, .bold, .white)
                     Spacer()
-                    DImage(.addLog).image
+                    DImage(.addRecord).image
                         .resizable()
                         .frame(width: .s1, height: .s1)
                 }
