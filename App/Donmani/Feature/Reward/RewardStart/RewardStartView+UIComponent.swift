@@ -102,10 +102,12 @@ extension RewardStartView {
                 .frame(height: .s2)
                 .padding(.bottom, 40)
                 
-                (feedbackCard.category?.image ?? DImage(.noneSticker).image)
-                    .resizable()
-                    .frame(width: 78, height: 78)
-                    .padding(.bottom, 20)
+                if let categoryImage = feedbackCard.category?.image {
+                    categoryImage
+                        .resizable()
+                        .frame(width: 78, height: 78)
+                        .padding(.bottom, 20)
+                }
                 
                 DText(feedbackCard.title)
                     .style(.h2, .bold, .white)
